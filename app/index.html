@@ -17,7 +17,33 @@
 </head>
 
 <body>
-  <h1>'Allo</h1>
+  <div class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <ul class="nav nav-pills pull-right">
+        <li ui-sref-active="active"><a ui-sref="home">Home</a></li>
+        <li ui-sref-active="active"><a ui-sref="s3({bucket: ''})">S3</a></li>
+      </ul>
+      <h3 class="text-muted">Yet Another AWS Management Console</h3>
+    </div>
+  </div>
+
+  <div ui-view=""></div>
+
+<!--
+  <div>
+    <pre>
+    $state = {{$state.current.name}}
+    $stateParams = {{$stateParams}}
+    $state full url = {{ $state.$current.url.source }}
+    </pre>
+  </div>
+-->
+
+  <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+    <div class="container">
+      <p class="navbar-text navbar-right">Copyright 2014 michihiro.</p>
+    </div>
+  </nav>
 
   <!-- build:js scripts/vendor.js -->
   <!-- bower:js -->
