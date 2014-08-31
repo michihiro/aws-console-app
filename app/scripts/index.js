@@ -30,25 +30,27 @@ function appConfig($stateProvider, $urlRouterProvider) {
 
 appRun.$inject = ['$rootScope', '$state', '$stateParams','$modal' ];
 function appRun($rootScope, $state, $stateParams, $modal) {
-  $rootScope.$state = $state;
-  $rootScope.state = $state;
-  $rootScope.$stateParams = $stateParams;
 
+  ng.extend($rootScope, {
+    state: $state,
+    stateParams: $stateParams,
+    openDialog: openDialog
+  });
 
-  $rootScope.openDialog = function(tpl, resolve) {
-    var modalInstance = $modal.open({
+  return;
+
+  function openDialog(tpl, resolve) {
+    var modal = $modal.open({
       templateUrl: 'views/' + tpl,
-//      controller: ModalInstanceCtrl,
 //      size: size,
       resolve: resolve
     });
-
-    modalInstance.result.then(function (selectedItem) {
-      $rootScope.selected = selectedItem;
-    }, function () {
-      console.log('Modal dismissed at: ' + new Date());
-    });
-  };
+    if(resolve.onClose) {
+      modal.result.then(
+        resolve.onClose,
+        function() { resolve.onClose(null); });
+    }
+  }
 }
 
 
@@ -58,20 +60,53 @@ function homeCtrl() {
 
 
 s3Ctrl.$inject = ['$scope', '$state', '$stateParams' ];
-function s3Ctrl($scope, $state, $stateParams) {
-  console.log($state, $stateParams);
+function s3Ctrl() {
 }
 
 dialogCredentialsCtrl.$inject = ['$scope', '$timeout'];
 function dialogCredentialsCtrl($scope, $timeout) {
-  $scope.save = function() {
-    $scope.processing = true;
+  var storage = chrome.storage.local;
 
+  ng.extend($scope, {
+    inputs: {},
+    save: save
+  });
+
+  storage.get('credidential', function(val) {
+    if(val && val.credidential) {
+      $timeout(function() {
+        ng.extend($scope.inputs, val.credidential);
+      });
+    }
+  });
+
+  return;
+
+  function save() {
+
+    var credidential = $scope.inputs;
+    AWS.config.update(credidential);
+
+    var s3 = new AWS.S3({ params: { Bucket: '', Region: '' }});
+
+    setProcessing(true);
+
+    s3.listBuckets(function (err) {
+      if(!err) {
+        chrome.storage.local.set({credidential:credidential}, function() {
+          setProcessing(false);
+          $scope.$close();
+        });
+      } else {
+        setProcessing(false);
+      }
+    });
+  }
+
+  function setProcessing(bool) {
     $timeout(function() {
-      $scope.processing = false;
-      $scope.$close();
-    }, 3000);
-  };
-
+      $scope.processing = bool;
+    });
+  }
 }
 

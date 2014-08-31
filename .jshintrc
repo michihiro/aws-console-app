@@ -21,6 +21,7 @@
     "latedef": "nofunc",
     "globals" : {
         "angular": true,
-        "chrome": true
+        "chrome": true,
+        "AWS": true
     }
 }
