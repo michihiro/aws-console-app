@@ -22,6 +22,7 @@
       <ul class="nav nav-pills pull-right">
         <li ui-sref-active="active"><a ui-sref="home">Home</a></li>
         <li ui-sref-active="active"><a ui-sref="s3({bucket: ''})">S3</a></li>
+        <li ui-sref-active="active"><a ng-click="openDialog('home/dialogCredentials.html')">test</a></li>
       </ul>
       <h3 class="text-muted">Yet Another AWS Management Console</h3>
     </div>
@@ -51,6 +52,8 @@
   <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script src="bower_components/angular-ui-utils/ui-utils.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
 
