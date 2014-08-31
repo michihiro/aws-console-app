@@ -45,7 +45,7 @@ function appRun($rootScope, $state, $stateParams, $modal) {
 //      size: size,
       resolve: resolve
     });
-    if(resolve.onClose) {
+    if(resolve && resolve.onClose) {
       modal.result.then(
         resolve.onClose,
         function() { resolve.onClose(null); });
@@ -90,6 +90,7 @@ function dialogCredentialsCtrl($scope, $timeout) {
     var s3 = new AWS.S3({ params: { Bucket: '', Region: '' }});
 
     setProcessing(true);
+    $scope.error = null;
 
     s3.listBuckets(function (err) {
       if(!err) {
@@ -98,6 +99,7 @@ function dialogCredentialsCtrl($scope, $timeout) {
           $scope.$close();
         });
       } else {
+        $scope.error = err.message;
         setProcessing(false);
       }
     });
