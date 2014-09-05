@@ -13,7 +13,7 @@ chrome.app.runtime.onLaunched.addListener(function() {
       minWidth: 480,
       minHeight: 320,
       left: Math.round((screen.availWidth - width) / 2),
-      top: Math.round((screen.availHeight - height)/2)
+      top: Math.round((screen.availHeight - height) / 2)
     }
   });
 });

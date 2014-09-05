@@ -2,23 +2,27 @@
 
 var ng = angular;
 ng.module('aws-console', [
-    'ui.router',
-    'ui.utils',
-    'ui.bootstrap'
-  ])
+      'ui.router',
+      'ui.utils',
+      'ui.bootstrap'
+    ])
   .service('credentialsService', credentialsService)
   .service('s3Service', s3Service)
+  .controller('homeCtrl', homeCtrl)
+  .controller('dialogCredentialsCtrl', dialogCredentialsCtrl)
+  .controller('s3Ctrl', s3Ctrl)
   .config(appConfig)
   .run(appRun);
 
 appConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
+
 function appConfig($stateProvider, $urlRouterProvider) {
 
   $urlRouterProvider.otherwise('/');
 
   $stateProvider
     .state('home', {
-      url:'/',
+      url: '/',
       templateUrl: 'views/home.html',
       controller: 'homeCtrl'
     })
@@ -30,7 +34,8 @@ function appConfig($stateProvider, $urlRouterProvider) {
 }
 
 
-appRun.$inject = ['$rootScope', '$state', '$stateParams','$modal', 'credentialsService' ];
+appRun.$inject = ['$rootScope', '$state', '$stateParams', '$modal', 'credentialsService'];
+
 function appRun($rootScope, $state, $stateParams, $modal, credentialsService) {
 
   ng.extend($rootScope, {
@@ -46,24 +51,26 @@ function appRun($rootScope, $state, $stateParams, $modal, credentialsService) {
   function openDialog(tpl, resolve) {
     var modal = $modal.open({
       templateUrl: 'views/' + tpl,
-//      size: size,
+      //size: size,
       resolve: resolve
     });
-    if(resolve && resolve.onClose) {
+    if (resolve && resolve.onClose) {
       modal.result.then(
         resolve.onClose,
-        function() { resolve.onClose(null); });
+        function() {
+          resolve.onClose(null);
+        });
     }
   }
 }
 
 
 homeCtrl.$inject = ['$scope'];
-function homeCtrl() {
-}
 
+function homeCtrl() {}
 
-s3Ctrl.$inject = ['$scope', '$state', '$stateParams', '$timeout','s3Service'];
+s3Ctrl.$inject = ['$scope', '$state', '$stateParams', '$timeout', 's3Service'];
+
 function s3Ctrl($scope, $state, $stateParams, $timeout, s3Service) {
 
   s3Service.bind($scope);
@@ -71,7 +78,8 @@ function s3Ctrl($scope, $state, $stateParams, $timeout, s3Service) {
   return;
 }
 
-s3Service.$inject = ['$rootScope', '$parse', '$timeout' ];
+s3Service.$inject = ['$rootScope', '$parse', '$timeout'];
+
 function s3Service($rootScope, $parse, $timeout) {
   var buckets = [];
   var setter = $parse('buckets').assign;
@@ -88,7 +96,7 @@ function s3Service($rootScope, $parse, $timeout) {
   }
 
   function _updateBuckets() {
-    if(!$rootScope.credentials) {
+    if (!$rootScope.credentials) {
       buckets.length = 0;
       return;
     }
@@ -97,7 +105,7 @@ function s3Service($rootScope, $parse, $timeout) {
       credentials: $rootScope.credentials,
     });
     s3.listBuckets(function(err, result) {
-      if(err) return;
+      if (err) return;
 
       var bucketNames = buckets.map(function(v) {
         return v.Name;
@@ -106,12 +114,14 @@ function s3Service($rootScope, $parse, $timeout) {
       var newBuckets = [];
       result.Buckets.forEach(function(bucket) {
         var idx = bucketNames.indexOf(bucket.Name);
-        if(idx >= 0) {
+        if (idx >= 0) {
           newBuckets.push(buckets[idx]);
         } else {
           bucket.bucketName = bucket.Name;
           newBuckets.push(bucket);
-          s3.getBucketLocation({ Bucket: bucket.Name },
+          s3.getBucketLocation({
+              Bucket: bucket.Name
+            },
             function(err, data) {
               if (data) {
                 ng.extend(bucket, data);
@@ -136,21 +146,21 @@ function s3Service($rootScope, $parse, $timeout) {
     var params = {
       Bucket: folder.bucketName,
       Delimiter: '/',
-//      EncodingType: 'url',
-//      Marker: 'STRING_VALUE',
-//      MaxKeys: 0,
-//      Prefix: 'STRING_VALUE'
+      //EncodingType: 'url',
+      //Marker: 'STRING_VALUE',
+      //MaxKeys: 0,
+      //Prefix: 'STRING_VALUE'
     };
     s3.listObjects(params, function(err, data) {
       console.log(arguments);
-      if(data) {
+      if (data) {
         folder.Prefix = data.Prefix;
         folder.folders = [];
         data.CommonPrefixes.forEach(function(v) {
           folder.folders.push({
-            Name:v.Prefix,
+            Name: v.Prefix,
             LocationConstraint: folder.LocationConstraint,
-            bucketName:  folder.bucketName,
+            bucketName: folder.bucketName,
           });
         });
       }
@@ -159,6 +169,7 @@ function s3Service($rootScope, $parse, $timeout) {
 }
 
 dialogCredentialsCtrl.$inject = ['$scope', '$timeout', 'credentialsService'];
+
 function dialogCredentialsCtrl($scope, $timeout, credentialsService) {
 
   ng.extend($scope, {
@@ -178,14 +189,17 @@ function dialogCredentialsCtrl($scope, $timeout, credentialsService) {
 
     var s3 = new AWS.S3({
       credentials: new AWS.Credentials(credentials),
-      params: { Bucket: '', Region: '' }
+      params: {
+        Bucket: '',
+        Region: ''
+      }
     });
 
     setProcessing(true);
     $scope.error = null;
 
     s3.listBuckets(function(err) {
-      if(!err) {
+      if (!err) {
         credentialsService.save(credentials).then(function() {
           credentialsService.load(true);
           setProcessing(false);
@@ -206,6 +220,7 @@ function dialogCredentialsCtrl($scope, $timeout, credentialsService) {
 }
 
 credentialsService.$inject = ['$rootScope', '$q', '$timeout'];
+
 function credentialsService($rootScope, $q, $timeout) {
   var storage = chrome.storage.local;
 
@@ -218,9 +233,9 @@ function credentialsService($rootScope, $q, $timeout) {
     var deferred = $q.defer();
 
     storage.get('credentials', function(val) {
-      if(val && val.credentials) {
+      if (val && val.credentials) {
         $timeout(function() {
-          if(flagUpdate) {
+          if (flagUpdate) {
             $rootScope.credentials = new AWS.Credentials(val.credentials);
           }
           deferred.resolve(val.credentials);
@@ -235,7 +250,9 @@ function credentialsService($rootScope, $q, $timeout) {
   function save(credentials) {
     var deferred = $q.defer();
 
-    chrome.storage.local.set({credentials:credentials}, function() {
+    chrome.storage.local.set({
+      credentials: credentials
+    }, function() {
       deferred.resolve();
     });
 

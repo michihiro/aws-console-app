@@ -150,6 +150,25 @@ module.exports = function(grunt) {
       }
     },
 
+    jsbeautifier: {
+      files: [
+        'Gruntfile.js',
+        'app/scripts/**/*.js',
+        '!app/scripts/vendor/*.js',
+        'app/styles/**/*.css',
+        '!app/styles/vendor/*.css'
+      ],
+      options: {
+        css: {
+          indentSize: 2
+        },
+        js: {
+          indentSize: 2,
+          keepArrayIndentation: true
+        }
+      }
+    },
+
     // Reads HTML for usemin blocks to enable smart builds that automatically
     // concat, minify and revision files. Creates configurations in memory so
     // additional tasks can operate on them
@@ -172,17 +191,6 @@ module.exports = function(grunt) {
     },
 
     // The following *-min tasks produce minified files in the dist folder
-//    imagemin: {
-//      dist: {
-//        files: [{
-//          expand: true,
-//          cwd: '<%= config.app %>/images',
-//          src: '{,*/}*.{gif,jpeg,jpg,png}',
-//          dest: '<%= config.dist %>/images'
-//        }]
-//      }
-//    },
-
     svgmin: {
       dist: {
         files: [{
@@ -279,7 +287,6 @@ module.exports = function(grunt) {
       ],
       dist: [
         'copy:styles',
-//        'imagemin',
         'svgmin'
       ],
       test: [

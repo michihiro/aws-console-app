@@ -2,46 +2,43 @@ body {
   margin: 0;
   padding: 60px 0;
 }
-
 .btn label {
   margin: 0;
 }
-
 .btn-loading {
-  position:relative;
+  position: relative;
 }
 .btn-loading .loading,
 .btn-loading .loading::after {
-content: ' ';
+  content: ' ';
   display: inline-block;
   position: absolute;
-  left: 0; 
+  left: 0;
   top: 0;
   right: 0;
   bottom: 0;
   width: 2em;
   height: 2em;
   margin: auto;
-
   border-width: 3px;
   border-style: solid;
   border-color: #777 transparent #777 transparent;
   border-radius: 50%;
-
   -webkit-animation: rotate 1.6s linear infinite;
 }
-
 .btn-loading .loading::after {
   width: 1em;
   height: 1em;
   -webkit-animation: rotate .8s linear -.5s infinite;
 }
-
 @-webkit-keyframes rotate {
-  0% { transform: rotate(0); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
-
 .alert {
- text-align: left;
+  text-align: left;
 }
