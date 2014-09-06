@@ -24,6 +24,7 @@
     var bindScope;
 
     return {
+      updateFolder: _updateFolder,
       bind: bind
     };
 
@@ -91,7 +92,7 @@
         //EncodingType: 'url',
         //Marker: 'STRING_VALUE',
         //MaxKeys: 0,
-        //Prefix: 'STRING_VALUE'
+        Prefix: folder.Prefix
       };
       s3.listObjects(params, function(err, data) {
         if (data) {
@@ -99,7 +100,8 @@
           folder.folders = [];
           data.CommonPrefixes.forEach(function(v) {
             folder.folders.push({
-              Name: v.Prefix,
+              Prefix: v.Prefix,
+              Name: v.Prefix.replace(/(^.*\/)(.*\/)/, '\$2'),
               LocationConstraint: folder.LocationConstraint,
               bucketName: folder.bucketName,
             });

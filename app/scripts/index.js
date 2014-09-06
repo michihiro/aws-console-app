@@ -2,6 +2,7 @@
 
 var ng = angular;
 ng.module('aws-console', [
+    'ngAnimate',
     'ui.router',
     'ui.utils',
     'ui.bootstrap'

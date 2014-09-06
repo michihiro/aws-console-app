@@ -42,3 +42,14 @@ body {
 .alert {
   text-align: left;
 }
+.nav > li > a.s3-item {
+  padding: 2px;
+}
+.s3-child {
+  -webkit-transition: all linear 0.2s;
+  transition: all linear 0.2s;
+  opacity: 1;
+}
+.s3-child.ng-hide {
+  opacity: 0;
+}

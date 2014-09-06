@@ -5,9 +5,9 @@
   ng.module('aws-console')
     .directive('s3Tree', s3TreeDirective);
 
-  s3TreeDirective.$inject = ['$compile', '$http', '$q', 's3Items'];
+  s3TreeDirective.$inject = ['$compile', '$http', '$q', 's3Service', 's3Items'];
 
-  function s3TreeDirective($compile, $http, $q, s3Items) {
+  function s3TreeDirective($compile, $http, $q, s3Service, s3Items) {
     var template;
     var deferred = $q.defer();
     $http.get('views/s3/tree.html').then(function(response) {
@@ -29,7 +29,9 @@
         };
 
         scope.onClick = function(ev, item) {
-          s3Items.selected = item;
+          s3Service.updateFolder(item);
+          if (!ng.element(ev.target).hasClass('not-select'))
+            s3Items.selected = item;
         };
 
         deferred.promise.then(function() {
