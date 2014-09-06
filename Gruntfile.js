@@ -269,6 +269,14 @@ module.exports = function(grunt) {
             'views/{,*/}*.html',
             'scripts/etc.js'
           ]
+        },{
+          expand: true,
+          dot: true,
+          cwd: '<%= config.app %>/bower_components/components-font-awesome',
+          dest: '<%= config.dist %>',
+          src: [
+            'fonts/{,*/}*.*',
+          ]
         }]
       },
       styles: {
@@ -301,7 +309,7 @@ module.exports = function(grunt) {
     chromeManifest: {
       dist: {
         options: {
-          buildnumber: true,
+          //buildnumber: true,
           background: {
             target: 'scripts/background.js',
             exclude: [

@@ -3,12 +3,13 @@
 
   var ng = angular;
   ng.module('aws-console')
+    .value('s3Items', {})
     .service('s3Service', s3Service)
     .controller('s3Ctrl', s3Ctrl);
 
-  s3Ctrl.$inject = ['$scope', '$state', '$stateParams', '$timeout', 's3Service'];
+  s3Ctrl.$inject = ['$scope', '$state', '$stateParams', '$timeout', 's3Service', 's3Items'];
 
-  function s3Ctrl($scope, $state, $stateParams, $timeout, s3Service) {
+  function s3Ctrl($scope, $state, $stateParams, $timeout, s3Service, s3Items) {
 
     s3Service.bind($scope);
 
@@ -41,8 +42,10 @@
       var s3 = new AWS.S3({
         credentials: $rootScope.credentials,
       });
+
       s3.listBuckets(function(err, result) {
         if (err) {
+          buckets.length = 0;
           return;
         }
 
@@ -91,7 +94,6 @@
         //Prefix: 'STRING_VALUE'
       };
       s3.listObjects(params, function(err, data) {
-        console.log(arguments);
         if (data) {
           folder.Prefix = data.Prefix;
           folder.folders = [];

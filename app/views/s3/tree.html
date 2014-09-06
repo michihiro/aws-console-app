@@ -1,9 +1,9 @@
 <ul class="nav nav-list nav-pills nav-stacked">
   <li ng-repeat="item in data" style="text-indent:{{(depth+1) * .5}}em"
-      ng-class="item.selected ? 'active' : ''">
+      ng-class="isActive(item)">
     <a ng-click="onClick($event, item)">
-      <i class="fa fa-plus icon-plus glyphicon glyphicon-plus"
-         ng-click="opened = !opened"></i>
+      <i class="fa fa-plus"
+         ng-click="opened = !opened; $event.stopImmediatePropagation()"></i>
       <span>{{item.Name}}</span>
     </a>
     <div ng-show="opened">
