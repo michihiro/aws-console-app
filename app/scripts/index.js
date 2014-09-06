@@ -2,10 +2,10 @@
 
 var ng = angular;
 ng.module('aws-console', [
-      'ui.router',
-      'ui.utils',
-      'ui.bootstrap'
-    ])
+    'ui.router',
+    'ui.utils',
+    'ui.bootstrap'
+  ])
   .service('credentialsService', credentialsService)
   .controller('homeCtrl', homeCtrl)
   .controller('dialogCredentialsCtrl', dialogCredentialsCtrl)

@@ -15,6 +15,8 @@ module.exports = function(grunt) {
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
+  var pkg = grunt.file.readJSON('package.json');
+
   // Configurable paths
   var config = {
     app: 'app',
@@ -265,6 +267,7 @@ module.exports = function(grunt) {
             'styles/fonts/{,*/}*.*',
             '_locales/{,*/}*.json',
             'views/{,*/}*.html',
+            'scripts/etc.js'
           ]
         }]
       },
@@ -308,6 +311,25 @@ module.exports = function(grunt) {
         },
         src: '<%= config.app %>',
         dest: '<%= config.dist %>'
+      }
+    },
+
+    replace: {
+      manifest: {
+        src: '<%= config.app %>/manifest.json',
+        overwrite: true,
+        replacements: [{
+          from: /"version":.*/,
+          to: '"version": "' + pkg.version + '",'
+        }]
+      },
+      html: {
+        src: '<%= config.dist %>/index.html',
+        overwrite: true,
+        replacements: [{
+          from: '<!-- dist-script -->',
+          to: '<script src="scripts/etc.js"></script>'
+        }]
       }
     },
 
@@ -367,12 +389,14 @@ module.exports = function(grunt) {
     'cssmin',
     'uglify',
     'copy',
+    'replace:html',
     'usemin',
     'htmlmin',
     'compress'
   ]);
 
   grunt.registerTask('default', [
+    'replace:manifest',
     'newer:jshint',
     'test',
     'build'

@@ -4,7 +4,7 @@
   var ng = angular;
   ng.module('aws-console')
     .service('s3Service', s3Service)
-    .controller('s3Ctrl', s3Ctrl)
+    .controller('s3Ctrl', s3Ctrl);
 
   s3Ctrl.$inject = ['$scope', '$state', '$stateParams', '$timeout', 's3Service'];
 
@@ -42,7 +42,9 @@
         credentials: $rootScope.credentials,
       });
       s3.listBuckets(function(err, result) {
-        if (err) return;
+        if (err) {
+          return;
+        }
 
         var bucketNames = buckets.map(function(v) {
           return v.Name;

@@ -23,7 +23,7 @@
         data: '=',
         depth: '=?'
       },
-      link: function(scope, element, attrs) {
+      link: function(scope, element) {//, attrs) {
         scope.depth = parseInt(scope.depth || 0, 10);
         scope._id = ++idCnt;
 
@@ -40,7 +40,7 @@ return selectedScope._id === scope._id;
           }
           scope.selected = true;
           selectedScope = scope;
-        }
+        };
         deferred.promise.then(function() {
           var newElement = angular.element(template);
           $compile(newElement)(scope);
