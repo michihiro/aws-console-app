@@ -30,8 +30,9 @@
 
         scope.onClick = function(ev, item) {
           s3Service.updateFolder(item);
-          if (!ng.element(ev.target).hasClass('not-select'))
+          if (!ng.element(ev.target).hasClass('not-select')) {
             s3Items.selected = item;
+          }
         };
 
         deferred.promise.then(function() {

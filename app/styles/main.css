@@ -64,6 +64,9 @@ body {
   bottom: 0;
   border-right: 1px solid #428bca;
 }
+.s3-right td {
+  white-space: nowrap;
+}
 .nav > li > a.s3-item {
   padding: 2px;
   white-space: nowrap;

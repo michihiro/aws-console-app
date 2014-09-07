@@ -48,7 +48,7 @@ function appRun($rootScope, $state, $stateParams, $modal, credentialsService) {
   credentialsService.load(true);
 
   $rootScope.$on('$stateChangeStart',
-    function(event, state, params) {
+    function(ev, state) {
       storage.set({
         lastState: state,
       });

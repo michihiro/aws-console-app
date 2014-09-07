@@ -6,12 +6,15 @@
     <table class="table">
       <tr>
         <th>Name</th>
+        <th>Size</th>
       </tr>
-      <tr ng-repeat="o in s3Items.selected.folders">
+      <tr tab-index="-1" ng-repeat="o in s3Items.selected.folders">
         <td>{{o.Name}}</td>
+        <td></td>
       </tr>
-      <tr ng-repeat="o in s3Items.selected.contents">
+      <tr tab-index="-1" ng-repeat="o in s3Items.selected.contents">
         <td>{{o.Name}}</td>
+        <td style="text-align:right">{{o.Size | bytes}}</td>
       </tr>
     </table>
   </div>

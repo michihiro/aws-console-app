@@ -109,14 +109,17 @@
           data.CommonPrefixes.forEach(function(v) {
             folders.push({
               Prefix: v.Prefix,
-              Name: v.Prefix.replace(/(^.*\/)(.*\/)/, '\$2'),
+              Name: v.Prefix.replace(/(^.*\/)(.*\/)/, '$2'),
               LocationConstraint: folder.LocationConstraint,
               bucketName: folder.bucketName,
             });
           });
           data.Contents.forEach(function(v) {
+            if (v.Key.match(/\/$/)) {
+              return;
+            }
             ng.extend(v, {
-              Name: v.Key.replace(/(^.*\/)(.*)/, '\$2'),
+              Name: v.Key.replace(/(^.*\/)(.*)/, '$2'),
             });
             contents.push(v);
           });
