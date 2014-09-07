@@ -90,22 +90,29 @@
         Bucket: folder.bucketName,
         Delimiter: '/',
         //EncodingType: 'url',
-        //Marker: 'STRING_VALUE',
+        Marker: folder.nextMarker,
         //MaxKeys: 0,
         Prefix: folder.Prefix
       };
       s3.listObjects(params, function(err, data) {
-        if (data) {
-          folder.Prefix = data.Prefix;
-          folder.folders = [];
-          data.CommonPrefixes.forEach(function(v) {
-            folder.folders.push({
-              Prefix: v.Prefix,
-              Name: v.Prefix.replace(/(^.*\/)(.*\/)/, '\$2'),
-              LocationConstraint: folder.LocationConstraint,
-              bucketName: folder.bucketName,
-            });
+        var folders = folder.folders = folder.folders || [];
+        if (!folder.nextMarker) {
+          folders.length = 0;
+        }
+        if (!data) {
+          return;
+        }
+        data.CommonPrefixes.forEach(function(v) {
+          folders.push({
+            Prefix: v.Prefix,
+            Name: v.Prefix.replace(/(^.*\/)(.*\/)/, '\$2'),
+            LocationConstraint: folder.LocationConstraint,
+            bucketName: folder.bucketName,
           });
+        });
+        folder.nextMarker = data.NextMarker;
+        if (folder.nextMarker) {
+          _updateFolder(folder);
         }
       });
     }
