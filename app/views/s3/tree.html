@@ -2,11 +2,11 @@
   <li ng-repeat="item in data" style="text-indent:{{(depth+1) * .5}}em"
       ng-class="isActive(item)">
     <a tab-index="-1" class="s3-item" ng-click="onClick($event, item)">
-      <i class="not-select fa {{item.folders.length === 0 ? 'fa-square' : opened ? 'fa-minus-square' : 'fa-plus-square'}}"
-         ng-click="opened = !opened;" "$event.stopImmediatePropagation()"></i>
+      <i class="not-select fa {{item.folders.length === 0 ? 'fa-square-o' : ( item.opened ? 'fa-minus-square-o' : 'fa-plus-square-o' ) }}"
+         ng-click="item.opened = !item.opened;" "$event.stopImmediatePropagation()"></i>
       <span>{{item.Name}}</span>
     </a>
-    <div ng-show="opened" class="s3-child">
+    <div ng-show="item.opened" class="s3-child">
       <s3-tree data="item.folders" depth="depth+1"></s3-tree>
     </div>
   </li>
