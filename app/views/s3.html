@@ -1,8 +1,18 @@
-<div class="jumbotron">
-  <h1>
-    S3
-  </h1>
-  <p class="lead">
-  </p>
-</div>
-<s3-tree data="buckets"></s3-tree>
+<div class="func-view">
+  <div class="s3-left">
+    <s3-tree data="buckets"></s3-tree>
+  </div>
+  <div class="s3-right">
+    <table class="table">
+      <tr>
+        <th>Name</th>
+      </tr>
+      <tr ng-repeat="o in s3Items.selected.folders">
+        <td>{{o.Name}}</td>
+      </tr>
+      <tr ng-repeat="o in s3Items.selected.contents">
+        <td>{{o.Name}}</td>
+      </tr>
+    </table>
+  </div>
+<div>

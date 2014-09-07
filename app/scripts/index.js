@@ -37,6 +37,8 @@ appRun.$inject = ['$rootScope', '$state', '$stateParams', '$modal', 'credentials
 
 function appRun($rootScope, $state, $stateParams, $modal, credentialsService) {
 
+  var storage = chrome.storage.local;
+
   ng.extend($rootScope, {
     state: $state,
     stateParams: $stateParams,
@@ -44,6 +46,19 @@ function appRun($rootScope, $state, $stateParams, $modal, credentialsService) {
   });
 
   credentialsService.load(true);
+
+  $rootScope.$on('$stateChangeStart',
+    function(event, state, params) {
+      storage.set({
+        lastState: state,
+      });
+    });
+
+  storage.get('lastState', function(val) {
+    if (val && val.lastState) {
+      $state.go(val.lastState.name, val.lastState.params);
+    }
+  });
 
   return;
 

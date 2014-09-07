@@ -42,8 +42,31 @@ body {
 .alert {
   text-align: left;
 }
+.func-view {
+  position: absolute;
+  left: 0;
+  top: 60px;
+  bottom: 60px;
+}
+.s3-left {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 200px;
+  overflow: scroll;
+}
+.s3-right {
+  position: absolute;
+  left: 200px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border-right: 1px solid #428bca;
+}
 .nav > li > a.s3-item {
   padding: 2px;
+  white-space: nowrap;
 }
 .s3-child {
   -webkit-transition: all linear 0.2s;

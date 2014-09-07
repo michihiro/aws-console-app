@@ -11,6 +11,7 @@
 
   function s3Ctrl($scope, $state, $stateParams, $timeout, s3Service, s3Items) {
 
+    $scope.s3Items = s3Items;
     s3Service.bind($scope);
 
     return;
@@ -96,24 +97,34 @@
       };
       s3.listObjects(params, function(err, data) {
         var folders = folder.folders = folder.folders || [];
+        var contents = folder.contents = folder.contents || [];
         if (!folder.nextMarker) {
           folders.length = 0;
+          contents.length = 0;
         }
         if (!data) {
           return;
         }
-        data.CommonPrefixes.forEach(function(v) {
-          folders.push({
-            Prefix: v.Prefix,
-            Name: v.Prefix.replace(/(^.*\/)(.*\/)/, '\$2'),
-            LocationConstraint: folder.LocationConstraint,
-            bucketName: folder.bucketName,
+        $timeout(function() {
+          data.CommonPrefixes.forEach(function(v) {
+            folders.push({
+              Prefix: v.Prefix,
+              Name: v.Prefix.replace(/(^.*\/)(.*\/)/, '\$2'),
+              LocationConstraint: folder.LocationConstraint,
+              bucketName: folder.bucketName,
+            });
           });
+          data.Contents.forEach(function(v) {
+            ng.extend(v, {
+              Name: v.Key.replace(/(^.*\/)(.*)/, '\$2'),
+            });
+            contents.push(v);
+          });
+          folder.nextMarker = data.NextMarker;
+          if (folder.nextMarker) {
+            _updateFolder(folder);
+          }
         });
-        folder.nextMarker = data.NextMarker;
-        if (folder.nextMarker) {
-          _updateFolder(folder);
-        }
       });
     }
   }

@@ -1,8 +1,8 @@
 <ul class="nav nav-list nav-pills nav-stacked">
   <li ng-repeat="item in data" style="text-indent:{{(depth+1) * .5}}em"
       ng-class="isActive(item)">
-    <a class="s3-item" ng-click="onClick($event, item)">
-      <i class="not-select fa {{opened ? 'fa-minus' : 'fa-plus'}}"
+    <a tab-index="0" class="s3-item" ng-click="onClick($event, item)">
+      <i class="not-select fa {{item.folders.length === 0 ? 'fa-square' : opened ? 'fa-minus-square' : 'fa-plus-square'}}"
          ng-click="opened = !opened;" "$event.stopImmediatePropagation()"></i>
       <span>{{item.Name}}</span>
     </a>
