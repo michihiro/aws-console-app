@@ -3,19 +3,29 @@
     <s3-tree data="buckets"></s3-tree>
   </div>
   <div class="s3-right">
-    <table class="table">
-      <tr>
-        <th>Name</th>
-        <th>Size</th>
-      </tr>
-      <tr tab-index="-1" ng-repeat="o in s3Items.selected.folders">
-        <td>{{o.Name}}</td>
-        <td></td>
-      </tr>
-      <tr tab-index="-1" ng-repeat="o in s3Items.selected.contents">
-        <td>{{o.Name}}</td>
-        <td style="text-align:right">{{o.Size | bytes}}</td>
-      </tr>
+    <table class="table table-striped" app-width-resizable2>
+      <thead>
+        <tr>
+          <th width-resizable><div>Name</div></th>
+          <th width-resizable><div>Size</div></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr tab-index="-1" ng-repeat="o in s3Items.selected.folders"
+            class="{{s3Items.selectedList === o ? 'info' : ''}}"
+            ng-dblClick="onDblClickList(o, true)"
+            ng-click="onClickList(o, true)">
+          <td><div><i class="fa fa-folder-o"></i>{{o.Name}}</div></td>
+          <td style="text-align:right"><div>{{o.Size | bytes}}</div></td>
+        </tr>
+        <tr tab-index="-1" ng-repeat="o in s3Items.selected.contents"
+            class="{{s3Items.selectedList === o ? 'info' : ''}}"
+            ng-dblClick="onDblClickList(o, false)"
+            ng-click="onClickList(o, false)">
+          <td><div><i class="fa fa-file-o"></i>{{o.Name}}</div></td>
+          <td style="text-align:right"><div>{{o.Size | bytes}}</div></td>
+        </tr>
+      </tbody>
     </table>
   </div>
 <div>

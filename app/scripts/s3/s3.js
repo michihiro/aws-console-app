@@ -14,6 +14,16 @@
     $scope.s3Items = s3Items;
     s3Service.bind($scope);
 
+    $scope.onClickList = function(obj, isDirectory) {
+      s3Items.selectedList = obj;
+    };
+
+    $scope.onDblClickList = function(obj, isDirectory) {
+      if (isDirectory) {
+        //s3Items.selected = obj;
+      }
+    };
+
     return;
   }
 

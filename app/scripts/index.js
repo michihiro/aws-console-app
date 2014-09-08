@@ -56,7 +56,7 @@
       });
 
     storage.get('lastState', function(val) {
-      if (val && val.lastState) {
+      if (val && val.lastState && val.lastState.name) {
         $state.go(val.lastState.name, val.lastState.params);
       }
     });
