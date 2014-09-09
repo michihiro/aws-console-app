@@ -3,20 +3,23 @@
 
   var ng = angular;
   ng.module('aws-console', [
-    'ngAnimate',
-    'ui.router',
-    'ui.utils',
-    'ui.bootstrap'
-  ])
+      'ngAnimate',
+      'ui.router',
+      'ui.utils',
+      'ui.bootstrap',
+      'jm.i18next'
+    ])
     .service('credentialsService', credentialsService)
     .controller('homeCtrl', homeCtrl)
+    .directive('modalDialog', modalDialogDirective)
+    .filter('momentFormat', momentFormatFilter)
     .controller('dialogCredentialsCtrl', dialogCredentialsCtrl)
     .config(appConfig)
     .run(appRun);
 
-  appConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
+  appConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$i18nextProvider'];
 
-  function appConfig($stateProvider, $urlRouterProvider) {
+  function appConfig($stateProvider, $urlRouterProvider, $i18nextProvider) {
 
     $urlRouterProvider.otherwise('/');
 
@@ -31,6 +34,15 @@
         templateUrl: 'views/s3.html',
         controller: 's3Ctrl'
       });
+
+    $i18nextProvider.options = {
+      //      lng: navigator.language,
+      lng: 'en',
+      useCookie: false,
+      useLocalStorage: false,
+      fallbackLng: 'en',
+      resGetPath: '_locales/__lng__/app.json',
+    };
   }
 
 
@@ -67,6 +79,7 @@
       var modal = $modal.open({
         templateUrl: 'views/' + tpl,
         //size: size,
+        backdrop: 'static',
         resolve: resolve
       });
       if (resolve && resolve.onClose) {
@@ -83,6 +96,58 @@
   homeCtrl.$inject = ['$scope'];
 
   function homeCtrl() {}
+
+  function modalDialogDirective() {
+    return {
+      restrict: 'C',
+      scope: true,
+      link: function(scope, elem) {
+        scope._mc = new Hammer.Manager(elem.find('.modal-header')[0], {
+          recognizers: [[Hammer.Pan]]
+        })
+          .on('panstart', function() {
+            var off = elem.offset();
+            scope._offset = {
+              left: off.left,
+              top: off.top - parseFloat(elem.css('margin-top')),
+              maxLeft: window.innerWidth - elem[0].offsetWidth,
+            };
+          })
+          .on('panend', function() {
+            scope._offset = null;
+          })
+          .on('pan', function(ev) {
+            if (!scope._offset) {
+              return;
+            }
+            var offset = scope._offset;
+            var left = offset.left + ev.deltaX;
+            var top = offset.top + ev.deltaY;
+            left = (left < 0) ? 0 :
+              (left > offset.maxLeft) ? offset.maxLeft : left;
+            top = (top < 0) ? 0 : top;
+            elem.css({
+              marginTop: 0,
+              position: 'absolute',
+              left: left,
+              top: top
+            });
+          });
+      }
+    };
+  }
+
+  function momentFormatFilter() {
+    var lang = navigator.language;
+
+    return filter;
+
+    function filter(v, arg) {
+      v = new moment(v);
+      v.locale(lang);
+      return v.format(arg); //return '';
+    }
+  }
 
   dialogCredentialsCtrl.$inject = ['$scope', '$timeout', 'credentialsService'];
 

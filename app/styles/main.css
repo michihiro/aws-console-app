@@ -31,6 +31,10 @@ body {
   height: 1em;
   -webkit-animation: rotate .8s linear -.5s infinite;
 }
+.btn-loading .loading.ng-hide,
+.btn-loading .loading.ng-hide::after {
+  display: none !important;
+}
 @-webkit-keyframes rotate {
   0% {
     transform: rotate(0);
@@ -45,6 +49,7 @@ body {
 .func-view {
   position: absolute;
   left: 0;
+  right: 0;
   top: 60px;
   bottom: 60px;
 }
@@ -55,6 +60,12 @@ body {
   bottom: 0;
   width: 200px;
   overflow: scroll;
+}
+.s3-left > .nav {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
 }
 .s3-right {
   position: absolute;
@@ -74,6 +85,15 @@ body {
 }
 .s3-right table i {
   margin-right: .5em;
+}
+.s3-upload-fileld {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: #777;
 }
 .nav > li > a.s3-item {
   padding: 2px;

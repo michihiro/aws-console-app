@@ -1,29 +1,38 @@
 <div class="func-view">
   <div class="s3-left">
-    <s3-tree data="buckets"></s3-tree>
+    <s3-tree data="s3Items.buckets"></s3-tree>
   </div>
   <div class="s3-right">
+    <div class="s3-upload-fileld" dropppable>
+     <div ng-repeat="f in uploadFiles">{{f.path}} {{f.size}}</div>
+    </div>
+    <button ng-if="s3Items.selected.Prefix" class="btn"
+            ng-click="s3Items.selected = s3Items.selected.parent"
+    >up</button>
     <table class="table table-striped" app-width-resizable2>
       <thead>
         <tr>
-          <th width-resizable><div>Name</div></th>
-          <th width-resizable><div>Size</div></th>
+          <th width-resizable><div>{{'s3.fileName' | i18next }}</div></th>
+          <th width-resizable><div>{{'s3.size' | i18next }}</div></th>
+          <th width-resizable><div>{{'s3.lastModified' | i18next }}</div></th>
         </tr>
       </thead>
       <tbody>
         <tr tab-index="-1" ng-repeat="o in s3Items.selected.folders"
             class="{{s3Items.selectedList === o ? 'info' : ''}}"
-            ng-dblClick="onDblClickList(o, true)"
+            ng-dblClick="onDblClickList(o, true, s3Items.selected)"
             ng-click="onClickList(o, true)">
           <td><div><i class="fa fa-folder-o"></i>{{o.Name}}</div></td>
           <td style="text-align:right"><div>{{o.Size | bytes}}</div></td>
+          <td style="text-align:right"><div>{{o.LastModified|momentFormat:'lll'}}</div></td>
         </tr>
         <tr tab-index="-1" ng-repeat="o in s3Items.selected.contents"
             class="{{s3Items.selectedList === o ? 'info' : ''}}"
-            ng-dblClick="onDblClickList(o, false)"
+            ng-dblClick="onDblClickList(o, false, s3Items.selected)"
             ng-click="onClickList(o, false)">
           <td><div><i class="fa fa-file-o"></i>{{o.Name}}</div></td>
           <td style="text-align:right"><div>{{o.Size | bytes}}</div></td>
+          <td style="text-align:right"><div>{{o.LastModified|momentFormat:'lll'}}</div></td>
         </tr>
       </tbody>
     </table>

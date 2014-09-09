@@ -21,24 +21,24 @@ chrome.app.runtime.onLaunched.addListener(function() {
 var feeds = [
   {
     url: 'http://status.aws.amazon.com/rss/ec2-us-west-1.rss'
+  },
+  {
+    url: 'http://status.aws.amazon.com/rss/ses-us-east-1.rss'
   }
 ];
-feeds.forEach(function(v) {
-  v.lastPublished = Date.now();
-});
 
 chrome.alarms.create('status-check', {
   periodInMinutes: 1
+  //when: 5000
 });
 chrome.alarms.onAlarm.addListener(function(alarm) {
   if (!alarm) {
     return;
   }
   if (alarm.name === 'status-check') {
-    statusCheck(feeds[0]);
+    feeds.forEach(statusCheck);
   }
 });
-//setTimeout(function() {statusCheck(feeds[0]);}, 1000);
 
 function statusCheck(feed) {
   var url = 'https://ajax.googleapis.com/ajax/services/feed/load';
@@ -54,44 +54,47 @@ function statusCheck(feed) {
 
   xhr.open('GET', url, true);
   xhr.onreadystatechange = function() {
-    console.log('statechange', arguments);
-    if (xhr.readyState === 4 && xhr.status === 200) {
-      var response;
-      try {
-        response = JSON.parse(xhr.response);
-      } catch (e) {}
+    if (xhr.readyState !== 4 || xhr.status !== 200) {
+      return;
+    }
+    var response, entries;
+    try {
+      response = JSON.parse(xhr.response);
+      entries = response.responseData.feed.entries;
+    } catch (e) {}
 
-      //console.log(xhr.response);
-      if (!response ||
-        !response.responseData ||
-        !response.responseData.feed.entries ||
-        !response.responseData.feed.entries.length) {
+    if (!entries || !entries.length) {
+      return;
+    }
+
+    var lastPublishedTime = feed.lastPublishedTime;
+    if (!lastPublishedTime) {
+      //      lastPublishedTime = Date.now() - 6000000; // 10min;
+      lastPublishedTime = Date.now() - 1800000000; // 3000min;
+    }
+
+    entries.forEach(function(v) {
+      var publishedTime = new Date(v.publishedDate).getTime();
+      if (publishedTime <= feed.lastPublishedTime) {
         return;
       }
 
-      var entries = response.responseData.feed.entries;
+      lastPublishedTime = (publishedTime > lastPublishedTime) ? publishedTime : lastPublishedTime;
 
-      entries.forEach(function(v) {
-        var publishedDate = new Date(v.publishedDate);
-        if (publishedDate.getTime() <= feed.lastPublished) {
-          return;
-        }
-        feed.lastPublished = publishedDate.getTime();
-        var opt = {
-          type: 'basic',
-          title: 'From Service Health Dashboard',
-          message: v.title,
-          contextMessage: v.contentSnippet,
-          iconUrl: 'images/icon-128.png',
-          isClickable: true
-        };
-        var id = feed + publishedDate;
-        chrome.notifications.create(id, opt, function() {
-          console.log('callback');
-        });
-      });
+      var opt = {
+        type: 'basic',
+        title: 'From Service Health Dashboard',
+        message: v.title,
+        contextMessage: v.contentSnippet,
+        iconUrl: 'images/icon-128.png',
+        isClickable: true
+      };
+      var id = feed.url + '?' + v.publishedTime;
+      chrome.notifications.create(id, opt, function() {});
+    });
 
-    }
+    feed.lastPublishedTime = lastPublishedTime;
+
   };
   xhr.send(opts);
 }

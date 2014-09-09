@@ -23,6 +23,7 @@
         "angular": true,
         "chrome": true,
         "AWS": true,
-        "Hammer": true
+        "Hammer": true,
+        "moment": true
     }
 }

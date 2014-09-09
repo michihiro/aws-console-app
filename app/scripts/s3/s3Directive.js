@@ -4,6 +4,7 @@
   var ng = angular;
   ng.module('aws-console')
     .directive('widthResizable', widthResizableDirective)
+    .directive('s3UploadFileld', s3UploadFieldDirective)
     .directive('s3Tree', s3TreeDirective);
 
   s3TreeDirective.$inject = ['$compile', '$http', '$q', 's3Service', 's3Items'];
@@ -44,6 +45,8 @@
       }
     };
   }
+
+  widthResizableDirective.$inject = ['$timeout'];
 
   function widthResizableDirective($timeout) {
 
@@ -88,6 +91,79 @@
           scope._mc = null;
           scope._handle = null;
         });
+      }
+    };
+  }
+
+  s3UploadFieldDirective.$inject = ['$timeout'];
+
+  function s3UploadFieldDirective($timeout) {
+
+    return {
+      restrict: 'C',
+      scope: true,
+      link: function(scope, elem) { //, attrs) {
+        elem[0].addEventListener('dragover', dragOver, false);
+        elem[0].addEventListener('dragleave', dragLeave, false);
+        elem[0].addEventListener('drop', drop, false);
+
+        function dragOver(e) {
+          e.stopPropagation();
+          e.preventDefault();
+          scope.dropActive = true;
+        }
+
+        function dragLeave(e) {
+          scope.dropActive = false;
+        }
+
+        function drop(e) {
+          var items = e.dataTransfer.items;
+          var entry, i, l;
+
+          e.stopPropagation();
+          e.preventDefault();
+
+          scope.uploadFiles = [];
+
+          for (i = 0, l = items.length; i < l; i++) {
+            entry = items[i].webkitGetAsEntry();
+            if (entry.isFile) {
+              _pushFileInfo(entry);
+            } else if (entry.isDirectory) {
+              _pushDirectoryInfo(entry);
+            }
+          }
+        }
+
+        function _pushDirectoryInfo(entry) {
+          var reader = entry.createReader();
+          reader.readEntries(function(results) {
+            var i, l;
+            for (i = 0, l = results.length; i < l; i++) {
+              if (results[i].isFile) {
+                _pushFileInfo(results[i]);
+              } else {
+                _pushDirectoryInfo(results[i]);
+              }
+            }
+          }, errorHandler);
+        }
+
+        function _pushFileInfo(entry) {
+          entry.getMetadata(function(metadata) {
+            $timeout(function() {
+              scope.uploadFiles.push({
+                path: entry.fullPath,
+                size: metadata.size
+              });
+            });
+          });
+        }
+
+        function errorHandler(e) {
+          console.log(e);
+        }
       }
     };
   }
