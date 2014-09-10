@@ -9,32 +9,28 @@
     <button ng-if="s3Items.selected.Prefix" class="btn"
             ng-click="s3Items.selected = s3Items.selected.parent"
     >up</button>
-    <table class="table table-striped" app-width-resizable2>
-      <thead>
-        <tr>
-          <th width-resizable><div>{{'s3.fileName' | i18next }}</div></th>
-          <th width-resizable><div>{{'s3.size' | i18next }}</div></th>
-          <th width-resizable><div>{{'s3.lastModified' | i18next }}</div></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr tab-index="-1" ng-repeat="o in s3Items.selected.folders"
-            class="{{s3Items.selectedList === o ? 'info' : ''}}"
-            ng-dblClick="onDblClickList(o, true, s3Items.selected)"
-            ng-click="onClickList(o, true)">
-          <td><div><i class="fa fa-folder-o"></i>{{o.Name}}</div></td>
-          <td style="text-align:right"><div>{{o.Size | bytes}}</div></td>
-          <td style="text-align:right"><div>{{o.LastModified|momentFormat:'lll'}}</div></td>
-        </tr>
-        <tr tab-index="-1" ng-repeat="o in s3Items.selected.contents"
-            class="{{s3Items.selectedList === o ? 'info' : ''}}"
-            ng-dblClick="onDblClickList(o, false, s3Items.selected)"
-            ng-click="onClickList(o, false)">
-          <td><div><i class="fa fa-file-o"></i>{{o.Name}}</div></td>
-          <td style="text-align:right"><div>{{o.Size | bytes}}</div></td>
-          <td style="text-align:right"><div>{{o.LastModified|momentFormat:'lll'}}</div></td>
-        </tr>
-      </tbody>
-    </table>
+    <scrollable-table watch="visibleProjects">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+             <th ng-repeat="col in columns" sortable-header col="col.col">{{col.name|i18next}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="item in s3Items.selected.list"
+              row-id="{{ item.id }}" 
+              ng-dblClick="onDblClickList(item)"
+              ng-click="onClickList(item)"
+              ng-class="{info: s3Items.selectedItem.id == item.id}" >
+            <td ng-repeat="col in columns" class="{{col.class}}">
+              <i ng-if="col.iconFn" class="fa {{col.iconFn(item)}}"></i>
+              <span ng-if="col.filterFn">{{col.filterFn(item, col.col)}}</span>
+              <span ng-if="!col.filterFn">{{item[col.col]}}</span>
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </scrollable-table>
   </div>
 <div>

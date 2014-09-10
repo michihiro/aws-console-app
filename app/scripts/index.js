@@ -7,7 +7,8 @@
       'ui.router',
       'ui.utils',
       'ui.bootstrap',
-      'jm.i18next'
+      'jm.i18next',
+      'scrollable-table'
     ])
     .service('credentialsService', credentialsService)
     .controller('homeCtrl', homeCtrl)
@@ -36,8 +37,8 @@
       });
 
     $i18nextProvider.options = {
-      //      lng: navigator.language,
-      lng: 'en',
+      lng: navigator.language,
+      //lng: 'en',
       useCookie: false,
       useLocalStorage: false,
       fallbackLng: 'en',

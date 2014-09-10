@@ -3,7 +3,6 @@
 
   var ng = angular;
   ng.module('aws-console')
-    .directive('widthResizable', widthResizableDirective)
     .directive('s3UploadFileld', s3UploadFieldDirective)
     .directive('s3Tree', s3TreeDirective);
 
@@ -41,55 +40,6 @@
           var newElement = angular.element(template);
           $compile(newElement)(scope);
           element.replaceWith(newElement);
-        });
-      }
-    };
-  }
-
-  widthResizableDirective.$inject = ['$timeout'];
-
-  function widthResizableDirective($timeout) {
-
-    return {
-      restrict: 'A',
-      scope: true,
-      link: function(scope, elem) { //, attrs) {
-
-        scope.$watch(
-          function() {
-            return elem.parents('table').height();
-          },
-          function(h) {
-            $timeout(function() {
-              scope._handle.height(h);
-            });
-          });
-
-        scope._handle = ng.element('<div class="width-resizable-handle"></div>').appendTo(elem);
-
-        elem.width(200);
-
-        scope._mc = new Hammer.Manager(scope._handle[0], {
-          recognizers: [[Hammer.Pan], [Hammer.Tap]]
-        })
-          .on('panstart', function() {
-            scope._width = elem.width();
-          })
-          .on('panend', function() {
-            scope._width = null;
-          })
-          .on('panleft panright', function(ev) {
-            if (!scope._width) {
-              return;
-            }
-            var w = scope._width + ev.deltaX;
-            elem.width(w > 50 ? w : 50);
-          });
-
-        elem.on('$destroy', function() {
-          scope._mc.destroy();
-          scope._mc = null;
-          scope._handle = null;
         });
       }
     };

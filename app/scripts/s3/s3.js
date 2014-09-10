@@ -9,20 +9,53 @@
     .service('s3Service', s3Service)
     .controller('s3Ctrl', s3Ctrl);
 
-  s3Ctrl.$inject = ['$scope', '$state', '$stateParams', '$timeout', 's3Service', 's3Items'];
+  s3Ctrl.$inject = ['$scope', '$state', '$stateParams', '$filter', '$timeout', 's3Service', 's3Items'];
 
-  function s3Ctrl($scope, $state, $stateParams, $timeout, s3Service, s3Items) {
+  function s3Ctrl($scope, $state, $stateParams, $filter, $timeout, s3Service, s3Items) {
 
     $scope.s3Items = s3Items;
-    s3Service.updateBuckets();
+    $scope.columns = [
+      {
+        col: 'Name',
+        name: 's3.fileName',
+        iconFn: function(o) {
+          return !o ? '' : o.Prefix ? 'fa-folder-o' : 'fa-file-o';
+        }
+      },
+      {
+        col: 'Size',
+        name: 's3.size',
+        class: 'text-right',
+        filterFn: function(o) {
+          return $filter('bytes')(o ? o.Size : undefined);
+        }
+      },
+      {
+        col: 'LastModified',
+        name: 's3.lastModified',
+        class: 'text-right',
+        filterFn: function(o) {
+          return $filter('momentFormat')(o.LastModified, 'lll');
+        }
+      },
+    ];
 
-    $scope.onClickList = function(obj, isDirectory) {
-      s3Items.selectedList = obj;
+    $scope.comparator = function() {
+      return 1
     };
 
-    $scope.onDblClickList = function(obj, isDirectory, parent) {
+    s3Service.updateBuckets();
+
+    $scope.onClickList = function(obj) {
+      s3Items.selectedItem = obj;
+    };
+
+    $scope.onDblClickList = function(obj) {
+      var isDirectory = !!obj.Prefix;
       if (isDirectory) {
-        parent.opened = true;
+        if (obj.parent) {
+          obj.parent.opened = true;
+        }
         obj.opened = true;
         s3Service.updateFolder(obj);
         s3Items.selected = obj;
@@ -169,6 +202,7 @@
 
             v = ng.extend(old, v);
             v = ng.extend(v, {
+              id: folder.bucketName + ':' + v.Prefix,
               parent: folder,
               Name: v.Prefix.replace(/(^.*\/)(.*\/)/, '$2'),
               LocationConstraint: folder.LocationConstraint,
@@ -193,6 +227,7 @@
 
             v = ng.extend(old, v);
             v = ng.extend(v, {
+              id: folder.bucketName + ':' + v.Key,
               parent: folder,
               Name: v.Key.replace(/(^.*\/)(.*)/, '$2'),
               LocationConstraint: folder.LocationConstraint,
@@ -201,6 +236,7 @@
             contents.push(v);
           });
 
+          folder.list = Array.prototype.concat.apply(folder.folders, folder.contents);
           folder.nextMarker = data.NextMarker;
           if (folder.nextMarker) {
             _updateFolder(folder);

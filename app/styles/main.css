@@ -75,16 +75,12 @@ body {
   bottom: 0;
   border-right: 1px solid #428bca;
 }
-.s3-right tr > div,
-.s3-right td > div {
+.s3-right tr,
+.s3-right td {
   white-space: nowrap;
-  display: inline-block;
-  width: 100%;
-  overflow-x: hidden;
-  border-right: 10px solid transparent;
 }
 .s3-right table i {
-  margin-right: .5em;
+  margin-right: .2em;
 }
 .s3-upload-fileld {
   display: block;
@@ -106,24 +102,4 @@ body {
 }
 .s3-child.ng-hide {
   opacity: 0;
-}
-table {
-  table-layout: fixed;
-  text-align: left
-}
-[width-resizable] {
-  position: relative;
-}
-[width-resizable] > .width-resizable-handle {
-  content: ' ';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  width: 10px;
-  background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), color-stop(0.4, rgba(0, 0, 0, 0)), color-stop(0.5, rgba(1, 1, 1, .1)), color-stop(0.6, rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0)));
-}
-[width-resizable] > .width-resizable-handle:hover {
-  background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), color-stop(0.4, rgba(0, 0, 0, 0)), color-stop(0.5, rgba(1, 1, 1, .25)), color-stop(0.6, rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0)));
-  cursor: w-resize;
 }
