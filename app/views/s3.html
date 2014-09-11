@@ -9,7 +9,7 @@
     <button ng-if="s3Items.selected.Prefix" class="btn"
             ng-click="s3Items.selected = s3Items.selected.parent"
     >up</button>
-    <scrollable-table watch="visibleProjects">
+    <scrollable-table watch="s3Items.selected.list">
       <table class="table table-striped table-bordered">
         <thead>
           <tr>
@@ -24,7 +24,7 @@
               ng-class="{info: s3Items.selectedItem.id == item.id}" >
             <td ng-repeat="col in columns" class="{{col.class}}">
               <i ng-if="col.iconFn" class="fa {{col.iconFn(item)}}"></i>
-              <span ng-if="col.filterFn">{{col.filterFn(item, col.col)}}</span>
+              <span ng-if="col.filterFn">{{col.filterFn(item[col.col])}}</span>
               <span ng-if="!col.filterFn">{{item[col.col]}}</span>
 
             </td>

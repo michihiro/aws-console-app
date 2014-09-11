@@ -63,7 +63,7 @@
           scope.dropActive = true;
         }
 
-        function dragLeave(e) {
+        function dragLeave() {
           scope.dropActive = false;
         }
 

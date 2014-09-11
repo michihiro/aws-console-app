@@ -9,15 +9,14 @@
     .service('s3Service', s3Service)
     .controller('s3Ctrl', s3Ctrl);
 
-  s3Ctrl.$inject = ['$scope', '$state', '$stateParams', '$filter', '$timeout', 's3Service', 's3Items'];
+  s3Ctrl.$inject = ['$scope', '$state', '$stateParams', '$filter', '$timeout', 's3Service', 's3Items', 'appFilterService'];
 
-  function s3Ctrl($scope, $state, $stateParams, $filter, $timeout, s3Service, s3Items) {
+  function s3Ctrl($scope, $state, $stateParams, $filter, $timeout, s3Service, s3Items, appFilterService) {
 
-    $scope.s3Items = s3Items;
-    $scope.columns = [
+    var columns = [
       {
         col: 'Name',
-        name: 's3.fileName',
+        name: 's3.name',
         iconFn: function(o) {
           return !o ? '' : o.Prefix ? 'fa-folder-o' : 'fa-file-o';
         }
@@ -26,31 +25,38 @@
         col: 'Size',
         name: 's3.size',
         class: 'text-right',
-        filterFn: function(o) {
-          return $filter('bytes')(o ? o.Size : undefined);
-        }
+        filterFn: appFilterService.byteFn,
       },
       {
         col: 'LastModified',
         name: 's3.lastModified',
         class: 'text-right',
-        filterFn: function(o) {
-          return $filter('momentFormat')(o.LastModified, 'lll');
-        }
+        filterFn: appFilterService.momentFormatFn,
       },
     ];
 
-    $scope.comparator = function() {
-      return 1
-    };
+    ng.extend($scope, {
+      columns: columns,
+      s3Items: s3Items,
+      onClickList: onClickList,
+      onDblClickList: onDblClickList,
+      comparator: comparator
+    });
 
-    s3Service.updateBuckets();
+    $scope.$watch('credentials', s3Service.updateBuckets);
 
-    $scope.onClickList = function(obj) {
+    return;
+
+    function onClickList(obj) {
       s3Items.selectedItem = obj;
-    };
+    }
 
-    $scope.onDblClickList = function(obj) {
+    function comparator() {
+      console.log('comparator', arguments);
+      return 1;
+    }
+
+    function onDblClickList(obj) {
       var isDirectory = !!obj.Prefix;
       if (isDirectory) {
         if (obj.parent) {
@@ -94,9 +100,8 @@
             });
           });
       }
-    };
+    }
 
-    return;
   }
 
   s3Service.$inject = ['$rootScope', '$parse', '$timeout', 's3Items'];

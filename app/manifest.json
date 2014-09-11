@@ -17,8 +17,8 @@
         "storage",
         "alarms",
         "notifications",
-        "http://*/*",
-        "https://*/*"
+        "https://*.amazonaws.com/",
+        "https://ajax.googleapis.com/ajax/services/feed/load"
     ],
     "icons": {
         "16": "images/icon-16.png",

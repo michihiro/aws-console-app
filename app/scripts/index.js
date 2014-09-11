@@ -13,7 +13,6 @@
     .service('credentialsService', credentialsService)
     .controller('homeCtrl', homeCtrl)
     .directive('modalDialog', modalDialogDirective)
-    .filter('momentFormat', momentFormatFilter)
     .controller('dialogCredentialsCtrl', dialogCredentialsCtrl)
     .config(appConfig)
     .run(appRun);
@@ -136,18 +135,6 @@
           });
       }
     };
-  }
-
-  function momentFormatFilter() {
-    var lang = navigator.language;
-
-    return filter;
-
-    function filter(v, arg) {
-      v = new moment(v);
-      v.locale(lang);
-      return v.format(arg); //return '';
-    }
   }
 
   dialogCredentialsCtrl.$inject = ['$scope', '$timeout', 'credentialsService'];

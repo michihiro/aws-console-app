@@ -1,6 +1,6 @@
 {
     "s3": {
-        "fileName": "Name",
+        "name": "Name",
         "size": "Size",
         "lastModified": "Last Modified"
     }

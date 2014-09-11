@@ -162,7 +162,8 @@ module.exports = function(grunt) {
       ],
       options: {
         css: {
-          indentSize: 2
+          indentSize: 2,
+          endWithNewline: true,
         },
         js: {
           indentSize: 2,

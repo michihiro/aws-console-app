@@ -7,6 +7,7 @@ chrome.app.runtime.onLaunched.addListener(function() {
 
   chrome.app.window.create('index.html', {
     id: 'main',
+    focused: false,
     innerBounds: {
       width: width,
       height: height,
@@ -27,15 +28,15 @@ var feeds = [
   }
 ];
 
+/* pendding
 chrome.alarms.create('status-check', {
   periodInMinutes: 1
   //when: 5000
 });
+*/
 chrome.alarms.onAlarm.addListener(function(alarm) {
-  if (!alarm) {
-    return;
-  }
-  if (alarm.name === 'status-check') {
+  var alarmName = alarm ? alarm.name : null;
+  if (alarmName === 'status-check') {
     feeds.forEach(statusCheck);
   }
 });
