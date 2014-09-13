@@ -82,14 +82,15 @@ body {
 .s3-right table i {
   margin-right: .2em;
 }
-.s3-upload-fileld {
-  display: block;
+.s3-upload-fileld-cover {
+  z-index: 1000;
+  content: ' ';
   position: absolute;
+  top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 100px;
-  background: #777;
+  background-color: rgba(128, 128, 128, .2);
 }
 .nav > li > a.s3-item {
   padding: 2px;

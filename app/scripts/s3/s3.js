@@ -40,7 +40,14 @@
       s3Items: s3Items,
       onClickList: onClickList,
       onDblClickList: onDblClickList,
-      comparator: comparator
+      comparator: comparator,
+      dropOpt: {
+        onDrop: function(promise) {
+          $scope.openDialog('s3/uploadDialog.html', {
+            promise: promise
+          });
+        },
+      }
     });
 
     $scope.$watch('credentials', s3Service.updateBuckets);

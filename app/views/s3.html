@@ -2,10 +2,8 @@
   <div class="s3-left">
     <s3-tree data="s3Items.buckets"></s3-tree>
   </div>
-  <div class="s3-right">
-    <div class="s3-upload-fileld" dropppable>
-     <div ng-repeat="f in uploadFiles">{{f.path}} {{f.size}}</div>
-    </div>
+  <div class="s3-right" s3-upload-field="dropOpt">
+    <div class="s3-upload-fileld-cover" ng-if="dropOpt.active"></div>
     <button ng-if="s3Items.selected.Prefix" class="btn"
             ng-click="s3Items.selected = s3Items.selected.parent"
     >up</button>
@@ -13,7 +11,7 @@
       <table class="table table-striped table-bordered">
         <thead>
           <tr>
-             <th ng-repeat="col in columns" sortable-header col="col.col">{{col.name|i18next}}</th>
+            <th ng-repeat="col in columns" sortable-header col="col.col">{{col.name|i18next}}</th>
           </tr>
         </thead>
         <tbody>

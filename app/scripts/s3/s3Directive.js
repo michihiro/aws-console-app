@@ -3,7 +3,8 @@
 
   var ng = angular;
   ng.module('aws-console')
-    .directive('s3UploadFileld', s3UploadFieldDirective)
+    .controller('s3UploadDialogCtrl', s3UploadDialogCtrl)
+    .directive('s3UploadField', s3UploadFieldDirective)
     .directive('s3Tree', s3TreeDirective);
 
   s3TreeDirective.$inject = ['$compile', '$http', '$q', 's3Service', 's3Items'];
@@ -22,100 +23,159 @@
         data: '=',
         depth: '=?'
       },
-      link: function(scope, element) { //, attrs) {
-        scope.depth = parseInt(scope.depth || 0, 10);
-
-        scope.isActive = function(item) {
-          return s3Items.selected === item ? 'active' : '';
-        };
-
-        scope.onClick = function(ev, item) {
-          s3Service.updateFolder(item);
-          if (!ng.element(ev.target).hasClass('not-select')) {
-            s3Items.selected = item;
-          }
-        };
-
-        deferred.promise.then(function() {
-          var newElement = angular.element(template);
-          $compile(newElement)(scope);
-          element.replaceWith(newElement);
-        });
-      }
+      link: link
     };
+
+    function link(scope, element) {
+      scope.depth = parseInt(scope.depth || 0, 10);
+
+      scope.isActive = function(item) {
+        return s3Items.selected === item ? 'active' : '';
+      };
+
+      scope.onClick = function(ev, item) {
+        s3Service.updateFolder(item);
+        if (!ng.element(ev.target).hasClass('not-select')) {
+          s3Items.selected = item;
+        }
+      };
+
+      deferred.promise.then(function() {
+        var newElement = angular.element(template);
+        $compile(newElement)(scope);
+        element.replaceWith(newElement);
+      });
+    }
   }
 
-  s3UploadFieldDirective.$inject = ['$timeout'];
+  s3UploadFieldDirective.$inject = ['$timeout', '$q'];
 
-  function s3UploadFieldDirective($timeout) {
+  function s3UploadFieldDirective($timeout, $q) {
 
     return {
-      restrict: 'C',
-      scope: true,
-      link: function(scope, elem) { //, attrs) {
-        elem[0].addEventListener('dragover', dragOver, false);
-        elem[0].addEventListener('dragleave', dragLeave, false);
-        elem[0].addEventListener('drop', drop, false);
+      restrict: 'A',
+      scope: {
+        opt: '=s3UploadField'
+      },
+      link: link
+    };
 
-        function dragOver(e) {
-          e.stopPropagation();
-          e.preventDefault();
-          scope.dropActive = true;
-        }
+    function link(scope, elem) {
+      elem.on({
+        dragover: dragOver,
+        dragleave: dragLeave,
+        drop: drop
+      });
 
-        function dragLeave() {
-          scope.dropActive = false;
-        }
+      function dragOver(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        $timeout(function() {
+          scope.opt.active = true;
+        });
+      }
 
-        function drop(e) {
-          var items = e.dataTransfer.items;
-          var entry, i, l;
+      function dragLeave() {
+        $timeout(function() {
+          scope.opt.active = false;
+        });
+      }
 
-          e.stopPropagation();
-          e.preventDefault();
+      function drop(e) {
+        e.stopPropagation();
+        e.preventDefault();
 
-          scope.uploadFiles = [];
+        var defer = $q.defer();
+        scope.opt.onDrop(defer.promise);
 
-          for (i = 0, l = items.length; i < l; i++) {
-            entry = items[i].webkitGetAsEntry();
-            if (entry.isFile) {
-              _pushFileInfo(entry);
-            } else if (entry.isDirectory) {
-              _pushDirectoryInfo(entry);
-            }
+        $timeout(function() {
+          scope.opt.active = false;
+        });
+
+        var items = e.originalEvent.dataTransfer.items;
+        var uploadFiles = [];
+        var promises = [];
+        var entry, i, l;
+
+        uploadFiles.total = 0;
+        for (i = 0, l = items.length; i < l; i++) {
+          entry = items[i].webkitGetAsEntry();
+          if (entry.isFile) {
+            promises.push(_setFileInfo(entry, uploadFiles));
+          } else if (entry.isDirectory) {
+            promises.push(_setDirectoryInfo(entry, uploadFiles));
           }
         }
+        $q.all(promises).then(defer.resolve, defer.reject);
 
-        function _pushDirectoryInfo(entry) {
+        function _setDirectoryInfo(entry, uploadFiles) {
           var reader = entry.createReader();
+          var defer = $q.defer();
           reader.readEntries(function(results) {
             var i, l;
+            var promises = [];
             for (i = 0, l = results.length; i < l; i++) {
               if (results[i].isFile) {
-                _pushFileInfo(results[i]);
+                promises.push(_setFileInfo(results[i], uploadFiles));
               } else {
-                _pushDirectoryInfo(results[i]);
+                promises.push(_setDirectoryInfo(results[i], uploadFiles));
               }
             }
+            $q.all(promises).then(defer.resolve, defer.reject);
           }, errorHandler);
+          return defer.promise;
         }
 
-        function _pushFileInfo(entry) {
+        function _setFileInfo(entry, uploadFiles) {
+          var d = $q.defer();
           entry.getMetadata(function(metadata) {
             $timeout(function() {
-              scope.uploadFiles.push({
+              uploadFiles.push({
+                entry: entry,
                 path: entry.fullPath,
                 size: metadata.size
               });
+              uploadFiles.total += metadata.size;
+              defer.notify(uploadFiles);
+              d.resolve(uploadFiles);
             });
           });
+          return d.promise;
         }
 
         function errorHandler(e) {
           console.log(e);
         }
       }
-    };
+    }
   }
 
+  s3UploadDialogCtrl.$inject = ['$scope', '$q', '$timeout', 'appFilterService'];
+
+  function s3UploadDialogCtrl($scope, $q, $timeout, appFilterService) {
+    var columns = [
+      {
+        col: 'path',
+        name: 's3.name',
+      },
+      {
+        col: 'size',
+        name: 's3.size',
+        class: 'text-right',
+        filterFn: appFilterService.byteFn,
+      }
+    ];
+
+    ng.extend($scope, {
+      columns: columns,
+    });
+
+    $scope.promise.then(function() {
+      $scope.isReady = true;
+    }, function() {
+      //
+    }, function(uploadFiles) {
+      $scope.uploadFiles = uploadFiles;
+    });
+  }
 })();

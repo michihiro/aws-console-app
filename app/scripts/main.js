@@ -28,6 +28,7 @@ var feeds = [
   }
 ];
 
+chrome.alarms.clearAll();
 /* pendding
 chrome.alarms.create('status-check', {
   periodInMinutes: 1

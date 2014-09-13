@@ -75,18 +75,23 @@
 
     return;
 
-    function openDialog(tpl, resolve) {
+    function openDialog(tpl, args) {
+      var scope = $rootScope.$new(),
+        k;
+      for (k in args) {
+        scope[k] = args[k];
+      }
       var modal = $modal.open({
         templateUrl: 'views/' + tpl,
+        scope: scope,
         //size: size,
         backdrop: 'static',
-        resolve: resolve
       });
-      if (resolve && resolve.onClose) {
+      if (args && args.onClose) {
         modal.result.then(
-          resolve.onClose,
+          args.onClose,
           function() {
-            resolve.onClose(null);
+            args.onClose(null);
           });
       }
     }
