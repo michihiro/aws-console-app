@@ -48,6 +48,11 @@
             top: top
           });
         });
+
+      elem.on('$destroy', function() {
+        scope._mc.destroy();
+        scope._mc = null;
+      });
     }
   }
 

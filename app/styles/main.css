@@ -1,6 +1,55 @@
 body {
   margin: 0;
-  padding: 60px 0;
+  padding: 0;
+}
+/** func-menu **/
+
+.func-menu {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  transition: width .2s ease;
+  padding-top: 60px;
+  background-color: #333;
+  z-index: 2000;
+}
+.func-menu.opened {
+  width: 140px;
+}
+.func-menu a {
+  display: block;
+  white-space: nowrap;
+  overflow-x: hidden;
+}
+.func-menu a img {
+  height: 40px;
+  width: 40px;
+  -webkit-filter: grayscale(100%);
+  transition: -webkit-filter .2s ease;
+}
+.func-menu a:hover img {
+  -webkit-filter: grayscale(0%);
+}
+.func-menu a div {
+  -webkit-transform: translateX(-100px);
+  transition: -webkit-transform .2s ease .2s, color .2s ease;
+  display: inline-block;
+}
+.func-menu.opened a div {
+  -webkit-transform: translateX(0);
+}
+.func-menu a div {
+  color: #999;
+}
+.func-menu a:hover div {
+  color: #fff;
+}
+/** navibar **/
+
+.navbar-fixed-top {
+  left: 40px;
 }
 .btn label {
   margin: 0;
@@ -48,7 +97,7 @@ body {
 }
 .func-view {
   position: absolute;
-  left: 0;
+  left: 40px;
   right: 0;
   top: 60px;
   bottom: 60px;
@@ -103,4 +152,19 @@ body {
 }
 .s3-child.ng-hide {
   opacity: 0;
+}
+/* modal */
+
+.modal.fade .modal-dialog {
+  transition: transform .1s ease-out;
+  transform: scale(1.05);
+}
+.modal.in .modal-dialog {
+  transform: scale(1);
+}
+.scrollableContainer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  height: auto;
 }

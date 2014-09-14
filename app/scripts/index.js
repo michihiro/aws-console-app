@@ -27,12 +27,24 @@
       .state('home', {
         url: '/',
         templateUrl: 'views/home.html',
+        serviceName: 'Home',
         controller: 'homeCtrl'
       })
       .state('s3', {
-        params: ['bucket'],
+        //params: ['bucket'],
+        serviceName: 'S3',
         templateUrl: 'views/s3.html',
         controller: 's3Ctrl'
+      })
+      .state('ec2', {
+        serviceName: 'EC2',
+        templateUrl: 'views/ec2.html',
+        controller: 'homeCtrl'
+      })
+      .state('route53', {
+        serviceName: 'Route53',
+        templateUrl: 'views/route53.html',
+        controller: 'homeCtrl'
       });
 
     $i18nextProvider.options = {
@@ -60,8 +72,9 @@
 
     credentialsService.load(true);
 
-    $rootScope.$on('$stateChangeStart',
+    $rootScope.$on('$stateChangeSuccess',
       function(ev, state) {
+        $rootScope.serviceName = state.serviceName;
         storage.set({
           lastState: state,
         });
@@ -76,12 +89,12 @@
     return;
 
     function openDialog(tpl, args) {
-      var scope = $rootScope.$new(),
-        k;
+      var scope = $rootScope.$new();
+      var k, modal;
       for (k in args) {
         scope[k] = args[k];
       }
-      var modal = $modal.open({
+      modal = $modal.open({
         templateUrl: 'views/' + tpl,
         scope: scope,
         //size: size,
@@ -106,40 +119,42 @@
     return {
       restrict: 'C',
       scope: true,
-      link: function(scope, elem) {
-        scope._mc = new Hammer.Manager(elem.find('.modal-header')[0], {
-          recognizers: [[Hammer.Pan]]
-        })
-          .on('panstart', function() {
-            var off = elem.offset();
-            scope._offset = {
-              left: off.left,
-              top: off.top - parseFloat(elem.css('margin-top')),
-              maxLeft: window.innerWidth - elem[0].offsetWidth,
-            };
-          })
-          .on('panend', function() {
-            scope._offset = null;
-          })
-          .on('pan', function(ev) {
-            if (!scope._offset) {
-              return;
-            }
-            var offset = scope._offset;
-            var left = offset.left + ev.deltaX;
-            var top = offset.top + ev.deltaY;
-            left = (left < 0) ? 0 :
-              (left > offset.maxLeft) ? offset.maxLeft : left;
-            top = (top < 0) ? 0 : top;
-            elem.css({
-              marginTop: 0,
-              position: 'absolute',
-              left: left,
-              top: top
-            });
-          });
-      }
+      link: link
     };
+
+    function link(scope, elem) {
+      scope._mc = new Hammer.Manager(elem.find('.modal-header')[0], {
+        recognizers: [[Hammer.Pan]]
+      })
+        .on('panstart', function() {
+          var off = elem.offset();
+          scope._offset = {
+            left: off.left,
+            top: off.top - parseFloat(elem.css('margin-top')),
+            maxLeft: window.innerWidth - elem[0].offsetWidth,
+          };
+        })
+        .on('panend', function() {
+          scope._offset = null;
+        })
+        .on('pan', function(ev) {
+          if (!scope._offset) {
+            return;
+          }
+          var offset = scope._offset;
+          var left = offset.left + ev.deltaX;
+          var top = offset.top + ev.deltaY;
+          left = (left < 0) ? 0 :
+            (left > offset.maxLeft) ? offset.maxLeft : left;
+          top = (top < 0) ? 0 : top;
+          elem.css({
+            marginTop: 0,
+            position: 'absolute',
+            left: left,
+            top: top
+          });
+        });
+    }
   }
 
   dialogCredentialsCtrl.$inject = ['$scope', '$timeout', 'credentialsService'];

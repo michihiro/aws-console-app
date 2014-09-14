@@ -20,14 +20,19 @@
 </head>
 
 <body>
+
+  <div class="func-menu" ng-mouseover="opened=true" ng-mouseleave="opened=false" ng-class="{opened:opened}">
+   <a ui-sref="s3" ng-click="opened=false"><img src="images/S3.svg"><div>S3</div></a>
+   <a ui-sref="ec2" ng-click="opened=false"><img src="images/EC2.svg"><div>EC2</div></a>
+   <a ui-sref="route53" ng-click="opened=false"><img src="images/Route53.svg"><div>Route53</div></a>
+  </div>
+
   <div class="navbar navbar-default navbar-fixed-top">
     <div class="container">
       <ul class="nav nav-pills pull-right">
-        <li ui-sref-active="active"><a ui-sref="home">Home</a></li>
-        <li ui-sref-active="active"><a ui-sref="s3({bucket: ''})">S3</a></li>
         <li ui-sref-active="active"><a ng-click="openDialog('home/dialogCredentials.html')">test</a></li>
       </ul>
-      <h3 class="text-muted">Yet Another AWS Management Console</h3>
+      <h3>{{serviceName}}</h3>
     </div>
   </div>
 
@@ -35,7 +40,7 @@
 
   <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
     <div class="container">
-      <p class="navbar-text navbar-right">Copyright 2014 michihiro.</p>
+      <p class="navbar-text navbar-right">Yet Another AWS Management Console - Copyright 2014 michihiro.</p>
     </div>
   </nav>
 

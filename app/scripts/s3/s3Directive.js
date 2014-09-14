@@ -132,7 +132,7 @@
             $timeout(function() {
               uploadFiles.push({
                 entry: entry,
-                path: entry.fullPath,
+                path: entry.fullPath.replace(/^\//, ''),
                 size: metadata.size
               });
               uploadFiles.total += metadata.size;
