@@ -22,29 +22,52 @@
   function appConfig($stateProvider, $urlRouterProvider, $i18nextProvider) {
 
     $urlRouterProvider.otherwise('/');
+    var titleView = {
+      template: '<h3>{{serviceName}}</h3>',
+    };
 
     $stateProvider
       .state('home', {
         url: '/',
-        templateUrl: 'views/home.html',
+        views: {
+          title: titleView,
+          main: {
+            templateUrl: 'views/home.html',
+            controller: 'homeCtrl'
+          }
+        },
         serviceName: 'Home',
-        controller: 'homeCtrl'
       })
       .state('s3', {
         //params: ['bucket'],
         serviceName: 'S3',
-        templateUrl: 'views/s3.html',
-        controller: 's3Ctrl'
+        views: {
+          title: titleView,
+          main: {
+            templateUrl: 'views/s3.html',
+            controller: 's3Ctrl'
+          }
+        },
       })
       .state('ec2', {
         serviceName: 'EC2',
-        templateUrl: 'views/ec2.html',
-        controller: 'homeCtrl'
+        views: {
+          title: titleView,
+          main: {
+            templateUrl: 'views/ec2.html',
+            controller: 's3Ctrl'
+          }
+        },
       })
       .state('route53', {
         serviceName: 'Route53',
-        templateUrl: 'views/route53.html',
-        controller: 'homeCtrl'
+        views: {
+          title: titleView,
+          main: {
+            templateUrl: 'views/route53.html',
+            controller: 'homeCtrl'
+          }
+        },
       });
 
     $i18nextProvider.options = {

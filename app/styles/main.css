@@ -13,7 +13,7 @@ body {
   transition: width .2s ease;
   padding-top: 60px;
   background-color: #333;
-  z-index: 2000;
+  z-index: 1040;
 }
 .func-menu.opened {
   width: 140px;
@@ -33,12 +33,13 @@ body {
   -webkit-filter: grayscale(0%);
 }
 .func-menu a div {
-  -webkit-transform: translateX(-100px);
-  transition: -webkit-transform .2s ease .2s, color .2s ease;
+  opacity: 0;
+  transition: opacity .1s ease .0s, color .1s ease;
   display: inline-block;
 }
 .func-menu.opened a div {
-  -webkit-transform: translateX(0);
+  opacity: 1;
+  transition: opacity .4s ease .2s, color .1s ease;
 }
 .func-menu a div {
   color: #999;
@@ -95,12 +96,34 @@ body {
 .alert {
   text-align: left;
 }
-.func-view {
+[ui-view] {
   position: absolute;
+}
+[ui-view="title"] {
+  transition: all .4s ease .2s;
+}
+[ui-view="title"].ng-enter {
+  opacity: 0;
+  transform: translateY(-10%);
+}
+[ui-view="title"].ng-leave-active {
+  opacity: 0;
+  transform: translateY(10%);
+}
+[ui-view="main"] {
+  top: 0;
+  bottom: 0;
   left: 40px;
   right: 0;
-  top: 60px;
-  bottom: 60px;
+  transition: all .2s ease .0s;
+}
+[ui-view="main"].ng-enter {
+  opacity: 0;
+  transform: translateX(20%);
+}
+[ui-view="main"].ng-leave-active {
+  opacity: 0;
+  transform: translateX(20%);
 }
 .s3-left {
   position: absolute;
@@ -141,12 +164,18 @@ body {
   right: 0;
   background-color: rgba(128, 128, 128, .2);
 }
+.func-view {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 60px;
+  bottom: 60px;
+}
 .nav > li > a.s3-item {
   padding: 2px;
   white-space: nowrap;
 }
 .s3-child {
-  -webkit-transition: all linear 0.2s;
   transition: all linear 0.2s;
   opacity: 1;
 }
@@ -156,7 +185,7 @@ body {
 /* modal */
 
 .modal.fade .modal-dialog {
-  transition: transform .1s ease-out;
+  transition: transform .1s ease;
   transform: scale(1.05);
 }
 .modal.in .modal-dialog {

@@ -16,7 +16,7 @@
         </thead>
         <tbody>
           <tr ng-repeat="item in s3Items.selected.list"
-              row-id="{{ item.id }}" 
+              row-id="{{ item.id }}"
               ng-dblClick="onDblClickList(item)"
               ng-click="onClickList(item)"
               ng-class="{info: s3Items.selectedItem.id == item.id}" >

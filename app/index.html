@@ -32,11 +32,11 @@
       <ul class="nav nav-pills pull-right">
         <li ui-sref-active="active"><a ng-click="openDialog('home/dialogCredentials.html')">test</a></li>
       </ul>
-      <h3>{{serviceName}}</h3>
+      <div ui-view="title"></div>
     </div>
   </div>
 
-  <div ui-view=""></div>
+  <div ui-view="main"></div>
 
   <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
     <div class="container">
