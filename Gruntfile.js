@@ -37,7 +37,7 @@ module.exports = function(grunt) {
         tasks: ['bowerInstall']
       },
       js: {
-        files: ['<%= config.app %>/scripts/{,*/}*.js'],
+        files: ['<%= config.app %>/js/{,*/}*.js'],
         tasks: ['jshint'],
         options: {
           livereload: true
@@ -47,7 +47,7 @@ module.exports = function(grunt) {
         files: ['Gruntfile.js']
       },
       styles: {
-        files: ['<%= config.app %>/styles/{,*/}*.css'],
+        files: ['<%= config.app %>/css/{,*/}*.css'],
         tasks: [],
         options: {
           livereload: true
@@ -58,7 +58,7 @@ module.exports = function(grunt) {
           livereload: '<%= connect.options.livereload %>'
         },
         files: [
-          '.tmp/styles/{,*/}*.css',
+          '.tmp/css/{,*/}*.css',
           '<%= config.app %>/*.html',
           '<%= config.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
           '<%= config.app %>/manifest.json',
@@ -128,8 +128,8 @@ module.exports = function(grunt) {
       },
       all: [
         'Gruntfile.js',
-        '<%= config.app %>/scripts/{,*/}*.js',
-        '!<%= config.app %>/scripts/vendor/*',
+        '<%= config.app %>/js/{,*/}*.js',
+        '!<%= config.app %>/js/vendor/*',
         'test/spec/{,*/}*.js'
       ]
     },
@@ -155,10 +155,10 @@ module.exports = function(grunt) {
     jsbeautifier: {
       files: [
         'Gruntfile.js',
-        'app/scripts/**/*.js',
-        '!app/scripts/vendor/*.js',
-        'app/styles/**/*.css',
-        '!app/styles/vendor/*.css'
+        'app/js/**/*.js',
+        '!app/js/vendor/*.js',
+        'app/css/**/*.css',
+        '!app/css/vendor/*.css'
       ],
       options: {
         css: {
@@ -190,7 +190,7 @@ module.exports = function(grunt) {
         assetsDirs: ['<%= config.dist %>', '<%= config.dist %>/images']
       },
       html: ['<%= config.dist %>/{,*/}*.html'],
-      css: ['<%= config.dist %>/styles/{,*/}*.css']
+      css: ['<%= config.dist %>/css/{,*/}*.css']
     },
 
     // The following *-min tasks produce minified files in the dist folder
@@ -265,10 +265,10 @@ module.exports = function(grunt) {
             '*.{ico,png,txt}',
             'images/{,*/}*.{webp,gif,png}',
             '{,*/}*.html',
-            'styles/fonts/{,*/}*.*',
+            'css/fonts/{,*/}*.*',
             '_locales/{,*/}*.json',
             'views/{,*/}*.html',
-            'scripts/etc.js'
+            'js/etc.js'
           ]
         }, {
           expand: true,
@@ -283,8 +283,8 @@ module.exports = function(grunt) {
       styles: {
         expand: true,
         dot: true,
-        cwd: '<%= config.app %>/styles',
-        dest: '.tmp/styles/',
+        cwd: '<%= config.app %>/css',
+        dest: '.tmp/css/',
         src: '{,*/}*.css'
       }
     },
@@ -312,9 +312,9 @@ module.exports = function(grunt) {
         options: {
           //buildnumber: true,
           background: {
-            target: 'scripts/background.js',
+            target: 'js/background.js',
             exclude: [
-              'scripts/chromereload.js'
+              'js/chromereload.js'
             ]
           }
         },

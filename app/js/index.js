@@ -44,7 +44,7 @@
         views: {
           title: titleView,
           main: {
-            templateUrl: 'views/s3.html',
+            templateUrl: 'views/s3/s3.html',
             controller: 's3Ctrl'
           }
         },
@@ -54,7 +54,7 @@
         views: {
           title: titleView,
           main: {
-            templateUrl: 'views/ec2.html',
+            templateUrl: 'views/ec2/ec2.html',
             controller: 's3Ctrl'
           }
         },
@@ -64,7 +64,7 @@
         views: {
           title: titleView,
           main: {
-            templateUrl: 'views/route53.html',
+            templateUrl: 'views/r53/r53.html',
             controller: 'homeCtrl'
           }
         },

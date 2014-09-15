@@ -5,18 +5,18 @@
   <meta charset="utf-8">
   <title>AWS Console App</title>
 
-  <!-- build:css styles/vendor.css -->
+  <!-- build:css css/vendor.css -->
   <!-- bower:css -->
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
   <link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.css" />
-  <link rel="stylesheet" href="bower_components/angular-scrollable-table/scrollable-table.css" />
   <!-- endbower -->
+  <link rel="stylesheet" href="bower_components/angular-scrollable-table/scrollable-table.css" />
   <link rel="stylesheet" href="bower_components/angular/angular-csp.css" />
   <!-- endbuild -->
 
-  <!-- build:css styles/main.css -->
-  <link rel="stylesheet" href="styles/main.css">
-  <link rel="stylesheet" href="styles/s3.css">
+  <!-- build:css css/main.css -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/s3.css">
   <!-- endbuild -->
 </head>
 
@@ -45,7 +45,7 @@
     </div>
   </nav>
 
-  <!-- build:js scripts/vendor.js -->
+  <!-- build:js js/vendor.js -->
   <!-- bower:js -->
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
@@ -55,20 +55,21 @@
   <script src="bower_components/angular-ui-utils/ui-utils.js"></script>
   <script src="bower_components/angular-animate/angular-animate.js"></script>
   <script src="bower_components/hammerjs/hammer.js"></script>
-  <script src="bower_components/momentjs/min/moment-with-locales.js"></script>
+  <script src="bower_components/momentjs/moment.js"></script>
   <script src="bower_components/i18next/i18next.js"></script>
   <script src="bower_components/ng-i18next/dist/ng-i18next.js"></script>
   <script src="bower_components/angular-scrollable-table/angular-scrollable-table.js"></script>
   <!-- endbower -->
-  <script src="scripts/vendor/aws-sdk-2.0.15.min.js"></script>
+  <script src="bower_components/momentjs/min/locales.js"></script>
+  <script src="bower_components/aws-sdk/dist/aws-sdk.js"></script>
   <!-- endbuild -->
 
-  <!-- build:js scripts/index.js -->
-  <script src="scripts/index.js"></script>
-  <script src="scripts/directive.js"></script>
-  <script src="scripts/filter.js"></script>
-  <script src="scripts/s3/s3.js"></script>
-  <script src="scripts/s3/s3Directive.js"></script>
+  <!-- build:js js/index.js -->
+  <script src="js/index.js"></script>
+  <script src="js/common/directive.js"></script>
+  <script src="js/common/filter.js"></script>
+  <script src="js/s3/s3.js"></script>
+  <script src="js/s3/s3Directive.js"></script>
   <!-- endbuild -->
 
   <!-- dist-script -->

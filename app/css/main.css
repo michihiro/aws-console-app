@@ -119,11 +119,11 @@ body {
 }
 [ui-view="main"].ng-enter {
   opacity: 0;
-  transform: translateX(20%);
+  transform: translateX(5%);
 }
 [ui-view="main"].ng-leave-active {
   opacity: 0;
-  transform: translateX(20%);
+  transform: translateX(5%);
 }
 .func-view {
   position: absolute;
