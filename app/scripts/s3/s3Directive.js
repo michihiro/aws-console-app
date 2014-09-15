@@ -52,6 +52,14 @@
 
   function s3UploadFieldDirective($timeout, $q) {
 
+    ng.element(document).on({
+      dragover: function(ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        ev.originalEvent.dataTransfer.dropEffect = 'none';
+      }
+    });
+
     return {
       restrict: 'A',
       scope: {
@@ -67,9 +75,9 @@
         drop: drop
       });
 
-      function dragOver(e) {
-        e.stopPropagation();
-        e.preventDefault();
+      function dragOver(ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
         $timeout(function() {
           scope.opt.active = true;
         });
@@ -81,9 +89,9 @@
         });
       }
 
-      function drop(e) {
-        e.stopPropagation();
-        e.preventDefault();
+      function drop(ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
 
         var defer = $q.defer();
         scope.opt.onDrop(defer.promise);
@@ -92,7 +100,7 @@
           scope.opt.active = false;
         });
 
-        var items = e.originalEvent.dataTransfer.items;
+        var items = ev.originalEvent.dataTransfer.items;
         var uploadFiles = [];
         var promises = [];
         var entry, i, l;
@@ -150,9 +158,9 @@
     }
   }
 
-  s3UploadDialogCtrl.$inject = ['$scope', '$q', '$timeout', 'appFilterService'];
+  s3UploadDialogCtrl.$inject = ['$scope', '$q', '$timeout', 'appFilterService', 's3Items'];
 
-  function s3UploadDialogCtrl($scope, $q, $timeout, appFilterService) {
+  function s3UploadDialogCtrl($scope, $q, $timeout, appFilterService, s3Items) {
     var columns = [
       {
         col: 'path',
@@ -168,6 +176,7 @@
 
     ng.extend($scope, {
       columns: columns,
+      upload: upload
     });
 
     $scope.promise.then(function() {
@@ -177,5 +186,42 @@
     }, function(uploadFiles) {
       $scope.uploadFiles = uploadFiles;
     });
+
+    function upload() {
+      var promises = $scope.uploadFiles.map(_uploadOne);
+      $q.all(promises).then(function() {
+        $scope.$close();
+      });
+    }
+
+    function _uploadOne(uploadFile) {
+      var defer = $q.defer();
+      uploadFile.entry.file(function(file) {
+        var reader = new FileReader();
+        reader.onerror = function() {
+          console.log('onerror', arguments);
+        };
+        reader.onloadend = function(ev) {
+          console.log('onload', arguments);
+
+          var folder = s3Items.selected;
+          var s3 = new AWS.S3({
+            credentials: $scope.credentials,
+            region: folder.LocationConstraint,
+          });
+          var uploadParam = {
+            Bucket: folder.bucketName,
+            Key: (folder.Prefix || '') + uploadFile.path,
+            Body: ev.srcElement.result
+          };
+          s3.putObject(uploadParam, function() { //err, data) {
+            defer.resolve();
+          });
+        };
+
+        reader.readAsArrayBuffer(file);
+      });
+      return defer.promise;
+    }
   }
 })();
