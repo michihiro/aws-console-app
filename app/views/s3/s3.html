@@ -1,13 +1,20 @@
 <div class="func-view">
-  <div class="btn-group">
-    <button ng-if="s3Items.selected.Prefix" class="btn"
-            ng-click="s3Items.selected = s3Items.selected.parent"
-    >up</button>
-  </div>
   <div class="s3-left">
-    <s3-tree data="s3Items.buckets"></s3-tree>
+    <div class="btn-group">
+      <button class="btn"
+              ng-click="openDialog('s3/createBucketDialog.html')"
+      >{{'s3.createBucket'|i18next}}</button>
+    </div>
+    <div class="s3-tree">
+      <s3-tree data="s3Items.buckets"></s3-tree>
+    </div>
   </div>
   <div class="s3-right" s3-upload-field="dropOpt">
+    <div class="btn-group">
+      <button ng-if="s3Items.selected.Prefix" class="btn"
+              ng-click="s3Items.selected = s3Items.selected.parent"
+      >up</button>
+    </div>
     <div class="s3-upload-fileld-cover" ng-if="dropOpt.active"></div>
     <scrollable-table watch="s3Items.selected.list">
       <table class="table table-striped table-bordered">

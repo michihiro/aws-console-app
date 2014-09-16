@@ -1,0 +1,50 @@
+<div ng-controller="s3CreateBucketDialogCtrl">
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">&times;</button>
+  <h3>{{'s3.createBucket'|i18next}}</h3>
+</div>
+<div class="modal-body"><form name=form role="form">
+  <div class="form-group">
+    <label>{{'s3.region'|i18next}}</label>
+    <div class="btn-group" dropdown is-open="selectRegion.isopen">
+      <button type="button" class="btn btn-info dropdown-toggle" ng-disabled="processing">
+        <span>{{'s3.regionName.'+inputs.region|i18next}}</span><span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li ng-repeat="r in regions">
+          <a ng-class="{'btn-info':inputs.region==r}"
+             ng-click="inputs.region=r;selectRegion.isopen=false">
+            {{'s3.regionName.'+r|i18next}} - {{r}}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>{{'s3.bucketName'|i18next}}</label>
+           {{form.bucketName.$error}}
+    <input type="text" class="form-control" name="bucketName"
+           placeholder="{{'Bucket Name'|i18next}}"
+           ng-model="inputs.bucketName"
+           ui-validate="{{validateBucketName}}"
+           ng-style="{'background-color': form.bucketName.$invalid ? 'rgba(255,0,0,.1)': 'rgba(0,128,255,.1)'}"
+           ng-disabled="processing" 
+           ng-class="{ok:form.bucketName.$error.validator}" />
+  </div>
+</form></div>
+<div class="modal-footer">
+  <div class="alert alert-warning" ng-show="error">{{error}}</div>
+  <button type="button" class="btn btn-warning"
+          ng-click="$dismiss()"
+          ng-disabled="processing" >
+    <label ng-show="processing" class=loading />
+    <label>{{'com.cancel'|i18next}}</label>
+  </button>
+  <button type="button" class="btn btn-loading" ng-class="{'btn-success':!form.$invalid}" 
+          ng-click="create()"
+          ng-disabled="processing || form.$invalid" >
+    <label ng-show="processing" class=loading />
+    <label>{{'s3.create'|i18next}}</label>
+  </button>
+</div>
+</div>

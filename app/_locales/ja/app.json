@@ -1,7 +1,24 @@
 {
-    "s3": {
-        "name": "名称",
-        "size": "サイズ",
-        "lastModified": "最終更新日時"
+  "com": {
+    "cancel": "キャンセル"
+  },
+  "s3": {
+    "name": "名称",
+    "size": "サイズ",
+    "lastModified": "最終更新日時",
+    "createBucket": "新規バケット作成",
+    "region": "リージョン",
+    "bucketName": "バケット名",
+    "create": "作成",
+    "regionName": {
+      "us-east-1": "US 東海岸（北バージニア）",
+      "us-west-1": "US 西海岸（北カルフォルニア）",
+      "us-west-2": "US 西海岸（オレゴン）",
+      "eu-west-1": "EU （アイルランド）",
+      "ap-southeast-1": "アジアパシフィック（シンガポール）",
+      "ap-southeast-2": "アジアパシフィック（シドニー）",
+      "ap-northeast-1": "アジアパシフィック（東京）",
+      "sa-east-1": "南アメリカ（サンパウロ）"
     }
+  }
 }

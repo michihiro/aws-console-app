@@ -7,6 +7,7 @@
       buckets: []
     })
     .service('s3Service', s3Service)
+    .controller('s3CreateBucketDialogCtrl', s3CreateBucketDialogCtrl)
     .controller('s3Ctrl', s3Ctrl);
 
   s3Ctrl.$inject = ['$scope', '$state', '$stateParams', '$filter', '$timeout', 's3Service', 's3Items', 'appFilterService'];
@@ -258,6 +259,55 @@
           }
         });
       });
+    }
+  }
+
+  s3CreateBucketDialogCtrl.$inject = ['$scope'];
+
+  function s3CreateBucketDialogCtrl($scope) {
+    var regions = [
+        'us-east-1',
+        'us-west-1',
+        'us-west-2',
+        'eu-west-1',
+        'ap-southeast-1',
+        'ap-southeast-2',
+        'ap-northeast-1',
+        'sa-east-1'
+      ];
+    var validateBucketName = {
+      validateChar: 'validateChar($value)',
+      validateStartChar: 'validateStartChar($value)',
+      validateEndChar: 'validateEndChar($value)',
+    };
+    ng.extend($scope, {
+      validateBucketName: validateBucketName,
+      regions: regions,
+      inputs: {
+        region: regions[0]
+      },
+      validateChar: validateChar,
+      validateStartChar: validateStartChar,
+      validateEndChar: validateEndChar,
+      create: create
+    });
+
+    return;
+
+    function validateChar(val) {
+      return val && !!val.match(/^[a-z0-9-_\.]+$/);
+    }
+
+    function validateStartChar(val) {
+      return val && !!val.match(/^[a-z0-9]/);
+    }
+
+    function validateEndChar(val) {
+      return val && !!val.match(/[a-z0-9]$/);
+    }
+
+    function create() {
+      console.log($scope.inputs);
     }
   }
 

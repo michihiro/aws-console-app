@@ -253,6 +253,12 @@ module.exports = function(grunt) {
     //     dist: {}
     // },
 
+    'json-minify': {
+      build: {
+        files: '<%= config.dist %>/_locales/**/*.json'
+      }
+    },
+
     // Copies remaining files to places other tasks can use
     copy: {
       dist: {
@@ -401,6 +407,7 @@ module.exports = function(grunt) {
     'replace:html',
     'usemin',
     'htmlmin',
+    'json-minify',
     'compress'
   ]);
 
