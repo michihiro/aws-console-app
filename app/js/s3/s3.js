@@ -262,9 +262,9 @@
     }
   }
 
-  s3CreateBucketDialogCtrl.$inject = ['$scope'];
+  s3CreateBucketDialogCtrl.$inject = ['$scope', '$timeout', 's3Service'];
 
-  function s3CreateBucketDialogCtrl($scope) {
+  function s3CreateBucketDialogCtrl($scope, $timeout, s3Service) {
     var regions = [
         'us-east-1',
         'us-west-1',
@@ -275,39 +275,66 @@
         'ap-northeast-1',
         'sa-east-1'
       ];
+
     var validateBucketName = {
-      validateChar: 'validateChar($value)',
-      validateStartChar: 'validateStartChar($value)',
-      validateEndChar: 'validateEndChar($value)',
+      minLen: '$value.length > 2',
+      maxLen: '$value.length < ((inputs.region === "us-east-1") ? 256 : 64)',
+      char: '(inputs.region === "us-east-1") ? validateReg("^[a-zA-Z0-9-\\._]+$", $value) : validateReg("^[a-z0-9-\\.]+$", $value)',
+      startChar: 'inputs.region === "us-east-1" || validateReg("^[a-z0-9]", $value)',
+      endChar: 'inputs.region === "us-east-1" || validateReg("[a-z0-9]$", $value)',
+      period: 'inputs.region === "us-east-1" || ! validateReg("[\\.]{2,}", $value)',
+      ipadr: 'inputs.region === "us-east-1" || ! validateReg("^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$", $value)'
     };
+
     ng.extend($scope, {
-      validateBucketName: validateBucketName,
       regions: regions,
       inputs: {
         region: regions[0]
       },
-      validateChar: validateChar,
-      validateStartChar: validateStartChar,
-      validateEndChar: validateEndChar,
+      validateBucketName: validateBucketName,
+      validateReg: validateReg,
       create: create
     });
 
     return;
 
-    function validateChar(val) {
-      return val && !!val.match(/^[a-z0-9-_\.]+$/);
-    }
-
-    function validateStartChar(val) {
-      return val && !!val.match(/^[a-z0-9]/);
-    }
-
-    function validateEndChar(val) {
-      return val && !!val.match(/[a-z0-9]$/);
+    function validateReg(exp, val) {
+      return !!(new RegExp(exp).exec(val || ''));
     }
 
     function create() {
-      console.log($scope.inputs);
+      var s3 = new AWS.S3({
+        credentials: $scope.credentials,
+        region: $scope.inputs.region
+      });
+      var params = {
+        Bucket: $scope.inputs.bucketName,
+        /*
+        CreateBucketConfiguration: {
+          LocationConstraint: $scope.inputs.region
+        },
+        ACL: 'private | public-read | public-read-write | authenticated-read',
+        GrantFullControl: 'STRING_VALUE',
+        GrantRead: 'STRING_VALUE',
+        GrantReadACP: 'STRING_VALUE',
+        GrantWrite: 'STRING_VALUE',
+        GrantWriteACP: 'STRING_VALUE'
+        */
+      };
+
+      $scope.processing = true;
+      s3.createBucket(params, function(err) {
+        $timeout(function() {
+          $scope.processing = false;
+          if (err) {
+            $scope.errorCode = err.code;
+          } else {
+            //console.log(data);
+            s3Service.updateBuckets();
+            $scope.$close();
+          }
+        });
+      });
     }
   }
 

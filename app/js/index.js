@@ -78,6 +78,8 @@
       fallbackLng: 'en',
       resGetPath: '_locales/__lng__/app.json',
     };
+
+    AWS.CognitoIdentityCredentials.prototype.storage = {};
   }
 
 

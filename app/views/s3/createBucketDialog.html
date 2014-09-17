@@ -27,13 +27,14 @@
            placeholder="{{'Bucket Name'|i18next}}"
            ng-model="inputs.bucketName"
            ui-validate="{{validateBucketName}}"
+           ui-validate-watch="'inputs.region'"
            ng-style="{'background-color': form.bucketName.$invalid ? 'rgba(255,0,0,.1)': 'rgba(0,128,255,.1)'}"
            ng-disabled="processing" 
            ng-class="{ok:form.bucketName.$error.validator}" />
   </div>
 </form></div>
 <div class="modal-footer">
-  <div class="alert alert-warning" ng-show="error">{{error}}</div>
+  <div class="alert alert-warning" ng-show="errorCode">{{'s3.error.'+errorCode|i18next}}</div>
   <button type="button" class="btn btn-warning"
           ng-click="$dismiss()"
           ng-disabled="processing" >

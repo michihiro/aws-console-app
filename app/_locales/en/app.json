@@ -19,6 +19,15 @@
       "ap-southeast-2": "Asia Pacific (Sydney)",
       "ap-northeast-1": "Asia Pacific（Tokyo）",
       "sa-east-1": "South America (Sao Paulo)"
+    },
+    "error": {
+      "BucketAlreadyExists": "The requested bucket name is already exist.",
+      "InvalidBucketName": "The specified bucket is not valid.",
+      "TooManyBuckets": "You have attempted to create more buckets than allowed.",
+      "BucketNotEmpty": "The bucket is not empty.",
+      "NoSuchBucket": "The specified bucket does not exist.",
+      "ServiceUnavailable": "Service Unavailable",
+      "InternalError": "Internal Server Error"
     }
   }
 }
