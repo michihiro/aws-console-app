@@ -141,3 +141,6 @@ body {
 .modal.in .modal-dialog {
   transform: scale(1);
 }
+.position-fixed {
+  position: fixed;
+}

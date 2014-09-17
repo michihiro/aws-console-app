@@ -8,7 +8,8 @@
       'ui.utils',
       'ui.bootstrap',
       'jm.i18next',
-      'scrollable-table'
+      'scrollable-table',
+      'ng-context-menu'
     ])
     .service('credentialsService', credentialsService)
     .controller('homeCtrl', homeCtrl)

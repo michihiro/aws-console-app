@@ -2,10 +2,11 @@
   <div class="s3-left">
     <div class="btn-group">
       <button class="btn"
-              ng-click="openDialog('s3/createBucketDialog.html')"
-      >{{'s3.createBucket'|i18next}}</button>
+              ng-click="openDialog('s3/createBucketDialog.html')">
+        {{'s3.createBucket'|i18next}}
+      </button>
     </div>
-    <div class="s3-tree">
+    <div class="s3-tree" context-menu data-target="s3-tree-context-menu">
       <s3-tree data="s3Items.buckets"></s3-tree>
     </div>
   </div>
@@ -41,3 +42,14 @@
     </scrollable-table>
   </div>
 <div>
+
+<div class="dropdown position-fixed" id="s3-tree-context-menu">
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a tabindex="-1"
+         ng-click="openDialog('s3/createBucketDialog.html')">
+        {{'s3.createBucket'|i18next}}
+      </a>
+    </li>
+  </ul>
+</div>
