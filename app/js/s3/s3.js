@@ -8,6 +8,7 @@
     })
     .service('s3Service', s3Service)
     .controller('s3CreateBucketDialogCtrl', s3CreateBucketDialogCtrl)
+    .controller('s3DeleteBucketDialogCtrl', s3DeleteBucketDialogCtrl)
     .controller('s3Ctrl', s3Ctrl);
 
   s3Ctrl.$inject = ['$scope', '$state', '$stateParams', '$filter', '$timeout', 's3Service', 's3Items', 'appFilterService'];
@@ -42,6 +43,8 @@
       onClickList: onClickList,
       onDblClickList: onDblClickList,
       comparator: comparator,
+      contextDisabled: {},
+      isOpenTreeMenu: false,
       dropOpt: {
         onDrop: function(promise) {
           $scope.openDialog('s3/uploadDialog.html', {
@@ -52,6 +55,17 @@
     });
 
     $scope.$watch('credentials', s3Service.updateBuckets);
+
+    ng.element(document).on('contextmenu', function() {
+      $timeout(function() {
+        $scope.isOpenTreeMenu = false;
+      });
+    });
+
+    $scope.$watch('s3Items.selected', function() {
+      $scope.contextDisabled.deleteBucket =
+        s3Items.selected && s3Items.selected.Prefix !== undefined;
+    });
 
     return;
 
@@ -329,7 +343,6 @@
           if (err) {
             $scope.errorCode = err.code;
           } else {
-            //console.log(data);
             s3Service.updateBuckets();
             $scope.$close();
           }
@@ -338,4 +351,34 @@
     }
   }
 
+  s3DeleteBucketDialogCtrl.$inject = ['$scope', '$timeout', 's3Service', 's3Items'];
+
+  function s3DeleteBucketDialogCtrl($scope, $timeout, s3Service, s3Items) {
+    ng.extend($scope, {
+      bucketName: s3Items.selected.bucketName,
+      deleteBucket: deleteBucket
+    });
+
+    function deleteBucket() {
+      var s3 = new AWS.S3({
+        credentials: $scope.credentials,
+        region: s3Items.selected.LocationConstraint
+      });
+      var params = {
+        Bucket: s3Items.selected.bucketName,
+      };
+      $scope.processing = true;
+      s3.deleteBucket(params, function(err) {
+        $timeout(function() {
+          $scope.processing = false;
+          if (err) {
+            $scope.errorCode = err.code;
+          } else {
+            s3Service.updateBuckets();
+            $scope.$close();
+          }
+        });
+      });
+    }
+  }
 })();

@@ -7,9 +7,12 @@
     "size": "サイズ",
     "lastModified": "最終更新日時",
     "createBucket": "新規バケット作成",
+    "deleteBucket": "バケット削除",
+    "createFolder": "フォルダ作成",
     "region": "リージョン",
     "bucketName": "バケット名",
     "create": "作成",
+    "delete": "削除",
     "regionName": {
       "us-east-1": "US 東海岸（北バージニア）",
       "us-west-1": "US 西海岸（北カルフォルニア）",

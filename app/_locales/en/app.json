@@ -7,9 +7,12 @@
     "size": "Size",
     "lastModified": "Last Modified",
     "createBucket": "Create Bucket",
+    "deleteBucket": "Delete Bucket",
+    "createFolder": "Create Folder",
     "region": "Region",
     "bucketName": "Bucket Name",
     "create": "Create",
+    "delete": "Delete",
     "regionName": {
       "us-east-1": "US East (Northern Virginia)",
       "us-west-1": "US West (Northern California)",

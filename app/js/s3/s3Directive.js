@@ -5,6 +5,7 @@
   ng.module('aws-console')
     .controller('s3UploadDialogCtrl', s3UploadDialogCtrl)
     .directive('s3UploadField', s3UploadFieldDirective)
+    .directive('s3RightClick', s3RightClick)
     .directive('s3Tree', s3TreeDirective);
 
   s3TreeDirective.$inject = ['$compile', '$http', '$q', 's3Service', 's3Items'];
@@ -26,7 +27,7 @@
       link: link
     };
 
-    function link(scope, element) {
+    function link(scope, elem) {
       scope.depth = parseInt(scope.depth || 0, 10);
 
       scope.isActive = function(item) {
@@ -41,11 +42,27 @@
       };
 
       deferred.promise.then(function() {
-        var newElement = angular.element(template);
-        $compile(newElement)(scope);
-        element.replaceWith(newElement);
+        var newElem = ng.element(template);
+        $compile(newElem)(scope);
+        elem.replaceWith(newElem);
       });
     }
+  }
+
+  s3RightClick.$inject = ['$parse'];
+
+  function s3RightClick($parse) {
+    return function(scope, elem, attrs) {
+      var fn = $parse(attrs.s3RightClick);
+      elem.bind('contextmenu', function(ev) {
+        scope.$apply(function() {
+          ev.preventDefault();
+          fn(scope, {
+            $event: event
+          });
+        });
+      });
+    };
   }
 
   s3UploadFieldDirective.$inject = ['$timeout', '$q'];
