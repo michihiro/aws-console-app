@@ -17,6 +17,7 @@
 
     var columns = [
       {
+        width: 250,
         col: 'Name',
         name: 's3.name',
         iconFn: function(o) {
@@ -24,12 +25,14 @@
         }
       },
       {
+        width: 150,
         col: 'Size',
         name: 's3.size',
         class: 'text-right',
         filterFn: appFilterService.byteFn,
       },
       {
+        width: 250,
         col: 'LastModified',
         name: 's3.lastModified',
         class: 'text-right',

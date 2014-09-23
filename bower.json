@@ -13,8 +13,6 @@
     "hammerjs": "~2.0.2",
     "momentjs": "~2.8.3",
     "ng-i18next": "~0.3.5",
-    "angular-scrollable-table": "*",
-    "aws-sdk": "~2.0.17",
     "ng-context-menu": "~1.0.0"
   },
   "devDependencies": {}

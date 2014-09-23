@@ -10,7 +10,6 @@
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
   <link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.css" />
   <!-- endbower -->
-  <link rel="stylesheet" href="bower_components/angular-scrollable-table/scrollable-table.css" />
   <link rel="stylesheet" href="bower_components/angular/angular-csp.css" />
   <!-- endbuild -->
 
@@ -22,7 +21,8 @@
 
 <body>
 
-  <div class="func-menu" ng-mouseover="opened=true" ng-mouseleave="opened=false" ng-class="{opened:opened}">
+  <div class="func-menu" ng-mouseleave="opened=false" ng-class="{opened:opened}">
+   <a class="menuicon" ng-mouseover="opened=true" ><i class="fa fa-navicon"></i></a>
    <a ui-sref="s3" ng-click="opened=false"><img src="images/S3.svg"><div>S3</div></a>
    <a ui-sref="ec2" ng-click="opened=false"><img src="images/EC2.svg"><div>EC2</div></a>
    <a ui-sref="route53" ng-click="opened=false"><img src="images/Route53.svg"><div>Route53</div></a>
@@ -58,11 +58,10 @@
   <script src="bower_components/momentjs/moment.js"></script>
   <script src="bower_components/i18next/i18next.js"></script>
   <script src="bower_components/ng-i18next/dist/ng-i18next.js"></script>
-  <script src="bower_components/angular-scrollable-table/angular-scrollable-table.js"></script>
   <script src="bower_components/ng-context-menu/dist/ng-context-menu.js"></script>
   <!-- endbower -->
   <script src="bower_components/momentjs/min/locales.js"></script>
-  <script src="bower_components/aws-sdk/dist/aws-sdk.js"></script>
+  <script src="js/vendor/aws-sdk-full.js"></script>
   <!-- endbuild -->
 
   <!-- build:js js/index.js -->

@@ -11,17 +11,27 @@ body {
   left: 0;
   width: 40px;
   transition: width .2s ease;
-  padding-top: 60px;
   background-color: #333;
   z-index: 1040;
+  box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, .1);
+  trasision: box-shadow .4s ease;
 }
 .func-menu.opened {
   width: 140px;
+  box-shadow: 1px 1px 4px 4px rgba(0, 0, 0, .1);
 }
 .func-menu a {
   display: block;
   white-space: nowrap;
   overflow-x: hidden;
+}
+.func-menu a.menuicon {
+  padding: 6px;
+  font-size: 32px;
+  color: #999;
+}
+.func-menu a:hover.menuicon {
+  color: #fff;
 }
 .func-menu a img {
   height: 40px;
@@ -143,4 +153,57 @@ body {
 }
 .position-fixed {
   position: fixed;
+}
+/** table **/
+
+.table-outer {
+  position: absolute;
+  top: 30px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+}
+.table-header-spacer {
+  height: 1.8em;
+}
+.table-container {
+  height: 100%;
+  overflow-y: auto;
+}
+.table-container .table {
+  table-layout: fixed;
+  width: auto;
+}
+.table-container .table > thead > tr > th,
+.table-container .table > tbody > tr > td {
+  padding: 0;
+}
+.th-inner {
+  position: absolute;
+  line-height: 1.8em;
+  top: 0;
+  padding: .1em .8em;
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+.td-inner {
+  line-height: 1.8em;
+  padding: .1em .8em;
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+.table-resize-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  min-height: 100%;
+  background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), color-stop(0.4, rgba(0, 0, 0, 0)), color-stop(0.5, rgba(1, 1, 1, .1)), color-stop(0.6, rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0)));
+}
+.table-resize-handle:hover {
+  background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), color-stop(0.4, rgba(0, 0, 0, 0)), color-stop(0.5, rgba(1, 1, 1, .25)), color-stop(0.6, rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0)));
+  cursor: ew-resize;
 }

@@ -18,6 +18,44 @@
       >up</button>
     </div>
     <div class="s3-upload-fileld-cover" ng-if="dropOpt.active"></div>
+    <div class="table-outer" context-menu data-target="s3-list-context-menu">
+      <div class="table-header-spacer"></div>
+      <div class="table-container" app-bind-scroll-position="tableScroll">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th ng-repeat="col in columns" col="col.col"
+                  ng-style="{width:col.width+'px'}">
+                <div class="th-inner"
+                     ng-style="{left:col.left,width:col.width+'px','-webkit-transform':'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
+                  <span>{{col.name|i18next}}</span>
+                  <div class="table-resize-handle"
+                       app-bind-width="col"></div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in s3Items.selected.list"
+                row-id="{{ item.id }}"
+                ng-dblClick="onDblClickList(item)"
+                ng-click="onClickList(item)"
+                ng-class="{info: s3Items.selectedItem.id == item.id}" >
+              <td ng-repeat="col in columns" class="{{col.class}}"
+                     ng-style="{width:col.width+'px'}">
+                <div class="td-inner" ng-style="{width: col.width+'px'}">
+                  <i ng-if="col.iconFn" class="fa {{col.iconFn(item)}}"></i>
+                  <span ng-if="col.filterFn">{{col.filterFn(item[col.col])}}</span>
+                  <span ng-if="!col.filterFn">{{item[col.col]}}</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+<!--
     <scrollable-table watch="s3Items.selected.list">
       <table class="table table-striped table-bordered">
         <thead>
@@ -40,6 +78,7 @@
         </tbody>
       </table>
     </scrollable-table>
+-->
   </div>
 </div>
 

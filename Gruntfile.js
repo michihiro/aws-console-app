@@ -343,7 +343,7 @@ module.exports = function(grunt) {
         overwrite: true,
         replacements: [{
           from: '<!-- dist-script -->',
-          to: '<script src="scripts/etc.js"></script>'
+          to: '<script src="js/etc.js"></script>'
         }]
       }
     },
