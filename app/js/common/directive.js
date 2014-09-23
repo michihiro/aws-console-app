@@ -5,7 +5,105 @@
   ng.module('aws-console')
     .directive('appBindWidth', appBindWidthDirective)
     .directive('appBindScrollPosition', appBindScrollPosition)
+    .directive('appTableRowSelected', appTableRowSelected)
     .directive('modalDialog', modalDialogDirective);
+
+  appTableRowSelected.$inject = [];
+
+  function appTableRowSelected() {
+    return {
+      restrict: 'A',
+      scope: {
+        selected: '=appTableRowSelected',
+      },
+      link: link
+    };
+
+    function link(scope, elem, attr) {
+      scope._selectRect = $('<div></div>').appendTo('body');
+      scope._selectRect.css({
+        position: 'absolute',
+        border: '1px dashed #777',
+        display: 'none',
+      });
+
+      scope._mc = new Hammer.Manager(elem[0], {
+        recognizers: [[Hammer.Pan], [Hammer.Tap]]
+      })
+        .on('tap', function(ev) {
+          var pos = _getIndexFromPosition(ev);
+          if (pos) {
+            scope.$apply(function() {
+              scope.selected = [pos.idx];
+            });
+          }
+        })
+        .on('panstart', function(ev) {
+          scope.startPos = _getIndexFromPosition(ev);
+        })
+        .on('panend', function() {
+          scope.startPos = scope.endPos = null;
+          scope._selectRect.css({
+            display: 'none'
+          });
+        })
+        .on('pan', function(ev) {
+          scope.endPos = _getIndexFromPosition(ev);
+          if (scope.startPos && scope.endPos) {
+            scope.$apply(function() {
+              scope.selected = _getSequence(
+                Math.min(scope.startPos.idx, scope.endPos.idx),
+                Math.max(scope.startPos.idx, scope.endPos.idx));
+            });
+            _setRect();
+          }
+        });
+
+      elem.on('$destroy', _onDestroy);
+
+      function _getIndexFromPosition(ev) {
+        ev = ev.srcEvent ? ev.srcEvent : ev;
+        var x = ev.pageX;
+        var y = ev.pageY;
+        var tr = document.elementFromPoint(x, y);
+        while (tr.tagName != 'TR' && tr.parentNode) {
+          tr = tr.parentNode;
+        }
+        if (tr.tagName == 'TR') {
+          return {
+            x: x,
+            y: y,
+            idx: ng.element(tr).scope().$index
+          }
+        }
+        return null;
+      }
+
+      function _setRect() {
+        var start = scope.startPos;
+        var end = scope.endPos;
+        scope._selectRect.css({
+          left: Math.min(start.x, end.x),
+          top: Math.min(start.y, end.y),
+          width: Math.abs(start.x - end.x),
+          height: Math.abs(start.y - end.y),
+          display: 'block'
+        });
+      }
+
+      function _onDestroy() {
+        scope._mc.destroy();
+        scope._mc = null;
+        scope._selectRect.remove();
+      }
+    }
+
+    function _getSequence(s, e) {
+      var range = [];
+      for (; s <= e; s++) range.push(s);
+      return range;
+    }
+  }
 
   function modalDialogDirective() {
 

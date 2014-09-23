@@ -43,10 +43,10 @@
     ng.extend($scope, {
       columns: columns,
       s3Items: s3Items,
-      onClickList: onClickList,
       onDblClickList: onDblClickList,
       comparator: comparator,
       contextDisabled: {},
+      isActiveItem: isActiveItem,
       isOpenTreeMenu: false,
       dropOpt: {
         onDrop: function(promise) {
@@ -56,6 +56,14 @@
         },
       }
     });
+
+    $scope.$watch('s3Items.selected', function() {
+      s3Items.selectedItemIdx = [];
+    });
+
+    function isActiveItem(itemId, idx) {
+      return s3Items.selectedItemIdx.indexOf(idx) >= 0;
+    }
 
     $scope.$watch('credentials', s3Service.updateBuckets);
 
@@ -71,10 +79,6 @@
     });
 
     return;
-
-    function onClickList(obj) {
-      s3Items.selectedItem = obj;
-    }
 
     function comparator() {
       console.log('comparator', arguments);

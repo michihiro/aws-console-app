@@ -35,12 +35,11 @@
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody app-table-row-selected="s3Items.selectedItemIdx">
             <tr ng-repeat="item in s3Items.selected.list"
                 row-id="{{ item.id }}"
                 ng-dblClick="onDblClickList(item)"
-                ng-click="onClickList(item)"
-                ng-class="{info: s3Items.selectedItem.id == item.id}" >
+                ng-class="{info: isActiveItem(item.id, $index)}" >
               <td ng-repeat="col in columns" class="{{col.class}}"
                      ng-style="{width:col.width+'px'}">
                 <div class="td-inner" ng-style="{width: col.width+'px'}">
