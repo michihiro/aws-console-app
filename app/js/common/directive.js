@@ -19,62 +19,82 @@
       link: link
     };
 
-    function link(scope, elem, attr) {
-      scope._selectRect = $('<div></div>').appendTo('body');
+    function link(scope, elem) {
+      scope._selectRect = ng.element('<div></div>').appendTo('body');
       scope._selectRect.css({
         position: 'absolute',
         border: '1px dashed #777',
         display: 'none',
       });
 
-      scope._mc = new Hammer.Manager(elem[0], {
-        recognizers: [[Hammer.Pan], [Hammer.Tap]]
-      })
-        .on('tap', function(ev) {
-          var pos = _getIndexFromPosition(ev);
-          if (pos) {
-            scope.$apply(function() {
-              scope.selected = [pos.idx];
-            });
-          }
-        })
-        .on('panstart', function(ev) {
-          scope.startPos = _getIndexFromPosition(ev);
-        })
-        .on('panend', function() {
-          scope.startPos = scope.endPos = null;
-          scope._selectRect.css({
-            display: 'none'
-          });
-        })
-        .on('pan', function(ev) {
-          scope.endPos = _getIndexFromPosition(ev);
-          if (scope.startPos && scope.endPos) {
-            scope.$apply(function() {
-              scope.selected = _getSequence(
-                Math.min(scope.startPos.idx, scope.endPos.idx),
-                Math.max(scope.startPos.idx, scope.endPos.idx));
-            });
-            _setRect();
-          }
-        });
+      _setHandlers();
 
       elem.on('$destroy', _onDestroy);
+
+      return;
+
+      function _setHandlers() {
+        scope._mc = new Hammer.Manager(elem[0], {
+          recognizers: [[Hammer.Pan], [Hammer.Tap]]
+        })
+          .on('tap', function(ev) {
+            var pos = _getIndexFromPosition(ev);
+            if (!pos) {
+              return;
+            }
+            scope.$apply(function() {
+              var idx;
+              if (ev.srcEvent.shiftKey && scope.selected.length) {
+                scope.selected = _getSequence(
+                  pos.idx,
+                  scope.selected[scope.selected.length - 1]
+                );
+              } else if (ev.srcEvent.ctrlKey || ev.srcEvent.metaKey) {
+                idx = scope.selected.indexOf(pos.idx);
+                if (idx > 0) {
+                  scope.selected.splice(idx, 1);
+                } else {
+                  scope.selected.push(pos.idx);
+                }
+              } else {
+                scope.selected = [pos.idx];
+              }
+            });
+          })
+          .on('panstart', function(ev) {
+            scope.startPos = _getIndexFromPosition(ev);
+          })
+          .on('panend', function() {
+            scope.startPos = scope.endPos = null;
+            scope._selectRect.css({
+              display: 'none'
+            });
+          })
+          .on('pan', function(ev) {
+            scope.endPos = _getIndexFromPosition(ev);
+            if (scope.startPos && scope.endPos) {
+              scope.$apply(function() {
+                scope.selected = _getSequence(scope.startPos.idx, scope.endPos.idx);
+              });
+              _setRect();
+            }
+          });
+      }
 
       function _getIndexFromPosition(ev) {
         ev = ev.srcEvent ? ev.srcEvent : ev;
         var x = ev.pageX;
         var y = ev.pageY;
         var tr = document.elementFromPoint(x, y);
-        while (tr.tagName != 'TR' && tr.parentNode) {
+        while (tr.tagName !== 'TR' && tr.parentNode) {
           tr = tr.parentNode;
         }
-        if (tr.tagName == 'TR') {
+        if (tr.tagName === 'TR') {
           return {
             x: x,
             y: y,
             idx: ng.element(tr).scope().$index
-          }
+          };
         }
         return null;
       }
@@ -99,9 +119,10 @@
     }
 
     function _getSequence(s, e) {
-      var range = [];
-      for (; s <= e; s++) range.push(s);
-      return range;
+      var step = s < e ? 1 : -1;
+      return new Array(Math.abs(e - s) + 1).join(',').split(',').map(function(e, i) {
+        return s + step * i;
+      });
     }
   }
 
