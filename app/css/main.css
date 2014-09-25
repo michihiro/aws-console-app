@@ -185,14 +185,14 @@ body {
   top: 0;
   padding: .1em .8em;
   white-space: nowrap;
-  overflow-x: hidden;
+  overflow: hidden;
   text-overflow: ellipsis;
 }
 .td-inner {
   line-height: 1.8em;
   padding: .1em .8em;
   white-space: nowrap;
-  overflow-x: hidden;
+  overflow: hidden;
   text-overflow: ellipsis;
 }
 .table-resize-handle {

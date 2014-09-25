@@ -95,6 +95,7 @@
       function dragOver(ev) {
         ev.stopPropagation();
         ev.preventDefault();
+        ev.originalEvent.dataTransfer.dropEffect = 'copy';
         $timeout(function() {
           scope.opt.active = true;
         });

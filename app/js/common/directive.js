@@ -82,9 +82,10 @@
       }
 
       function _getIndexFromPosition(ev) {
-        ev = ev.srcEvent ? ev.srcEvent : ev;
-        var x = ev.pageX;
-        var y = ev.pageY;
+        var srcEvent = ev.srcEvent ? ev.srcEvent : ev;
+        var isStart = ev.type === 'panstart';
+        var x = srcEvent.pageX - (isStart ? ev.deltaX : 0);
+        var y = srcEvent.pageY - (isStart ? ev.deltaY : 0);
         var tr = document.elementFromPoint(x, y);
         while (tr.tagName !== 'TR' && tr.parentNode) {
           tr = tr.parentNode;
@@ -126,7 +127,9 @@
     }
   }
 
-  function modalDialogDirective() {
+  modalDialogDirective.$inject = ['$timeout', '$window'];
+
+  function modalDialogDirective($timeout, $window) {
 
     return {
       restrict: 'C',
@@ -135,44 +138,54 @@
     };
 
     function link(scope, elem) {
-      var header = elem.find('.modal-header')[0];
+      var header = elem.find('.modal-header');
       var opt = {
         recognizers: [[Hammer.Pan]]
       };
+      header.css({
+        cursor: 'move'
+      });
 
-      scope._mc = new Hammer.Manager(header, opt)
+      scope._hm = new Hammer.Manager(header[0], opt)
         .on('panstart', function() {
-          var off = elem.offset();
-          scope._offset = {
-            left: off.left,
-            top: off.top - parseFloat(elem.css('margin-top')),
-            maxLeft: window.innerWidth - elem[0].offsetWidth
+          scope._transPos = scope._transPos || {
+            x: 0,
+            y: 0
           };
+
+          scope._transXMin = -elem[0].offsetLeft;
+          scope._transXMax = $window.innerWidth - elem[0].offsetWidth - elem[0].offsetLeft;
+          scope._transYMin = -elem[0].offsetTop;
+          scope._transYMax = $window.innerHeight - elem[0].offsetHeight - elem[0].offsetTop;
         })
-        .on('panend', function() {
-          scope._offset = null;
+        .on('panend', function(ev) {
+          var pos = _getTranslatePos(ev);
+          scope._transPos = pos;
         })
         .on('pan', function(ev) {
-          if (!scope._offset) {
-            return;
-          }
-          var offset = scope._offset;
-          var left = offset.left + ev.deltaX;
-          var top = offset.top + ev.deltaY;
-          left = (left < 0) ? 0 :
-            (left > offset.maxLeft) ? offset.maxLeft : left;
-          top = (top < 0) ? 0 : top;
+          var pos = _getTranslatePos(ev);
           elem.css({
-            marginTop: 0,
-            position: 'absolute',
-            left: left,
-            top: top
+            transform: 'translate(' + pos.x + 'px,' + pos.y + 'px)',
+            transition: 'none',
           });
         });
 
+      function _getTranslatePos(ev) {
+        var x = scope._transPos.x + ev.deltaX;
+        var y = scope._transPos.y + ev.deltaY;
+        x = (x < scope._transXMin) ? scope._transXMin :
+          (x > scope._transXMax) ? scope._transXMax : x;
+        y = (y < scope._transYMin) ? scope._transYMin :
+          (y > scope._transYMax) ? scope._transYMax : y;
+        return {
+          x: x,
+          y: y
+        };
+      }
+
       elem.on('$destroy', function() {
-        scope._mc.destroy();
-        scope._mc = null;
+        scope._hm.destroy();
+        scope._hm = null;
       });
     }
   }
@@ -190,7 +203,7 @@
     };
 
     function link(scope, elem) {
-      scope._mc = new Hammer.Manager(elem[0], {
+      scope._hm = new Hammer.Manager(elem[0], {
         recognizers: [[Hammer.Pan]]
       })
         .on('panstart', function() {
@@ -225,8 +238,8 @@
       }
 
       elem.on('$destroy', function() {
-        scope._mc.destroy();
-        scope._mc = null;
+        scope._hm.destroy();
+        scope._hm = null;
       });
     }
   }
