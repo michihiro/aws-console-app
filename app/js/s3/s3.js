@@ -7,13 +7,14 @@
       buckets: []
     })
     .service('s3Service', s3Service)
+    .service('s3DownloadService', s3DownloadService)
     .controller('s3CreateBucketDialogCtrl', s3CreateBucketDialogCtrl)
     .controller('s3DeleteBucketDialogCtrl', s3DeleteBucketDialogCtrl)
     .controller('s3Ctrl', s3Ctrl);
 
-  s3Ctrl.$inject = ['$scope', '$state', '$stateParams', '$filter', '$timeout', 's3Service', 's3Items', 'appFilterService'];
+  s3Ctrl.$inject = ['$scope', '$state', '$stateParams', '$filter', '$timeout', 's3Service', 's3DownloadService', 's3Items', 'appFilterService'];
 
-  function s3Ctrl($scope, $state, $stateParams, $filter, $timeout, s3Service, s3Items, appFilterService) {
+  function s3Ctrl($scope, $state, $stateParams, $filter, $timeout, s3Service, s3DownloadService, s3Items, appFilterService) {
 
     var columns = [
       {
@@ -85,52 +86,29 @@
       return 1;
     }
 
-    function onDblClickList(obj) {
-      var isDirectory = !!obj.Prefix;
+    function onDblClickList() {
+      var objs = s3Items.selectedItemIdx.map(function(i) {
+        return s3Items.selected.list[i];
+      });
+      var isDirectory = !!objs[0].Prefix;
       if (isDirectory) {
-        if (obj.parent) {
-          obj.parent.opened = true;
+        if (objs[0].parent) {
+          objs[0].parent.opened = true;
         }
-        obj.opened = true;
-        s3Service.updateFolder(obj);
-        s3Items.selected = obj;
+        objs[0].opened = true;
+        s3Service.updateFolder(objs[0]);
+        s3Items.selected = objs[0];
       } else {
-        var s3 = new AWS.S3({
-          credentials: $scope.credentials,
-          region: obj.LocationConstraint,
-        });
-        var params = {
-          Bucket: obj.bucketName,
-          Key: obj.Key,
-          Expires: 60
-        };
-        var url = s3.getSignedUrl('getObject', params);
-
-        chrome.fileSystem.chooseEntry({
-            type: 'saveFile',
-            suggestedName: obj.Name
-          },
-          function(writableFileEntry) {
-
-            writableFileEntry.createWriter(function(writer) {
-              // writer.onerror = errorHandler;
-              writer.onwriteend = function(e) {
-                console.log('write end', e);
-              };
-              var xhr = new XMLHttpRequest();
-              xhr.open('GET', url, true);
-              xhr.responseType = 'blob';
-              xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                  writer.write(xhr.response, {});
-                }
-              };
-              xhr.send();
-            });
+        s3DownloadService.download([objs[0]])
+          .then(function() {
+            console.log('all finished');
+          }, function() {
+            console.log('all error');
+          }, function() {
+            console.log('all notify');
           });
       }
     }
-
   }
 
   s3Service.$inject = ['$rootScope', '$parse', '$timeout', 's3Items'];
@@ -388,4 +366,90 @@
       });
     }
   }
+
+  s3DownloadService.$inject = ['$rootScope', '$q'];
+
+  function s3DownloadService($rootScope, $q) {
+    return {
+      download: download
+    };
+
+    function download(objs) {
+      return _chooseDirEntry().then(function(dirEntry) {
+        var savePromises = objs.map(function(obj) {
+          return _getSavePromise(dirEntry, obj);
+        });
+
+        return $q.all(savePromises);
+      });
+    }
+
+    function _chooseDirEntry() {
+      var defer = $q.defer();
+      chrome.fileSystem.chooseEntry({
+        type: 'openDirectory',
+      }, function(writableFileEntry) {
+        if (writableFileEntry) {
+          defer.resolve(writableFileEntry);
+        } else {
+          defer.reject();
+        }
+      });
+      return defer.promise;
+    }
+
+    function _getSavePromise(dirEntry, obj) {
+      return getWriter().then(saveUrl);
+
+      function getWriter() {
+        var defer = $q.defer();
+        var opt = {
+          create: true,
+          exclusive: false
+        };
+        dirEntry.getFile(obj.Name, opt, function(file) {
+          file.createWriter(defer.resolve, defer.reject);
+        }, defer.reject);
+        return defer.promise;
+      }
+
+      function saveUrl(writer) {
+        var defer = $q.defer();
+        var xhr = new XMLHttpRequest();
+        var url = _getObjectUrl(obj);
+
+        writer.truncate(0);
+        xhr.open('GET', url, true);
+        xhr.responseType = 'blob';
+        xhr.onerror = defer.reject;
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              writer.onerror = defer.reject;
+              writer.onwriteend = defer.resolve;
+              writer.write(xhr.response, {});
+            } else {
+              defer.reject();
+            }
+          }
+        };
+        xhr.send();
+        return defer.promise;
+      }
+    }
+
+    function _getObjectUrl(obj) {
+      var s3 = new AWS.S3({
+        credentials: $rootScope.credentials,
+        region: obj.LocationConstraint,
+      });
+      var params = {
+        Bucket: obj.bucketName,
+        Key: obj.Key,
+        Expires: 60
+      };
+      return s3.getSignedUrl('getObject', params);
+    }
+  }
+
 })();
