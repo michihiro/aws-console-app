@@ -137,10 +137,17 @@
         function _setDirectoryInfo(entry, uploadFiles) {
           var reader = entry.createReader();
           var defer = $q.defer();
-          reader.readEntries(function(results) {
+          reader.readEntries(entryCallback, defer.reject);
+
+          return defer.promise;
+
+          function entryCallback(results) {
             var i, l;
             var promises = [];
             for (i = 0, l = results.length; i < l; i++) {
+              if (results[i].name[0] === '.') {
+                continue; // hidden file
+              }
               if (results[i].isFile) {
                 promises.push(_setFileInfo(results[i], uploadFiles));
               } else {
@@ -148,8 +155,7 @@
               }
             }
             $q.all(promises).then(defer.resolve, defer.reject);
-          }, errorHandler);
-          return defer.promise;
+          }
         }
 
         function _setFileInfo(entry, uploadFiles) {
@@ -167,10 +173,6 @@
             });
           });
           return d.promise;
-        }
-
-        function errorHandler(e) {
-          console.log(e);
         }
       }
     }
@@ -209,20 +211,41 @@
 
     function upload() {
       var promises = $scope.uploadFiles.map(_uploadOne);
+      $scope.progress = true;
+      $scope.uploadCnt = 0;
+      $scope.uploadSize = [];
+      $scope.uploadTotal = 0;
+
       $q.all(promises).then(function() {
         $scope.$close();
+        $scope.progress = false;
+      }, function(err) {
+        console.log('error', err);
       });
+
+      promises.forEach(function(p) {
+        p.then(function() {
+          $scope.uploadCnt++;
+          //console.log('progress', $scope.uploadCnt, $scope.uploadTotal);
+        }, null, function(progress) {
+          $scope.uploadSize[p._idx] = progress.loaded;
+          $scope.uploadTotal = $scope.uploadSize.reduce(_sum, 0);
+          //console.log('progress', $scope.uploadCnt, $scope.uploadTotal);
+        });
+      });
+
+      function _sum(total, size) {
+        return total + size;
+      }
     }
 
-    function _uploadOne(uploadFile) {
+    function _uploadOne(uploadFile, idx) {
       var defer = $q.defer();
       uploadFile.entry.file(function(file) {
         var reader = new FileReader();
-        reader.onerror = function() {
-          console.log('onerror', arguments);
-        };
-        reader.onloadend = function(ev) {
-          console.log('onload', arguments);
+        reader.onerror = defer.reject;
+        reader.onloadend = function() {
+          //console.log('onload', arguments);
 
           var folder = s3Items.selected;
           var s3 = new AWS.S3({
@@ -232,15 +255,19 @@
           var uploadParam = {
             Bucket: folder.bucketName,
             Key: (folder.Prefix || '') + uploadFile.path,
-            Body: ev.srcElement.result
+            Body: new Blob([reader.result]),
           };
           s3.putObject(uploadParam, function() { //err, data) {
+            reader = null;
             defer.resolve();
+          }).on('httpUploadProgress', function(progress) {
+            defer.notify(progress);
           });
         };
 
         reader.readAsArrayBuffer(file);
       });
+      defer.promise._idx = idx;
       return defer.promise;
     }
   }
