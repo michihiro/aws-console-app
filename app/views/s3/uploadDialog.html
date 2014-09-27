@@ -1,38 +1,59 @@
-<div ng-controller="s3UploadDialogCtrl">
+<div class="s3-upload-dialog" ng-controller="s3UploadDialogCtrl">
 <div class="modal-header">
   <button type="button" class="close" ng-click="$dismiss()">&times;</button>
   <h3>{{'Upload Files'||i18next}}</h3>
 </div>
 <div class="modal-body">
-  <div class="form-group">
-    <scrollable-table watch="uploadFiles">
-      <table class="table table-striped table-bordered">
-        <thead>
-          <tr>
-            <th ng-repeat="col in columns" sortable-header col="col.col">{{col.name|i18next}}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="item in uploadFiles"
-              row-id="{{ item.path }}">
-            <td ng-repeat="col in columns" class="{{col.class}}">
-              <span ng-if="col.filterFn">{{col.filterFn(item[col.col])}}</span>
-              <span ng-if="!col.filterFn">{{item[col.col]}}</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </scrollable-table>
-{{uploadFiles.length}} Files, 
-{{uploadFiles.total|bytes}}
+  <div class="modal-body-inner">
+    <div class="table-outer">
+      <div class="table-header-spacer"></div>
+      <div class="table-container" app-bind-scroll-position="tableScroll">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th ng-repeat="col in columns" sortable-header col="col.col">
+                <div class="th-inner"
+                     ng-style="{left:col.left,width:col.width+'px','-webkit-transform':'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
+                  <span>{{col.name|i18next}}</span>
+                  <div class="table-resize-handle"
+                       app-bind-width="col"></div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in uploadFiles"
+                row-id="{{ item.path }}">
+              <td ng-repeat="col in columns" class="{{col.class}}"
+                  ng-style="{width:col.width+'px'}">
+                <div class="td-inner" ng-style="{width: col.width+'px'}">
+                  <span ng-if="col.filterFn">{{col.filterFn(item[col.col])}}</span>
+                  <span ng-if="!col.filterFn">{{item[col.col]}}</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 <div class="modal-footer">
   <div class="alert alert-warning" ng-show="error">{{error}}</div>
+  <div class="text-left">
+{{uploadFiles.length}} Files, 
+{{uploadFiles.total|bytes}}
+  </div>
+  <button type="button" class="btn btn-warning"
+          ng-click="$dismiss()"
+          ng-disabled="processing" >
+    <label ng-show="processing" class=loading />
+    <label>{{'com.cancel'|i18next}}</label>
+  </button>
   <button type="button" class="btn btn-success btn-loading"
           ng-click="upload()"
           ng-disabled="processing || !isReady" >
     <label ng-show="processing" class=loading />
     <label>Upload</label>
   </button>
-</div>
 </div>

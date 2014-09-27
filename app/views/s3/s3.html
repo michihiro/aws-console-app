@@ -53,31 +53,6 @@
         </table>
       </div>
     </div>
-
-<!--
-    <scrollable-table watch="s3Items.selected.list">
-      <table class="table table-striped table-bordered">
-        <thead>
-          <tr>
-            <th ng-repeat="col in columns" sortable-header col="col.col">{{col.name|i18next}}</th>
-          </tr>
-        </thead>
-        <tbody context-menu data-target="s3-list-context-menu">
-          <tr ng-repeat="item in s3Items.selected.list"
-              row-id="{{ item.id }}"
-              ng-dblClick="onDblClickList(item)"
-              ng-click="onClickList(item)"
-              ng-class="{info: s3Items.selectedItem.id == item.id}" >
-            <td ng-repeat="col in columns" class="{{col.class}}">
-              <i ng-if="col.iconFn" class="fa {{col.iconFn(item)}}"></i>
-              <span ng-if="col.filterFn">{{col.filterFn(item[col.col])}}</span>
-              <span ng-if="!col.filterFn">{{item[col.col]}}</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </scrollable-table>
--->
   </div>
 </div>
 

@@ -183,12 +183,14 @@
       {
         col: 'path',
         name: 's3.name',
+        width: 400
       },
       {
         col: 'size',
         name: 's3.size',
         class: 'text-right',
         filterFn: appFilterService.byteFn,
+        width: 160
       }
     ];
 
