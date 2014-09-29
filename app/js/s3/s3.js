@@ -8,9 +8,74 @@
     })
     .service('s3Service', s3Service)
     .service('s3DownloadService', s3DownloadService)
+    .factory('s3NotificationsService', s3NotificationsService)
     .controller('s3CreateBucketDialogCtrl', s3CreateBucketDialogCtrl)
     .controller('s3DeleteBucketDialogCtrl', s3DeleteBucketDialogCtrl)
-    .controller('s3Ctrl', s3Ctrl);
+    .controller('s3Ctrl', s3Ctrl)
+    .controller('s3NotificationsAreaCtrl', s3NotificationsAreaCtrl);
+
+  s3NotificationsService.$inject = ['$timeout'];
+
+  function s3NotificationsService($timeout) {
+    var timeout = 5000;
+    var notifications = [];
+    var notificationsToDel = null;
+    return {
+      get: get,
+      add: add,
+      end: end,
+      hold: hold,
+      release: release
+    };
+
+    function get() {
+      return notifications;
+    }
+
+    function add(notif) {
+      notifications.unshift(notif);
+    }
+
+    function end(notif) {
+      $timeout(function() {
+        if (notificationsToDel === null) {
+          _del(notif);
+        } else {
+          notificationsToDel.push(notif);
+        }
+      }, timeout);
+    }
+
+    function hold() {
+      notificationsToDel = [];
+    }
+
+    function release() {
+      if (notificationsToDel === null) {
+        return;
+      }
+      notificationsToDel.forEach(_del);
+      notificationsToDel = null;
+    }
+
+    function _del(notif) {
+      var idx = notifications.indexOf(notif);
+      if (idx >= 0) {
+        notifications.splice(idx, 1);
+      }
+    }
+  }
+
+  s3NotificationsAreaCtrl.$inject = ['$scope', '$timeout', 's3NotificationsService'];
+
+  function s3NotificationsAreaCtrl($scope, $timeout, s3NotificationsService) {
+    ng.extend($scope, {
+      getNotifications: s3NotificationsService.get,
+      holdNotifications: s3NotificationsService.hold,
+      releaseNotifications: s3NotificationsService.release,
+      closeNotification: s3NotificationsService.end
+    });
+  }
 
   s3Ctrl.$inject = ['$scope', '$state', '$stateParams', '$filter', '$timeout', 's3Service', 's3DownloadService', 's3Items', 'appFilterService'];
 

@@ -178,9 +178,9 @@
     }
   }
 
-  s3UploadDialogCtrl.$inject = ['$scope', '$q', '$timeout', 'appFilterService', 's3Items'];
+  s3UploadDialogCtrl.$inject = ['$scope', '$q', '$timeout', 'appFilterService', 's3Items', 's3NotificationsService'];
 
-  function s3UploadDialogCtrl($scope, $q, $timeout, appFilterService, s3Items) {
+  function s3UploadDialogCtrl($scope, $q, $timeout, appFilterService, s3Items, s3NotificationsService) {
     var columns = [
       {
         col: 'path',
@@ -211,26 +211,33 @@
 
     function upload() {
       var promises = $scope.uploadFiles.map(_uploadOne);
-      $scope.progress = true;
-      $scope.uploadCnt = 0;
-      $scope.uploadSize = [];
-      $scope.uploadTotal = 0;
+      $scope.processing = true;
+
+      $scope.notification = {
+        uploadNum: promises.length,
+        uploadCnt: 0,
+        uploadSize: [],
+        uploadTotal: 0,
+        sizeTotal: $scope.uploadFiles.map(function(v) {
+          return v.size;
+        }).reduce(_sum),
+      };
+      s3NotificationsService.add($scope.notification);
+      $scope.$close();
 
       $q.all(promises).then(function() {
-        $scope.$close();
-        $scope.progress = false;
+        s3NotificationsService.end($scope.notification);
+        $scope.notification = null;
       }, function(err) {
         console.log('error', err);
       });
 
       promises.forEach(function(p) {
         p.then(function() {
-          $scope.uploadCnt++;
-          //console.log('progress', $scope.uploadCnt, $scope.uploadTotal);
+          $scope.notification.uploadCnt++;
         }, null, function(progress) {
-          $scope.uploadSize[p._idx] = progress.loaded;
-          $scope.uploadTotal = $scope.uploadSize.reduce(_sum, 0);
-          //console.log('progress', $scope.uploadCnt, $scope.uploadTotal);
+          $scope.notification.uploadSize[p._idx] = progress.loaded;
+          $scope.notification.uploadTotal = $scope.notification.uploadSize.reduce(_sum, 0);
         });
       });
 

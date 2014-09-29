@@ -53,6 +53,26 @@
         </table>
       </div>
     </div>
+
+    <div ng-controller="s3NotificationsAreaCtrl"
+         ng-mouseenter="holdNotifications()"
+         ng-mouseleave="releaseNotifications()"
+         class="notifications-area">
+      <div ng-repeat="n in getNotifications()"
+           ng-mouseenter="n._hover=true"
+           ng-mouseleave="n._hover=false"
+           class="alert alert-info">
+        <div class="progress">
+          <div class="progress-bar" ng-style="{width: (n.uploadTotal * 100 / n.sizeTotal) + '%'}">
+          </div>
+        </div>
+        <div>
+        <div ng-if="n._hover">
+          <div>{{n.uploadTotal}} / {{n.sizeTotal}} bytes </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 

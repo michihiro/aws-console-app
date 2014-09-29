@@ -37,6 +37,51 @@
 .s3-right table i {
   margin-right: .2em;
 }
+.s3-right .notifications-area {
+  position: absolute;
+  right: 8px;
+  bottom: 0;
+  width: 300px;
+}
+.notifications-area .alert {
+  box-shadow: 4px 4px 8px 0 rgba(0, 0, 0, .2);
+  padding-bottom: 4px;
+  padding-top: 4px;
+  margin-bottom: 8px;
+  min-height: 2em;
+  overflow-y: hidden;
+  opacity: .5;
+}
+.notifications-area:hover .alert {
+  opacity: 1;
+}
+.notifications-area .alert > * {
+  margin-bottom: -100%;
+  transition: margin 200ms ease-in;
+}
+.notifications-area .alert:hover > * {
+  margin-bottom: 0;
+}
+.notifications-area .alert.ng-enter {
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: transform 500ms ease-in, opacity 500ms ease-in;
+}
+.notifications-area .alert.ng-enter.ng-enter-active {
+  opacity: 1;
+  opacity: .5;
+  transform: translate(0);
+}
+.notifications-area .alert.ng-leave {
+  transition: margin 500ms ease-in, padding 500ms ease-in, opacity 500ms ease-in;
+  min-height: 0;
+}
+.notifications-area .alert.ng-leave.ng-leave-active {
+  opacity: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
 .s3-upload-fileld-cover {
   z-index: 1000;
   content: ' ';
