@@ -39,10 +39,12 @@
   function appFilterService($filter) {
     var bytesFilter = $filter('bytes');
     var momentFormatFilter = $filter('momentFormat');
+    var i18next = $filter('i18next');
 
     return {
       byteFn: byteFn,
-      momentFormatFn: momentFormatFn
+      momentFormatFn: momentFormatFn,
+      s3StorageClass: s3StorageClass
     };
 
     function byteFn(obj) {
@@ -51,6 +53,16 @@
 
     function momentFormatFn(obj) {
       return momentFormatFilter(obj, 'lll');
+    }
+
+    function s3StorageClass(obj) {
+      if (obj === 'STANDARD' || obj === 'REDUCED_REDUNDANCY') {
+        var s = obj.toLowerCase().replace(/(_)(.)/g, function(all, a1, a2) {
+          return a2.toUpperCase();
+        });
+        return i18next('s3.' + s);
+      }
+      return '-';
     }
   }
 

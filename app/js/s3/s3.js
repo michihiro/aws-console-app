@@ -17,7 +17,7 @@
   s3NotificationsService.$inject = ['$timeout'];
 
   function s3NotificationsService($timeout) {
-    var timeout = 5000;
+    var timeout = 4000;
     var notifications = [];
     var notificationsToDel = null;
     return {
@@ -92,13 +92,19 @@
       },
       {
         width: 150,
+        col: 'StorageClass',
+        name: 's3.storageClass',
+        filterFn: appFilterService.s3StorageClass,
+      },
+      {
+        width: 80,
         col: 'Size',
         name: 's3.size',
         class: 'text-right',
         filterFn: appFilterService.byteFn,
       },
       {
-        width: 250,
+        width: 220,
         col: 'LastModified',
         name: 's3.lastModified',
         class: 'text-right',

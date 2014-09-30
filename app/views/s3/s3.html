@@ -63,7 +63,10 @@
            ng-mouseleave="n._hover=false"
            class="alert alert-info">
         <div class="progress">
-          <div class="progress-bar" ng-style="{width: (n.uploadTotal * 100 / n.sizeTotal) + '%'}">
+          <div class="progress-bar progress-bar-info"
+               ng-class="{fin: n.uploadPercent==100}"
+               ng-style="{width: n.uploadPercent+'%'}">
+            <span ng-if="n._hover">{{n.uploadPercent}}%</span>
           </div>
         </div>
         <div>

@@ -13,6 +13,11 @@
     "bucketName": "バケット名",
     "create": "作成",
     "delete": "削除",
+    "startUpload": "アップロード開始",
+    "uploadTo": "アップロード先",
+    "storageClass": "ストレージ クラス",
+    "standard": "標準",
+    "reducedRedundancy": "低冗長化",
     "regionName": {
       "us-east-1": "US 東海岸（北バージニア）",
       "us-west-1": "US 西海岸（北カルフォルニア）",

@@ -198,6 +198,10 @@
 
     ng.extend($scope, {
       columns: columns,
+      folder: s3Items.selected,
+      inputs: {
+        storageClass: 'STANDARD'
+      },
       upload: upload
     });
 
@@ -220,7 +224,7 @@
         uploadTotal: 0,
         sizeTotal: $scope.uploadFiles.map(function(v) {
           return v.size;
-        }).reduce(_sum),
+        }).reduce(_sum, 0),
       };
       s3NotificationsService.add($scope.notification);
       $scope.$close();
@@ -236,8 +240,10 @@
         p.then(function() {
           $scope.notification.uploadCnt++;
         }, null, function(progress) {
-          $scope.notification.uploadSize[p._idx] = progress.loaded;
-          $scope.notification.uploadTotal = $scope.notification.uploadSize.reduce(_sum, 0);
+          var notif = $scope.notification;
+          notif.uploadSize[p._idx] = progress.loaded;
+          notif.uploadTotal = $scope.notification.uploadSize.reduce(_sum, 0);
+          notif.uploadPercent = (notif.uploadTotal * 100 / notif.sizeTotal).toFixed(2);
         });
       });
 
@@ -248,6 +254,7 @@
 
     function _uploadOne(uploadFile, idx) {
       var defer = $q.defer();
+      var storageClass = $scope.inputs.storageClass;
       uploadFile.entry.file(function(file) {
         var reader = new FileReader();
         reader.onerror = defer.reject;
@@ -262,6 +269,7 @@
           var uploadParam = {
             Bucket: folder.bucketName,
             Key: (folder.Prefix || '') + uploadFile.path,
+            StorageClass: storageClass,
             Body: new Blob([reader.result]),
           };
           s3.putObject(uploadParam, function() { //err, data) {

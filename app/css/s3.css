@@ -69,7 +69,7 @@
 }
 .notifications-area .alert.ng-enter.ng-enter-active {
   opacity: 1;
-  opacity: .5;
+  opacity: .8;
   transform: translate(0);
 }
 .notifications-area .alert.ng-leave {
@@ -81,6 +81,15 @@
   margin-bottom: 0;
   padding-top: 0;
   padding-bottom: 0;
+}
+.progress-bar.progress-bar-info {
+  text-shadow: 2px 2px 0 #5BC0D7, 2px -2px 0 #5BC0D7, -2px 2px 0 #5BC0D7, -2px -2px 0 #5BC0D7;
+}
+.progress-bar.progress-bar-success {
+  text-shadow: 2px 2px 0 #5cb85c, 2px -2px 0 #5cb85c, -2px 2px 0 #5cb85c, -2px -2px 0 #5cb85c;
+}
+.progress-bar.fin {
+  -webkit-animation: flash .5s ease 3s;
 }
 .s3-upload-fileld-cover {
   z-index: 1000;
