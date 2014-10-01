@@ -1,0 +1,33 @@
+<div ng-controller="s3DeleteObjectsDialogCtrl">
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">&times;</button>
+  <h3>{{'s3.deleteObjects'|i18next}}</h3>
+</div>
+<div class="modal-body"><form name=form role="form">
+<!--
+  <div class="form-group">
+    <label>{{'s3.bucketName'|i18next}}</label>
+    <span>{{bucketName}}</span>
+  </div>
+-->
+  <div class="form-group">
+    <label>File</label>
+    <span>{{keys.length}}</span>
+  </div>
+</form></div>
+<div class="modal-footer">
+  <div class="alert alert-warning" ng-show="errorCode">{{'s3.error.'+errorCode|i18next}}</div>
+  <button type="button" class="btn btn-warning"
+          ng-click="$dismiss()"
+          ng-disabled="processing" >
+    <label ng-show="processing" class=loading />
+    <label>{{'com.cancel'|i18next}}</label>
+  </button>
+  <button type="button" class="btn btn-loading" ng-class="{'btn-success':!form.$invalid}" 
+          ng-click="drop()"
+          ng-disabled="processing || !isReady" >
+    <label ng-show="processing" class=loading />
+    <label>{{'s3.delete'|i18next}}</label>
+  </button>
+</div>
+</div>

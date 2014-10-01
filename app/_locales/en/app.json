@@ -9,6 +9,7 @@
     "createBucket": "Create Bucket",
     "deleteBucket": "Delete Bucket",
     "createFolder": "Create Folder",
+    "deleteObjects": "Delete",
     "region": "Region",
     "bucketName": "Bucket Name",
     "create": "Create",

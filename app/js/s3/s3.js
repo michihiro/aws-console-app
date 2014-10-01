@@ -117,7 +117,7 @@
       s3Items: s3Items,
       onDblClickList: onDblClickList,
       comparator: comparator,
-      contextDisabled: {},
+      actionDisabled: {},
       isActiveItem: isActiveItem,
       isOpenTreeMenu: false,
       dropOpt: {
@@ -146,8 +146,11 @@
     });
 
     $scope.$watch('s3Items.selected', function() {
-      $scope.contextDisabled.deleteBucket =
+      $scope.actionDisabled.deleteBucket =
         s3Items.selected && s3Items.selected.Prefix !== undefined;
+    });
+    $scope.$watch('s3Items.selectedItemIdx', function() {
+      $scope.actionDisabled.deleteObjects = !s3Items.selectedItemIdx || !s3Items.selectedItemIdx.length;
     });
 
     return;

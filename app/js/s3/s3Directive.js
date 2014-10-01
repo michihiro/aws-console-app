@@ -208,7 +208,7 @@
     $scope.promise.then(function() {
       $scope.isReady = true;
     }, function() {
-      //
+      $scope.$dismiss();
     }, function(uploadFiles) {
       $scope.uploadFiles = uploadFiles;
     });

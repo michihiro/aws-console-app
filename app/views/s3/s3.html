@@ -86,9 +86,9 @@
 
 <div class="dropdown position-fixed" id="s3-list-context-menu">
   <ul class="dropdown-menu" role="menu">
-    <li ng-class="{disabled:contextDisabled.createFolder}">
-      <a ng-click="(!contextDisabled.createFolder || $event.stopPropagation()) && openDialog('s3/createFolderDialog.html')">
-        {{'s3.createFolder'|i18next}}
+    <li ng-class="{disabled:actionDisabled.deleteObjects}">
+      <a ng-click="(!actionDisabled.deleteObjects || $event.stopPropagation()) && openDialog('s3/deleteObjectsDialog.html')">
+        {{'s3.deleteObjects'|i18next}}
       </a>
     </li>
   </ul>

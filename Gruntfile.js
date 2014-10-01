@@ -221,7 +221,7 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           cwd: '<%= config.dist %>',
-          src: '{,*/}*.html',
+          src: '**/*.html',
           dest: '<%= config.dist %>'
         }]
       }

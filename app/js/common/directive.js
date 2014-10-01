@@ -87,15 +87,19 @@
         var x = srcEvent.pageX - (isStart ? ev.deltaX : 0);
         var y = srcEvent.pageY - (isStart ? ev.deltaY : 0);
         var tr = document.elementFromPoint(x, y);
+        var trScope;
         while (tr.tagName !== 'TR' && tr.parentNode) {
           tr = tr.parentNode;
         }
         if (tr.tagName === 'TR') {
-          return {
-            x: x,
-            y: y,
-            idx: ng.element(tr).scope().$index
-          };
+          trScope = ng.element(tr).scope();
+          if (typeof trScope.$index === 'number') {
+            return {
+              x: x,
+              y: y,
+              idx: trScope.$index
+            };
+          }
         }
         return null;
       }

@@ -17,6 +17,13 @@
   width: 200px;
   overflow: scroll;
 }
+.s3-left i.opentree {
+  transform: rotateZ(45deg);
+  transform-origin: 75% 50%;
+}
+.s3-left i.transparent {
+  color: transparent;
+}
 .s3-left > div > .nav {
   position: absolute;
   left: 0;
