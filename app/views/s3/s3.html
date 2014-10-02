@@ -24,7 +24,7 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              <th ng-repeat="col in columns" col="col.col"
+              <th ng-repeat="col in columns"
                   ng-style="{width:col.width+'px'}">
                 <div class="th-inner"
                      ng-style="{left:col.left,width:col.width+'px','-webkit-transform':'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
@@ -36,6 +36,11 @@
             </tr>
           </thead>
           <tbody app-table-row-selected="s3Items.selectedItemIdx">
+            <tr ng-if="creatingFolder">
+             <td colspan="{{columns.length}}" ng-controller="s3CreateFolderCtrl">
+              <input app-focus-on="folderName" ng-model="folderName" ng-trim="true" ng-keyup="onKeyup($event)" ng-blur="onInputDone()">
+             </td>
+            </tr>
             <tr ng-repeat="item in s3Items.selected.list"
                 row-id="{{ item.id }}"
                 ng-dblClick="onDblClickList(item)"
@@ -89,6 +94,11 @@
     <li ng-class="{disabled:actionDisabled.deleteObjects}">
       <a ng-click="(!actionDisabled.deleteObjects || $event.stopPropagation()) && openDialog('s3/deleteObjectsDialog.html')">
         {{'s3.deleteObjects'|i18next}}
+      </a>
+    </li>
+    <li ng-class="{disabled:actionDisabled.createFolder}">
+      <a ng-click="(!actionDisabled.createFolder || $event.stopPropagation()) && openCreateFolder()">
+        {{'s3.createFolder'|i18next}}
       </a>
     </li>
   </ul>

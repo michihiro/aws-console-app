@@ -116,6 +116,8 @@
       columns: columns,
       s3Items: s3Items,
       onDblClickList: onDblClickList,
+      openCreateFolder: openCreateFolder,
+      closeCreateFolder: closeCreateFolder,
       comparator: comparator,
       actionDisabled: {},
       isActiveItem: isActiveItem,
@@ -158,6 +160,16 @@
     function comparator() {
       console.log('comparator', arguments);
       return 1;
+    }
+
+    function openCreateFolder() {
+      $scope.creatingFolder = true;
+    }
+
+    function closeCreateFolder() {
+      $timeout(function() {
+        $scope.creatingFolder = false;
+      });
     }
 
     function onDblClickList() {

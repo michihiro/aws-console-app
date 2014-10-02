@@ -162,13 +162,15 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 .table-header-spacer {
   height: 1.8em;
 }
 .table-container {
   height: 100%;
+  overflow-x: visible;
   overflow-y: auto;
 }
 .table-container .table {

@@ -6,7 +6,58 @@
     .directive('appBindWidth', appBindWidthDirective)
     .directive('appBindScrollPosition', appBindScrollPosition)
     .directive('appTableRowSelected', appTableRowSelected)
+    .directive('tableOuter', tableOuter)
+    .directive('appFocusOn', appFocusOnDirective)
+    .factory('appFocusOn', appFocusOnFactory)
     .directive('modalDialog', modalDialogDirective);
+
+  appFocusOnDirective.$inject = [];
+
+  function appFocusOnDirective() {
+    return {
+      restrict: 'A',
+      scope: {
+        name: '@appFocusOn'
+      },
+      link: link
+    };
+
+    function link(scope, elem) {
+      scope.$on('appFocusOn', function(e, name) {
+        if (name === scope.name) {
+          return elem[0].focus();
+        }
+      });
+    }
+  }
+
+  appFocusOnFactory.$inject = ['$rootScope', '$timeout'];
+
+  function appFocusOnFactory($rootScope, $timeout) {
+    return function(name) {
+      return $timeout(function() {
+        return $rootScope.$broadcast('appFocusOn', name);
+      });
+    };
+  }
+
+  tableOuter.$inject = [''];
+
+  function tableOuter() {
+    return {
+      restrict: 'C',
+      link: link
+    };
+
+    function link(scope, elem) {
+      elem.on('scroll', function() {
+        elem.find('.table-container').css({
+          minWidth: elem[0].offsetWidth + elem[0].scrollLeft
+        });
+      });
+    }
+  }
+
 
   appTableRowSelected.$inject = [];
 

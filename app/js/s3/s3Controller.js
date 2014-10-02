@@ -3,7 +3,52 @@
 
   var ng = angular;
   ng.module('aws-console')
+    .controller('s3CreateFolderCtrl', s3CreateFolderCtrl)
     .controller('s3DeleteObjectsDialogCtrl', s3DeleteObjectsDialogCtrl);
+
+  s3CreateFolderCtrl.$inject = ['$scope', 's3Service', 's3Items', 'appFocusOn'];
+
+  function s3CreateFolderCtrl($scope, s3Service, s3Items, appFocusOn) {
+    ng.extend($scope, {
+      onKeyup: onKeyup,
+      onInputDone: onInputDone
+    });
+
+    appFocusOn('folderName');
+
+    return;
+
+    function onKeyup(ev) {
+      if ($scope.folderName && $scope.folderName.length && ev.keyCode === 13) {
+        onInputDone();
+      }
+    }
+
+    function onInputDone() {
+      var folderName = $scope.folderName;
+      if (!folderName || !folderName.length) {
+        return;
+      }
+      folderName.replace(/$\//, '');
+      folderName += '/';
+
+      var s3 = new AWS.S3({
+        credentials: $scope.credentials,
+        region: s3Items.selected.LocationConstraint,
+      });
+      var uploadParam = {
+        Bucket: s3Items.selected.bucketName,
+        Key: folderName,
+        //StorageClass: storageClass,
+        Body: new Blob([]),
+      };
+      s3.putObject(uploadParam, function() {
+        s3Service.updateFolder(s3Items.selected);
+      });
+      $scope.closeCreateFolder();
+      $scope.folderName = '';
+    }
+  }
 
   s3DeleteObjectsDialogCtrl.$inject = ['$scope', '$q', '$timeout', 's3Service', 's3Items'];
 
