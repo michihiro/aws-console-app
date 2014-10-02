@@ -41,7 +41,7 @@
     };
   }
 
-  tableOuter.$inject = [''];
+  tableOuter.$inject = [];
 
   function tableOuter() {
     return {
