@@ -4,6 +4,7 @@
   var ng = angular;
   ng.module('aws-console')
     .controller('s3UploadDialogCtrl', s3UploadDialogCtrl)
+    .factory('s3Mimetype', s3MimetypeFactory)
     .directive('s3UploadField', s3UploadFieldDirective)
     .directive('s3RightClick', s3RightClick)
     .directive('s3Tree', s3TreeDirective);
@@ -178,9 +179,34 @@
     }
   }
 
-  s3UploadDialogCtrl.$inject = ['$scope', '$q', '$timeout', 'appFilterService', 's3Items', 's3NotificationsService'];
+  s3MimetypeFactory.$inject = ['$http'];
 
-  function s3UploadDialogCtrl($scope, $q, $timeout, appFilterService, s3Items, s3NotificationsService) {
+  function s3MimetypeFactory($http) {
+    var mime = {};
+    $http.get('mimetype.txt').then(function(res) {
+      if (typeof res.data === 'string') {
+        mime = res.data.split('\n').reduce(function(all, v) {
+          var match = v.match(/^([^#][^\s]*)(?:(?:[\s]+)([^\s]+))/);
+          var type;
+          if (match) {
+            match.shift();
+            type = match.shift();
+            match.forEach(function(ext) {
+              all[ext] = type;
+            });
+          }
+          return all;
+        }, {});
+      }
+    });
+    return function(ext) {
+      return mime[ext];
+    };
+  }
+
+  s3UploadDialogCtrl.$inject = ['$scope', '$q', '$timeout', 'appFilterService', 's3Items', 's3NotificationsService', 's3Mimetype'];
+
+  function s3UploadDialogCtrl($scope, $q, $timeout, appFilterService, s3Items, s3NotificationsService, s3Mimetype) {
     var columns = [
       {
         col: 'path',
@@ -259,8 +285,6 @@
         var reader = new FileReader();
         reader.onerror = defer.reject;
         reader.onloadend = function() {
-          //console.log('onload', arguments);
-
           var folder = s3Items.selected;
           var s3 = new AWS.S3({
             credentials: $scope.credentials,
@@ -270,6 +294,7 @@
             Bucket: folder.bucketName,
             Key: (folder.Prefix || '') + uploadFile.path,
             StorageClass: storageClass,
+            ContentType: s3Mimetype(uploadFile.path.replace(/^.*\./, '')),
             Body: new Blob([reader.result]),
           };
           s3.putObject(uploadParam, function() { //err, data) {
