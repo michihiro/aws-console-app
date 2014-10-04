@@ -15,6 +15,7 @@
     });
 
     appFocusOn('folderName');
+    s3Items.selectedItemIdx = [];
 
     return;
 
@@ -27,6 +28,7 @@
     function onInputDone() {
       var folderName = $scope.folderName;
       if (!folderName || !folderName.length) {
+        $scope.closeCreateFolder();
         return;
       }
       folderName.replace(/$\//, '');
