@@ -7,9 +7,9 @@
     .directive('s3RightClick', s3RightClick)
     .directive('s3Tree', s3TreeDirective);
 
-  s3TreeDirective.$inject = ['$compile', '$http', '$q', 's3Service', 's3Items'];
+  s3TreeDirective.$inject = ['$compile', '$http', '$q', 's3Items', 's3ListService'];
 
-  function s3TreeDirective($compile, $http, $q, s3Service, s3Items) {
+  function s3TreeDirective($compile, $http, $q, s3Items, s3ListService) {
     var template;
     var deferred = $q.defer();
     $http.get('views/s3/tree.html').then(function(response) {
@@ -30,14 +30,11 @@
       scope.depth = parseInt(scope.depth || 0, 10);
 
       scope.isActive = function(item) {
-        return s3Items.selected === item ? 'active' : '';
+        return s3ListService.getCurrent() === item ? 'active' : '';
       };
 
       scope.onClick = function(ev, item) {
-        s3Service.updateFolder(item);
-        if (!ng.element(ev.target).hasClass('not-select')) {
-          s3Items.selected = item;
-        }
+        s3ListService.setCurrent(item);
       };
 
       deferred.promise.then(function() {

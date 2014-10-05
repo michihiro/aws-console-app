@@ -8,14 +8,14 @@
       <ul class="dropdown-menu" role="menu" ng-include="'views/s3/treeMenu.html'">
       </ul>
     </div>
-    <div class="s3-tree" context-menu data-target="s3-tree-context-menu">
-      <s3-tree data="s3Items.buckets"></s3-tree>
+    <div class="s3-tree" context-menu data-target="s3-tree-context-menu" ng-controller="s3TreeCtrl">
+      <s3-tree data="getBuckets()"></s3-tree>
     </div>
   </div>
   <div class="s3-right" s3-upload-field="dropOpt">
     <div class="btn-group">
-      <button ng-if="s3Items.selected.Prefix" class="btn"
-              ng-click="s3Items.selected = s3Items.selected.parent"
+      <button ng-if="getCurrent().Prefix" class="btn"
+              ng-click="setCurrent(getCurrent().parent)"
       >up</button>
     </div>
     <div class="s3-upload-fileld-cover" ng-if="dropOpt.active"></div>
@@ -42,7 +42,7 @@
               <input app-focus-on="folderName" ng-model="folderName" ng-trim="true" ng-keyup="onKeyup($event)" ng-blur="onInputDone()">
              </td>
             </tr>
-            <tr ng-repeat="item in s3Items.selected.list"
+            <tr ng-repeat="item in getCurrent().list"
                 row-id="{{ item.id }}"
                 ng-dblClick="onDblClickList(item)"
                 ng-class="{info: isActiveItem(item.id, $index)}" >

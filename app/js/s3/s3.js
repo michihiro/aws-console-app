@@ -5,215 +5,73 @@
     .value('s3Items', {
       buckets: []
     })
-    .service('s3Service', s3Service)
+    .factory('s3ListService', s3ListServiceFactory)
     .service('s3DownloadService', s3DownloadService)
     .factory('s3NotificationsService', s3NotificationsService)
     .controller('s3Ctrl', s3Ctrl)
     .controller('s3NotificationsAreaCtrl', s3NotificationsAreaCtrl);
 
-  s3NotificationsService.$inject = ['$timeout'];
+  s3ListServiceFactory.$inject = ['$rootScope', '$timeout'];
 
-  function s3NotificationsService($timeout) {
-    var timeout = 4000;
-    var notifications = [];
-    var notificationsToDel = null;
-    return {
-      get: get,
-      add: add,
-      end: end,
-      hold: hold,
-      release: release
-    };
+  function s3ListServiceFactory($rootScope, $timeout) {
+    var buckets = [];
+    var current;
 
-    function get() {
-      return notifications;
-    }
-
-    function add(notif) {
-      notifications.unshift(notif);
-    }
-
-    function end(notif) {
-      $timeout(function() {
-        if (notificationsToDel === null) {
-          _del(notif);
-        } else {
-          notificationsToDel.push(notif);
-        }
-      }, timeout);
-    }
-
-    function hold() {
-      notificationsToDel = [];
-    }
-
-    function release() {
-      if (notificationsToDel === null) {
-        return;
-      }
-      notificationsToDel.forEach(_del);
-      notificationsToDel = null;
-    }
-
-    function _del(notif) {
-      var idx = notifications.indexOf(notif);
-      if (idx >= 0) {
-        notifications.splice(idx, 1);
-      }
-    }
-  }
-
-  s3NotificationsAreaCtrl.$inject = ['$scope', '$timeout', 's3NotificationsService'];
-
-  function s3NotificationsAreaCtrl($scope, $timeout, s3NotificationsService) {
-    ng.extend($scope, {
-      getNotifications: s3NotificationsService.get,
-      holdNotifications: s3NotificationsService.hold,
-      releaseNotifications: s3NotificationsService.release,
-      closeNotification: s3NotificationsService.end
-    });
-  }
-
-  s3Ctrl.$inject = ['$scope', '$state', '$stateParams', '$filter', '$timeout', 's3Service', 's3DownloadService', 's3Items', 'appFilterService'];
-
-  function s3Ctrl($scope, $state, $stateParams, $filter, $timeout, s3Service, s3DownloadService, s3Items, appFilterService) {
-
-    var columns = [
-      {
-        width: 250,
-        col: 'Name',
-        name: 's3.name',
-        iconFn: function(o) {
-          return !o ? '' : o.Prefix ? 'fa-folder-o' : 'fa-file-o';
-        }
-      },
-      {
-        width: 150,
-        col: 'StorageClass',
-        name: 's3.storageClass',
-        filterFn: appFilterService.s3StorageClass,
-      },
-      {
-        width: 80,
-        col: 'Size',
-        name: 's3.size',
-        class: 'text-right',
-        filterFn: appFilterService.byteFn,
-      },
-      {
-        width: 220,
-        col: 'LastModified',
-        name: 's3.lastModified',
-        class: 'text-right',
-        filterFn: appFilterService.momentFormatFn,
-      },
-    ];
-
-    ng.extend($scope, {
-      columns: columns,
-      s3Items: s3Items,
-      onDblClickList: onDblClickList,
-      openCreateFolder: openCreateFolder,
-      closeCreateFolder: closeCreateFolder,
-      comparator: comparator,
-      actionDisabled: {},
-      isActiveItem: isActiveItem,
-      isOpenTreeMenu: false,
-      dropOpt: {
-        onDrop: function(promise) {
-          $scope.openDialog('s3/uploadDialog.html', {
-            promise: promise
-          });
-        },
-      }
-    });
-
-    $scope.$watch('s3Items.selected', function() {
-      s3Items.selectedItemIdx = [];
-    });
-
-    function isActiveItem(itemId, idx) {
-      return s3Items.selectedItemIdx.indexOf(idx) >= 0;
-    }
-
-    $scope.$watch('credentials', s3Service.updateBuckets);
-
-    ng.element(document).on('contextmenu', function() {
-      $timeout(function() {
-        $scope.isOpenTreeMenu = false;
-      });
-    });
-
-    $scope.$watch('s3Items.selected', function() {
-      $scope.actionDisabled.deleteBucket =
-        s3Items.selected && s3Items.selected.Prefix !== undefined;
-    });
-    $scope.$watch('s3Items.selectedItemIdx', function() {
-      $scope.actionDisabled.deleteObjects = !s3Items.selectedItemIdx || !s3Items.selectedItemIdx.length;
-    });
-
-    return;
-
-    function comparator() {
-      console.log('comparator', arguments);
-      return 1;
-    }
-
-    function openCreateFolder() {
-      $scope.creatingFolder = true;
-    }
-
-    function closeCreateFolder() {
-      $timeout(function() {
-        $scope.creatingFolder = false;
-      });
-    }
-
-    function onDblClickList() {
-      var objs = s3Items.selectedItemIdx.map(function(i) {
-        return s3Items.selected.list[i];
-      });
-      var isDirectory = !!objs[0].Prefix;
-      if (isDirectory) {
-        if (objs[0].parent) {
-          objs[0].parent.opened = true;
-        }
-        objs[0].opened = true;
-        s3Service.updateFolder(objs[0]);
-        s3Items.selected = objs[0];
-      } else {
-        s3DownloadService.download([objs[0]])
-          .then(function() {
-            console.log('all finished');
-          }, function() {
-            console.log('all error');
-          }, function() {
-            console.log('all notify');
-          });
-      }
-    }
-  }
-
-  s3Service.$inject = ['$rootScope', '$parse', '$timeout', 's3Items'];
-
-  function s3Service($rootScope, $parse, $timeout, s3Items) {
-    var buckets = s3Items.buckets;
+    $rootScope.$watch('credentials', _listBuckets);
 
     return {
-      updateBuckets: _updateBuckets,
-      updateFolder: _updateFolder,
+      getBuckets: getBuckets,
+      getCurrent: getCurrent,
+      setCurrent: setCurrent,
+      updateBuckets: updateBuckets,
+      updateFolder: updateFolder,
     };
 
-    function _updateBuckets() {
+    function getBuckets() {
+      return buckets;
+    }
+
+    function getCurrent() {
+      return current;
+    }
+
+    function setCurrent(folder) {
+      if (current !== folder) {
+        _listFolder(folder);
+        current = folder;
+      }
+    }
+
+    function updateBuckets(newBucket) {
+      if (newBucket) {
+        var bucket = {
+          Name: newBucket,
+          bucketName: newBucket,
+        };
+        buckets.push(bucket);
+        setCurrent(bucket);
+      }
+      _listBuckets();
+    }
+
+    function updateFolder() {
+      _listFolder(current);
+    }
+
+    function awsS3(region) {
+      return new AWS.S3({
+        credentials: $rootScope.credentials,
+        region: region,
+      });
+    }
+
+    function _listBuckets() {
       if (!$rootScope.credentials) {
         buckets.length = 0;
         return;
       }
 
-      var s3 = new AWS.S3({
-        credentials: $rootScope.credentials,
-      });
-
+      var s3 = awsS3();
       s3.listBuckets(function(err, result) {
         if (err) {
           buckets.length = 0;
@@ -228,17 +86,18 @@
         result.Buckets.forEach(function(bucket) {
           var idx = bucketNames.indexOf(bucket.Name);
           if (idx >= 0) {
-            newBuckets.push(buckets[idx]);
-          } else {
-            bucket.bucketName = bucket.Name;
-            newBuckets.push(bucket);
+            bucket = ng.extend(buckets[idx], bucket);
+          }
+          bucket.bucketName = bucket.Name;
+          newBuckets.push(bucket);
+          if (!bucket.LocationConstraint) {
             s3.getBucketLocation({
                 Bucket: bucket.Name
               },
               function(err, data) {
                 if (data) {
                   ng.extend(bucket, data);
-                  _updateFolder(bucket);
+                  _listFolder(bucket);
                 }
               }
             );
@@ -248,18 +107,14 @@
           buckets.length = 0;
           Array.prototype.push.apply(buckets, newBuckets);
 
-          if (!s3Items.selected) {
-            s3Items.selected = s3Items.buckets[0];
+          if (!current) {
+            setCurrent(buckets[0]);
           }
         });
       });
     }
 
-    function _updateFolder(folder) {
-      var s3 = new AWS.S3({
-        credentials: $rootScope.credentials,
-        region: folder.LocationConstraint,
-      });
+    function _listFolder(folder) {
       var params = {
         Bucket: folder.bucketName,
         Delimiter: '/',
@@ -269,6 +124,7 @@
         Prefix: folder.Prefix
       };
 
+      var s3 = awsS3(folder.LocationConstraint);
       s3.listObjects(params, function(err, data) {
         var folders = folder.folders = folder.folders || [];
         var contents = folder.contents = folder.contents || [];
@@ -334,13 +190,196 @@
           folder.list = Array.prototype.concat.apply(folder.folders, folder.contents);
           folder.nextMarker = data.NextMarker;
           if (folder.nextMarker) {
-            _updateFolder(folder);
+            _listFolder(folder);
           } else {
             folder.oldFolders.length = 0;
             folder.oldContents.length = 0;
           }
         });
       });
+    }
+  }
+
+  s3NotificationsService.$inject = ['$timeout'];
+
+  function s3NotificationsService($timeout) {
+    var timeout = 4000;
+    var notifications = [];
+    var notificationsToDel = null;
+    return {
+      get: get,
+      add: add,
+      end: end,
+      hold: hold,
+      release: release
+    };
+
+    function get() {
+      return notifications;
+    }
+
+    function add(notif) {
+      notifications.unshift(notif);
+    }
+
+    function end(notif) {
+      $timeout(function() {
+        if (notificationsToDel === null) {
+          _del(notif);
+        } else {
+          notificationsToDel.push(notif);
+        }
+      }, timeout);
+    }
+
+    function hold() {
+      notificationsToDel = [];
+    }
+
+    function release() {
+      if (notificationsToDel === null) {
+        return;
+      }
+      notificationsToDel.forEach(_del);
+      notificationsToDel = null;
+    }
+
+    function _del(notif) {
+      var idx = notifications.indexOf(notif);
+      if (idx >= 0) {
+        notifications.splice(idx, 1);
+      }
+    }
+  }
+
+  s3NotificationsAreaCtrl.$inject = ['$scope', '$timeout', 's3NotificationsService'];
+
+  function s3NotificationsAreaCtrl($scope, $timeout, s3NotificationsService) {
+    ng.extend($scope, {
+      getNotifications: s3NotificationsService.get,
+      holdNotifications: s3NotificationsService.hold,
+      releaseNotifications: s3NotificationsService.release,
+      closeNotification: s3NotificationsService.end
+    });
+  }
+
+  s3Ctrl.$inject = ['$scope', '$state', '$stateParams', '$filter', '$timeout', 's3DownloadService', 's3Items', 's3ListService', 'appFilterService'];
+
+  function s3Ctrl($scope, $state, $stateParams, $filter, $timeout, s3DownloadService, s3Items, s3ListService, appFilterService) {
+
+    var columns = [
+      {
+        width: 250,
+        col: 'Name',
+        name: 's3.name',
+        iconFn: function(o) {
+          return !o ? '' : o.Prefix ? 'fa-folder-o' : 'fa-file-o';
+        }
+      },
+      {
+        width: 150,
+        col: 'StorageClass',
+        name: 's3.storageClass',
+        filterFn: appFilterService.s3StorageClass,
+      },
+      {
+        width: 80,
+        col: 'Size',
+        name: 's3.size',
+        class: 'text-right',
+        filterFn: appFilterService.byteFn,
+      },
+      {
+        width: 220,
+        col: 'LastModified',
+        name: 's3.lastModified',
+        class: 'text-right',
+        filterFn: appFilterService.momentFormatFn,
+      },
+    ];
+
+    ng.extend($scope, {
+      getCurrent: s3ListService.getCurrent,
+      setCurrent: s3ListService.setCurrent,
+      columns: columns,
+      s3Items: s3Items,
+      onDblClickList: onDblClickList,
+      openCreateFolder: openCreateFolder,
+      closeCreateFolder: closeCreateFolder,
+      comparator: comparator,
+      actionDisabled: {},
+      isActiveItem: isActiveItem,
+      isOpenTreeMenu: false,
+      dropOpt: {
+        onDrop: function(promise) {
+          $scope.openDialog('s3/uploadDialog.html', {
+            promise: promise
+          });
+        },
+      }
+    });
+
+    $scope.$watch(function() {
+      return s3ListService.getCurrent();
+    }, function() {
+      s3Items.selectedItemIdx = [];
+    });
+
+    function isActiveItem(itemId, idx) {
+      return s3Items.selectedItemIdx && s3Items.selectedItemIdx.indexOf(idx) >= 0;
+    }
+
+    ng.element(document).on('contextmenu', function() {
+      $timeout(function() {
+        $scope.isOpenTreeMenu = false;
+      });
+    });
+
+    $scope.$watch(function() {
+      return s3ListService.getCurrent();
+    }, function(current) {
+      $scope.actionDisabled.deleteBucket =
+        current && current.Prefix !== undefined;
+    });
+    $scope.$watch('s3Items.selectedItemIdx', function() {
+      $scope.actionDisabled.deleteObjects = !s3Items.selectedItemIdx || !s3Items.selectedItemIdx.length;
+    });
+
+    return;
+
+    function comparator() {
+      console.log('comparator', arguments);
+      return 1;
+    }
+
+    function openCreateFolder() {
+      $scope.creatingFolder = true;
+    }
+
+    function closeCreateFolder() {
+      $timeout(function() {
+        $scope.creatingFolder = false;
+      });
+    }
+
+    function onDblClickList(obj) {
+      var isDirectory = !!obj.Prefix;
+      if (isDirectory) {
+        if (obj.parent) {
+          obj.parent.opened = true;
+        }
+        obj.opened = true;
+        s3ListService.setCurrent(obj);
+      } else {
+        s3DownloadService.download([obj])
+          .then(function() {
+            console.log('all finished');
+          }, function() {
+            console.log('all error');
+          }, function() {
+            console.log('all notify');
+          });
+      }
     }
   }
 
