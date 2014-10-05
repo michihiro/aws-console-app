@@ -12,6 +12,7 @@
     "createFolder": "Create Folder",
     "deleteObjects": "Delete",
     "region": "Region",
+    "noObject": "No objects found.",
     "bucketName": "Bucket Name",
     "create": "Create",
     "delete": "Delete",

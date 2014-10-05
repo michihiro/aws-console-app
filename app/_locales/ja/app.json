@@ -12,6 +12,7 @@
     "createFolder": "フォルダ作成",
     "deleteObjects": "削除",
     "region": "リージョン",
+    "noObject": "オブジェクトがありません。",
     "bucketName": "バケット名",
     "create": "作成",
     "delete": "削除",

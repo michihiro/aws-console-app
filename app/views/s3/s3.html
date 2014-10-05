@@ -42,6 +42,11 @@
               <input app-focus-on="folderName" ng-model="folderName" ng-trim="true" ng-keyup="onKeyup($event)" ng-blur="onInputDone()">
              </td>
             </tr>
+            <tr ng-if="getCurrent().list.length === 0 && !creatingFolder">
+             <td colspan="{{columns.length}}" style="text-align:center">
+              {{'s3.noObject'|i18next}}
+             </td>
+            </tr>
             <tr ng-repeat="item in getCurrent().list"
                 row-id="{{ item.id }}"
                 ng-dblClick="onDblClickList(item)"
