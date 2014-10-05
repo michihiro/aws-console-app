@@ -1,7 +1,5 @@
-(function() {
+(function(ng) {
   'use strict';
-
-  var ng = angular;
 
   ng.module('aws-console')
     .filter('bytes', bytesFilter)
@@ -66,4 +64,4 @@
     }
   }
 
-})();
+})(angular);

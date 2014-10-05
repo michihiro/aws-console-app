@@ -1,7 +1,6 @@
-(function() {
+(function(ng) {
   'use strict';
 
-  var ng = angular;
   ng.module('aws-console', [
       'ngAnimate',
       'ui.router',
@@ -231,4 +230,4 @@
     }
   }
 
-})();
+})(angular);

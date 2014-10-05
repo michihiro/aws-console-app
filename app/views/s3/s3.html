@@ -2,9 +2,10 @@
   <div class="s3-left">
     <div class="btn-group" dropdown is-open="isOpenTreeMenu">
       <button type="button" class="btn btn-info dropdown-toggle" ng-disabled="processing">
-        <span>Menu</span><span class="caret"></span>
+        <span>{{'com.action'|i18next}}</span>
+        <span class="caret"></span>
       </button>
-      <ul class="dropdown-menu" role="menu" ng-include="'views/s3/s3TreeMenu.html'">
+      <ul class="dropdown-menu" role="menu" ng-include="'views/s3/treeMenu.html'">
       </ul>
     </div>
     <div class="s3-tree" context-menu data-target="s3-tree-context-menu">
@@ -86,7 +87,7 @@
 
 <div class="dropdown position-fixed" id="s3-tree-context-menu">
  <ul class="dropdown-menu" role="menu"
-     ng-include="'views/s3/s3TreeMenu.html'"></ul>
+     ng-include="'views/s3/treeMenu.html'"></ul>
 </div>
 
 <div class="dropdown position-fixed" id="s3-list-context-menu">

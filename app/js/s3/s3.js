@@ -1,7 +1,6 @@
-(function() {
+(function(ng) {
   'use strict';
 
-  var ng = angular;
   ng.module('aws-console')
     .value('s3Items', {
       buckets: []
@@ -9,8 +8,6 @@
     .service('s3Service', s3Service)
     .service('s3DownloadService', s3DownloadService)
     .factory('s3NotificationsService', s3NotificationsService)
-    .controller('s3CreateBucketDialogCtrl', s3CreateBucketDialogCtrl)
-    .controller('s3DeleteBucketDialogCtrl', s3DeleteBucketDialogCtrl)
     .controller('s3Ctrl', s3Ctrl)
     .controller('s3NotificationsAreaCtrl', s3NotificationsAreaCtrl);
 
@@ -347,112 +344,6 @@
     }
   }
 
-  s3CreateBucketDialogCtrl.$inject = ['$scope', '$timeout', 's3Service'];
-
-  function s3CreateBucketDialogCtrl($scope, $timeout, s3Service) {
-    var regions = [
-        'us-east-1',
-        'us-west-1',
-        'us-west-2',
-        'eu-west-1',
-        'ap-southeast-1',
-        'ap-southeast-2',
-        'ap-northeast-1',
-        'sa-east-1'
-      ];
-
-    var validateBucketName = {
-      minLen: '$value.length > 2',
-      maxLen: '$value.length < ((inputs.region === "us-east-1") ? 256 : 64)',
-      char: '(inputs.region === "us-east-1") ? validateReg("^[a-zA-Z0-9-\\._]+$", $value) : validateReg("^[a-z0-9-\\.]+$", $value)',
-      startChar: 'inputs.region === "us-east-1" || validateReg("^[a-z0-9]", $value)',
-      endChar: 'inputs.region === "us-east-1" || validateReg("[a-z0-9]$", $value)',
-      period: 'inputs.region === "us-east-1" || ! validateReg("[\\.]{2,}", $value)',
-      ipadr: 'inputs.region === "us-east-1" || ! validateReg("^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$", $value)'
-    };
-
-    ng.extend($scope, {
-      regions: regions,
-      inputs: {
-        region: regions[0]
-      },
-      validateBucketName: validateBucketName,
-      validateReg: validateReg,
-      create: create
-    });
-
-    return;
-
-    function validateReg(exp, val) {
-      return !!(new RegExp(exp).exec(val || ''));
-    }
-
-    function create() {
-      var s3 = new AWS.S3({
-        credentials: $scope.credentials,
-        region: $scope.inputs.region
-      });
-      var params = {
-        Bucket: $scope.inputs.bucketName,
-        /*
-        CreateBucketConfiguration: {
-          LocationConstraint: $scope.inputs.region
-        },
-        ACL: 'private | public-read | public-read-write | authenticated-read',
-        GrantFullControl: 'STRING_VALUE',
-        GrantRead: 'STRING_VALUE',
-        GrantReadACP: 'STRING_VALUE',
-        GrantWrite: 'STRING_VALUE',
-        GrantWriteACP: 'STRING_VALUE'
-        */
-      };
-
-      $scope.processing = true;
-      s3.createBucket(params, function(err) {
-        $timeout(function() {
-          $scope.processing = false;
-          if (err) {
-            $scope.errorCode = err.code;
-          } else {
-            s3Service.updateBuckets();
-            $scope.$close();
-          }
-        });
-      });
-    }
-  }
-
-  s3DeleteBucketDialogCtrl.$inject = ['$scope', '$timeout', 's3Service', 's3Items'];
-
-  function s3DeleteBucketDialogCtrl($scope, $timeout, s3Service, s3Items) {
-    ng.extend($scope, {
-      bucketName: s3Items.selected.bucketName,
-      deleteBucket: deleteBucket
-    });
-
-    function deleteBucket() {
-      var s3 = new AWS.S3({
-        credentials: $scope.credentials,
-        region: s3Items.selected.LocationConstraint
-      });
-      var params = {
-        Bucket: s3Items.selected.bucketName,
-      };
-      $scope.processing = true;
-      s3.deleteBucket(params, function(err) {
-        $timeout(function() {
-          $scope.processing = false;
-          if (err) {
-            $scope.errorCode = err.code;
-          } else {
-            s3Service.updateBuckets();
-            $scope.$close();
-          }
-        });
-      });
-    }
-  }
-
   s3DownloadService.$inject = ['$rootScope', '$q'];
 
   function s3DownloadService($rootScope, $q) {
@@ -538,4 +429,4 @@
     }
   }
 
-})();
+})(angular);

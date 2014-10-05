@@ -1,5 +1,6 @@
 {
   "com": {
+    "action": "Action",
     "cancel": "Cancel"
   },
   "s3": {

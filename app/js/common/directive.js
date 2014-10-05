@@ -1,7 +1,6 @@
-(function() {
+(function(ng) {
   'use strict';
 
-  var ng = angular;
   ng.module('aws-console')
     .directive('appBindWidth', appBindWidthDirective)
     .directive('appBindScrollPosition', appBindScrollPosition)
@@ -321,4 +320,4 @@
     }
   }
 
-})();
+})(angular);
