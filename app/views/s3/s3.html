@@ -36,7 +36,7 @@
               </th>
             </tr>
           </thead>
-          <tbody app-table-row-selected="s3Items.selectedItemIdx">
+          <tbody app-on-row-selected="onRowSelect($indexes)">
             <tr ng-if="creatingFolder">
              <td colspan="{{columns.length}}" ng-controller="s3CreateFolderCtrl">
               <input app-focus-on="folderName" ng-model="folderName" ng-trim="true" ng-keyup="onKeyup($event)" ng-blur="onInputDone()">
@@ -50,7 +50,7 @@
             <tr ng-repeat="item in getCurrent().list"
                 row-id="{{ item.id }}"
                 ng-dblClick="onDblClickList(item)"
-                ng-class="{info: isActiveItem(item.id, $index)}" >
+                ng-class="{info: isSelectedObject(item)}" >
               <td ng-repeat="col in columns" class="{{col.class}}"
                      ng-style="{width:col.width+'px'}">
                 <div class="td-inner" ng-style="{width: col.width+'px'}">
@@ -77,12 +77,12 @@
           <div class="progress-bar progress-bar-info"
                ng-class="{fin: n.uploadPercent==100}"
                ng-style="{width: n.uploadPercent+'%'}">
-            <span ng-if="n._hover">{{n.uploadPercent}}%</span>
+            <span>{{n.uploadPercent}}%</span>
           </div>
         </div>
         <div>
         <div ng-if="n._hover">
-          <div>{{n.uploadTotal}} / {{n.sizeTotal}} bytes </div>
+          <div>{{n.sizeUpload}} / {{n.sizeTotal}} bytes </div>
         </div>
       </div>
     </div>
@@ -97,6 +97,11 @@
 
 <div class="dropdown position-fixed" id="s3-list-context-menu">
   <ul class="dropdown-menu" role="menu">
+    <li ng-class="{disabled:actionDisabled.downloadObjects}">
+      <a ng-click="(!actionDisabled.downloadObjects || $event.stopPropagation()) && downloadObjects()">
+        {{'s3.downloadObjects'|i18next}}
+      </a>
+    </li>
     <li ng-class="{disabled:actionDisabled.deleteObjects}">
       <a ng-click="(!actionDisabled.deleteObjects || $event.stopPropagation()) && openDialog('s3/deleteObjectsDialog.html')">
         {{'s3.deleteObjects'|i18next}}

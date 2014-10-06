@@ -4,7 +4,7 @@
   ng.module('aws-console')
     .directive('appBindWidth', appBindWidthDirective)
     .directive('appBindScrollPosition', appBindScrollPosition)
-    .directive('appTableRowSelected', appTableRowSelected)
+    .directive('appOnRowSelected', appOnRowSelected)
     .directive('tableOuter', tableOuter)
     .directive('appFocusOn', appFocusOnDirective)
     .factory('appFocusOn', appFocusOnFactory)
@@ -58,24 +58,22 @@
   }
 
 
-  appTableRowSelected.$inject = [];
+  appOnRowSelected.$inject = ['$parse'];
 
-  function appTableRowSelected() {
+  function appOnRowSelected($parse) {
     return {
       restrict: 'A',
-      scope: {
-        selected: '=appTableRowSelected',
-      },
       link: link
     };
 
-    function link(scope, elem) {
+    function link(scope, elem, attr) {
       scope._selectRect = ng.element('<div></div>').appendTo('body');
       scope._selectRect.css({
         position: 'absolute',
         border: '1px dashed #777',
         display: 'none',
       });
+      var _selectedIdx = [];
 
       _setHandlers();
 
@@ -93,22 +91,28 @@
               return;
             }
             scope.$apply(function() {
+              var handler = $parse(attr.appOnRowSelected);
               var idx;
-              if (ev.srcEvent.shiftKey && scope.selected.length) {
-                scope.selected = _getSequence(
+
+              if (ev.srcEvent.shiftKey && _selectedIdx.length) {
+                _selectedIdx = _getSequence(
                   pos.idx,
-                  scope.selected[scope.selected.length - 1]
+                  _selectedIdx[_selectedIdx.length - 1]
                 );
               } else if (ev.srcEvent.ctrlKey || ev.srcEvent.metaKey) {
-                idx = scope.selected.indexOf(pos.idx);
+                idx = _selectedIdx.indexOf(pos.idx);
                 if (idx > 0) {
-                  scope.selected.splice(idx, 1);
+                  _selectedIdx.splice(idx, 1);
                 } else {
-                  scope.selected.push(pos.idx);
+                  _selectedIdx.push(pos.idx);
                 }
               } else {
-                scope.selected = [pos.idx];
+                _selectedIdx = [pos.idx];
               }
+              handler(scope, {
+                $event: ev,
+                $indexes: _selectedIdx
+              });
             });
           })
           .on('panstart', function(ev) {
@@ -121,10 +125,15 @@
             });
           })
           .on('pan', function(ev) {
+            var handler = $parse(attr.appOnRowSelected);
             scope.endPos = _getIndexFromPosition(ev);
             if (scope.startPos && scope.endPos) {
               scope.$apply(function() {
-                scope.selected = _getSequence(scope.startPos.idx, scope.endPos.idx);
+                _selectedIdx = _getSequence(scope.startPos.idx, scope.endPos.idx);
+                handler(scope, {
+                  $event: ev.originalEvent,
+                  $indexes: _selectedIdx
+                });
               });
               _setRect();
             }

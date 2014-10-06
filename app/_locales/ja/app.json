@@ -10,6 +10,7 @@
     "createBucket": "新規バケット作成",
     "deleteBucket": "バケット削除",
     "createFolder": "フォルダ作成",
+    "downloadObjects": "ダウンロード",
     "deleteObjects": "削除",
     "region": "リージョン",
     "noObject": "オブジェクトがありません。",

@@ -10,6 +10,7 @@
     "createBucket": "Create Bucket",
     "deleteBucket": "Delete Bucket",
     "createFolder": "Create Folder",
+    "downloadObjects": "Download",
     "deleteObjects": "Delete",
     "region": "Region",
     "noObject": "No objects found.",

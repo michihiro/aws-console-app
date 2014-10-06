@@ -17,9 +17,9 @@
     });
   }
 
-  s3UploadDialogCtrl.$inject = ['$scope', '$q', '$timeout', 'appFilterService', 's3Items', 's3ListService', 's3NotificationsService', 's3Mimetype'];
+  s3UploadDialogCtrl.$inject = ['$scope', '$q', '$timeout', 'appFilterService', 's3ListService', 's3NotificationsService', 's3Mimetype', 'awsS3'];
 
-  function s3UploadDialogCtrl($scope, $q, $timeout, appFilterService, s3Items, s3ListService, s3NotificationsService, s3Mimetype) {
+  function s3UploadDialogCtrl($scope, $q, $timeout, appFilterService, s3ListService, s3NotificationsService, s3Mimetype, awsS3) {
     var columns = [
       {
         col: 'path',
@@ -57,10 +57,11 @@
       $scope.processing = true;
 
       $scope.notification = {
-        uploadNum: promises.length,
-        uploadCnt: 0,
-        uploadSize: [],
-        uploadTotal: 0,
+        type: 'upload',
+        numTotal: promises.length,
+        numUpload: 0,
+        sizes: [],
+        sizeUpload: 0,
         sizeTotal: $scope.uploadFiles.map(function(v) {
           return v.size;
         }).reduce(_sum, 0),
@@ -77,12 +78,13 @@
 
       promises.forEach(function(p) {
         p.then(function() {
-          $scope.notification.uploadCnt++;
+          s3ListService.updateFolder(s3ListService.getCurrent());
+          $scope.notification.numUpload++;
         }, null, function(progress) {
           var notif = $scope.notification;
-          notif.uploadSize[p._idx] = progress.loaded;
-          notif.uploadTotal = $scope.notification.uploadSize.reduce(_sum, 0);
-          notif.uploadPercent = (notif.uploadTotal * 100 / notif.sizeTotal).toFixed(2);
+          notif.sizes[p._idx] = progress.loaded;
+          notif.sizeUpload = $scope.notification.sizes.reduce(_sum, 0);
+          notif.uploadPercent = (notif.sizeUpload * 100 / notif.sizeTotal).toFixed(2);
         });
       });
 
@@ -99,10 +101,7 @@
         reader.onerror = defer.reject;
         reader.onloadend = function() {
           var folder = $scope.folder;
-          var s3 = new AWS.S3({
-            credentials: $scope.credentials,
-            region: folder.LocationConstraint,
-          });
+          var s3 = awsS3(folder.LocationConstraint);
           var uploadParam = {
             Bucket: folder.bucketName,
             Key: (folder.Prefix || '') + uploadFile.path,
@@ -125,9 +124,9 @@
     }
   }
 
-  s3CreateBucketDialogCtrl.$inject = ['$scope', '$timeout', 's3ListService'];
+  s3CreateBucketDialogCtrl.$inject = ['$scope', '$timeout', 's3ListService', 'awsS3'];
 
-  function s3CreateBucketDialogCtrl($scope, $timeout, s3ListService) {
+  function s3CreateBucketDialogCtrl($scope, $timeout, s3ListService, awsS3) {
     var regions = [
         'us-east-1',
         'us-west-1',
@@ -166,10 +165,7 @@
     }
 
     function create() {
-      var s3 = new AWS.S3({
-        credentials: $scope.credentials,
-        region: $scope.inputs.region
-      });
+      var s3 = awsS3($scope.inputs.region);
       var params = {
         Bucket: $scope.inputs.bucketName,
         /*
@@ -200,19 +196,16 @@
     }
   }
 
-  s3DeleteBucketDialogCtrl.$inject = ['$scope', '$timeout', 's3Items', 's3ListService'];
+  s3DeleteBucketDialogCtrl.$inject = ['$scope', '$timeout', 's3ListService', 'awsS3'];
 
-  function s3DeleteBucketDialogCtrl($scope, $timeout, s3Items, s3ListService) {
+  function s3DeleteBucketDialogCtrl($scope, $timeout, s3ListService, awsS3) {
     ng.extend($scope, {
       bucketName: s3ListService.getCurrent().bucketName,
       deleteBucket: deleteBucket
     });
 
     function deleteBucket() {
-      var s3 = new AWS.S3({
-        credentials: $scope.credentials,
-        region: s3ListService.getCurrent().LocationConstraint
-      });
+      var s3 = awsS3(s3ListService.getCurrent().LocationConstraint);
       var params = {
         Bucket: s3ListService.getCurrent().bucketName,
       };
@@ -231,16 +224,15 @@
     }
   }
 
-  s3CreateFolderCtrl.$inject = ['$scope', 's3Items', 's3ListService', 'appFocusOn'];
+  s3CreateFolderCtrl.$inject = ['$scope', 's3ListService', 'awsS3', 'appFocusOn'];
 
-  function s3CreateFolderCtrl($scope, s3Items, s3ListService, appFocusOn) {
+  function s3CreateFolderCtrl($scope, s3ListService, awsS3, appFocusOn) {
     ng.extend($scope, {
       onKeyup: onKeyup,
       onInputDone: onInputDone
     });
 
     appFocusOn('folderName');
-    s3Items.selectedItemIdx = [];
 
     return;
 
@@ -259,30 +251,27 @@
       folderName.replace(/$\//, '');
       folderName += '/';
 
-      var s3 = new AWS.S3({
-        credentials: $scope.credentials,
-        region: s3ListService.getCurrent().LocationConstraint,
-      });
+      var s3 = awsS3(s3ListService.getCurrent().LocationConstraint);
       var uploadParam = {
         Bucket: s3ListService.getCurrent().bucketName,
-        Key: folderName,
+        Key: (s3ListService.getCurrent().Prefix || '') + folderName,
         //StorageClass: storageClass,
         Body: new Blob([]),
       };
       s3.putObject(uploadParam, function() {
+        $scope.closeCreateFolder();
         s3ListService.updateFolder();
       });
-      $scope.closeCreateFolder();
+      s3ListService.selectObjects([]);
       $scope.folderName = '';
     }
   }
 
-  s3DeleteObjectsDialogCtrl.$inject = ['$scope', '$q', '$timeout', 's3Items', 's3ListService'];
+  s3DeleteObjectsDialogCtrl.$inject = ['$scope', '$q', '$timeout', 's3ListService', 'awsS3'];
 
-  function s3DeleteObjectsDialogCtrl($scope, $q, $timeout, s3Items, s3ListService) {
+  function s3DeleteObjectsDialogCtrl($scope, $q, $timeout, s3ListService, awsS3) {
     ng.extend($scope, {
       isReady: false,
-      s3Items: s3Items,
       keys: [],
       drop: drop
     });
@@ -292,10 +281,7 @@
     return;
 
     function init() {
-      var promises = s3Items.selectedItemIdx.map(function(idx) {
-        var obj = s3ListService.getCurrent().list[idx];
-        return getKeys(obj);
-      });
+      var promises = s3ListService.getSelectedObjects().map(getKeys);
 
       $q.all(promises).then(function() {
         $scope.isReady = true;
@@ -317,10 +303,7 @@
     }
 
     function list(obj, defer, nextMarker) {
-      var s3 = new AWS.S3({
-        credentials: $scope.credentials,
-        region: s3ListService.getCurrent().LocationConstraint
-      });
+      var s3 = awsS3(obj.LocationConstraint);
       var params = {
         Bucket: s3ListService.getCurrent().bucketName,
         //Delimiter: '/',
@@ -352,10 +335,7 @@
 
     function drop() {
       $scope.processing = true;
-      var s3 = new AWS.S3({
-        credentials: $scope.credentials,
-        region: s3ListService.getCurrent().LocationConstraint
-      });
+      var s3 = awsS3(s3ListService.getCurrent().LocationConstraint);
       var params = {
         Bucket: s3ListService.getCurrent().bucketName,
         Delete: {
@@ -368,6 +348,7 @@
           console.log(err, err.stack);
         } else {
           s3ListService.updateFolder();
+          s3ListService.selectObjects([]);
           $timeout(function() {
             $scope.processing = false;
             $scope.$close();

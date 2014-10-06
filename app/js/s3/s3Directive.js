@@ -7,9 +7,9 @@
     .directive('s3RightClick', s3RightClick)
     .directive('s3Tree', s3TreeDirective);
 
-  s3TreeDirective.$inject = ['$compile', '$http', '$q', 's3Items', 's3ListService'];
+  s3TreeDirective.$inject = ['$compile', '$http', '$q', 's3ListService'];
 
-  function s3TreeDirective($compile, $http, $q, s3Items, s3ListService) {
+  function s3TreeDirective($compile, $http, $q, s3ListService) {
     var template;
     var deferred = $q.defer();
     $http.get('views/s3/tree.html').then(function(response) {
