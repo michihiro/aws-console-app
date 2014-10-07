@@ -386,14 +386,7 @@
         obj.opened = true;
         s3ListService.setCurrent(obj);
       } else {
-        s3DownloadService.download([obj])
-          .then(function() {
-            console.log('all finished');
-          }, function() {
-            console.log('all error');
-          }, function() {
-            console.log('all notify');
-          });
+        s3DownloadService.download([obj]);
       }
     }
 
@@ -402,20 +395,129 @@
     }
   }
 
-  s3DownloadService.$inject = ['$rootScope', '$q', 'awsS3'];
+  s3DownloadService.$inject = ['$rootScope', '$q', '$modal', 's3ListService', 'awsS3'];
 
-  function s3DownloadService($rootScope, $q, awsS3) {
+  function s3DownloadService($rootScope, $q, $modal, s3ListService, awsS3) {
     return {
       download: download
     };
 
     function download(objs) {
-      return _chooseDirEntry().then(function(dirEntry) {
-        var savePromises = objs.map(function(obj) {
-          return _getSavePromise(dirEntry, obj);
+      _getUrls(objs)
+        .then(function(urlData) {
+          _saveAllObjects(urlData);
+        }, function() {
+          _alert();
+        });
+    }
+
+    function _alert() {
+      $modal.open({
+        templateUrl: 'views/com/alertDialog.html',
+      });
+    }
+
+    function _saveAllObjects(urlData) {
+      _chooseDirEntry().then(function(dirEntry) {
+        // notification = {}; all(notification);
+        var promises = urlData.map(function(obj) {
+          return _getRequest(obj, dirEntry);
         });
 
-        return $q.all(savePromises);
+        $q.all(promises).then(function() {
+          //notify.end();
+        });
+        promises.forEach(function(p) {
+          p.then(function() {}, null, function() {});
+        });
+      }, function() {
+        // canceled
+      });
+    }
+
+    function _getRequest(obj, dirEntry) {
+      var defer = $q.defer();
+      var xhr = new XMLHttpRequest();
+
+      xhr.open('GET', obj.url, true);
+      xhr.responseType = 'blob';
+      xhr.onerror = defer.reject;
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState !== 4) {
+          return;
+        }
+        if (!xhr.writerPromise) {
+          xhr.writerPromise = _createWriter(obj, dirEntry);
+        }
+        if (xhr.status === 200) {
+          xhr.writerPromise.then(function(writer) {
+            writer.onerror = defer.reject;
+            writer.onwriteend = defer.resolve;
+            writer.write(xhr.response, {});
+          });
+        } else {
+          defer.reject();
+        }
+      };
+      xhr.send();
+      return defer.promise;
+    }
+
+    function _createWriter(obj, dirEntry) {
+      var defer = $q.defer();
+      var opt = {
+        create: true,
+        exclusive: false
+      };
+      dirEntry.getFile(obj.name, opt, function(file) {
+        file.createWriter(defer.resolve, defer.reject);
+      }, function(err) {
+        defer.reject(err);
+      });
+      return defer.promise;
+    }
+
+    function _getUrls(objs) {
+      var current = s3ListService.getCurrent();
+      var bucketName = current.bucketName;
+      var region = current.LocationConstraint;
+
+      var promises = objs.map(function(obj) {
+        var defer = $q.defer();
+        if (obj.Prefix) {
+          var s3 = awsS3(obj.LocationConstraint);
+          var params = {
+            Bucket: obj.bucketName,
+            //MaxKeys: 1000,
+            Prefix: obj.Prefix
+          };
+          s3.listObjects(params, function(err, data) {
+            if (err) {
+              defer.reject(err);
+            } else {
+              var downloadData = data.Contents.map(function(o) {
+                return {
+                  url: _getObjectUrl(bucketName, region, o),
+                  name: o.Key.replace(current.Prefix, '')
+                };
+              });
+              defer.resolve(downloadData);
+            }
+          });
+        } else {
+          defer.resolve([{
+            url: _getObjectUrl(bucketName, region, obj),
+            name: obj.Key.replace(current.Prefix, '')
+          }]);
+        }
+        return defer.promise;
+      });
+      return $q.all(promises).then(function(data) {
+        data = data.reduce(function(all, d) {
+          Array.prototype.push.apply(all, d);
+          return all;
+        }, []);
+        return $q.when(data);
       });
     }
 
@@ -423,9 +525,9 @@
       var defer = $q.defer();
       chrome.fileSystem.chooseEntry({
         type: 'openDirectory',
-      }, function(writableFileEntry) {
-        if (writableFileEntry) {
-          defer.resolve(writableFileEntry);
+      }, function(dirEntry) {
+        if (dirEntry) {
+          defer.resolve(dirEntry);
         } else {
           defer.reject();
         }
@@ -433,50 +535,10 @@
       return defer.promise;
     }
 
-    function _getSavePromise(dirEntry, obj) {
-      return getWriter().then(saveUrl);
-
-      function getWriter() {
-        var defer = $q.defer();
-        var opt = {
-          create: true,
-          exclusive: false
-        };
-        dirEntry.getFile(obj.Name, opt, function(file) {
-          file.createWriter(defer.resolve, defer.reject);
-        }, defer.reject);
-        return defer.promise;
-      }
-
-      function saveUrl(writer) {
-        var defer = $q.defer();
-        var xhr = new XMLHttpRequest();
-        var url = _getObjectUrl(obj);
-
-        writer.truncate(0);
-        xhr.open('GET', url, true);
-        xhr.responseType = 'blob';
-        xhr.onerror = defer.reject;
-        xhr.onreadystatechange = function() {
-          if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-              writer.onerror = defer.reject;
-              writer.onwriteend = defer.resolve;
-              writer.write(xhr.response, {});
-            } else {
-              defer.reject();
-            }
-          }
-        };
-        xhr.send();
-        return defer.promise;
-      }
-    }
-
-    function _getObjectUrl(obj) {
-      var s3 = awsS3(obj.LocationConstraint);
+    function _getObjectUrl(bucketName, region, obj) {
+      var s3 = awsS3(region);
       var params = {
-        Bucket: obj.bucketName,
+        Bucket: bucketName,
         Key: obj.Key,
         Expires: 60
       };
