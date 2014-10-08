@@ -59,9 +59,9 @@
       $scope.notification = {
         type: 'upload',
         numTotal: promises.length,
-        numUpload: 0,
+        numProcessed: 0,
         sizes: [],
-        sizeUpload: 0,
+        sizeProcessed: 0,
         sizeTotal: $scope.uploadFiles.map(function(v) {
           return v.size;
         }).reduce(_sum, 0),
@@ -79,12 +79,12 @@
       promises.forEach(function(p) {
         p.then(function() {
           s3ListService.updateFolder(s3ListService.getCurrent());
-          $scope.notification.numUpload++;
+          $scope.notification.numProcessed++;
         }, null, function(progress) {
           var notif = $scope.notification;
           notif.sizes[p._idx] = progress.loaded;
-          notif.sizeUpload = $scope.notification.sizes.reduce(_sum, 0);
-          notif.uploadPercent = (notif.sizeUpload * 100 / notif.sizeTotal).toFixed(2);
+          notif.sizeProcessed = $scope.notification.sizes.reduce(_sum, 0);
+          notif.percent = (notif.sizeProcessed * 100 / notif.sizeTotal).toFixed(2);
         });
       });
 

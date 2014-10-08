@@ -75,14 +75,14 @@
            class="alert alert-info">
         <div class="progress">
           <div class="progress-bar progress-bar-info"
-               ng-class="{fin: n.uploadPercent==100}"
-               ng-style="{width: n.uploadPercent+'%'}">
-            <span>{{n.uploadPercent}}%</span>
+               ng-class="{fin: n.percent==100}"
+               ng-style="{width: n.percent+'%'}">
+            <span>{{n.percent}}%</span>
           </div>
         </div>
         <div>
         <div ng-if="n._hover">
-          <div>{{n.sizeUpload}} / {{n.sizeTotal}} bytes </div>
+          <div>{{n.sizeProcessed}} / {{n.sizeTotal}} bytes </div>
         </div>
       </div>
     </div>
@@ -112,5 +112,7 @@
         {{'s3.createFolder'|i18next}}
       </a>
     </li>
+  </ul>
+</div>
   </ul>
 </div>

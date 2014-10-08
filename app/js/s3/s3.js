@@ -395,9 +395,12 @@
     }
   }
 
-  s3DownloadService.$inject = ['$rootScope', '$q', '$modal', 's3ListService', 'awsS3'];
+  s3DownloadService.$inject = ['$rootScope', '$q', '$modal', 's3ListService', 's3NotificationsService', 'awsS3'];
 
-  function s3DownloadService($rootScope, $q, $modal, s3ListService, awsS3) {
+  function s3DownloadService($rootScope, $q, $modal, s3ListService, s3NotificationsService, awsS3) {
+    var MAX_DOWNLOAD_NUM = 1000;
+    var ERR_TOO_MAY_OBJECTS = 'errTooManyObjects';
+
     return {
       download: download
     };
@@ -419,23 +422,60 @@
 
     function _saveAllObjects(urlData) {
       _chooseDirEntry().then(function(dirEntry) {
-        // notification = {}; all(notification);
-        var promises = urlData.map(function(obj) {
-          return _getRequest(obj, dirEntry);
+        var promises = urlData.map(function(obj, idx) {
+          if (obj.name[obj.name.length - 1] === '/') {
+            return _saveFolder(obj, dirEntry, idx);
+          } else {
+            return _saveFile(obj, dirEntry, idx);
+          }
         });
 
+        var notification = {
+          type: 'download',
+          numTotal: promises.length,
+          numProcessed: 0,
+          sizes: [],
+          sizeProcessed: 0,
+          sizeTotal: urlData.map(function(v) {
+            return v.size;
+          }).reduce(_sum, 0),
+        };
+
+        s3NotificationsService.add(notification);
         $q.all(promises).then(function() {
-          //notify.end();
+          s3NotificationsService.end(notification);
         });
         promises.forEach(function(p) {
-          p.then(function() {}, null, function() {});
+          p.then(function() {
+            notification.numProcessed++;
+          }, null, function(progress) {
+            notification.sizes[p._idx] = progress.size;
+            notification.sizeProcessed = notification.sizes.reduce(_sum, 0);
+            notification.percent = (notification.sizeProcessed * 100 / notification.sizeTotal).toFixed(2);
+          });
         });
       }, function() {
         // canceled
       });
+
+      function _sum(total, size) {
+        return total + size;
+      }
     }
 
-    function _getRequest(obj, dirEntry) {
+    function _saveFolder(obj, dirEntry, idx) {
+      var defer = $q.defer();
+      var dirs = obj.name.split('/');
+      dirs.pop();
+
+      _createDir(dirEntry, dirs, function() {
+        defer.resolve();
+      });
+      defer.promise._idx = idx;
+      return defer.promise;
+    }
+
+    function _saveFile(obj, dirEntry, idx) {
       var defer = $q.defer();
       var xhr = new XMLHttpRequest();
 
@@ -446,35 +486,68 @@
         if (xhr.readyState !== 4) {
           return;
         }
+        defer.notify({size:xhr.response.size});
         if (!xhr.writerPromise) {
           xhr.writerPromise = _createWriter(obj, dirEntry);
         }
         if (xhr.status === 200) {
           xhr.writerPromise.then(function(writer) {
             writer.onerror = defer.reject;
-            writer.onwriteend = defer.resolve;
-            writer.write(xhr.response, {});
+            writer.onwriteend = function() {
+              if (writer.length !== 0 || xhr.response.size === 0) {
+                defer.resolve();
+              } else {
+                writer.write(xhr.response, {});
+              }
+            };
+            writer.truncate(0);
           });
         } else {
           defer.reject();
         }
       };
       xhr.send();
+      defer.promise._idx = idx;
       return defer.promise;
     }
 
     function _createWriter(obj, dirEntry) {
       var defer = $q.defer();
-      var opt = {
-        create: true,
-        exclusive: false
-      };
-      dirEntry.getFile(obj.name, opt, function(file) {
-        file.createWriter(defer.resolve, defer.reject);
-      }, function(err) {
-        defer.reject(err);
-      });
+      var dirs = obj.name.split('/');
+      dirs.pop();
+
+      if (dirs.length > 0) {
+        _createDir(dirEntry, dirs, function() {
+          _save();
+        });
+      } else {
+        _save();
+      }
+
+      function _save() {
+        var opt = {
+          create: true,
+          exclusive: false
+        };
+        dirEntry.getFile(obj.name, opt, function(file) {
+          file.createWriter(defer.resolve, defer.reject);
+        }, function(err) {
+          defer.reject(err);
+        });
+      }
       return defer.promise;
+    }
+
+    function _createDir(dirEntry, dirNames, callback) {
+      dirEntry.getDirectory(dirNames[0], {
+        create: true
+      }, function(childDirEntry) {
+        if (dirNames.length > 1) {
+          _createDir(childDirEntry, dirNames.slice(1), callback);
+        } else {
+          callback(null);
+        }
+      });
     }
 
     function _getUrls(objs) {
@@ -485,20 +558,21 @@
       var promises = objs.map(function(obj) {
         var defer = $q.defer();
         if (obj.Prefix) {
-          var s3 = awsS3(obj.LocationConstraint);
+          var s3 = awsS3(region);
           var params = {
-            Bucket: obj.bucketName,
-            //MaxKeys: 1000,
+            Bucket: bucketName,
             Prefix: obj.Prefix
           };
           s3.listObjects(params, function(err, data) {
             if (err) {
+              console.log(err);
               defer.reject(err);
             } else {
               var downloadData = data.Contents.map(function(o) {
                 return {
                   url: _getObjectUrl(bucketName, region, o),
-                  name: o.Key.replace(current.Prefix, '')
+                  name: o.Key.replace(current.Prefix, ''),
+                  size: o.Size
                 };
               });
               defer.resolve(downloadData);
@@ -507,7 +581,8 @@
         } else {
           defer.resolve([{
             url: _getObjectUrl(bucketName, region, obj),
-            name: obj.Key.replace(current.Prefix, '')
+            name: obj.Key.replace(current.Prefix, ''),
+            size: obj.Size
           }]);
         }
         return defer.promise;
@@ -517,7 +592,11 @@
           Array.prototype.push.apply(all, d);
           return all;
         }, []);
-        return $q.when(data);
+        if(data.length > MAX_DOWNLOAD_NUM) {
+          return $q.reject(ERR_TOO_MAY_OBJECTS);
+        } else {
+          return $q.when(data);
+        }
       });
     }
 
