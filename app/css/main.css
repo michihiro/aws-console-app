@@ -151,6 +151,12 @@ body {
 .modal.in .modal-dialog {
   transform: scale(1);
 }
+.modal h3 {
+  margin: 0px;
+}
+.modal .form-group {
+  margin-bottom: 5px;
+}
 .position-fixed {
   position: fixed;
 }
@@ -185,14 +191,14 @@ body {
   position: absolute;
   line-height: 1.8em;
   top: 0;
-  padding: .1em .8em;
+  padding: .05em .4em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .td-inner {
   line-height: 1.8em;
-  padding: .1em .8em;
+  padding: .05em .4em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

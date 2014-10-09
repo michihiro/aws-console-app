@@ -282,17 +282,20 @@
           var w = scope._width + ev.deltaX;
           $timeout(function() {
             scope.opt.width = w > 50 ? w : 50;
-            var left = 0;
-            elem.parents('thead').find('[app-bind-width]').each(function() {
-              var thScope = ng.element(this).scope();
-              thScope[scope.optName].left = left;
-              left += thScope[scope.optName].width;
-            });
+            _setLeft();
           });
         });
 
+      _setLeft();
       ng.element($window).on('resize', setSize);
       setSize();
+
+      elem.on('$destroy', function() {
+        scope._hm.destroy();
+        scope._hm = null;
+      });
+
+      return;
 
       function setSize() {
         $timeout(function() {
@@ -300,10 +303,14 @@
         });
       }
 
-      elem.on('$destroy', function() {
-        scope._hm.destroy();
-        scope._hm = null;
-      });
+      function _setLeft() {
+        var left = 0;
+        elem.parents('thead').find('[app-bind-width]').each(function() {
+          var thScope = ng.element(this).scope();
+          thScope[scope.optName].left = left;
+          left += thScope[scope.optName].width;
+        });
+      }
     }
   }
 

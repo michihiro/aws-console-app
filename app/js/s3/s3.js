@@ -486,7 +486,9 @@
         if (xhr.readyState !== 4) {
           return;
         }
-        defer.notify({size:xhr.response.size});
+        defer.notify({
+          size: xhr.response.size
+        });
         if (!xhr.writerPromise) {
           xhr.writerPromise = _createWriter(obj, dirEntry);
         }
@@ -592,7 +594,7 @@
           Array.prototype.push.apply(all, d);
           return all;
         }, []);
-        if(data.length > MAX_DOWNLOAD_NUM) {
+        if (data.length > MAX_DOWNLOAD_NUM) {
           return $q.reject(ERR_TOO_MAY_OBJECTS);
         } else {
           return $q.when(data);

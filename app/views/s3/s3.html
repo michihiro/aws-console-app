@@ -28,7 +28,7 @@
               <th ng-repeat="col in columns"
                   ng-style="{width:col.width+'px'}">
                 <div class="th-inner"
-                     ng-style="{left:col.left,width:col.width+'px','-webkit-transform':'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
+                     ng-style="{left:col.left+'px',width:col.width+'px','-webkit-transform':'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
                   <span>{{col.name|i18next}}</span>
                   <div class="table-resize-handle"
                        app-bind-width="col"></div>

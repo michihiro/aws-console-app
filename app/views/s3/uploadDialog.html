@@ -34,7 +34,7 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              <th ng-repeat="col in columns" sortable-header col="col.col">
+              <th ng-repeat="col in columns">
                 <div class="th-inner"
                      ng-style="{left:col.left,width:col.width+'px','-webkit-transform':'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
                   <span>{{col.name|i18next}}</span>
@@ -50,8 +50,9 @@
               <td ng-repeat="col in columns" class="{{col.class}}"
                   ng-style="{width:col.width+'px'}">
                 <div class="td-inner" ng-style="{width: col.width+'px'}">
-                  <span ng-if="col.filterFn">{{col.filterFn(item[col.col])}}</span>
-                  <span ng-if="!col.filterFn">{{item[col.col]}}</span>
+                  <span ng-if="col.checkbox"><input type=checkbox ng-model="item.check"></span>
+                  <span ng-if="col.col && col.filterFn">{{col.filterFn(item[col.col])}}</span>
+                  <span ng-if="col.col && !col.filterFn">{{item[col.col]}}</span>
                 </div>
               </td>
             </tr>

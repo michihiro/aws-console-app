@@ -22,6 +22,10 @@
   function s3UploadDialogCtrl($scope, $q, $timeout, appFilterService, s3ListService, s3NotificationsService, s3Mimetype, awsS3) {
     var columns = [
       {
+        checkbox: true,
+        width: 20,
+      },
+      {
         col: 'path',
         name: 's3.name',
         width: 400
@@ -31,7 +35,7 @@
         name: 's3.size',
         class: 'text-right',
         filterFn: appFilterService.byteFn,
-        width: 160
+        width: 140
       }
     ];
 
@@ -46,14 +50,25 @@
 
     $scope.promise.then(function() {
       $scope.isReady = true;
+      $scope.$watch(function() {
+        return $scope.uploadFiles.some(_isChecked);
+      }, function(isReady) {
+        $scope.isReady = isReady;
+      }, true);
     }, function() {
       $scope.$dismiss();
     }, function(uploadFiles) {
       $scope.uploadFiles = uploadFiles;
     });
 
+    return;
+
+    function _isChecked(v) {
+      return v.check;
+    }
+
     function upload() {
-      var promises = $scope.uploadFiles.map(_uploadOne);
+      var promises = $scope.uploadFiles.filter(_isChecked).map(_uploadOne);
       $scope.processing = true;
 
       $scope.notification = {

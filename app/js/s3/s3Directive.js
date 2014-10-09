@@ -104,8 +104,17 @@
       }
 
       function drop(ev) {
+        var items = ev.originalEvent.dataTransfer.items;
+        var uploadFiles = [];
+        var promises = [];
+        var entry, i, l;
+
         ev.stopPropagation();
         ev.preventDefault();
+        if (!items.length) {
+          console.log('no upload files', ev);
+          return;
+        }
 
         var defer = $q.defer();
         scope.opt.onDrop(defer.promise);
@@ -113,11 +122,6 @@
         $timeout(function() {
           scope.opt.active = false;
         });
-
-        var items = ev.originalEvent.dataTransfer.items;
-        var uploadFiles = [];
-        var promises = [];
-        var entry, i, l;
 
         uploadFiles.total = 0;
         for (i = 0, l = items.length; i < l; i++) {
@@ -159,6 +163,7 @@
           entry.getMetadata(function(metadata) {
             $timeout(function() {
               uploadFiles.push({
+                check: true,
                 entry: entry,
                 path: entry.fullPath.replace(/^\//, ''),
                 size: metadata.size
@@ -178,25 +183,29 @@
 
   function s3MimetypeFactory($http) {
     var mime = {};
-    $http.get('mimetype.txt').then(function(res) {
-      if (typeof res.data === 'string') {
-        mime = res.data.split('\n').reduce(function(all, v) {
-          var match = v.match(/^([^#][^\s]*)(?:(?:[\s]+)([^\s]+))/);
-          var type;
-          if (match) {
-            match.shift();
-            type = match.shift();
-            match.forEach(function(ext) {
-              all[ext] = type;
-            });
-          }
-          return all;
-        }, {});
-      }
-    });
+    $http.get('mimetype.txt').then(_extractMimeTypeString);
+
     return function(ext) {
       return mime[ext];
     };
+
+    function _extractMimeTypeString(res) {
+      if (typeof res.data !== 'string') {
+        return;
+      }
+      mime = res.data.split('\n').reduce(function(all, v) {
+        var match = v.match(/^([^#][^\s]*)(?:(?:[\s]+)([^\s]+))/);
+        var type;
+        if (match) {
+          match.shift();
+          type = match.shift();
+          match.forEach(function(ext) {
+            all[ext] = type;
+          });
+        }
+        return all;
+      }, {});
+    }
   }
 
 })(angular);
