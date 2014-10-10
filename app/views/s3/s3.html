@@ -1,7 +1,7 @@
 <div class="func-view">
   <div class="s3-left">
     <div class="btn-group" dropdown is-open="isOpenTreeMenu">
-      <button type="button" class="btn btn-info dropdown-toggle" ng-disabled="processing">
+      <button type="button" class="btn btn-info dropdown-toggle">
         <span>{{'com.action'|i18next}}</span>
         <span class="caret"></span>
       </button>
@@ -37,6 +37,11 @@
             </tr>
           </thead>
           <tbody app-on-row-selected="onRowSelect($indexes)">
+            <tr ng-if="getCurrent().list === undefined">
+             <td colspan="{{columns.length}}">
+               <div class="td-inner"><div class="loader"/><div class="loader"/><div class="loader"/><div class="loader"/></div>
+             </td>
+            </tr>
             <tr ng-if="creatingFolder">
              <td colspan="{{columns.length}}" ng-controller="s3CreateFolderCtrl">
               <input app-focus-on="folderName" ng-model="folderName" ng-trim="true" ng-keyup="onKeyup($event)" ng-blur="onInputDone()">
@@ -91,28 +96,17 @@
 </div>
 
 <div class="dropdown position-fixed" id="s3-tree-context-menu">
- <ul class="dropdown-menu" role="menu"
-     ng-include="'views/s3/treeMenu.html'"></ul>
+  <ul class="dropdown-menu" role="menu"
+      ng-include="'views/s3/treeMenu.html'"></ul>
 </div>
 
 <div class="dropdown position-fixed" id="s3-list-context-menu">
   <ul class="dropdown-menu" role="menu">
-    <li ng-class="{disabled:actionDisabled.downloadObjects}">
-      <a ng-click="(!actionDisabled.downloadObjects || $event.stopPropagation()) && downloadObjects()">
-        {{'s3.downloadObjects'|i18next}}
+    <li ng-repeat="m in listMenu"
+        ng-class="{disabled:actionDisabled[m.action]}">
+      <a ng-click="(!actionDisabled[m.action] || $event.stopPropagation()) && m.onClick($event)">
+        {{m.label|i18next}}
       </a>
     </li>
-    <li ng-class="{disabled:actionDisabled.deleteObjects}">
-      <a ng-click="(!actionDisabled.deleteObjects || $event.stopPropagation()) && openDialog('s3/deleteObjectsDialog.html')">
-        {{'s3.deleteObjects'|i18next}}
-      </a>
-    </li>
-    <li ng-class="{disabled:actionDisabled.createFolder}">
-      <a ng-click="(!actionDisabled.createFolder || $event.stopPropagation()) && openCreateFolder()">
-        {{'s3.createFolder'|i18next}}
-      </a>
-    </li>
-  </ul>
-</div>
   </ul>
 </div>

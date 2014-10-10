@@ -11,7 +11,7 @@
         <span>{{'s3.regionName.'+inputs.region|i18next}}</span><span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu">
-        <li ng-repeat="r in regions">
+        <li ng-repeat="r in regions.s3">
           <a ng-class="{'btn-info':inputs.region==r}"
              ng-click="inputs.region=r;selectRegion.isopen=false">
             {{'s3.regionName.'+r|i18next}} - {{r}}

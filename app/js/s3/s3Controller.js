@@ -142,17 +142,6 @@
   s3CreateBucketDialogCtrl.$inject = ['$scope', '$timeout', 's3ListService', 'awsS3'];
 
   function s3CreateBucketDialogCtrl($scope, $timeout, s3ListService, awsS3) {
-    var regions = [
-        'us-east-1',
-        'us-west-1',
-        'us-west-2',
-        'eu-west-1',
-        'ap-southeast-1',
-        'ap-southeast-2',
-        'ap-northeast-1',
-        'sa-east-1'
-      ];
-
     var validateBucketName = {
       minLen: '$value.length > 2',
       maxLen: '$value.length < ((inputs.region === "us-east-1") ? 256 : 64)',
@@ -164,9 +153,8 @@
     };
 
     ng.extend($scope, {
-      regions: regions,
       inputs: {
-        region: regions[0]
+        region: $scope.regions.s3[0]
       },
       validateBucketName: validateBucketName,
       validateReg: validateReg,

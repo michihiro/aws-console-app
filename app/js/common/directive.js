@@ -2,6 +2,7 @@
   'use strict';
 
   ng.module('aws-console')
+    .directive('appRightClick', appRightClick)
     .directive('appBindWidth', appBindWidthDirective)
     .directive('appBindScrollPosition', appBindScrollPosition)
     .directive('appOnRowSelected', appOnRowSelected)
@@ -9,6 +10,22 @@
     .directive('appFocusOn', appFocusOnDirective)
     .factory('appFocusOn', appFocusOnFactory)
     .directive('modalDialog', modalDialogDirective);
+
+  appRightClick.$inject = ['$parse'];
+
+  function appRightClick($parse) {
+    return function(scope, elem, attrs) {
+      var fn = $parse(attrs.appRightClick);
+      elem.bind('contextmenu', function(ev) {
+        scope.$apply(function() {
+          ev.preventDefault();
+          fn(scope, {
+            $event: event
+          });
+        });
+      });
+    };
+  }
 
   appFocusOnDirective.$inject = [];
 
@@ -67,77 +84,83 @@
     };
 
     function link(scope, elem, attr) {
-      scope._selectRect = ng.element('<div></div>').appendTo('body');
-      scope._selectRect.css({
-        position: 'absolute',
-        border: '1px dashed #777',
-        display: 'none',
-      });
       var _selectedIdx = [];
+      var opt = {
+        recognizers: [[Hammer.Pan], [Hammer.Tap]]
+      };
+      scope._selectRect = ng.element('<div></div>')
+        .appendTo('body')
+        .css({
+          position: 'absolute',
+          border: '1px dashed #777',
+          display: 'none',
+        });
 
-      _setHandlers();
+      scope._mc = new Hammer.Manager(elem[0], opt)
+        .on('tap', _onTap)
+        .on('panstart', _onPanstart)
+        .on('panend', _onPanend)
+        .on('pan', _onPan);
 
       elem.on('$destroy', _onDestroy);
 
       return;
 
-      function _setHandlers() {
-        scope._mc = new Hammer.Manager(elem[0], {
-          recognizers: [[Hammer.Pan], [Hammer.Tap]]
-        })
-          .on('tap', function(ev) {
-            var pos = _getIndexFromPosition(ev);
-            if (!pos) {
-              return;
-            }
-            scope.$apply(function() {
-              var handler = $parse(attr.appOnRowSelected);
-              var idx;
+      function _onTap(ev) {
+        var pos = _getIndexFromPosition(ev);
+        if (!pos) {
+          return;
+        }
+        scope.$apply(function() {
+          var handler = $parse(attr.appOnRowSelected);
+          var idx;
 
-              if (ev.srcEvent.shiftKey && _selectedIdx.length) {
-                _selectedIdx = _getSequence(
-                  pos.idx,
-                  _selectedIdx[_selectedIdx.length - 1]
-                );
-              } else if (ev.srcEvent.ctrlKey || ev.srcEvent.metaKey) {
-                idx = _selectedIdx.indexOf(pos.idx);
-                if (idx > 0) {
-                  _selectedIdx.splice(idx, 1);
-                } else {
-                  _selectedIdx.push(pos.idx);
-                }
-              } else {
-                _selectedIdx = [pos.idx];
-              }
-              handler(scope, {
-                $event: ev,
-                $indexes: _selectedIdx
-              });
-            });
-          })
-          .on('panstart', function(ev) {
-            scope.startPos = _getIndexFromPosition(ev);
-          })
-          .on('panend', function() {
-            scope.startPos = scope.endPos = null;
-            scope._selectRect.css({
-              display: 'none'
-            });
-          })
-          .on('pan', function(ev) {
-            var handler = $parse(attr.appOnRowSelected);
-            scope.endPos = _getIndexFromPosition(ev);
-            if (scope.startPos && scope.endPos) {
-              scope.$apply(function() {
-                _selectedIdx = _getSequence(scope.startPos.idx, scope.endPos.idx);
-                handler(scope, {
-                  $event: ev.originalEvent,
-                  $indexes: _selectedIdx
-                });
-              });
-              _setRect();
+          if (ev.srcEvent.shiftKey && _selectedIdx.length) {
+            _selectedIdx = _getSequence(
+              pos.idx,
+              _selectedIdx[_selectedIdx.length - 1]
+            );
+          } else if (ev.srcEvent.ctrlKey || ev.srcEvent.metaKey) {
+            idx = _selectedIdx.indexOf(pos.idx);
+            if (idx > 0) {
+              _selectedIdx.splice(idx, 1);
+            } else {
+              _selectedIdx.push(pos.idx);
             }
+          } else {
+            _selectedIdx = [pos.idx];
+          }
+          handler(scope, {
+            $event: ev,
+            $indexes: _selectedIdx
           });
+        });
+      }
+
+      function _onPanstart(ev) {
+        scope.startPos = _getIndexFromPosition(ev);
+      }
+
+      function _onPanend() {
+        scope.startPos = scope.endPos = null;
+        scope._selectRect.css({
+          display: 'none'
+        });
+      }
+
+      function _onPan(ev) {
+        var handler = $parse(attr.appOnRowSelected);
+        scope.endPos = _getIndexFromPosition(ev);
+        if (scope.startPos && scope.endPos) {
+          scope.$apply(function() {
+            _selectedIdx = _getSequence(scope.startPos.idx, scope.endPos.idx);
+            handler(scope, {
+              $event: ev.originalEvent,
+              $indexes: _selectedIdx
+            });
+          });
+          _setRect();
+        }
       }
 
       function _getIndexFromPosition(ev) {
@@ -210,28 +233,38 @@
       });
 
       scope._hm = new Hammer.Manager(header[0], opt)
-        .on('panstart', function() {
-          scope._transPos = scope._transPos || {
-            x: 0,
-            y: 0
-          };
+        .on('panstart', _onPanstart)
+        .on('panend', _onPanend)
+        .on('pan', _onPan);
 
-          scope._transXMin = -elem[0].offsetLeft;
-          scope._transXMax = $window.innerWidth - elem[0].offsetWidth - elem[0].offsetLeft;
-          scope._transYMin = -elem[0].offsetTop;
-          scope._transYMax = $window.innerHeight - elem[0].offsetHeight - elem[0].offsetTop;
-        })
-        .on('panend', function(ev) {
-          var pos = _getTranslatePos(ev);
-          scope._transPos = pos;
-        })
-        .on('pan', function(ev) {
-          var pos = _getTranslatePos(ev);
-          elem.css({
-            transform: 'translate(' + pos.x + 'px,' + pos.y + 'px)',
-            transition: 'none',
-          });
+      elem.on('$destroy', _onDestroy);
+
+      return;
+
+      function _onPanstart() {
+        scope._transPos = scope._transPos || {
+          x: 0,
+          y: 0
+        };
+
+        scope._transXMin = -elem[0].offsetLeft;
+        scope._transXMax = $window.innerWidth - elem[0].offsetWidth - elem[0].offsetLeft;
+        scope._transYMin = -elem[0].offsetTop;
+        scope._transYMax = $window.innerHeight - elem[0].offsetHeight - elem[0].offsetTop;
+      }
+
+      function _onPanend(ev) {
+        var pos = _getTranslatePos(ev);
+        scope._transPos = pos;
+      }
+
+      function _onPan(ev) {
+        var pos = _getTranslatePos(ev);
+        elem.css({
+          transform: 'translate(' + pos.x + 'px,' + pos.y + 'px)',
+          transition: 'none',
         });
+      }
 
       function _getTranslatePos(ev) {
         var x = scope._transPos.x + ev.deltaX;
@@ -246,10 +279,10 @@
         };
       }
 
-      elem.on('$destroy', function() {
+      function _onDestroy() {
         scope._hm.destroy();
         scope._hm = null;
-      });
+      }
     }
   }
 
@@ -266,38 +299,42 @@
     };
 
     function link(scope, elem) {
-      scope._hm = new Hammer.Manager(elem[0], {
+      var opt = {
         recognizers: [[Hammer.Pan]]
-      })
-        .on('panstart', function() {
-          scope._width = scope.opt.width || 50;
-        })
-        .on('panend', function() {
-          scope._width = null;
-        })
-        .on('panleft panright', function(ev) {
-          if (!scope._width) {
-            return;
-          }
-          var w = scope._width + ev.deltaX;
-          $timeout(function() {
-            scope.opt.width = w > 50 ? w : 50;
-            _setLeft();
-          });
-        });
+      };
+      scope._hm = new Hammer.Manager(elem[0], opt)
+        .on('panstart', _onPanstart)
+        .on('panend', _onPanend)
+        .on('panleft panright', _onPanside);
 
       _setLeft();
-      ng.element($window).on('resize', setSize);
-      setSize();
+      ng.element($window).on('resize', _setHeight);
+      _setHeight();
 
-      elem.on('$destroy', function() {
-        scope._hm.destroy();
-        scope._hm = null;
-      });
+      elem.on('$destroy', _onDestroy);
 
       return;
 
-      function setSize() {
+      function _onPanstart() {
+        scope._width = scope.opt.width || 50;
+      }
+
+      function _onPanend() {
+        scope._width = null;
+      }
+
+      function _onPanside(ev) {
+        if (!scope._width) {
+          return;
+        }
+        var w = scope._width + ev.deltaX;
+        $timeout(function() {
+          scope.opt.width = w > 50 ? w : 50;
+          _setLeft();
+        });
+      }
+
+      function _setHeight() {
         $timeout(function() {
           elem.height(elem.parents('.table-container').height());
         });
@@ -310,6 +347,11 @@
           thScope[scope.optName].left = left;
           left += thScope[scope.optName].width;
         });
+      }
+
+      function _onDestroy() {
+        scope._hm.destroy();
+        scope._hm = null;
       }
     }
   }

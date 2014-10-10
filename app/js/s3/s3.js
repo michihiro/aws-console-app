@@ -319,10 +319,35 @@
       },
     ];
 
+    var listMenu = [
+      {
+        label: 's3.downloadObjects',
+        action: 'downloadObjects',
+        onClick: function() {
+          downloadObjects();
+        }
+      },
+      {
+        label: 's3.deleteObjects',
+        action: 'deleteObjects',
+        onClick: function() {
+          $scope.openDialog('s3/deleteObjectsDialog.html');
+        }
+      },
+      {
+        label: 's3.createFolder',
+        action: 'createFolder',
+        onClick: function() {
+          $scope.openCreateFolder();
+        }
+      }
+    ];
+
     ng.extend($scope, {
       getCurrent: s3ListService.getCurrent,
       setCurrent: s3ListService.setCurrent,
       columns: columns,
+      listMenu: listMenu,
       onDblClickList: onDblClickList,
       downloadObjects: downloadObjects,
       openCreateFolder: openCreateFolder,

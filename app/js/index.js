@@ -15,6 +15,17 @@
     .config(appConfig)
     .run(appRun);
 
+  var regions = [
+    'us-east-1',
+    'us-west-1',
+    'us-west-2',
+    'eu-west-1',
+    'ap-southeast-1',
+    'ap-southeast-2',
+    'ap-northeast-1',
+    'sa-east-1'
+  ];
+
   appConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$i18nextProvider'];
 
   function appConfig($stateProvider, $urlRouterProvider, $i18nextProvider) {
@@ -53,7 +64,7 @@
           title: titleView,
           main: {
             templateUrl: 'views/ec2/ec2.html',
-            controller: 's3Ctrl'
+            controller: 'ec2Ctrl'
           }
         },
       })
@@ -90,6 +101,10 @@
     ng.extend($rootScope, {
       state: $state,
       stateParams: $stateParams,
+      regions: {
+        s3: regions,
+        ec2: regions
+      },
       openDialog: openDialog
     });
 

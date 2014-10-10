@@ -4,7 +4,6 @@
   ng.module('aws-console')
     .factory('s3Mimetype', s3MimetypeFactory)
     .directive('s3UploadField', s3UploadFieldDirective)
-    .directive('s3RightClick', s3RightClick)
     .directive('s3Tree', s3TreeDirective);
 
   s3TreeDirective.$inject = ['$compile', '$http', '$q', 's3ListService'];
@@ -43,22 +42,6 @@
         elem.replaceWith(newElem);
       });
     }
-  }
-
-  s3RightClick.$inject = ['$parse'];
-
-  function s3RightClick($parse) {
-    return function(scope, elem, attrs) {
-      var fn = $parse(attrs.s3RightClick);
-      elem.bind('contextmenu', function(ev) {
-        scope.$apply(function() {
-          ev.preventDefault();
-          fn(scope, {
-            $event: event
-          });
-        });
-      });
-    };
   }
 
   s3UploadFieldDirective.$inject = ['$timeout', '$q'];
