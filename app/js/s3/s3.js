@@ -70,10 +70,8 @@
       _listFolder(current);
     }
 
-    function selectObjects(indexes) {
-      selected = (indexes || []).map(function(idx) {
-        return current.list[idx];
-      });
+    function selectObjects(sel) {
+      selected = sel;
     }
 
     function isSelectedObject(item) {

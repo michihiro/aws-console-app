@@ -30,6 +30,10 @@
                 <div class="th-inner"
                      ng-style="{left:col.left+'px',width:col.width+'px','-webkit-transform':'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
                   <span>{{col.name|i18next}}</span>
+                  <div class="sort-mark" ng-click="setSort(col)">
+                    <i ng-if="sortCol==col.col && !sortReverse" class="fa fa-sort-up"></i>
+                    <i ng-if="sortCol==col.col && sortReverse" class="fa fa-sort-down"></i>
+                  </div>
                   <div class="table-resize-handle"
                        app-bind-width="col"></div>
                 </div>
@@ -52,7 +56,7 @@
               {{'s3.noObject'|i18next}}
              </td>
             </tr>
-            <tr ng-repeat="item in getCurrent().list"
+            <tr ng-repeat="item in getCurrent().list | orderBy:sortExp:sortReverse"
                 row-id="{{ item.id }}"
                 ng-dblClick="onDblClickList(item)"
                 ng-class="{info: isSelectedObject(item)}" >

@@ -74,14 +74,17 @@
       getCurrent: s3ListService.getCurrent,
       setCurrent: s3ListService.setCurrent,
       columns: columns,
+      setSort: setSort,
+      sortExp: sortExp,
+      sortCol: 'Name',
+      sortReverse: false,
       listMenu: listMenu,
       onDblClickList: onDblClickList,
       downloadObjects: downloadObjects,
       openCreateFolder: openCreateFolder,
       closeCreateFolder: closeCreateFolder,
-      comparator: comparator,
       actionDisabled: {},
-      onRowSelect: s3ListService.selectObjects,
+      onRowSelect: onRowSelect,
       isSelectedObject: s3ListService.isSelectedObject,
       isOpenTreeMenu: false,
       dropOpt: {
@@ -114,9 +117,17 @@
 
     return;
 
-    function comparator() {
-      console.log('comparator', arguments);
-      return 1;
+    function setSort(col) {
+      if ($scope.sortCol === col.col) {
+        $scope.sortReverse = !$scope.sortReverse;
+      } else {
+        $scope.sortCol = col.col;
+        $scope.sortReverse = false;
+      }
+    }
+
+    function sortExp(item) {
+      return item[$scope.sortCol];
     }
 
     function openCreateFolder() {
@@ -127,6 +138,16 @@
       $timeout(function() {
         $scope.creatingFolder = false;
       });
+    }
+
+    function onRowSelect(indexes) {
+      var orderBy = $filter('orderBy');
+      var list = orderBy(s3ListService.getCurrent().list,
+        $scope.sortExp, $scope.sortReverse);
+      var selected = (indexes || []).map(function(idx) {
+        return list[idx];
+      });
+      s3ListService.selectObjects(selected);
     }
 
     function onDblClickList(obj) {

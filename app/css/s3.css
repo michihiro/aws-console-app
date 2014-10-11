@@ -76,6 +76,16 @@
   opacity: 1;
   transform: translate3d(0, 0, 0);
 }
+.s3-right th .sort-mark {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 15px;
+  text-align: right;
+  color: #aaa;
+  cursor: pointer;
+}
 .s3-right .notifications-area {
   position: absolute;
   right: 8px;
