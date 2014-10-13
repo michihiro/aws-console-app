@@ -116,8 +116,16 @@
                   ng.extend(bucket, data);
                   _listFolder(bucket);
                 }
-              }
-            );
+              });
+            s3.getBucketVersioning({
+                Bucket: bucket.Name
+              },
+              function(err, data) {
+                if (data) {
+                  bucket.Versioning = data.Status;
+                  bucket.MFADelete = data.MFADelete;
+                }
+              });
           }
         });
         $timeout(function() {

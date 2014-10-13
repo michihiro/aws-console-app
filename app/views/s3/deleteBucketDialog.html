@@ -3,12 +3,14 @@
   <button type="button" class="close" ng-click="$dismiss()">&times;</button>
   <h3>{{'s3.deleteBucket'|i18next}}</h3>
 </div>
-<div class="modal-body"><form name=form role="form">
+<div class="modal-body">
+  <form name=form class="form-horizontal" role="form">
   <div class="form-group">
-    <label>{{'s3.bucketName'|i18next}}</label>
-    <span>{{bucketName}}</span>
+    <label class="col-sm-4 control-label">{{'s3.bucketName'|i18next}}</label>
+    <div class="col-sm-8 form-control-static">{{bucketName}}</div>
   </div>
-</form></div>
+  </form>
+</div>
 <div class="modal-footer">
   <div class="alert alert-warning" ng-show="errorCode">{{'s3.error.'+errorCode|i18next}}</div>
   <button type="button" class="btn btn-warning"

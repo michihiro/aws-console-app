@@ -1,0 +1,16 @@
+<div ng-controller="s3BucketPropertiesDialogCtrl">
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">&times;</button>
+  <h3>{{'s3.bucketProperties'|i18next}}</h3>
+</div>
+<div class="modal-body">
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default"
+          ng-click="$dismiss()"
+          ng-disabled="processing" >
+    <label ng-show="processing" class=loading />
+    <label>{{'com.cancel'|i18next}}</label>
+  </button>
+</div>
+</div>

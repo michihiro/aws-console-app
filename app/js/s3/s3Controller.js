@@ -8,6 +8,7 @@
     .controller('s3UploadDialogCtrl', s3UploadDialogCtrl)
     .controller('s3CreateBucketDialogCtrl', s3CreateBucketDialogCtrl)
     .controller('s3DeleteBucketDialogCtrl', s3DeleteBucketDialogCtrl)
+    .controller('s3BucketPropertiesDialogCtrl', s3BucketPropertiesDialogCtrl)
     .controller('s3CreateFolderCtrl', s3CreateFolderCtrl)
     .controller('s3DeleteObjectsDialogCtrl', s3DeleteObjectsDialogCtrl);
 
@@ -46,6 +47,30 @@
       },
     ];
 
+    var treeMenu = [
+      {
+        label: 's3.createBucket',
+        action: 'createBucket',
+        onClick: function() {
+          $scope.openDialog('s3/createBucketDialog.html');
+        }
+      },
+      {
+        label: 's3.bucketProperties',
+        action: 'bucketProperties',
+        onClick: function() {
+          $scope.openDialog('s3/bucketPropertiesDialog.html');
+        }
+      },
+      {
+        label: 's3.deleteBucket',
+        action: 'deleteBucket',
+        onClick: function() {
+          $scope.openDialog('s3/deleteBucketDialog.html');
+        }
+      }
+    ];
+
     var listMenu = [
       {
         label: 's3.downloadObjects',
@@ -78,6 +103,7 @@
       sortExp: sortExp,
       sortCol: 'Name',
       sortReverse: false,
+      treeMenu: treeMenu,
       listMenu: listMenu,
       onDblClickList: onDblClickList,
       downloadObjects: downloadObjects,
@@ -105,6 +131,7 @@
     $scope.$watch(function() {
       return s3ListService.getCurrent();
     }, function(current) {
+      $scope.actionDisabled.bucketProperties =
       $scope.actionDisabled.deleteBucket =
         current && current.Prefix !== undefined;
     });
@@ -395,6 +422,11 @@
         });
       });
     }
+  }
+
+  s3BucketPropertiesDialogCtrl.$inject = ['$scope'];
+
+  function s3BucketPropertiesDialogCtrl($scope) {
   }
 
   s3CreateFolderCtrl.$inject = ['$scope', 's3ListService', 'awsS3', 'appFocusOn'];
