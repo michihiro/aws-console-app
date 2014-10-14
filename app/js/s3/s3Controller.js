@@ -114,9 +114,9 @@
       isSelectedObject: s3ListService.isSelectedObject,
       isOpenTreeMenu: false,
       dropOpt: {
-        onDrop: function(promise) {
+        onDrop: function(uploadInfo) {
           $scope.openDialog('s3/uploadDialog.html', {
-            promise: promise
+            uploadInfo: uploadInfo
           });
         },
       }
@@ -132,7 +132,7 @@
       return s3ListService.getCurrent();
     }, function(current) {
       $scope.actionDisabled.bucketProperties =
-      $scope.actionDisabled.deleteBucket =
+        $scope.actionDisabled.deleteBucket =
         current && current.Prefix !== undefined;
     });
     $scope.$watch(function() {
@@ -245,17 +245,18 @@
       upload: upload
     });
 
-    $scope.promise.then(function() {
+    $scope.uploadInfo.promise.then(function() {
+      $scope.uploadFiles = $scope.uploadInfo.uploadList;
       $scope.isReady = true;
       $scope.$watch(function() {
-        return $scope.uploadFiles.some(_isChecked);
+        return ($scope.uploadInfo.uploadList||[]).some(_isChecked);
       }, function(isReady) {
         $scope.isReady = isReady;
       }, true);
     }, function() {
       $scope.$dismiss();
-    }, function(uploadFiles) {
-      $scope.uploadFiles = uploadFiles;
+    }, function() { //(uploadFiles) {
+      //$scope.uploadFiles = $scope.uploadInfo.uploadList.slice();
     });
 
     return;
@@ -427,6 +428,7 @@
   s3BucketPropertiesDialogCtrl.$inject = ['$scope'];
 
   function s3BucketPropertiesDialogCtrl($scope) {
+    ng.extend($scope, {});
   }
 
   s3CreateFolderCtrl.$inject = ['$scope', 's3ListService', 'awsS3', 'appFocusOn'];
@@ -514,17 +516,18 @@
         //Delimiter: '/',
         //EncodingType: 'url',
         Marker: nextMarker,
-        //MaxKeys: 0,
-        MaxKeys: 1000,
+        MaxKeys: 100,
         Prefix: obj.Prefix
       };
       s3.listObjects(params, function(err, data) {
         if (err) {
           defer.reject(err);
         } else {
-          data.Contents.forEach(function(o) {
-            $scope.keys.push({
-              Key: o.Key
+          $timeout(function() {
+            data.Contents.forEach(function(o) {
+              $scope.keys.push({
+                Key: o.Key
+              });
             });
           });
 

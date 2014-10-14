@@ -44,9 +44,9 @@
     }
   }
 
-  s3UploadFieldDirective.$inject = ['$timeout', '$q'];
+  s3UploadFieldDirective.$inject = ['$timeout', '$q', 's3UploadService'];
 
-  function s3UploadFieldDirective($timeout, $q) {
+  function s3UploadFieldDirective($timeout, $q, s3UploadService) {
 
     ng.element(document).on({
       dragover: function(ev) {
@@ -65,6 +65,8 @@
     };
 
     function link(scope, elem) {
+      var timeoutPromise;
+
       elem.on({
         dragover: dragOver,
         dragleave: dragLeave,
@@ -72,91 +74,66 @@
       });
 
       function dragOver(ev) {
+        var items = ev.originalEvent.dataTransfer.items;
+        if (!items.length) {
+          return;
+        }
         ev.stopPropagation();
         ev.preventDefault();
         ev.originalEvent.dataTransfer.dropEffect = 'copy';
+
         $timeout(function() {
+          if(timeoutPromise) {
+            $timeout.cancel(timeoutPromise);
+            timeoutPromise = null;
+          }
           scope.opt.active = true;
         });
       }
 
       function dragLeave() {
-        $timeout(function() {
+        if(timeoutPromise) {
+          $timeout.cancel(timeoutPromise);
+        }
+        timeoutPromise = $timeout(function() {
           scope.opt.active = false;
-        });
+          timeoutPromise = null;
+          scope.uploadInfo = null;
+        }, 500);
       }
 
       function drop(ev) {
         var items = ev.originalEvent.dataTransfer.items;
-        var uploadFiles = [];
-        var promises = [];
-        var entry, i, l;
-
-        ev.stopPropagation();
-        ev.preventDefault();
+        var entries = [];
+        var i, l, entry;
+        var uploadInfo;
         if (!items.length) {
           console.log('no upload files', ev);
           return;
         }
-
-        var defer = $q.defer();
-        scope.opt.onDrop(defer.promise);
-
-        $timeout(function() {
-          scope.opt.active = false;
-        });
-
-        uploadFiles.total = 0;
+        ev.stopPropagation();
+        ev.preventDefault();
         for (i = 0, l = items.length; i < l; i++) {
           entry = items[i].webkitGetAsEntry();
-          if (entry.isFile) {
-            promises.push(_setFileInfo(entry, uploadFiles));
-          } else if (entry.isDirectory) {
-            promises.push(_setDirectoryInfo(entry, uploadFiles));
-          }
-        }
-        $q.all(promises).then(defer.resolve, defer.reject);
-
-        function _setDirectoryInfo(entry, uploadFiles) {
-          var reader = entry.createReader();
-          var defer = $q.defer();
-          reader.readEntries(entryCallback, defer.reject);
-
-          return defer.promise;
-
-          function entryCallback(results) {
-            var i, l;
-            var promises = [];
-            for (i = 0, l = results.length; i < l; i++) {
-              if (results[i].name[0] === '.') {
-                continue; // hidden file
-              }
-              if (results[i].isFile) {
-                promises.push(_setFileInfo(results[i], uploadFiles));
-              } else {
-                promises.push(_setDirectoryInfo(results[i], uploadFiles));
-              }
-            }
-            $q.all(promises).then(defer.resolve, defer.reject);
+          if(entry) {
+            entries.push(entry);
           }
         }
 
-        function _setFileInfo(entry, uploadFiles) {
-          var d = $q.defer();
-          entry.getMetadata(function(metadata) {
-            $timeout(function() {
-              uploadFiles.push({
-                check: true,
-                entry: entry,
-                path: entry.fullPath.replace(/^\//, ''),
-                size: metadata.size
-              });
-              uploadFiles.total += metadata.size;
-              defer.notify(uploadFiles);
-              d.resolve(uploadFiles);
-            });
+        uploadInfo = s3UploadService.createUploadList(entries);
+        uploadInfo.promise.then(onceOnDrop, null, onceOnDrop);
+
+        var onDrop = scope.opt.onDrop;
+        function onceOnDrop() {
+          if(onDrop) {
+            onDrop(uploadInfo);
+          }
+          onDrop = null;
+          $timeout(function() {
+            scope.opt.active = false;
+            timeoutPromise = null;
+            scope.uploadInfo = null;
           });
-          return d.promise;
         }
       }
     }

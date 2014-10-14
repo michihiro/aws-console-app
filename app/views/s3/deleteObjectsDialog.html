@@ -5,7 +5,7 @@
 </div>
 <div class="modal-body">
   <div class="alert alert-danger">
-    <p ng-if="keys.length <= 1">
+    <p ng-if="keys.length == 1">
       {{'s3.deleteMsg1' | i18next:{} | sprintf: keys[0].Key }}
     </p>
     <p ng-if="keys.length > 1">

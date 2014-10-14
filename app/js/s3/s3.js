@@ -5,6 +5,7 @@
     .factory('awsS3', awsS3Factory)
     .factory('s3ListService', s3ListServiceFactory)
     .service('s3DownloadService', s3DownloadService)
+    .service('s3UploadService', s3UploadService)
     .factory('s3NotificationsService', s3NotificationsService);
 
   awsS3Factory.$inject = ['$rootScope'];
@@ -24,6 +25,7 @@
     var buckets = [];
     var current;
     var selected = [];
+    var _listFolderRequest = {};
 
     $rootScope.$watch('credentials', _listBuckets);
 
@@ -132,14 +134,25 @@
           buckets.length = 0;
           Array.prototype.push.apply(buckets, newBuckets);
 
-          if (!current) {
-            setCurrent(buckets[0]);
-          }
+          $timeout(function() {
+            if (!current) {
+              setCurrent(buckets[0]);
+            }
+          }, 1000);
         });
       });
     }
 
     function _listFolder(folder) {
+      var now = Date.now();
+      var folderKey = folder.bucketName + ':' + (folder.Prefix||'/');
+      if(!folder.nextMarker &&
+         _listFolderRequest[folderKey] &&
+         _listFolderRequest[folderKey] > now - 1000) {
+        return;
+      }
+      _listFolderRequest[folderKey] = now;
+
       var params = {
         Bucket: folder.bucketName,
         Delimiter: '/',
@@ -217,6 +230,8 @@
           if (folder.nextMarker) {
             _listFolder(folder);
           } else {
+            var folderKey = folder.bucketName + ':' + (folder.Prefix||'/');
+            delete _listFolderRequest[folderKey];
             folder.oldFolders.length = 0;
             folder.oldContents.length = 0;
           }
@@ -509,4 +524,55 @@
     }
   }
 
+  s3UploadService.$inject = ['$q'];
+
+  function s3UploadService($q) {
+    return {
+      createUploadList: createUploadList,
+    };
+
+    function createUploadList(entries) {
+      var uploadList = [];
+      uploadList.total = 0;
+
+      return {
+        promise: getUpload(),
+        uploadList: uploadList
+      };
+
+      function getUpload() {
+        var defer = $q.defer();
+        var entry = entries.shift();
+        if(entry.isFile) {
+          entry.getMetadata(function(metadata) {
+            uploadList.push({
+              check: true,
+              entry: entry,
+              path: entry.fullPath.replace(/^\//, ''),
+              size: metadata.size
+            });
+            uploadList.total += metadata.size;
+            defer.notify(uploadList);
+            defer.resolve(uploadList);
+          }, function(err) {
+            console.log(err);
+          });
+        } else if(entry.isDirectory) {
+          var reader = entry.createReader();
+          reader.readEntries(function(result) {
+            Array.prototype.push.apply(entries, result);
+            defer.resolve(uploadList);
+          });
+        }
+
+        return defer.promise.then(function() {
+          if(entries.length) {
+            return getUpload();
+          } else {
+            return $q.when(uploadList);
+          }
+        });
+      }
+    }
+  }
 })(angular);
