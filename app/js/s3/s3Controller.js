@@ -96,6 +96,7 @@
     ];
 
     ng.extend($scope, {
+      breadcrumb: [],
       getCurrent: s3ListService.getCurrent,
       setCurrent: s3ListService.setCurrent,
       columns: columns,
@@ -134,6 +135,18 @@
       $scope.actionDisabled.bucketProperties =
         $scope.actionDisabled.deleteBucket =
         current && current.Prefix !== undefined;
+
+      $scope.breadcrumb.length = 0;
+      if (current && current.Prefix) {
+        var folder, breadcrumb = [];
+        for (folder = current.parent; folder; folder = folder.parent) {
+          breadcrumb.unshift(folder);
+        }
+        if (breadcrumb.length > 2) {
+          breadcrumb.splice(1, breadcrumb.length - 3, {});
+        }
+        $scope.breadcrumb = breadcrumb;
+      }
     });
     $scope.$watch(function() {
       return s3ListService.getSelectedObjects();
@@ -249,7 +262,7 @@
       $scope.uploadFiles = $scope.uploadInfo.uploadList;
       $scope.isReady = true;
       $scope.$watch(function() {
-        return ($scope.uploadInfo.uploadList||[]).some(_isChecked);
+        return ($scope.uploadInfo.uploadList || []).some(_isChecked);
       }, function(isReady) {
         $scope.isReady = isReady;
       }, true);

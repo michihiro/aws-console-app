@@ -83,7 +83,7 @@
         ev.originalEvent.dataTransfer.dropEffect = 'copy';
 
         $timeout(function() {
-          if(timeoutPromise) {
+          if (timeoutPromise) {
             $timeout.cancel(timeoutPromise);
             timeoutPromise = null;
           }
@@ -92,7 +92,7 @@
       }
 
       function dragLeave() {
-        if(timeoutPromise) {
+        if (timeoutPromise) {
           $timeout.cancel(timeoutPromise);
         }
         timeoutPromise = $timeout(function() {
@@ -115,7 +115,7 @@
         ev.preventDefault();
         for (i = 0, l = items.length; i < l; i++) {
           entry = items[i].webkitGetAsEntry();
-          if(entry) {
+          if (entry) {
             entries.push(entry);
           }
         }
@@ -124,8 +124,9 @@
         uploadInfo.promise.then(onceOnDrop, null, onceOnDrop);
 
         var onDrop = scope.opt.onDrop;
+
         function onceOnDrop() {
-          if(onDrop) {
+          if (onDrop) {
             onDrop(uploadInfo);
           }
           onDrop = null;

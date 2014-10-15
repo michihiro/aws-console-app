@@ -19,10 +19,13 @@
     </div>
   </div>
   <div class="s3-right" s3-upload-field="dropOpt">
-    <div class="btn-group">
-      <button ng-if="getCurrent().Prefix" class="btn"
-              ng-click="setCurrent(getCurrent().parent)"
-      >up</button>
+    <div class="col-md-12">
+      <ol class="breadcrumb breadcrumb-arrow" style="">
+        <li ng-repeat="b in breadcrumb"  style="white-space:nowrap;">
+          <a ng-class="{disabled:!b.Name}" ng-click="b.Name && setCurrent(b)">{{b.Name||'...'}}</a></li>
+        </li>
+        <li><span>{{getCurrent().Name}}</span></li>
+      </ol>
     </div>
     <div class="s3-upload-fileld-cover" ng-if="dropOpt.active"></div>
     <div class="table-outer" context-menu data-target="s3-list-context-menu">

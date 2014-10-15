@@ -15,7 +15,8 @@
     "ng-i18next": "~0.3.5",
     "ng-context-menu": "~1.0.0",
     "animate.css": "~3.2.0",
-    "sprintf": "~1.0.0"
+    "sprintf": "~1.0.0",
+    "Bootflat": "~2.0.4"
   },
   "devDependencies": {}
 }

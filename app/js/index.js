@@ -33,7 +33,7 @@
 
     $urlRouterProvider.otherwise('/');
     var titleView = {
-      template: '<h3>{{serviceName}}</h3>',
+      template: '<h4>{{serviceName}}</h4>',
     };
 
     $stateProvider

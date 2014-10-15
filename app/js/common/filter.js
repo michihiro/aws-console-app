@@ -50,7 +50,7 @@
     }
 
     function momentFormatFn(obj) {
-      if(!obj) {
+      if (!obj) {
         return '-';
       }
       return momentFormatFilter(obj, 'lll');

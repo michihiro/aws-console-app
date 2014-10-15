@@ -125,22 +125,18 @@ body {
   bottom: 0;
   left: 40px;
   right: 0;
-  transition: all .2s ease .0s;
+  transition: all .5s ease .0s;
 }
+[ui-view="main"].ng-leave.ng-leave-active,
 [ui-view="main"].ng-enter {
   opacity: 0;
-  /*  transform: translateX(5%);*/
-}
-[ui-view="main"].ng-leave-active {
-  opacity: 0;
-  /*  transform: translateX(5%);*/
 }
 .func-view {
   position: absolute;
   left: 0;
   right: 0;
-  top: 60px;
-  bottom: 60px;
+  top: 52px;
+  bottom: 52px;
 }
 /* modal */
 

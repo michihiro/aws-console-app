@@ -145,10 +145,10 @@
 
     function _listFolder(folder) {
       var now = Date.now();
-      var folderKey = folder.bucketName + ':' + (folder.Prefix||'/');
-      if(!folder.nextMarker &&
-         _listFolderRequest[folderKey] &&
-         _listFolderRequest[folderKey] > now - 1000) {
+      var folderKey = folder.bucketName + ':' + (folder.Prefix || '/');
+      if (!folder.nextMarker &&
+        _listFolderRequest[folderKey] &&
+        _listFolderRequest[folderKey] > now - 1000) {
         return;
       }
       _listFolderRequest[folderKey] = now;
@@ -230,7 +230,7 @@
           if (folder.nextMarker) {
             _listFolder(folder);
           } else {
-            var folderKey = folder.bucketName + ':' + (folder.Prefix||'/');
+            var folderKey = folder.bucketName + ':' + (folder.Prefix || '/');
             delete _listFolderRequest[folderKey];
             folder.oldFolders.length = 0;
             folder.oldContents.length = 0;
@@ -384,7 +384,7 @@
           return;
         }
         defer.notify({
-          size: xhr.response.size
+          size: (xhr.response || {}).size || 0,
         });
         if (!xhr.writerPromise) {
           xhr.writerPromise = _createWriter(obj, dirEntry);
@@ -543,7 +543,7 @@
       function getUpload() {
         var defer = $q.defer();
         var entry = entries.shift();
-        if(entry.isFile) {
+        if (entry.isFile) {
           entry.getMetadata(function(metadata) {
             uploadList.push({
               check: true,
@@ -557,7 +557,7 @@
           }, function(err) {
             console.log(err);
           });
-        } else if(entry.isDirectory) {
+        } else if (entry.isDirectory) {
           var reader = entry.createReader();
           reader.readEntries(function(result) {
             Array.prototype.push.apply(entries, result);
@@ -566,7 +566,7 @@
         }
 
         return defer.promise.then(function() {
-          if(entries.length) {
+          if (entries.length) {
             return getUpload();
           } else {
             return $q.when(uploadList);

@@ -12,7 +12,7 @@
 .s3-left .s3-tree {
   position: absolute;
   left: 0;
-  top: 36px;
+  top: 40px;
   bottom: 0;
   width: 200px;
   overflow: scroll;
@@ -62,7 +62,7 @@
   border-right: 1px solid #428bca;
 }
 .s3-right .table-outer {
-  top: 30px;
+  top: 40px;
 }
 .s3-right table i {
   margin-right: .2em;
@@ -180,4 +180,15 @@
     -webkit-transform: scale(1);
     opacity: 1;
   }
+}
+/**/
+
+.breadcrumb-arrow li a:hover.disabled,
+.breadcrumb-arrow li a:focus.disabled {
+  background-color: #3bafda;
+  border: 1px solid #3bafda;
+}
+.breadcrumb-arrow li a:hover.disabled:before,
+.breadcrumb-arrow li a:focus.disabled:before {
+  border-left-color: #3bafda;
 }
