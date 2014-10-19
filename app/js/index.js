@@ -18,8 +18,8 @@
 
   var regions = [
     'us-east-1',
-    'us-west-1',
     'us-west-2',
+    'us-west-1',
     'eu-west-1',
     'ap-southeast-1',
     'ap-southeast-2',
@@ -31,54 +31,29 @@
 
   function appConfig($stateProvider, $urlRouterProvider, $i18nextProvider) {
 
-    $urlRouterProvider.otherwise('/');
+    var services = [
+      'home', 's3', 'ec2', 'r53'
+    ];
+
     var titleView = {
-      template: '<h4>{{serviceName}}</h4>',
+      template: '<h4>{{serviceName + \'.serviceName\'|i18next}}</h4>',
     };
 
-    $stateProvider
-      .state('home', {
-        url: '/',
-        views: {
-          title: titleView,
-          main: {
-            templateUrl: 'views/home.html',
-            controller: 'homeCtrl'
-          }
-        },
-        serviceName: 'Home',
-      })
-      .state('s3', {
-        //params: ['bucket'],
-        serviceName: 'S3',
-        views: {
-          title: titleView,
-          main: {
-            templateUrl: 'views/s3/s3.html',
-            controller: 's3Ctrl'
-          }
-        },
-      })
-      .state('ec2', {
-        serviceName: 'EC2',
-        views: {
-          title: titleView,
-          main: {
-            templateUrl: 'views/ec2/ec2.html',
-            controller: 'ec2Ctrl'
-          }
-        },
-      })
-      .state('route53', {
-        serviceName: 'Route53',
-        views: {
-          title: titleView,
-          main: {
-            templateUrl: 'views/r53/r53.html',
-            controller: 'homeCtrl'
-          }
-        },
-      });
+    $urlRouterProvider.otherwise('/');
+    services.forEach(function(service) {
+      $stateProvider
+        .state(service, {
+          //url: '/' + (service == 'home' ? '' : service),
+          views: {
+            title: titleView,
+            main: {
+              templateUrl: 'views/' + service + '/' + service + '.html',
+              controller: service + 'Ctrl'
+            }
+          },
+          serviceName: service,
+        });
+    });
 
     $i18nextProvider.options = {
       lng: navigator.language,
