@@ -1,14 +1,18 @@
 <div class="func-view">
-  <div class="btn-group scrl-btns">
-    <a class="btn">&lt;</a>
-    <a class="btn">&gt;</a>
-  </div>
   <tabset>
+    <div tab-headings-scroller>
+    </div>
     <tab ng-repeat="t in tabs" heading="{{'s3.regionName.'+t.region|i18next}}"
          active="t.active"
          select="onSelectRegion(t.region, $index)"> 
       <div>{{'s3.regionName.'+t.region|i18next}}</div>
       <div>{{getInstances(t.region).length}} instance(s)</div>
     </tab>
+<!--
+    <div class="btn-group scrl-btns">
+      <a class="btn">&lt;</a>
+      <a class="btn">&gt;</a>
+    </div>
+-->
   </tabset>
 </div>

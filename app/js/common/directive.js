@@ -9,6 +9,7 @@
     .directive('tableOuter', tableOuter)
     .directive('appFocusOn', appFocusOnDirective)
     .factory('appFocusOn', appFocusOnFactory)
+    .directive('tabHeadingsScroller', tabHeadingsScroller)
     .directive('modalDialog', modalDialogDirective);
 
   appRightClick.$inject = ['$parse'];
@@ -378,4 +379,70 @@
     }
   }
 
+  tabHeadingsScroller.$inject = ['$timeout'];
+
+  function tabHeadingsScroller($timeout) {
+
+    return {
+      restrict: 'A',
+      template: '<div class="btn-group scrl-btns">' +
+        '<a class="btn" data-dir="1">&lt;</a>' +
+        '<a class="btn" data-dir="-1">&gt;</a>' +
+        '</div>',
+      link: link
+    };
+
+    function link(scope, elem) {
+      elem.css({
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        zIndex: 100
+      });
+
+      scope.$watch('tabs', function() {
+        $timeout(function() {
+          scope.eachX = [];
+          elem
+            .parent('.nav-tabs').css({
+              overflow: 'hidden',
+              whiteSpace: 'nowrap'
+            })
+            .children('li').css({
+              float: 'none',
+              display: 'inline-block'
+            })
+            .each(function() {
+              scope.eachX.push(this.offsetLeft);
+            })
+            .off('click', onClick)
+            .on('click', onClick);
+        });
+      });
+      scope.posX = 0;
+
+      elem.find('a').on('click', function() {
+        var dir = ng.element(this).data('dir');
+        var eachX = (dir === -1) ?
+          scope.eachX :
+          scope.eachX.slice(0).reverse();
+        eachX.some(function(v) {
+          if (dir === -1 && v > scope.posX ||
+            dir === 1 && v < scope.posX) {
+            scope.posX = v;
+            elem.siblings('li').css({
+              transition: 'transform 1s ease',
+              transform: 'translateX(' + -scope.posX + 'px)'
+            });
+            return true;
+          }
+        });
+      });
+
+      function onClick() {
+        console.log('click!');
+      }
+
+    }
+  }
 })(angular);

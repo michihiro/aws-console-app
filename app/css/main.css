@@ -211,17 +211,3 @@ body {
   background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), color-stop(0.4, rgba(0, 0, 0, 0)), color-stop(0.5, rgba(1, 1, 1, .25)), color-stop(0.6, rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0)));
   cursor: ew-resize;
 }
-.nav-tabs {
-  overflow: hidden;
-  white-space: nowrap;
-}
-.nav-tabs > li {
-  float: none;
-  display: inline-block;
-}
-.scrl-btns {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 100;
-}
