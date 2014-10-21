@@ -383,16 +383,19 @@
 
   function tabHeadingsScroller($timeout) {
 
+    var space = 40;
     return {
       restrict: 'A',
       template: '<div class="btn-group scrl-btns">' +
-        '<a class="btn" data-dir="1">&lt;</a>' +
-        '<a class="btn" data-dir="-1">&gt;</a>' +
+        '<a class="btn" data-dir="-1">&lt;</a>' +
+        '<a class="btn" data-dir="1">&gt;</a>' +
         '</div>',
       link: link
     };
 
     function link(scope, elem) {
+      scope.posX = 0;
+
       elem.css({
         position: 'absolute',
         top: 0,
@@ -412,37 +415,46 @@
               float: 'none',
               display: 'inline-block'
             })
-            .each(function() {
-              scope.eachX.push(this.offsetLeft);
-            })
             .off('click', onClick)
             .on('click', onClick);
         });
       });
-      scope.posX = 0;
 
       elem.find('a').on('click', function() {
         var dir = ng.element(this).data('dir');
-        var eachX = (dir === -1) ?
-          scope.eachX :
-          scope.eachX.slice(0).reverse();
-        eachX.some(function(v) {
-          if (dir === -1 && v > scope.posX ||
-            dir === 1 && v < scope.posX) {
-            scope.posX = v;
-            elem.siblings('li').css({
-              transition: 'transform 1s ease',
-              transform: 'translateX(' + -scope.posX + 'px)'
-            });
+        var li = elem.siblings('li').get();
+        if (dir === -1) {
+          li.reverse();
+        }
+        li.some(function(liElem) {
+          var left = liElem.offsetLeft;
+          if (dir === 1 && left > scope.posX + space ||
+            dir === -1 && left < scope.posX + space) {
+            translate(Math.max(left - space, 0));
             return true;
           }
         });
       });
 
-      function onClick() {
-        console.log('click!');
+      function onClick(ev) {
+        var w = elem.parent('.nav-tabs').width() - elem.width();
+        var currentTarget = ev.currentTarget;
+        var offsetLeft = currentTarget.offsetLeft;
+        var offsetWidth = currentTarget.offsetWidth;
+        if (offsetLeft < scope.posX + space) {
+          translate(Math.max(ev.currentTarget.offsetLeft - space, 0));
+        } else if (offsetLeft + offsetWidth > w + scope.posX - space) {
+          translate(Math.min(offsetLeft + offsetWidth - w + space, w));
+        }
       }
 
+      function translate(posX) {
+        scope.posX = posX;
+        elem.siblings('li').css({
+          transition: 'transform .4s ease',
+          transform: 'translateX(' + -scope.posX + 'px)'
+        });
+      }
     }
   }
 })(angular);

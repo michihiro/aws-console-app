@@ -108,6 +108,8 @@
       for (k in args) {
         scope[k] = args[k];
       }
+
+      $rootScope._classBlur = true;
       modal = $modal.open({
         templateUrl: 'views/' + tpl,
         scope: scope,
@@ -121,6 +123,9 @@
             args.onClose(null);
           });
       }
+      modal.result.finally(function() {
+        $rootScope._classBlur = false;
+      });
     }
   }
 

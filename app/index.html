@@ -9,10 +9,11 @@
   <!-- bower:css -->
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
   <link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap-material-design/dist/css/material.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap-material-design/dist/css/ripples.css" />
   <!-- endbower -->
   <link rel="stylesheet" href="bower_components/animate.css/animate.css" />
   <link rel="stylesheet" href="bower_components/angular/angular-csp.css" />
-  <link rel="stylesheet" href="bower_components/Bootflat/bootflat/css/bootflat.css" />
   <!-- endbuild -->
 
   <!-- build:css css/main.css -->
@@ -39,7 +40,7 @@
     </div>
   </div>
 
-  <div ui-view="main"></div>
+  <div ui-view="main" ng-class="{blur:_classBlur}"></div>
 
   <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
     <div class="container">
@@ -62,6 +63,8 @@
   <script src="bower_components/ng-i18next/dist/ng-i18next.js"></script>
   <script src="bower_components/ng-context-menu/dist/ng-context-menu.js"></script>
   <script src="bower_components/sprintf/src/sprintf.js"></script>
+  <script src="bower_components/bootstrap-material-design/dist/js/material.js"></script>
+  <script src="bower_components/bootstrap-material-design/dist/js/ripples.js"></script>
   <!-- endbower -->
   <script src="bower_components/momentjs/min/locales.js"></script>
   <script src="js/vendor/aws-sdk-full.js"></script>
