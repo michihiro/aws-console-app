@@ -7,7 +7,6 @@
       'ui.utils',
       'ui.bootstrap',
       'jm.i18next',
-      'sprintf',
       'ng-context-menu'
     ])
     .service('credentialsService', credentialsService)
@@ -35,17 +34,12 @@
       'home', 's3', 'ec2', 'r53'
     ];
 
-    var titleView = {
-      template: '<h4>{{serviceName + \'.serviceName\'|i18next}}</h4>',
-    };
-
     $urlRouterProvider.otherwise('/');
     services.forEach(function(service) {
       $stateProvider
         .state(service, {
           //url: '/' + (service == 'home' ? '' : service),
           views: {
-            title: titleView,
             main: {
               templateUrl: 'views/' + service + '/' + service + '.html',
               controller: service + 'Ctrl'

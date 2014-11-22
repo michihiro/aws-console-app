@@ -22,7 +22,7 @@
   <!-- endbuild -->
 </head>
 
-<body>
+<body ng-cloak>
 
   <div class="func-menu" ng-mouseleave="opened=false" ng-class="{opened:opened}">
    <a class="menuicon" ng-click="opened=true" ><i class="fa fa-navicon"></i></a>
@@ -36,7 +36,7 @@
       <ul class="nav nav-pills pull-right">
         <li ui-sref-active="active"><a ng-click="openDialog('home/dialogCredentials.html')">test</a></li>
       </ul>
-      <div ui-view="title"></div>
+      <h3 ng-if="serviceName">{{serviceName + '.serviceName'|i18next}}</h3>
     </div>
   </div>
 
@@ -68,7 +68,6 @@
   <!-- endbower -->
   <script src="bower_components/momentjs/min/locales.js"></script>
   <script src="js/vendor/aws-sdk-full.js"></script>
-  <script src="js/vendor/angular-sprintf.js"></script>
   <!-- endbuild -->
 
   <!-- build:js js/index.js -->

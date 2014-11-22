@@ -4,48 +4,51 @@
   <h3>{{'s3.createBucket'|i18next}}</h3>
 </div>
 <div class="modal-body">
-  <form name=form class="form-horizontal" role="form">
-  <div class="form-group">
-    <label class="col-sm-4 control-label">{{'s3.region'|i18next}}</label>
-    <div class="btn-group col-sm-8" dropdown is-open="selectRegion.isopen">
-      <button type="button" class="btn btn-info dropdown-toggle" ng-disabled="processing">
-        <span>{{'s3.regionName.'+inputs.region|i18next}}</span><span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu" role="menu">
-        <li ng-repeat="r in regions.s3">
-          <a ng-class="{'btn-info':inputs.region==r}"
-             ng-click="inputs.region=r;selectRegion.isopen=false">
-            {{'s3.regionName.'+r|i18next}} - {{r}}
-          </a>
-        </li>
-      </ul>
+  <form name=form class="form-horizontal">
+    <div class="form-group">
+      <label class="col-sm-4 control-label">{{'s3.region'|i18next}}</label>
+      <div class="col-sm-8">
+        <div class="btn-group" dropdown is-open="selectRegion.isopen">
+          <button class="btn btn-info dropdown-toggle" ng-disabled="processing">
+            <span>{{'s3.regionName.'+inputs.region|i18next}}</span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li ng-repeat="r in regions.s3" ng-if="r !== inputs.region">
+              <a ng-class="{'btn-info':inputs.region==r}"
+                 ng-click="inputs.region=r;selectRegion.isopen=false">
+                <span>{{'s3.regionName.'+r|i18next}} - {{r}}</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-4 control-label">{{'s3.bucketName'|i18next}}</label>
-    <div class="col-sm-8">
-      <input type="text" class="form-control" name="bucketName"
-             ng-model="inputs.bucketName"
-             ui-validate="{{validateBucketName}}"
-             ui-validate-watch="'inputs.region'"
-             ng-style="{'background-color': form.bucketName.$invalid ? 'rgba(255,0,0,.1)': 'rgba(0,128,255,.1)'}"
-             ng-disabled="processing"
-             ng-class="{ok:form.bucketName.$error.validator}" />
+    <div class="form-group">
+      <label class="col-sm-4 control-label">{{'s3.bucketName'|i18next}}</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" name="bucketName" 
+               ng-model="inputs.bucketName"
+               ui-validate="{{validateBucketName}}"
+               ui-validate-watch="'inputs.region'"
+               ng-style="{'background-color': form.bucketName.$invalid ? 'rgba(255,0,0,.1)': 'rgba(0,128,255,.1)'}"
+               ng-disabled="processing">
+      </div>
     </div>
-  </div>
   </form>
 </div>
 <div class="modal-footer">
   <div class="alert alert-warning" ng-show="errorCode">{{'s3.error.'+errorCode|i18next}}</div>
-  <button type="button" class="btn btn-warning"
+  <button class="btn btn-default"
           ng-click="$dismiss()"
-          ng-disabled="processing" >
+          ng-disabled="processing">
     <label ng-show="processing" class=loading />
     <label>{{'com.cancel'|i18next}}</label>
   </button>
-  <button type="button" class="btn btn-loading" ng-class="{'btn-success':!form.$invalid}" 
+  <button class="btn btn-loading"
+          ng-class="{'btn-success':!form.$invalid}"
           ng-click="create()"
-          ng-disabled="processing || form.$invalid" >
+          ng-disabled="processing || form.$invalid">
     <label ng-show="processing" class=loading />
     <label>{{'s3.create'|i18next}}</label>
   </button>

@@ -5,12 +5,8 @@
 </div>
 <div class="modal-body">
   <div class="alert alert-danger">
-    <p ng-if="keys.length == 1">
-      {{'s3.deleteMsg1' | i18next:{} | sprintf: keys[0].Key }}
-    </p>
-    <p ng-if="keys.length > 1">
-      {{'s3.deleteMsg2' | i18next:{} | sprintf: keys.length }}
-    </p>
+    <p ng-if="keys.length == 1" ng-i18next="[i18next]({sprintf:[keys[0].Key]})s3.deleteObjMsg1"></p>
+    <p ng-if="keys.length > 1" ng-i18next="[i18next]({sprintf:[keys.length]})s3.deleteObjMsg2"></p>
   </div>
 </div>
 <div class="modal-footer">

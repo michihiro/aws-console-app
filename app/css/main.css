@@ -2,6 +2,9 @@ body {
   margin: 0;
   padding: 0;
 }
+[ng-cloak] {
+  display: none !important;
+}
 /** func-menu **/
 
 .func-menu {
@@ -63,6 +66,15 @@ body {
   left: 40px;
   margin: 0;
 }
+.navbar-fixed-top .container {
+  margin: 0;
+}
+.navbar h3 {
+  margin: 10px 20px;
+  color: #fff;
+}
+
+/** button **/
 .btn label {
   margin: 0;
 }
@@ -154,9 +166,11 @@ body {
 .modal h3 {
   margin: 0px;
 }
+/*
 .modal .form-group {
   margin-bottom: 5px;
 }
+*/
 .position-fixed {
   position: fixed;
 }
@@ -215,10 +229,9 @@ body {
   background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), color-stop(0.4, rgba(0, 0, 0, 0)), color-stop(0.5, rgba(1, 1, 1, .25)), color-stop(0.6, rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0)));
   cursor: ew-resize;
 }
-
 .btn-group {
- margin: 1px;
+  margin: 1px;
 }
 .dropdown-menu {
-  background: rgba(255,255,255,.85);
+  background: rgba(255, 255, 255, .9);
 }

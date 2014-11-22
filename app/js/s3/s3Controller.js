@@ -55,6 +55,7 @@
           $scope.openDialog('s3/createBucketDialog.html');
         }
       },
+/*
       {
         label: 's3.bucketProperties',
         action: 'bucketProperties',
@@ -62,6 +63,7 @@
           $scope.openDialog('s3/bucketPropertiesDialog.html');
         }
       },
+*/
       {
         label: 's3.deleteBucket',
         action: 'deleteBucket',
@@ -245,7 +247,7 @@
         name: 's3.size',
         class: 'text-right',
         filterFn: appFilterService.byteFn,
-        width: 140
+        width: 130
       }
     ];
 
