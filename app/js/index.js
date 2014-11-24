@@ -10,7 +10,6 @@
       'ng-context-menu'
     ])
     .service('credentialsService', credentialsService)
-    .controller('homeCtrl', homeCtrl)
     .controller('dialogCredentialsCtrl', dialogCredentialsCtrl)
     .config(appConfig)
     .run(appRun);
@@ -31,14 +30,13 @@
   function appConfig($stateProvider, $urlRouterProvider, $i18nextProvider) {
 
     var services = [
-      'home', 's3', 'ec2', 'r53'
+      's3', 'ec2', 'r53'
     ];
 
     $urlRouterProvider.otherwise('/');
     services.forEach(function(service) {
       $stateProvider
         .state(service, {
-          //url: '/' + (service == 'home' ? '' : service),
           views: {
             main: {
               templateUrl: 'views/' + service + '/' + service + '.html',
@@ -78,7 +76,10 @@
       openDialog: openDialog
     });
 
-    credentialsService.load(true);
+    credentialsService.load(true)
+      .catch(function() {
+        $rootScope.openDialog('com/credentialsDialog.html');
+      });
 
     $rootScope.$on('$stateChangeSuccess',
       function(ev, state) {
@@ -123,10 +124,6 @@
     }
   }
 
-
-  homeCtrl.$inject = ['$scope'];
-
-  function homeCtrl() {}
 
   dialogCredentialsCtrl.$inject = ['$scope', '$timeout', 'credentialsService'];
 
@@ -201,7 +198,7 @@
             deferred.resolve(val.credentials);
           });
         } else {
-          deferred.resolve({});
+          deferred.reject({});
         }
       });
       return deferred.promise;
