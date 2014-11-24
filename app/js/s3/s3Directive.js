@@ -117,11 +117,13 @@
           entry = items[i].webkitGetAsEntry();
           if (entry) {
             entries.push(entry);
+            //entries.push(entry.filesystem.root);
+            //entry = null;
           }
         }
 
         uploadInfo = s3UploadService.createUploadList(entries);
-        uploadInfo.promise.then(onceOnDrop, null, onceOnDrop);
+        uploadInfo.promise.then(onceOnDrop, onError, onceOnDrop);
 
         var onDrop = scope.opt.onDrop;
 
@@ -135,6 +137,15 @@
             timeoutPromise = null;
             scope.uploadInfo = null;
           });
+        }
+
+        function onError() {
+          $timeout(function() {
+            scope.opt.active = false;
+            timeoutPromise = null;
+            scope.uploadInfo = null;
+          });
+          // TODO;
         }
       }
     }

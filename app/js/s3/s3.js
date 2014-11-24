@@ -556,12 +556,16 @@
             defer.resolve(uploadList);
           }, function(err) {
             console.log(err);
+            defer.reject(err);
           });
         } else if (entry.isDirectory) {
           var reader = entry.createReader();
           reader.readEntries(function(result) {
             Array.prototype.push.apply(entries, result);
             defer.resolve(uploadList);
+          }, function(err)  {
+            console.log(err);
+            defer.reject(err);
           });
         }
 
