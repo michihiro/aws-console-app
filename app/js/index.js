@@ -33,10 +33,11 @@
       's3', 'ec2', 'r53'
     ];
 
-    $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise('/s3');
     services.forEach(function(service) {
       $stateProvider
         .state(service, {
+          url : '/' + service,
           views: {
             main: {
               templateUrl: 'views/' + service + '/' + service + '.html',

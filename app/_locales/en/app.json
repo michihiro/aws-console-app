@@ -1,7 +1,11 @@
 {
   "com": {
+    "credentials": "Credentials",
+    "accessKeyId": "Access Key ID",
+    "secretAccessKey": "Secret Access Key",
     "action": "Action",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "save": "Save"
   },
   "s3": {
     "serviceName": "S3",

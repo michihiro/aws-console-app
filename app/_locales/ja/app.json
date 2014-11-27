@@ -1,7 +1,11 @@
 {
   "com": {
+    "credentials": "クレデンシャル",
+    "accessKeyId": "アクセスキーID",
+    "secretAccessKey": "シークレットアクセスキー",
     "action": "操作",
-    "cancel": "キャンセル"
+    "cancel": "キャンセル",
+    "save": "保存"
   },
   "s3": {
     "serviceName": "S3",

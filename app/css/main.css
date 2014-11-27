@@ -73,8 +73,14 @@ body {
   margin: 10px 20px;
   color: #fff;
 }
+.navbar-fixed-bottom {
+  z-index: 1;
+}
 
 /** button **/
+.btn {
+ text-transform: none;
+}
 .btn label {
   margin: 0;
 }
@@ -149,7 +155,8 @@ body {
   left: 0;
   right: 0;
   top: 52px;
-  bottom: 52px;
+  bottom: 60px;
+  z-index: 10;
 }
 .blur {
   -webkit-filter: blur(2px) grayscale(50%);

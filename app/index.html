@@ -32,21 +32,21 @@
   </div>
 
   <div class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
-      <ul class="nav nav-pills pull-right">
-        <li ui-sref-active="active"><a ng-click="openDialog('home/credentialsDialog.html')">test</a></li>
-      </ul>
-      <h3 ng-if="serviceName">{{serviceName + '.serviceName'|i18next}}</h3>
-    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li>
+        <a ng-click="openDialog('com/credentialsDialog.html')"><i class="fa fa-key"></i></a>
+      </li>
+    </ul>
+    <h3 ng-if="serviceName">{{serviceName + '.serviceName'|i18next}}</h3>
   </div>
 
   <div ui-view="main" ng-class="{blur:_classBlur}"></div>
 
-  <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
-    <div class="container">
-      <p class="navbar-text navbar-right">Yet Another AWS Management Console - Copyright 2014 michihiro.</p>
-    </div>
-  </nav>
+  <div class="nav navbar navbar-default navbar-fixed-bottom" role="navigation">
+    <p class="navbar-text navbar-right">
+      Yet Another AWS Management Console - Copyright 2014 michihiro.
+    </p>
+  </div>
 
   <!-- build:js js/vendor.js -->
   <!-- bower:js -->
