@@ -20,9 +20,13 @@
   </div>
   <div class="s3-right" s3-upload-field="dropOpt">
     <div class="col-md-12">
-      <ol class="breadcrumb breadcrumb-arrow" style="">
+      <ol class="breadcrumb breadcrumb-arrow">
+        <img ng-if="!breadcrumb.length && !getCurrent().list.length"
+             src="images/S3Bucket.svg">
+        <img ng-if="breadcrumb.length || getCurrent().list.length"
+             src="images/S3BucketWithObjects.svg">
         <li ng-repeat="b in breadcrumb"  style="white-space:nowrap;">
-          <a ng-class="{disabled:!b.Name}" ng-click="b.Name && setCurrent(b)">{{b.Name||'...'}}</a></li>
+          <a ng-class="{disabled:!b.Name}" ng-click="b.Name && setCurrent(b)">{{b.Name.replace('/','')||'...'}}</a></li>
         </li>
         <li><span>{{getCurrent().Name}}</span></li>
       </ol>
@@ -52,7 +56,12 @@
           <tbody app-on-row-selected="onRowSelect($indexes)">
             <tr ng-if="getCurrent().list === undefined">
              <td colspan="{{columns.length}}">
-               <div class="td-inner"><div class="loader"/><div class="loader"/><div class="loader"/><div class="loader"/></div>
+               <div class="td-inner">
+                 <div class="loader"></div>
+                 <div class="loader"></div>
+                 <div class="loader"></div>
+                 <div class="loader"></div>
+               </div>
              </td>
             </tr>
             <tr ng-if="creatingFolder">

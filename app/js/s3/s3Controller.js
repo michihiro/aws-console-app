@@ -52,7 +52,7 @@
         label: 's3.createBucket',
         action: 'createBucket',
         onClick: function() {
-          $scope.openDialog('s3/createBucketDialog.html');
+          $scope.openDialog('s3/createBucketDialog');
         }
       },
 /*
@@ -68,7 +68,7 @@
         label: 's3.deleteBucket',
         action: 'deleteBucket',
         onClick: function() {
-          $scope.openDialog('s3/deleteBucketDialog.html');
+          $scope.openDialog('s3/deleteBucketDialog');
         }
       }
     ];
@@ -85,7 +85,7 @@
         label: 's3.deleteObjects',
         action: 'deleteObjects',
         onClick: function() {
-          $scope.openDialog('s3/deleteObjectsDialog.html');
+          $scope.openDialog('s3/deleteObjectsDialog');
         }
       },
       {
@@ -98,6 +98,7 @@
     ];
 
     ng.extend($scope, {
+
       breadcrumb: [],
       getCurrent: s3ListService.getCurrent,
       setCurrent: s3ListService.setCurrent,
@@ -118,7 +119,7 @@
       isOpenTreeMenu: false,
       dropOpt: {
         onDrop: function(uploadInfo) {
-          $scope.openDialog('s3/uploadDialog.html', {
+          $scope.openDialog('s3/uploadDialog', {
             uploadInfo: uploadInfo
           });
         },
@@ -144,7 +145,7 @@
         for (folder = current.parent; folder; folder = folder.parent) {
           breadcrumb.unshift(folder);
         }
-        if (breadcrumb.length > 2) {
+        if (breadcrumb.length > 3) {
           breadcrumb.splice(1, breadcrumb.length - 3, {});
         }
         $scope.breadcrumb = breadcrumb;
@@ -229,9 +230,9 @@
     });
   }
 
-  s3UploadDialogCtrl.$inject = ['$scope', '$q', '$timeout', 'appFilterService', 's3ListService', 's3NotificationsService', 's3Mimetype', 'awsS3'];
+  s3UploadDialogCtrl.$inject = ['$scope', '$q', '$timeout', 'appFilterService', 's3ListService', 's3NotificationsService', 's3Mimetype', 'awsS3', 'dialogInputs'];
 
-  function s3UploadDialogCtrl($scope, $q, $timeout, appFilterService, s3ListService, s3NotificationsService, s3Mimetype, awsS3) {
+  function s3UploadDialogCtrl($scope, $q, $timeout, appFilterService, s3ListService, s3NotificationsService, s3Mimetype, awsS3, dialogInputs) {
     var columns = [
       {
         checkbox: true,
@@ -252,6 +253,7 @@
     ];
 
     ng.extend($scope, {
+      uploadInfo: dialogInputs.uploadInfo,
       columns: columns,
       folder: s3ListService.getCurrent(),
       inputs: {
@@ -352,9 +354,9 @@
     }
   }
 
-  s3CreateBucketDialogCtrl.$inject = ['$scope', '$timeout', 's3ListService', 'awsS3'];
+  s3CreateBucketDialogCtrl.$inject = ['$scope', '$timeout', 'awsRegions', 's3ListService', 'awsS3'];
 
-  function s3CreateBucketDialogCtrl($scope, $timeout, s3ListService, awsS3) {
+  function s3CreateBucketDialogCtrl($scope, $timeout, awsRegions, s3ListService, awsS3) {
     var validateBucketName = {
       minLen: '$value.length > 2',
       maxLen: '$value.length < ((inputs.region === "us-east-1") ? 256 : 64)',
@@ -366,8 +368,9 @@
     };
 
     ng.extend($scope, {
+      awsRegions: awsRegions,
       inputs: {
-        region: $scope.regions.s3[0]
+        region: awsRegions.s3[0]
       },
       validateBucketName: validateBucketName,
       validateReg: validateReg,

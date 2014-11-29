@@ -1,4 +1,3 @@
-<div ng-controller="s3DeleteObjectsDialogCtrl">
 <div class="modal-header">
   <button type="button" class="close" ng-click="$dismiss()">&times;</button>
   <h3>{{'s3.deleteConfirmation'|i18next}}</h3>
@@ -14,14 +13,13 @@
   <button type="button" class="btn btn-default"
           ng-click="$dismiss()"
           ng-disabled="processing" >
-    <label ng-show="processing" class=loading />
+    <label ng-show="processing" class="loading"></label>
     <label>{{'com.cancel'|i18next}}</label>
   </button>
   <button type="button" class="btn btn-loading" ng-class="{'btn-danger':!form.$invalid}" 
           ng-click="drop()"
           ng-disabled="processing || !isReady" >
-    <label ng-show="processing" class=loading />
+    <label ng-show="processing" class="loading"></label>
     <label>{{'s3.delete'|i18next}}</label>
   </button>
-</div>
 </div>

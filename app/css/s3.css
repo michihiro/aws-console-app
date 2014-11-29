@@ -185,10 +185,9 @@
 
 .breadcrumb-arrow li a:hover.disabled,
 .breadcrumb-arrow li a:focus.disabled {
-  background-color: #3bafda;
-  border: 1px solid #3bafda;
+  text-decoration: none;
 }
-.breadcrumb-arrow li a:hover.disabled:before,
-.breadcrumb-arrow li a:focus.disabled:before {
-  border-left-color: #3bafda;
+.breadcrumb img {
+  width: 28px;
+  height: 28px;
 }

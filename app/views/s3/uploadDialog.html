@@ -1,9 +1,8 @@
-<div class="s3-upload-dialog" ng-controller="s3UploadDialogCtrl">
 <div class="modal-header">
   <button class="close" ng-click="$dismiss()">&times;</button>
   <h3>{{'Upload Files'||i18next}}</h3>
 </div>
-<div class="modal-body">
+<div class="modal-body s3-upload-dialog">
   <div class="form-group">
     <label>{{'s3.uploadTo'|i18next}}</label>
     <span>{{folder.bucketName}} / {{folder.Prefix}}<span>
@@ -67,13 +66,13 @@
   <button class="btn btn-default"
           ng-click="$dismiss()"
           ng-disabled="processing" >
-    <label ng-show="processing" class=loading />
+    <label ng-show="processing" class=loading></label>
     <label>{{'com.cancel'|i18next}}</label>
   </button>
   <button class="btn btn-success btn-loading"
           ng-click="upload()"
           ng-disabled="processing || !isReady" >
-    <label ng-show="processing" class=loading />
+    <label ng-show="processing" class=loading></label>
     <label>{{'s3.startUpload'|i18next}}</label>
   </button>
 </div>

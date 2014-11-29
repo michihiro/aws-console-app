@@ -5,6 +5,16 @@ body {
 [ng-cloak] {
   display: none !important;
 }
+.screen {
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+}
+.modal-open .screen {
+  -webkit-filter: grayscale(50%);
+}
 /** func-menu **/
 
 .func-menu {
@@ -157,9 +167,6 @@ body {
   top: 52px;
   bottom: 60px;
   z-index: 10;
-}
-.blur {
-  -webkit-filter: blur(2px) grayscale(50%);
 }
 /* modal */
 

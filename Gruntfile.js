@@ -184,6 +184,17 @@ module.exports = function(grunt) {
       ]
     },
 
+    uglify: {
+      options: {
+        mangle: false
+        /*
+        mangle: {
+         except: ['jQuery', 'angular']
+        }
+        */
+      }
+    },
+
     // Performs rewrites based on rev and the useminPrepare configuration
     usemin: {
       options: {

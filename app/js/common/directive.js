@@ -95,6 +95,7 @@
           position: 'absolute',
           border: '1px dashed #777',
           display: 'none',
+          zIndex: 10
         });
 
       scope._mc = new Hammer.Manager(elem[0], opt)

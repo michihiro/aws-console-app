@@ -1,19 +1,6 @@
 (function(ng) {
   'use strict';
 
-  ng.module('aws-console', [
-      'ngAnimate',
-      'ui.router',
-      'ui.utils',
-      'ui.bootstrap',
-      'jm.i18next',
-      'ng-context-menu'
-    ])
-    .service('credentialsService', credentialsService)
-    .controller('dialogCredentialsCtrl', dialogCredentialsCtrl)
-    .config(appConfig)
-    .run(appRun);
-
   var regions = [
     'us-east-1',
     'us-west-2',
@@ -25,9 +12,28 @@
     'sa-east-1'
   ];
 
-  appConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$i18nextProvider'];
+  ng.module('aws-console', [
+      'ngAnimate',
+      'ui.router',
+      'ui.utils',
+      'ui.bootstrap',
+      'jm.i18next',
+      'ng-context-menu'
+    ])
+    .constant('awsRegions', {
+      s3: regions,
+      ec2: regions
+    })
+    .service('credentialsService', credentialsService)
+    .controller('comCredentialsDialogCtrl', comCredentialsDialogCtrl)
+    .config(appConfig)
+    .run(appRun);
 
-  function appConfig($stateProvider, $urlRouterProvider, $i18nextProvider) {
+  appConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$i18nextProvider', 'awsRegions'];
+
+  function appConfig($stateProvider, $urlRouterProvider, $i18nextProvider, awsRegions) {
+
+    $urlRouterProvider.otherwise('/s3');
 
     var services = [
       's3', 'ec2', 'r53'
@@ -35,6 +41,10 @@
 
     $urlRouterProvider.otherwise('/s3');
     services.forEach(function(service) {
+      var serviceRegions;
+      if(service !== 's3' && service !== 'r53') {
+        serviceRegions = awsRegions[service];
+      }
       $stateProvider
         .state(service, {
           url : '/' + service,
@@ -44,7 +54,7 @@
               controller: service + 'Ctrl'
             }
           },
-          serviceName: service,
+          serviceRegions: serviceRegions
         });
     });
 
@@ -70,21 +80,16 @@
     ng.extend($rootScope, {
       state: $state,
       stateParams: $stateParams,
-      regions: {
-        s3: regions,
-        ec2: regions
-      },
       openDialog: openDialog
     });
 
     credentialsService.load(true)
       .catch(function() {
-        $rootScope.openDialog('com/credentialsDialog.html');
+        $rootScope.openDialog('com/credentialsDialog');
       });
 
     $rootScope.$on('$stateChangeSuccess',
       function(ev, state) {
-        $rootScope.serviceName = state.serviceName;
         storage.set({
           lastState: state,
         });
@@ -98,37 +103,27 @@
 
     return;
 
-    function openDialog(tpl, args) {
-      var scope = $rootScope.$new();
-      var k, modal;
-      for (k in args) {
-        scope[k] = args[k];
-      }
-
-      $rootScope._classBlur = true;
-      modal = $modal.open({
-        templateUrl: 'views/' + tpl,
-        scope: scope,
-        //size: size,
-        backdrop: 'static',
+    function openDialog(dlgName, opt, modalOpt) {
+      var controllerName = dlgName.replace(/\/(.)/g, function(m, g1) {
+        return g1.toUpperCase();
       });
-      if (args && args.onClose) {
-        modal.result.then(
-          args.onClose,
-          function() {
-            args.onClose(null);
-          });
-      }
-      modal.result.finally(function() {
-        $rootScope._classBlur = false;
+      return $modal.open({
+        templateUrl: 'views/' + dlgName + '.html',
+        backdrop: 'static',
+        keyboard: false,
+        controller: controllerName + 'Ctrl',
+        size: (modalOpt || {}).size,
+        resolve : {
+          dialogInputs: function() { return opt || {};}
+        }
       });
     }
   }
 
 
-  dialogCredentialsCtrl.$inject = ['$scope', '$timeout', 'credentialsService'];
+  comCredentialsDialogCtrl.$inject = ['$scope', '$timeout', 'credentialsService'];
 
-  function dialogCredentialsCtrl($scope, $timeout, credentialsService) {
+  function comCredentialsDialogCtrl($scope, $timeout, credentialsService) {
 
     ng.extend($scope, {
       inputs: {},

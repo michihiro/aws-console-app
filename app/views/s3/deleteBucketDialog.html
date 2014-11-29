@@ -13,13 +13,13 @@
     <button class="btn btn-default"
             ng-click="$dismiss()"
             ng-disabled="processing" >
-      <label ng-show="processing" class=loading />
+      <label ng-show="processing" class="loading"></label>
       <label>{{'com.cancel'|i18next}}</label>
     </button>
     <button class="btn btn-loading" ng-class="{'btn-danger':!form.$invalid}" 
             ng-click="deleteBucket()"
             ng-disabled="processing || form.$invalid" >
-      <label ng-show="processing" class=loading />
+      <label ng-show="processing" class="loading"></label>
       <label>{{'s3.delete'|i18next}}</label>
     </button>
   </div>
