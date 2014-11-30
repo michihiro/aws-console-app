@@ -3,6 +3,7 @@
 
   ng.module('aws-console')
     .controller('s3Ctrl', s3Ctrl)
+    .factory('s3Actions', s3ActionsFactory)
     .controller('s3HeaderCtrl', s3HeaderCtrl)
     .controller('s3TreeCtrl', s3TreeCtrl)
     .controller('s3NotificationsAreaCtrl', s3NotificationsAreaCtrl)
@@ -13,14 +14,119 @@
     .controller('s3CreateFolderCtrl', s3CreateFolderCtrl)
     .controller('s3DeleteObjectsDialogCtrl', s3DeleteObjectsDialogCtrl);
 
-  s3HeaderCtrl.$inject = ['$scope', '$state', '$stateParams', '$filter', '$timeout', 's3DownloadService', 's3ListService', 'appFilterService'];
+  s3ActionsFactory.$inject = ['$rootScope', 's3ListService', 's3DownloadService'];
 
-  function s3HeaderCtrl($scope, $state, $stateParams, $filter, $timeout, s3DownloadService, s3ListService, appFilterService) {
+  function s3ActionsFactory($rootScope, s3ListService, s3DownloadService) {
+    var actions = {
+      createBucket: {
+        label: 's3.createBucket',
+        action: 'createBucket',
+        onClick: function() {
+          $rootScope.openDialog('s3/createBucketDialog');
+          actionsObj.isMenuOpened = false;
+        }
+      },
+      deleteBucket: {
+        label: 's3.deleteBucket',
+        action: 'deleteBucket',
+        onClick: function() {
+          $rootScope.openDialog('s3/deleteBucketDialog');
+          actionsObj.isMenuOpened = false;
+        }
+      },
+      downloadObjects: {
+        label: 's3.downloadObjects',
+        action: 'downloadObjects',
+        onClick: function() {
+          downloadObjects();
+          actionsObj.isMenuOpened = false;
+        }
+      },
+      bucketProperties: {
+        label: 's3.bucketProperties',
+        action: 'bucketProperties',
+        onClick: function() {
+          $rootScope.openDialog('s3/bucketPropertiesDialog');
+          actionsObj.isMenuOpened = false;
+        }
+      },
+      createFolder: {
+        label: 's3.createFolder',
+        action: 'createFolder',
+        onClick: function() {
+          actionsObj.creatingFolder = true;
+          actionsObj.isMenuOpened = false;
+        }
+      },
+      deleteObjects: {
+        label: 's3.deleteObjects',
+        action: 'deleteObjects',
+        onClick: function() {
+          $rootScope.openDialog('s3/deleteObjectsDialog');
+          actionsObj.isMenuOpened = false;
+        }
+      },
+    };
+
+    $rootScope.$watch(function() {
+      return s3ListService.getCurrent();
+    }, function(current) {
+      actions.bucketProperties.disabled =
+      actions.deleteBucket.disabled =
+      current && current.Prefix !== undefined;
+    });
+
+    $rootScope.$watch(function() {
+      return s3ListService.getSelectedObjects();
+    }, function(selected) {
+      actions.downloadObjects.disabled = !selected || !selected.length;
+      actions.deleteObjects.disabled = !selected || !selected.length;
+    });
+
+    var actionsObj = {
+      all: [
+        actions.createBucket,
+        //actions.bucketProperties,
+        actions.deleteBucket,
+        actions.createFolder,
+        actions.downloadObjects,
+        actions.deleteObjects,
+      ],
+      tree: [ 
+        actions.createBucket,
+        //actions.bucketProperties,
+        actions.deleteBucket,
+      ],
+      list: [
+        actions.createFolder,
+        actions.downloadObjects,
+        actions.deleteObjects,
+      ],
+    };
+
+    return actionsObj;
+
+    function downloadObjects() {
+      s3DownloadService.download(s3ListService.getSelectedObjects());
+    }
+  }
+
+  s3HeaderCtrl.$inject = ['$scope', '$state', '$stateParams', '$filter', '$timeout', 's3Actions', 's3DownloadService', 's3ListService', 'appFilterService'];
+
+  function s3HeaderCtrl($scope, $state, $stateParams, $filter, $timeout, s3Actions, s3DownloadService, s3ListService, appFilterService) {
+
     ng.extend($scope, {
+      s3Actions: s3Actions,
+      actions: s3Actions.all,
       breadcrumb: [],
       getCurrent: s3ListService.getCurrent,
       setCurrent: s3ListService.setCurrent,
+      hasPrev: s3ListService.hasPrev,
+      goPrev: s3ListService.goPrev,
+      hasNext: s3ListService.hasNext,
+      goNext: s3ListService.goNext,
     });
+
     $scope.$watch(function() {
       return s3ListService.getCurrent();
     }, function(current) {
@@ -38,9 +144,9 @@
     });
   }
 
-  s3Ctrl.$inject = ['$scope', '$state', '$stateParams', '$filter', '$timeout', 's3DownloadService', 's3ListService', 'appFilterService'];
+  s3Ctrl.$inject = ['$scope', '$state', '$stateParams', '$filter', '$timeout', 's3Actions', 's3DownloadService', 's3ListService', 'appFilterService'];
 
-  function s3Ctrl($scope, $state, $stateParams, $filter, $timeout, s3DownloadService, s3ListService, appFilterService) {
+  function s3Ctrl($scope, $state, $stateParams, $filter, $timeout, s3Actions, s3DownloadService, s3ListService, appFilterService) {
 
     var columns = [
       {
@@ -73,56 +179,6 @@
       },
     ];
 
-    var treeMenu = [
-      {
-        label: 's3.createBucket',
-        action: 'createBucket',
-        onClick: function() {
-          $scope.openDialog('s3/createBucketDialog');
-        }
-      },
-/*
-      {
-        label: 's3.bucketProperties',
-        action: 'bucketProperties',
-        onClick: function() {
-          $scope.openDialog('s3/bucketPropertiesDialog.html');
-        }
-      },
-*/
-      {
-        label: 's3.deleteBucket',
-        action: 'deleteBucket',
-        onClick: function() {
-          $scope.openDialog('s3/deleteBucketDialog');
-        }
-      }
-    ];
-
-    var listMenu = [
-      {
-        label: 's3.downloadObjects',
-        action: 'downloadObjects',
-        onClick: function() {
-          downloadObjects();
-        }
-      },
-      {
-        label: 's3.deleteObjects',
-        action: 'deleteObjects',
-        onClick: function() {
-          $scope.openDialog('s3/deleteObjectsDialog');
-        }
-      },
-      {
-        label: 's3.createFolder',
-        action: 'createFolder',
-        onClick: function() {
-          $scope.openCreateFolder();
-        }
-      }
-    ];
-
     ng.extend($scope, {
 
       getCurrent: s3ListService.getCurrent,
@@ -132,13 +188,12 @@
       sortExp: sortExp,
       sortCol: 'Name',
       sortReverse: false,
-      treeMenu: treeMenu,
-      listMenu: listMenu,
+      treeMenu: s3Actions.tree,
+      listMenu: s3Actions.list,
+      s3Actions: s3Actions,
       onDblClickList: onDblClickList,
       downloadObjects: downloadObjects,
-      openCreateFolder: openCreateFolder,
-      closeCreateFolder: closeCreateFolder,
-      actionDisabled: {},
+
       onRowSelect: onRowSelect,
       isSelectedObject: s3ListService.isSelectedObject,
       isOpenTreeMenu: false,
@@ -157,21 +212,6 @@
       });
     });
 
-    $scope.$watch(function() {
-      return s3ListService.getCurrent();
-    }, function(current) {
-      $scope.actionDisabled.bucketProperties =
-        $scope.actionDisabled.deleteBucket =
-        current && current.Prefix !== undefined;
-
-    });
-    $scope.$watch(function() {
-      return s3ListService.getSelectedObjects();
-    }, function(selected) {
-      $scope.actionDisabled.downloadObjects = !selected || !selected.length;
-      $scope.actionDisabled.deleteObjects = !selected || !selected.length;
-    });
-
     return;
 
     function setSort(col) {
@@ -185,16 +225,6 @@
 
     function sortExp(item) {
       return item[$scope.sortCol];
-    }
-
-    function openCreateFolder() {
-      $scope.creatingFolder = true;
-    }
-
-    function closeCreateFolder() {
-      $timeout(function() {
-        $scope.creatingFolder = false;
-      });
     }
 
     function onRowSelect(indexes) {
@@ -463,9 +493,9 @@
     ng.extend($scope, {});
   }
 
-  s3CreateFolderCtrl.$inject = ['$scope', 's3ListService', 'awsS3', 'appFocusOn'];
+  s3CreateFolderCtrl.$inject = ['$scope', '$timeout', 's3ListService', 'awsS3', 'appFocusOn', 's3Actions'];
 
-  function s3CreateFolderCtrl($scope, s3ListService, awsS3, appFocusOn) {
+  function s3CreateFolderCtrl($scope, $timeout, s3ListService, awsS3, appFocusOn, s3Actions) {
     ng.extend($scope, {
       onKeyup: onKeyup,
       onInputDone: onInputDone
@@ -484,7 +514,9 @@
     function onInputDone() {
       var folderName = $scope.folderName;
       if (!folderName || !folderName.length) {
-        $scope.closeCreateFolder();
+        $timeout(function() {
+          s3Actions.creatingFolder = false;
+        });
         return;
       }
       folderName.replace(/$\//, '');
@@ -498,7 +530,9 @@
         Body: new Blob([]),
       };
       s3.putObject(uploadParam, function() {
-        $scope.closeCreateFolder();
+        $timeout(function() {
+          s3Actions.creatingFolder = false;
+        });
         s3ListService.updateFolder();
       });
       s3ListService.selectObjects([]);

@@ -1,12 +1,41 @@
-<ol class="breadcrumb s3-header">
-  <img ng-if="!breadcrumb.length && !getCurrent().list.length"
-       src="images/S3Bucket.svg">
-  <img ng-if="breadcrumb.length || getCurrent().list.length"
-       src="images/S3BucketWithObjects.svg">
-  <li ng-repeat="b in breadcrumb"  style="white-space:nowrap;">
-    <a ng-class="{disabled:!b.Name}" ng-click="b.Name && setCurrent(b)">
-      {{b.Name.replace('/','')||'...'}}
-    </a>
-  </li>
-  <li><span>{{getCurrent().Name}}</span></li>
-</ol>
+<div class="s3-header">
+  <div class="btn-group" dropdown is-open="s3Actions.isMenuOpened">
+    <button type="button" class="btn btn-info dropdown-toggle">
+      <span>{{'com.action'|i18next}}</span>
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li ng-repeat="m in actions"
+          ng-class="{disabled:m.disabled}">
+        <a ng-class="{withoutripple:m.disabled}"
+           ng-click="(!m.disabled || $event.stopPropagation()) && m.onClick($event)">
+          {{m.label|i18next}}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="btn-group">
+    <button class="btn btn-info"
+            ng-disabled="!hasPrev()"
+            ng-click="goPrev()">
+      <span><i class="fa fa-arrow-left"></i></span>
+    </button>
+    <button class="btn btn-info"
+            ng-disabled="!hasNext()"
+            ng-click="goNext()">
+      <span><i class="fa fa-arrow-right"></i></span>
+    </button>
+  </div>
+  <ol class="breadcrumb" ng-if="getCurrent()">
+    <img ng-if="!breadcrumb.length && !getCurrent().list.length"
+         src="images/S3Bucket.svg">
+    <img ng-if="breadcrumb.length || getCurrent().list.length"
+         src="images/S3BucketWithObjects.svg">
+    <li ng-repeat="b in breadcrumb"  style="white-space:nowrap;">
+      <a ng-class="{disabled:!b.Name}" ng-click="b.Name && setCurrent(b)">
+        {{b.Name.replace('/','')||'...'}}
+      </a>
+    </li>
+    <li><span>{{getCurrent().Name}}</span></li>
+  </ol>
+</div>

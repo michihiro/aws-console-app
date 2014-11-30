@@ -26,6 +26,9 @@
     var current;
     var selected = [];
     var _listFolderRequest = {};
+    var HISTORY_MAX = 100;
+    var history = [];
+    var historyIdx = 0;
 
     $rootScope.$watch('credentials', _listBuckets);
 
@@ -33,6 +36,10 @@
       getBuckets: getBuckets,
       getCurrent: getCurrent,
       setCurrent: setCurrent,
+      hasPrev: hasPrev,
+      goPrev: goPrev,
+      hasNext: hasNext,
+      goNext: goNext,
       updateBuckets: updateBuckets,
       updateFolder: updateFolder,
       selectObjects: selectObjects,
@@ -50,6 +57,42 @@
 
     function setCurrent(folder) {
       if (current !== folder) {
+        history.length = historyIdx;
+        history.push(folder);
+        if(history.length <= HISTORY_MAX) {
+          historyIdx++;
+        } else {
+          history.shift();
+        }
+
+        _listFolder(folder);
+        current = folder;
+        selected = [];
+      }
+    }
+
+    function hasPrev() {
+      return historyIdx > 1;
+    }
+
+    function goPrev() {
+      if(hasPrev()) {
+        var folder = history[historyIdx - 2];
+        historyIdx--;
+        _listFolder(folder);
+        current = folder;
+        selected = [];
+      }
+    }
+
+    function hasNext() {
+      return history.length > historyIdx;
+    }
+
+    function goNext() {
+      if(hasNext()) {
+        var folder = history[historyIdx];
+        historyIdx++;
         _listFolder(folder);
         current = folder;
         selected = [];

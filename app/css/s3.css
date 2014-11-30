@@ -12,10 +12,14 @@
 .s3-left .s3-tree {
   position: absolute;
   left: 0;
-  top: 40px;
+  top: 0;
   bottom: 0;
   width: 200px;
   overflow: scroll;
+  border-right: 1px solid rgba(0,0,0,.2);
+}
+.s3-left i.fa-caret-right {
+ padding: 0 4px;
 }
 .s3-left i.opentree {
   transform: rotateZ(45deg);
@@ -180,9 +184,15 @@
 }
 /**/
 
-.s3-header {
-  margin-top: 4px;
-  padding: 8px;
+.s3-header > * {
+  display: inline-block;
+  margin: 6px;
+}
+.s3-header .btn {
+  padding: 8px 12px;
+}
+.s3-header > .breadcrumb {
+  padding: 2px 8px;
 }
 .s3-header li a:hover.disabled,
 .s3-header li a:focus.disabled {

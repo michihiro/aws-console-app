@@ -1,19 +1,5 @@
 <div class="func-view">
   <div class="s3-left">
-    <div class="btn-group" dropdown is-open="isOpenTreeMenu">
-      <button type="button" class="btn btn-info dropdown-toggle">
-        <span>{{'com.action'|i18next}}</span>
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu" role="menu">
-        <li ng-repeat="m in treeMenu"
-            ng-class="{disabled:actionDisabled[m.action]}">
-          <a ng-click="(!actionDisabled[m.action] || $event.stopPropagation()) && m.onClick($event)">
-            {{m.label|i18next}}
-          </a>
-        </li>
-      </ul>
-    </div>
     <div class="s3-tree" context-menu data-target="s3-tree-context-menu" ng-controller="s3TreeCtrl">
       <s3-tree data="getBuckets()"></s3-tree>
     </div>
@@ -52,12 +38,12 @@
                </div>
              </td>
             </tr>
-            <tr ng-if="creatingFolder">
+            <tr ng-if="s3Actions.creatingFolder">
              <td colspan="{{columns.length}}" ng-controller="s3CreateFolderCtrl">
               <input app-focus-on="folderName" ng-model="folderName" ng-trim="true" ng-keyup="onKeyup($event)" ng-blur="onInputDone()">
              </td>
             </tr>
-            <tr ng-if="getCurrent().list.length === 0 && !creatingFolder">
+            <tr ng-if="getCurrent().list.length === 0 && !s3Actions.creatingFolder">
              <td colspan="{{columns.length}}" style="text-align:center">
               {{'s3.noObject'|i18next}}
              </td>
@@ -108,8 +94,9 @@
 <div class="dropdown position-fixed" id="s3-tree-context-menu">
   <ul class="dropdown-menu" role="menu">
     <li ng-repeat="m in treeMenu"
-        ng-class="{disabled:actionDisabled[m.action]}">
-      <a ng-click="(!actionDisabled[m.action] || $event.stopPropagation()) && m.onClick($event)">
+        ng-class="{disabled:m.disabled}">
+      <a ng-class="{withoutripple:m.disabled}"
+         ng-click="(!m.disabled || $event.stopPropagation()) && m.onClick($event)">
         {{m.label|i18next}}
       </a>
     </li>
@@ -119,8 +106,9 @@
 <div class="dropdown position-fixed" id="s3-list-context-menu">
   <ul class="dropdown-menu" role="menu">
     <li ng-repeat="m in listMenu"
-        ng-class="{disabled:actionDisabled[m.action]}">
-      <a ng-click="(!actionDisabled[m.action] || $event.stopPropagation()) && m.onClick($event)">
+        ng-class="{disabled:m.disabled}">
+      <a ng-class="{withoutripple:m.disabled}"
+         ng-click="(!m.disabled || $event.stopPropagation()) && m.onClick($event)">
         {{m.label|i18next}}
       </a>
     </li>
