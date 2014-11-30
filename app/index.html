@@ -38,6 +38,8 @@
         </li>
       </ul>
       <h3 ng-if="state.current.name">{{state.current.name + '.serviceName'|i18next}}</h3>
+      <div ui-view="header"></div>
+
     </div>
 
     <div ui-view="main"></div>

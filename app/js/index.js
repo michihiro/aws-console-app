@@ -49,6 +49,10 @@
         .state(service, {
           url : '/' + service,
           views: {
+            header: {
+              templateUrl: 'views/' + service + '/' + service + 'Header.html',
+              controller: service + 'HeaderCtrl'
+            },
             main: {
               templateUrl: 'views/' + service + '/' + service + '.html',
               controller: service + 'Ctrl'

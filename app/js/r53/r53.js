@@ -3,6 +3,7 @@
 
   ng.module('aws-console')
     .factory('awsR53', awsR53Factory)
+    .controller('r53HeaderCtrl', r53Ctrl)
     .controller('r53Ctrl', r53Ctrl);
 
   awsR53Factory.$inject = ['$rootScope'];

@@ -4,6 +4,7 @@
   ng.module('aws-console')
     .factory('awsEC2', awsEC2Factory)
     .factory('ec2Service', ec2Service)
+    .controller('ec2HeaderCtrl', ec2Ctrl)
     .controller('ec2Ctrl', ec2Ctrl);
 
   awsEC2Factory.$inject = ['$rootScope'];
@@ -17,10 +18,10 @@
     };
   }
 
-  ec2Ctrl.$inject = ['$scope', '$timeout', 'ec2Service'];
+  ec2Ctrl.$inject = ['$scope', '$timeout', 'awsRegions', 'ec2Service'];
 
-  function ec2Ctrl($scope, $timeout, ec2Service) {
-    var tabs = $scope.regions.ec2.map(function(r) {
+  function ec2Ctrl($scope, $timeout, awsRegions, ec2Service) {
+    var tabs = awsRegions.ec2.map(function(r) {
       return {
         region: r,
         active: ec2Service.getCurrentRegion() === r,

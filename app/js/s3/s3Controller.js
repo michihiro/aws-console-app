@@ -3,6 +3,7 @@
 
   ng.module('aws-console')
     .controller('s3Ctrl', s3Ctrl)
+    .controller('s3HeaderCtrl', s3HeaderCtrl)
     .controller('s3TreeCtrl', s3TreeCtrl)
     .controller('s3NotificationsAreaCtrl', s3NotificationsAreaCtrl)
     .controller('s3UploadDialogCtrl', s3UploadDialogCtrl)
@@ -11,6 +12,31 @@
     .controller('s3BucketPropertiesDialogCtrl', s3BucketPropertiesDialogCtrl)
     .controller('s3CreateFolderCtrl', s3CreateFolderCtrl)
     .controller('s3DeleteObjectsDialogCtrl', s3DeleteObjectsDialogCtrl);
+
+  s3HeaderCtrl.$inject = ['$scope', '$state', '$stateParams', '$filter', '$timeout', 's3DownloadService', 's3ListService', 'appFilterService'];
+
+  function s3HeaderCtrl($scope, $state, $stateParams, $filter, $timeout, s3DownloadService, s3ListService, appFilterService) {
+    ng.extend($scope, {
+      breadcrumb: [],
+      getCurrent: s3ListService.getCurrent,
+      setCurrent: s3ListService.setCurrent,
+    });
+    $scope.$watch(function() {
+      return s3ListService.getCurrent();
+    }, function(current) {
+      $scope.breadcrumb.length = 0;
+      if (current && current.Prefix) {
+        var folder, breadcrumb = [];
+        for (folder = current.parent; folder; folder = folder.parent) {
+          breadcrumb.unshift(folder);
+        }
+        if (breadcrumb.length > 3) {
+          breadcrumb.splice(1, breadcrumb.length - 3, {});
+        }
+        $scope.breadcrumb = breadcrumb;
+      }
+    });
+  }
 
   s3Ctrl.$inject = ['$scope', '$state', '$stateParams', '$filter', '$timeout', 's3DownloadService', 's3ListService', 'appFilterService'];
 
@@ -99,7 +125,6 @@
 
     ng.extend($scope, {
 
-      breadcrumb: [],
       getCurrent: s3ListService.getCurrent,
       setCurrent: s3ListService.setCurrent,
       columns: columns,
@@ -139,17 +164,6 @@
         $scope.actionDisabled.deleteBucket =
         current && current.Prefix !== undefined;
 
-      $scope.breadcrumb.length = 0;
-      if (current && current.Prefix) {
-        var folder, breadcrumb = [];
-        for (folder = current.parent; folder; folder = folder.parent) {
-          breadcrumb.unshift(folder);
-        }
-        if (breadcrumb.length > 3) {
-          breadcrumb.splice(1, breadcrumb.length - 3, {});
-        }
-        $scope.breadcrumb = breadcrumb;
-      }
     });
     $scope.$watch(function() {
       return s3ListService.getSelectedObjects();

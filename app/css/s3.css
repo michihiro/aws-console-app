@@ -61,9 +61,6 @@
   bottom: 0;
   border-right: 1px solid #428bca;
 }
-.s3-right .table-outer {
-  top: 40px;
-}
 .s3-right table i {
   margin-right: .2em;
 }
@@ -183,11 +180,15 @@
 }
 /**/
 
-.breadcrumb-arrow li a:hover.disabled,
-.breadcrumb-arrow li a:focus.disabled {
+.s3-header {
+  margin-top: 4px;
+  padding: 8px;
+}
+.s3-header li a:hover.disabled,
+.s3-header li a:focus.disabled {
   text-decoration: none;
 }
-.breadcrumb img {
+.s3-header img {
   width: 28px;
   height: 28px;
 }

@@ -138,16 +138,9 @@ body {
 [ui-view] {
   position: absolute;
 }
-[ui-view="title"] {
-  transition: all .4s ease .2s;
-}
-[ui-view="title"].ng-enter {
-  opacity: 0;
-  transform: translateY(-10%);
-}
-[ui-view="title"].ng-leave-active {
-  opacity: 0;
-  transform: translateY(10%);
+[ui-view="header"] {
+  top: 0;
+  left: 100px;
 }
 [ui-view="main"] {
   top: 0;
