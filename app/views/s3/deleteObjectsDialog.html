@@ -1,22 +1,22 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$dismiss()">&times;</button>
+  <button class="close" ng-click="$dismiss()">&times;</button>
   <h3>{{'s3.deleteConfirmation'|i18next}}</h3>
 </div>
 <div class="modal-body">
-  <div class="alert alert-danger">
+  <div class="alert">
     <p ng-if="keys.length == 1" ng-i18next="[i18next]({sprintf:[keys[0].Key]})s3.deleteObjMsg1"></p>
     <p ng-if="keys.length > 1" ng-i18next="[i18next]({sprintf:[keys.length]})s3.deleteObjMsg2"></p>
   </div>
 </div>
 <div class="modal-footer">
   <div class="alert alert-warning" ng-show="errorCode">{{'s3.error.'+errorCode|i18next}}</div>
-  <button type="button" class="btn btn-default"
+  <button class="btn btn-default"
           ng-click="$dismiss()"
           ng-disabled="processing" >
     <label ng-show="processing" class="loading"></label>
     <label>{{'com.cancel'|i18next}}</label>
   </button>
-  <button type="button" class="btn btn-loading" ng-class="{'btn-danger':!form.$invalid}" 
+  <button class="btn btn-loading" ng-class="{'btn-danger':!form.$invalid}" 
           ng-click="drop()"
           ng-disabled="processing || !isReady" >
     <label ng-show="processing" class="loading"></label>

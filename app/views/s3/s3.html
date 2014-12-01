@@ -28,7 +28,7 @@
             </tr>
           </thead>
           <tbody app-on-row-selected="onRowSelect($indexes)">
-            <tr ng-if="getCurrent().list === undefined">
+            <tr ng-if="getCurrent() && getCurrent().list === undefined">
              <td colspan="{{columns.length}}">
                <div class="td-inner">
                  <div class="loader"></div>
@@ -40,7 +40,9 @@
             </tr>
             <tr ng-if="s3Actions.creatingFolder">
              <td colspan="{{columns.length}}" ng-controller="s3CreateFolderCtrl">
-              <input app-focus-on="folderName" ng-model="folderName" ng-trim="true" ng-keyup="onKeyup($event)" ng-blur="onInputDone()">
+              <input placeholder="{{'s3.folderName'|i18next}}"
+                     app-focus-on="folderName" ng-model="folderName" ng-trim="true"
+                     ng-keyup="onKeyup($event)" ng-blur="onInputDone()">
              </td>
             </tr>
             <tr ng-if="getCurrent().list.length === 0 && !s3Actions.creatingFolder">

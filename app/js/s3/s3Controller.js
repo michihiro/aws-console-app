@@ -111,9 +111,9 @@
     }
   }
 
-  s3HeaderCtrl.$inject = ['$scope', '$state', '$stateParams', '$filter', '$timeout', 's3Actions', 's3DownloadService', 's3ListService', 'appFilterService'];
+  s3HeaderCtrl.$inject = ['$scope', '$state', '$stateParams', '$filter', '$timeout', 's3Actions', 's3DownloadService', 's3ListService'];
 
-  function s3HeaderCtrl($scope, $state, $stateParams, $filter, $timeout, s3Actions, s3DownloadService, s3ListService, appFilterService) {
+  function s3HeaderCtrl($scope, $state, $stateParams, $filter, $timeout, s3Actions, s3DownloadService, s3ListService) {
 
     ng.extend($scope, {
       s3Actions: s3Actions,
@@ -421,7 +421,13 @@
       create: create
     });
 
+    $scope.$watch('inputs', _inputsChanged, true);
+
     return;
+
+    function _inputsChanged() {
+      $scope.errorCode = null;
+    }
 
     function validateReg(exp, val) {
       return !!(new RegExp(exp).exec(val || ''));

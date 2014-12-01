@@ -1,0 +1,15 @@
+.r53-left,
+.r53-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
+.r53-left {
+  left: 0;
+  width: 200px;
+}
+.r53-right {
+  left: 200px;
+  right: 0;
+}

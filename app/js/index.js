@@ -130,12 +130,14 @@
   function comCredentialsDialogCtrl($scope, $timeout, credentialsService) {
 
     ng.extend($scope, {
+      canCancel: false,
       inputs: {},
       save: save
     });
 
     credentialsService.load().then(function(result) {
       ng.extend($scope.inputs, result);
+      $scope.canCancel = (result.accessKeyId && result.secretAccessKey);
     });
 
     return;

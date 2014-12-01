@@ -86,6 +86,9 @@ body {
 .navbar-fixed-bottom {
   z-index: 1;
 }
+.navbar-fixed-bottom .navbar-text.navbar-right:last-child {
+  margin-right: 15px;
+}
 
 /** button **/
 .btn {
@@ -162,7 +165,9 @@ body {
   z-index: 10;
 }
 /* modal */
-
+.modal-content {
+  border-radius: 6px;
+}
 .modal.fade .modal-dialog {
   transition: transform .1s ease;
   transform: scale(1.05);
@@ -208,6 +213,10 @@ body {
 .table-container .table > tbody > tr > td {
   padding: 0;
 }
+.table-striped > tbody > tr:nth-child(even).info > td {
+ background-color: #c4e4f3;
+}
+
 .th-inner {
   position: absolute;
   line-height: 1.8em;
@@ -241,4 +250,10 @@ body {
 }
 .dropdown-menu {
   background: rgba(255, 255, 255, .9);
+}
+form input.ng-invalid.ng-dirty {
+  background-color: hsl(  7, 100%, 95%);
+}
+form input.ng-valid.ng-dirty {
+  background-color: hsl(187, 100%, 95%);
 }

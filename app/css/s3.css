@@ -87,6 +87,9 @@
   color: #aaa;
   cursor: pointer;
 }
+.s3-right table input {
+  padding: 0 8px;
+}
 .s3-right .notifications-area {
   position: absolute;
   right: 8px;
@@ -192,7 +195,7 @@
   padding: 8px 12px;
 }
 .s3-header > .breadcrumb {
-  padding: 2px 8px;
+  padding: 2px 8px 2px 2px;
 }
 .s3-header li a:hover.disabled,
 .s3-header li a:focus.disabled {

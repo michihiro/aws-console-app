@@ -1,5 +1,66 @@
 <div class="func-view">
-  <div ng-repeat="z in hostedZones">
-    {{z.Name}}
+  <div class="r53-left">
+    <div ng-repeat="z in r53Info.getHostedZones()"
+         ng-click="r53Info.setCurrent(z)">
+      {{z.Name}}
+    </div>
+  </div>
+  <div class="r53-right">
+  
+    <div class="table-outer">
+      <div class="table-header-spacer"></div>
+      <div class="table-container" app-bind-scroll-position="tableScroll">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th ng-repeat="col in columns"
+                  ng-style="{width:col.width+'px'}">
+                <div class="th-inner"
+                     ng-style="{left:col.left+'px',width:col.width+'px','-webkit-transform':'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
+                  <span>{{col.name|i18next}}</span>
+                  <div class="sort-mark" ng-click="setSort(col)">
+                    <i ng-if="sortCol==col.col && !sortReverse" class="fa fa-sort-up"></i>
+                    <i ng-if="sortCol==col.col && sortReverse" class="fa fa-sort-down"></i>
+                  </div>
+                  <div class="table-resize-handle"
+                       app-bind-width="col"></div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody app-on-row-selected="onRowSelect($indexes)">
+            <tr ng-if="getCurrent() && getCurrent().list === undefined">
+             <td colspan="{{columns.length}}">
+               <div class="td-inner">
+                 <div class="loader"></div>
+                 <div class="loader"></div>
+                 <div class="loader"></div>
+                 <div class="loader"></div>
+               </div>
+             </td>
+            </tr>
+            <tr ng-if="r53Info.getCurrent().list.length === 0">
+             <td colspan="{{columns.length}}" style="text-align:center">
+              {{'r53.noRecords'|i18next}}
+             </td>
+            </tr>
+            <tr ng-repeat="item in r53Info.getCurrent().list | orderBy:sortExp:sortReverse"
+                row-id="{{ item.id }}"
+                ng-dblClick="onDblClickList(item)"
+                ng-class="{info: isSelectedObject(item)}" >
+              <td ng-repeat="col in columns" class="{{col.class}}"
+                     ng-style="{width:col.width+'px'}">
+                <div class="td-inner" ng-style="{width: col.width+'px'}">
+                  <span ng-if="col.isArray" ng-repeat="val in item[col.col] track by $index">{{val}}<br></span>
+                  <span ng-if="!col.isArray && col.filterFn">{{col.filterFn(item[col.col])}}</span>
+                  <span ng-if="!col.isArray && !col.filterFn">{{item[col.col]}}</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
+
