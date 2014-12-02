@@ -201,8 +201,8 @@ body {
   height: 1.8em;
 }
 .table-container {
-  height: 100%;
-  overflow-x: visible;
+  height: calc(100% - 1.8em);
+  overflow-x: hidden;
   overflow-y: auto;
 }
 .table-container .table {
@@ -256,4 +256,12 @@ form input.ng-invalid.ng-dirty {
 }
 form input.ng-valid.ng-dirty {
   background-color: hsl(187, 100%, 95%);
+}
+
+[dropdown].btn-group {
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.23), 0 1px 1px rgba(0, 0, 0, 0.16);
+}
+[dropdown].btn-group:hover,
+[dropdown].btn-group.open {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.23), 0 3px 10px rgba(0, 0, 0, 0.16);
 }

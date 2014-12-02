@@ -13,3 +13,12 @@
   left: 200px;
   right: 0;
 }
+.r53-left .nav > li > a {
+  padding: 2px;
+}
+.r53-left .nav > li > a > i {
+  margin: 2px 10px;
+}
+.r53-left .nav > li > a > i.local {
+  opacity: .3;
+}

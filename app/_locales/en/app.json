@@ -9,6 +9,7 @@
   },
   "s3": {
     "serviceName": "S3",
+    "buckets": "Buckets",
     "name": "Name",
     "size": "Size",
     "lastModified": "Last Modified",
@@ -67,6 +68,10 @@
     }
   },
   "r53": {
-    "serviceName": "Route53"
+    "serviceName": "Route53",
+    "name": "Domain Name",
+    "ttl": "TTL",
+    "type": "Type",
+    "value": "Value"
   }
 }

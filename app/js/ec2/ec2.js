@@ -4,7 +4,7 @@
   ng.module('aws-console')
     .factory('awsEC2', awsEC2Factory)
     .factory('ec2Service', ec2Service)
-    .controller('ec2HeaderCtrl', ec2Ctrl)
+    .controller('ec2HeaderCtrl', ec2HeaderCtrl)
     .controller('ec2Ctrl', ec2Ctrl);
 
   awsEC2Factory.$inject = ['$rootScope'];
@@ -16,6 +16,13 @@
         region: region,
       });
     };
+  }
+
+  ec2HeaderCtrl.$inject = ['$scope'];
+
+  function ec2HeaderCtrl($scope) {
+    ng.extend($scope, {
+    });
   }
 
   ec2Ctrl.$inject = ['$scope', '$timeout', 'awsRegions', 'ec2Service'];

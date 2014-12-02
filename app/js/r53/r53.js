@@ -24,9 +24,9 @@
     });
   }
 
-  r53Ctrl.$inject = ['$scope', '$timeout', 'r53Info', 'appFilterService'];
+  r53Ctrl.$inject = ['$scope', '$timeout', '$filter', 'r53Info'];
 
-  function r53Ctrl($scope, $timeout, r53Info, appFilterService) {
+  function r53Ctrl($scope, $timeout, $filter, r53Info) {
     var columns = [
       {
         width: 250,
@@ -49,18 +49,31 @@
         col: 'Values',
         name: 'r53.value',
         isArray: true,
-        filterFn: function(v) {return v.join('<br>')}
+        filterFn: function(v) {return v.join('<br>');}
       },
     ];
 
     ng.extend($scope, {
       r53Info: r53Info,
       columns: columns,
+      onRowSelect: onRowSelect,
+      isSelectedObject: r53Info.isSelectedObject,
     });
 
     r53Info.updateHostedZones();
 
     return;
+
+    function onRowSelect(indexes) {
+      var orderBy = $filter('orderBy');
+      var list = orderBy(r53Info.getCurrent().list,
+        $scope.sortExp, $scope.sortReverse);
+      var selected = (indexes || []).map(function(idx) {
+        return list[idx];
+      });
+      r53Info.selectObjects(selected);
+    }
+
   }
 
   r53InfoFactory.$inject = ['$rootScope', '$timeout', 'awsR53'];
@@ -68,12 +81,15 @@
   function r53InfoFactory($rootScope, $timeout, awsR53) {
     var hostedZones = [];
     var currentZone;
+    var selected = [];
 
     return {
       getHostedZones: getHostedZones,
       updateHostedZones: updateHostedZones,
       getCurrent: getCurrent,
-      setCurrent: setCurrent
+      setCurrent: setCurrent,
+      selectObjects: selectObjects,
+      isSelectedObject: isSelectedObject,
     };
 
     function getHostedZones() {
@@ -102,6 +118,7 @@
           if (data.Marker) {
             _listHostedZones(data.Marker);
           }
+          if(!currentZone) setCurrent(hostedZones[0]);
         });
       });
     }
@@ -140,6 +157,14 @@
           }
         });
       });
+    }
+
+    function selectObjects(sel) {
+      selected = sel;
+    }
+
+    function isSelectedObject(item) {
+      return selected.indexOf(item) >= 0;
     }
   }
 

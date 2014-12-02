@@ -9,6 +9,7 @@
   },
   "s3": {
     "serviceName": "S3",
+    "buckets": "バケット",
     "name": "名称",
     "size": "サイズ",
     "lastModified": "最終更新日時",
@@ -67,6 +68,10 @@
     }
   },
   "r53": {
-    "serviceName": "Route53"
+    "serviceName": "Route53",
+    "name": "ドメイン名",
+    "ttl": "TTL",
+    "type": "タイプ",
+    "value": "値"
   }
 }

@@ -1,5 +1,6 @@
 <div class="func-view">
   <div class="s3-left">
+    <div class="s3-tree-header">{{'s3.buckets'|i18next}}</div>
     <div class="s3-tree" context-menu data-target="s3-tree-context-menu" ng-controller="s3TreeCtrl">
       <s3-tree data="getBuckets()"></s3-tree>
     </div>

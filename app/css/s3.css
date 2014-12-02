@@ -9,14 +9,25 @@
   top: 0;
   bottom: 0;
 }
+.s3-left .s3-tree-header {
+  position: absolute;
+  line-height: 1.8em;
+  top: 0;
+  padding: .05em .4em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: bold;
+}
 .s3-left .s3-tree {
   position: absolute;
   left: 0;
-  top: 0;
+  top: 1.8em;
   bottom: 0;
   width: 200px;
   overflow: scroll;
   border-right: 1px solid rgba(0,0,0,.2);
+  border-top: 2px solid rgb(221, 221, 221);
 }
 .s3-left i.fa-caret-right {
  padding: 0 4px;
@@ -192,6 +203,7 @@
   margin: 6px;
 }
 .s3-header .btn {
+  margin: 0;
   padding: 8px 12px;
 }
 .s3-header > .breadcrumb {

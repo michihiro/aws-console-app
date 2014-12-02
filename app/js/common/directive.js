@@ -288,9 +288,9 @@
     }
   }
 
-  appBindWidthDirective.$inject = ['$timeout', '$window'];
+  appBindWidthDirective.$inject = ['$timeout'];
 
-  function appBindWidthDirective($timeout, $window) {
+  function appBindWidthDirective($timeout) {
     return {
       restrict: 'A',
       scope: {
@@ -310,8 +310,6 @@
         .on('panleft panright', _onPanside);
 
       _setLeft();
-      ng.element($window).on('resize', _setHeight);
-      _setHeight();
 
       elem.on('$destroy', _onDestroy);
 
@@ -333,12 +331,6 @@
         $timeout(function() {
           scope.opt.width = w > 50 ? w : 50;
           _setLeft();
-        });
-      }
-
-      function _setHeight() {
-        $timeout(function() {
-          elem.height(elem.parents('.table-container').height());
         });
       }
 

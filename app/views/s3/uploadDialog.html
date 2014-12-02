@@ -11,12 +11,12 @@
     <label class="col-xs-4 control-label">{{'s3.storageClass'|i18next}}</label>
     <div class="btn-group">
       <label class="btn btn-default"
-             ng-class="{'btn-primary':inputs.storageClass=='STANDARD'}"
+             ng-class="{'btn-info':inputs.storageClass=='STANDARD'}"
              ng-model="inputs.storageClass" btn-radio="'STANDARD'">
         {{'s3.standard'|i18next}}
       </label>
       <label class="btn btn-default"
-             ng-class="{'btn-primary':inputs.storageClass=='REDUCED_REDUNDANCY'}"
+             ng-class="{'btn-info':inputs.storageClass=='REDUCED_REDUNDANCY'}"
              ng-model="inputs.storageClass" btn-radio="'REDUCED_REDUNDANCY'">
         {{'s3.reducedRedundancy'|i18next}}
       </label>
@@ -69,7 +69,7 @@
     <label ng-show="processing" class=loading></label>
     <label>{{'com.cancel'|i18next}}</label>
   </button>
-  <button class="btn btn-success btn-loading"
+  <button class="btn btn-info btn-loading"
           ng-click="upload()"
           ng-disabled="processing || !isReady" >
     <label ng-show="processing" class=loading></label>

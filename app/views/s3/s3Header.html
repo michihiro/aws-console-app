@@ -14,18 +14,16 @@
       </li>
     </ul>
   </div>
-  <div class="btn-group">
-    <button class="btn btn-info"
-            ng-disabled="!hasPrev()"
-            ng-click="goPrev()">
-      <span><i class="fa fa-arrow-left"></i></span>
-    </button>
-    <button class="btn btn-info"
-            ng-disabled="!hasNext()"
-            ng-click="goNext()">
-      <span><i class="fa fa-arrow-right"></i></span>
-    </button>
-  </div>
+  <button class="btn btn-info"
+          ng-disabled="!hasPrev()"
+          ng-click="goPrev()">
+    <span><i class="fa fa-arrow-left"></i></span>
+  </button>
+  <button class="btn btn-info"
+          ng-disabled="!hasNext()"
+          ng-click="goNext()">
+    <span><i class="fa fa-arrow-right"></i></span>
+  </button>
   <ol class="breadcrumb" ng-if="getCurrent()">
     <img ng-if="!breadcrumb.length && !getCurrent().list.length"
          src="images/S3Bucket.svg">
