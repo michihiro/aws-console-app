@@ -161,6 +161,9 @@
                   ng.extend(bucket, data);
                   _listFolder(bucket);
                 }
+                if (!current) {
+                  setCurrent(buckets[0]);
+                }
               });
             s3.getBucketVersioning({
                 Bucket: bucket.Name
@@ -176,12 +179,6 @@
         $timeout(function() {
           buckets.length = 0;
           Array.prototype.push.apply(buckets, newBuckets);
-
-          $timeout(function() {
-            if (!current) {
-              setCurrent(buckets[0]);
-            }
-          }, 1000);
         });
       });
     }

@@ -58,6 +58,7 @@
   "ec2": {
     "serviceName": "EC2",
     "regionName": {
+      "all": "All Regions",
       "us-east-1": "US East (Northern Virginia)",
       "us-west-2": "US West (Oregon)",
       "us-west-1": "US West (Northern California)",

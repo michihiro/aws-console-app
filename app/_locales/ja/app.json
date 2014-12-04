@@ -58,6 +58,7 @@
   "ec2": {
     "serviceName": "EC2",
     "regionName": {
+      "all": "全てのリージョン",
       "us-east-1": "US 東海岸（北バージニア）",
       "us-west-2": "US 西海岸（オレゴン）",
       "us-west-1": "US 西海岸（北カルフォルニア）",

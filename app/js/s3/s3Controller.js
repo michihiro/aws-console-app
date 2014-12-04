@@ -71,9 +71,10 @@
     $rootScope.$watch(function() {
       return s3ListService.getCurrent();
     }, function(current) {
+      actions.createFolder.disabled = !current;
       actions.bucketProperties.disabled =
       actions.deleteBucket.disabled =
-      current && current.Prefix !== undefined;
+        (!current || current.Prefix !== undefined);
     });
 
     $rootScope.$watch(function() {

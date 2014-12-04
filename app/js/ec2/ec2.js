@@ -3,7 +3,7 @@
 
   ng.module('aws-console')
     .factory('awsEC2', awsEC2Factory)
-    .factory('ec2Service', ec2Service)
+    .factory('ec2Info', ec2InfoFactory)
     .controller('ec2HeaderCtrl', ec2HeaderCtrl)
     .controller('ec2Ctrl', ec2Ctrl);
 
@@ -18,27 +18,33 @@
     };
   }
 
-  ec2HeaderCtrl.$inject = ['$scope'];
+  ec2HeaderCtrl.$inject = ['$scope', 'awsRegions', 'ec2Info'];
 
-  function ec2HeaderCtrl($scope) {
+  function ec2HeaderCtrl($scope, awsRegions, ec2Info) {
     ng.extend($scope, {
+      awsRegions: awsRegions,
+      ec2Info: ec2Info,
     });
   }
 
-  ec2Ctrl.$inject = ['$scope', '$timeout', 'awsRegions', 'ec2Service'];
+  ec2Ctrl.$inject = ['$scope', '$timeout', 'awsRegions', 'ec2Info'];
 
-  function ec2Ctrl($scope, $timeout, awsRegions, ec2Service) {
+  function ec2Ctrl($scope, $timeout, awsRegions, ec2Info) {
+    /*
     var tabs = awsRegions.ec2.map(function(r) {
       return {
         region: r,
-        active: ec2Service.getCurrentRegion() === r,
+        active: ec2Info.getCurrentRegion() === r,
       };
     });
-
+    */
     ng.extend($scope, {
+      ec2Info: ec2Info,
+      /*
       tabs: tabs,
-      getInstances: ec2Service.getInstances,
+      getInstances: ec2Info.getInstances,
       onSelectRegion: onSelectRegion
+      */
     });
 
     /*
@@ -46,22 +52,22 @@
       return ec2Service.getInstances(ec2Service.getCurrentRegion());
     }, function(i) {
     });
-    */
 
     $scope.$on('$destroy', function() {
       $scope.onSelectRegion = null;
     });
 
     function onSelectRegion(region) {
-      ec2Service.setCurrentRegion(region);
-      ec2Service.listInstances(region);
+      ec2Info.setCurrentRegion(region);
+      ec2Info.listInstances(region);
     }
+    */
   }
 
-  ec2Service.$inject = ['$rootScope', '$timeout', 'awsEC2'];
+  ec2InfoFactory.$inject = ['$rootScope', '$timeout', 'awsRegions', 'awsEC2'];
 
-  function ec2Service($rootScope, $timeout, awsEC2) {
-    var currentRegion;
+  function ec2InfoFactory($rootScope, $timeout, awsRegions, awsEC2) {
+    var currentRegion = 'all';
     var instances = {};
 
     return {
@@ -76,11 +82,27 @@
     }
 
     function setCurrentRegion(region) {
+      if(region === 'all') {
+        awsRegions.ec2.forEach(function(r) {
+          listInstances(r);
+        });
+      } else {
+        listInstances(region);
+      }
       currentRegion = region;
     }
 
     function getInstances(region) {
-      return instances[region];
+      if(region === 'all') {
+        return Object.keys(instances).reduce(function(all, key) {
+          if(instances[key] && instances[key].length) {
+            all = all.concat(instances[key]);
+          }
+          return all;
+        }, []);
+      } else {
+        return instances[region];
+      }
     }
 
     function listInstances(region) {

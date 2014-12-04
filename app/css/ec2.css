@@ -1,0 +1,4 @@
+.ec2-header > * {
+  display: inline-block;
+  margin: 6px;
+}
