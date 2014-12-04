@@ -162,9 +162,11 @@ body {
   right: 0;
   top: 52px;
   bottom: 60px;
-  z-index: 10;
 }
 /* modal */
+.modal-body {
+  padding: 24px 12px;
+}
 .modal-content {
   border-radius: 6px;
 }
@@ -248,6 +250,9 @@ body {
 .btn-group {
   margin: 1px;
 }
+.dropdown.position-fixed {
+  z-index: 10;
+}
 .dropdown-menu {
   background: rgba(255, 255, 255, .9);
 }
@@ -257,7 +262,6 @@ form input.ng-invalid.ng-dirty {
 form input.ng-valid.ng-dirty {
   background-color: hsl(187, 100%, 95%);
 }
-
 [dropdown].btn-group {
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.23), 0 1px 1px rgba(0, 0, 0, 0.16);
 }

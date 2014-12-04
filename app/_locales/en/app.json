@@ -18,6 +18,7 @@
     "bucketProperties": "Bucket Properties",
     "createFolder": "Create Folder",
     "downloadObjects": "Download",
+    "uploadObjects": "Upload Files",
     "deleteObjects": "Delete",
     "deleteConfirmation": "Delete Confirmation",
     "deleteObjMsg1": "Are you sure you want to delete %s?",
@@ -69,6 +70,7 @@
   },
   "r53": {
     "serviceName": "Route53",
+    "zones": "Zones",
     "name": "Domain Name",
     "ttl": "TTL",
     "type": "Type",

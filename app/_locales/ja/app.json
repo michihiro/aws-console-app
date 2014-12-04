@@ -18,6 +18,7 @@
     "bucketProperties": "バケットのプロパティ",
     "createFolder": "フォルダ作成",
     "downloadObjects": "ダウンロード",
+    "uploadObjects": "ファイルのアップロード",
     "deleteObjects": "削除",
     "deleteConfirmation": "削除の確認",
     "deleteObjMsg1": "%s を削除しますか？",
@@ -69,6 +70,7 @@
   },
   "r53": {
     "serviceName": "Route53",
+    "zones": "ゾーン",
     "name": "ドメイン名",
     "ttl": "TTL",
     "type": "タイプ",

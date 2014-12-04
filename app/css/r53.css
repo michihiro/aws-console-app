@@ -8,10 +8,25 @@
 .r53-left {
   left: 0;
   width: 200px;
+  border-right: 1px solid rgba(0,0,0,.2);
 }
 .r53-right {
   left: 200px;
   right: 0;
+}
+.r53-left .r53-left-header {
+  position:absolute;
+  line-height: 1.8em;
+  top: 0;
+  padding: .05em .4em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: bold;
+}
+.r53-left .nav {
+  margin-top: 1.8em;
+  border-top: 2px solid rgb(221, 221, 221);
 }
 .r53-left .nav > li > a {
   padding: 2px;

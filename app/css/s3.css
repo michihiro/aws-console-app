@@ -66,7 +66,7 @@
 }
 .s3-upload-dialog .modal-body-inner {
   position: relative;
-  min-height: 300px;
+  min-height: 200px;
 }
 .s3-right {
   position: absolute;
@@ -114,11 +114,13 @@
   margin-bottom: 8px;
   min-height: 2em;
   overflow-y: hidden;
-  opacity: .5;
+  opacity: .7;
+  border-radius: 8px;
 }
 .notifications-area:hover .alert {
   opacity: 1;
 }
+/*
 .notifications-area .alert > * {
   margin-bottom: -100%;
   transition: margin 200ms ease-in;
@@ -126,6 +128,7 @@
 .notifications-area .alert:hover > * {
   margin-bottom: 0;
 }
+*/
 .notifications-area .alert.ng-enter {
   opacity: 0;
   transform: translateY(-100%);
@@ -146,6 +149,18 @@
   padding-top: 0;
   padding-bottom: 0;
 }
+.progress {
+  position: relative;
+  height: 20px;
+  margin-bottom: 2px;
+  border-radius: 2px;
+}
+.progress > span {
+  position: absolute;
+  right: 10px;
+  color: #444;
+}
+/*
 .progress-bar.progress-bar-info {
   text-shadow: 2px 2px 0 #5BC0D7, 2px -2px 0 #5BC0D7, -2px 2px 0 #5BC0D7, -2px -2px 0 #5BC0D7;
 }
@@ -155,6 +170,7 @@
 .progress-bar.fin {
   -webkit-animation: flash .5s ease 3s;
 }
+*/
 .s3-upload-fileld-cover {
   z-index: 1000;
   content: ' ';
@@ -216,4 +232,10 @@
 .s3-header img {
   width: 28px;
   height: 28px;
+}
+.s3-upload-dialog .table-outer {
+  border: 1px solid #ddd;
+}
+.s3-upload-dialog .form-group {
+  margin-bottom: 10px;
 }

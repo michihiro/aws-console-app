@@ -78,16 +78,13 @@
            ng-mouseleave="n._hover=false"
            class="alert alert-info">
         <div class="progress">
-          <div class="progress-bar progress-bar-info"
+          <span>{{n.percent}}%</span>
+          <div class="progress-bar progress-bar-material-lightgrey active"
                ng-class="{fin: n.percent==100}"
                ng-style="{width: n.percent+'%'}">
-            <span>{{n.percent}}%</span>
           </div>
         </div>
-        <div>
-        <div ng-if="n._hover">
-          <div>{{n.sizeProcessed}} / {{n.sizeTotal}} bytes </div>
-        </div>
+        <div>{{n.sizeProcessed}} / {{n.sizeTotal}} bytes </div>
       </div>
     </div>
 

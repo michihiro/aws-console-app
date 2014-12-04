@@ -80,6 +80,7 @@
 
   function r53InfoFactory($rootScope, $timeout, awsR53) {
     var hostedZones = [];
+    var oldHostedZones = [];
     var currentZone;
     var selected = [];
 
@@ -97,13 +98,14 @@
     }
 
     function updateHostedZones() {
-      hostedZones.length = 0;
+      oldHostedZones = hostedZones;
       _listHostedZones();
     }
 
     function _listHostedZones(marker) {
       if (!$rootScope.credentials) {
         hostedZones.length = 0;
+        oldHostedZones.length = 0;
         return;
       }
 
@@ -114,11 +116,25 @@
           return;
         }
         $timeout(function() {
-          Array.prototype.push.apply(hostedZones, data.HostedZones);
+          var zones = data.HostedZones.map(function(z) {
+            oldHostedZones.some(function(o, idx) {
+              if(o.Id !== z.Id) {
+                return false;
+              }
+              ng.extend(z, o);
+              oldHostedZones.splice(idx, 1);
+              return true;
+            });
+            return z;
+          });
+          Array.prototype.push.apply(hostedZones, zones);
+
           if (data.Marker) {
             _listHostedZones(data.Marker);
           }
-          if(!currentZone) setCurrent(hostedZones[0]);
+          if(!currentZone) {
+            setCurrent(hostedZones[0]);
+          }
         });
       });
     }
@@ -129,7 +145,6 @@
 
     function setCurrent(zone) {
       currentZone = zone;
-      zone.list = false;
       _updateRecords(zone);
     }
 
@@ -141,6 +156,9 @@
         StartRecordName: nextRecordName,
         StartRecordType: nextRecordType
       }, function(err, data) {
+        if(!nextRecordName) {
+          zone.list = [];
+        }
         if (!data || !data.ResourceRecordSets) {
           return;
         }
@@ -150,7 +168,6 @@
             v.Values = v.ResourceRecords.map(function(rr) {return rr.Value;});
             return v;
           });
-          zone.list = zone.list || [];
           Array.prototype.push.apply(zone.list, resourceRecordSets);
           if (data.IsTruncated) {
             _updateRecords(zone, data.NextRecordName, data.NextRecordType);

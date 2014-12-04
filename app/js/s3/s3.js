@@ -426,13 +426,13 @@
         if (xhr.readyState !== 4) {
           return;
         }
-        defer.notify({
-          size: (xhr.response || {}).size || 0,
-        });
         if (!xhr.writerPromise) {
           xhr.writerPromise = _createWriter(obj, dirEntry);
         }
         if (xhr.status === 200) {
+          defer.notify({
+            size: (xhr.response || {}).size || 0,
+          });
           xhr.writerPromise.then(function(writer) {
             writer.onerror = defer.reject;
             writer.onwriteend = function() {
