@@ -253,6 +253,9 @@
         scope._transXMax = $window.innerWidth - elem[0].offsetWidth - elem[0].offsetLeft;
         scope._transYMin = -elem[0].offsetTop;
         scope._transYMax = $window.innerHeight - elem[0].offsetHeight - elem[0].offsetTop;
+        if(scope._transYMax < scope._transYMin) {
+          scope._transYMax = scope._transYMin;
+        }
       }
 
       function _onPanend(ev) {

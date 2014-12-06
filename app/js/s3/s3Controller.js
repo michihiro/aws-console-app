@@ -93,7 +93,7 @@
         actions.downloadObjects,
         actions.deleteObjects,
       ],
-      tree: [ 
+      tree: [
         actions.createBucket,
         //actions.bucketProperties,
         actions.deleteBucket,

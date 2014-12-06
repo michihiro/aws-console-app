@@ -83,6 +83,10 @@ body {
   margin: 10px 20px;
   color: #fff;
 }
+.navbar .navbar-nav > li > a {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
 .navbar-fixed-bottom {
   z-index: 1;
 }
