@@ -11,10 +11,10 @@
   ec2InVpcFilter.$inject = [];
   function ec2InVpcFilter() {
     return function(instances, vpcId) {
-     return instances.filter(function(i) {
-       return i.VpcId === vpcId;
-     });
-    }
+      return instances.filter(function(i) {
+        return i.VpcId === vpcId;
+      });
+    };
   }
 
   awsEC2Factory.$inject = ['$rootScope'];

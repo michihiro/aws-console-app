@@ -6,12 +6,16 @@
         <div class="vpc-region" ng-if="ec2Info.getCurrentRegion()=='all'">
           {{'ec2.regionName.'+v.region|i18next}}
         </div>
-        <div ng-if="v.name">{{v.name}} ({{v.VpcId}})</div>
-        <div ng-if="!v.name">{{v.vpcId}}</div>
+        <i class="fa fa-chevron-right" ng-class="{'fa-rotate-90': v.isOpen}"></i>
+        <span ng-if="v.name">{{v.name}} ({{v.VpcId}})</span>
+        <span ng-if="!v.name">{{v.vpcId}}</span>
       </accordion-heading>
       <div ng-repeat="i in ec2Info.getInstances() | ec2InVpc:v.VpcId">
-        {{i.InstanceId}}
-        <!-- {{i}} -->
+        <div class="instance">
+          <img src="images/Instance.svg">
+          <div>{{i.InstanceId}}</div>
+          <!-- {{i}} -->
+        </div>
       </div>
     </accordion-group>
   </accordion>

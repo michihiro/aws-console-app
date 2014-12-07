@@ -8,3 +8,32 @@
 .ec2-vpc-panel .vpc-region {
   float: right;
 }
+.ec2-vpc-panel .panel-body {
+  padding: 4px;
+}
+.ec2-vpc-panel .panel-body .instance {
+  padding: 4px;
+  position: relative;
+  display: inline-block;
+  width: 200px;
+  height: 120px;
+  float: left;
+  /*
+  background-image: url(../images/Instance.svg);
+  background-repeat: no-repeat;
+  background-position: -15px -15px;
+  */
+}
+/*
+.ec2-vpc-panel .panel-body .instance > img {
+  z-index:0;
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  width: 100px;
+  height: 100px;
+}
+*/
+.ec2-vpc-panel .panel-body .instance > div {
+ display: inline-block;
+}
