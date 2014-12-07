@@ -4,8 +4,18 @@
   ng.module('aws-console')
     .factory('awsEC2', awsEC2Factory)
     .factory('ec2Info', ec2InfoFactory)
+    .filter('ec2InVpc', ec2InVpcFilter)
     .controller('ec2HeaderCtrl', ec2HeaderCtrl)
     .controller('ec2Ctrl', ec2Ctrl);
+
+  ec2InVpcFilter.$inject = [];
+  function ec2InVpcFilter() {
+    return function(instances, vpcId) {
+     return instances.filter(function(i) {
+       return i.VpcId === vpcId;
+     });
+    }
+  }
 
   awsEC2Factory.$inject = ['$rootScope'];
 
@@ -67,14 +77,18 @@
   ec2InfoFactory.$inject = ['$rootScope', '$timeout', 'awsRegions', 'awsEC2'];
 
   function ec2InfoFactory($rootScope, $timeout, awsRegions, awsEC2) {
-    var currentRegion = 'all';
+    var currentRegion;
     var instances = {};
+    var vpcs = {};
+
+    setCurrentRegion('all');
 
     return {
       getCurrentRegion: getCurrentRegion,
       setCurrentRegion: setCurrentRegion,
       getInstances: getInstances,
-      listInstances: listInstances
+      getVpcs: getVpcs,
+      listInstances: listInstances,
     };
 
     function getCurrentRegion() {
@@ -92,7 +106,8 @@
       currentRegion = region;
     }
 
-    function getInstances(region) {
+    function getInstances() {
+      var region = getCurrentRegion();
       if(region === 'all') {
         return Object.keys(instances).reduce(function(all, key) {
           if(instances[key] && instances[key].length) {
@@ -105,7 +120,38 @@
       }
     }
 
+    function getVpcs() {
+      var region = getCurrentRegion();
+      if(region === 'all') {
+        return Object.keys(vpcs).reduce(function(all, key) {
+          if(vpcs[key] && vpcs[key].length) {
+            all = all.concat(vpcs[key]);
+          }
+          return all;
+        }, []);
+      } else {
+        return vpcs[region];
+      }
+    }
+
     function listInstances(region) {
+      awsEC2(region).describeVpcs({}, function(err, data) {
+        if (!data || !data.Vpcs) {
+          return;
+        }
+        vpcs[region] = data.Vpcs.map(function(v) {
+          v.Tags.some(function(t) {
+            if(t.Key !== 'Name') {
+              return false;
+            }
+            v.name = t.Value;
+            return true;
+          });
+          v.isOpen = true;
+          v.region = region;
+          return v;
+        });
+      });
       awsEC2(region).describeInstances({}, function(err, data) {
         if (!data || !data.Reservations) {
           return;

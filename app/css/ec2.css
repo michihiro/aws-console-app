@@ -2,3 +2,9 @@
   display: inline-block;
   margin: 6px;
 }
+.ec2-vpc-panel {
+  margin: 2px 4px;
+}
+.ec2-vpc-panel .vpc-region {
+  float: right;
+}

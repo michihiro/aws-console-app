@@ -1,26 +1,18 @@
 <div class="func-view">
-  <div>
-      <div>{{'ec2.regionName.'+ec2Info.getCurrentRegion()|i18next}}</div>
-      <div>{{ec2Info.getInstances(ec2Info.getCurrentRegion()).length}} instance(s)</div>
-  </div>
-<!--
-  <tabset>
-    <div tab-headings-scroller>
-    </div>
-    <tab ng-repeat="t in tabs" heading="{{'s3.regionName.'+t.region|i18next}}"
-         active="t.active"
-         select="onSelectRegion(t.region, $index)"> 
-      <div>{{'s3.regionName.'+t.region|i18next}}</div>
-      <div>{{getInstances(t.region).length}} instance(s)</div>
-    </tab>
--->
-<!--
-    <div class="btn-group scrl-btns">
-      <a class="btn">&lt;</a>
-      <a class="btn">&gt;</a>
-    </div>
--->
-<!--
-  </tabset>
--->
+  <accordion>
+    <accordion-group class="panel-default ec2-vpc-panel"
+                     ng-repeat="v in ec2Info.getVpcs()" is-open="v.isOpen">
+      <accordion-heading>
+        <div class="vpc-region" ng-if="ec2Info.getCurrentRegion()=='all'">
+          {{'ec2.regionName.'+v.region|i18next}}
+        </div>
+        <div ng-if="v.name">{{v.name}} ({{v.VpcId}})</div>
+        <div ng-if="!v.name">{{v.vpcId}}</div>
+      </accordion-heading>
+      <div ng-repeat="i in ec2Info.getInstances() | ec2InVpc:v.VpcId">
+        {{i.InstanceId}}
+        <!-- {{i}} -->
+      </div>
+    </accordion-group>
+  </accordion>
 </div>
