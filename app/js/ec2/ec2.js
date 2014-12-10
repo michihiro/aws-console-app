@@ -147,13 +147,10 @@
           return;
         }
         vpcs[region] = data.Vpcs.map(function(v) {
-          v.Tags.some(function(t) {
-            if(t.Key !== 'Name') {
-              return false;
-            }
-            v.name = t.Value;
-            return true;
-          });
+          v.tags = v.Tags.reduce(function(all, v2) {
+            all[v2.Key] = v2.Value;
+            return all;
+          }, {});
           v.isOpen = true;
           v.region = region;
           return v;
@@ -165,7 +162,15 @@
         }
         $timeout(function() {
           instances[region] = data.Reservations.reduce(function(all, resv) {
-            Array.prototype.push.apply(all, resv.Instances);
+            var ins = resv.Instances.map(function(v) {
+              v.tags = v.Tags.reduce(function(all, v2) {
+                all[v2.Key] = v2.Value;
+                return all;
+              }, {});
+              return v;
+            });
+
+            Array.prototype.push.apply(all, ins);//resv.Instances);
             return all;
           }, []);
         });

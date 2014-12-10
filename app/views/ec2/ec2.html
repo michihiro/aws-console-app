@@ -7,14 +7,17 @@
           {{'ec2.regionName.'+v.region|i18next}}
         </div>
         <i class="fa fa-chevron-right" ng-class="{'fa-rotate-90': v.isOpen}"></i>
-        <span ng-if="v.name">{{v.name}} ({{v.VpcId}})</span>
+        <span ng-if="v.tags.Name">{{v.tags.Name}} ( {{v.VpcId}} )</span>
         <span ng-if="!v.name">{{v.vpcId}}</span>
       </accordion-heading>
       <div ng-repeat="i in ec2Info.getInstances() | ec2InVpc:v.VpcId">
         <div class="instance">
-          <img src="images/Instance.svg">
-          <div>{{i.InstanceId}}</div>
-          <!-- {{i}} -->
+          <img src="images/Instance.svg" class="state-{{i.State.Name}}">
+          <div>
+            <div ng-if="i.tags.Name">{{i.tags.Name}}</div>
+            <div ng-if="!i.tags.Name">( {{i.InstanceId}} )</div>
+            <div> {{i.InstanceType}} - {{i.State.Name}}</div>
+          </div>
         </div>
       </div>
     </accordion-group>
