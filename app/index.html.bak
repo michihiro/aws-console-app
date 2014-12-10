@@ -1,0 +1,92 @@
+<!doctype html>
+<html ng-app="aws-console" ng-csp>
+
+<head>
+  <meta charset="utf-8">
+  <title>AWS Console App</title>
+
+  <!-- build:css css/vendor.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+  <link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap-material-design/dist/css/material.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap-material-design/dist/css/ripples.css" />
+  <!-- endbower -->
+  <link rel="stylesheet" href="bower_components/animate.css/animate.css" />
+  <link rel="stylesheet" href="bower_components/angular/angular-csp.css" />
+  <!-- endbuild -->
+
+  <!-- build:css css/main.css -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/s3.css">
+  <link rel="stylesheet" href="css/r53.css">
+  <!-- endbuild -->
+</head>
+
+<body ng-cloak>
+  <div class="screen">
+    <div class="func-menu" ng-mouseleave="opened=false" ng-class="{opened:opened}">
+     <a class="menuicon" ng-click="opened=true" ><i class="fa fa-navicon"></i></a>
+     <a ui-sref="s3" ng-click="opened=false"><img src="images/S3.svg"><div>S3</div></a>
+     <a ui-sref="ec2" ng-click="opened=false"><img src="images/EC2.svg"><div>EC2</div></a>
+     <a ui-sref="r53" ng-click="opened=false"><img src="images/Route53.svg"><div>Route53</div></a>
+    </div>
+
+    <div class="navbar navbar-default navbar-fixed-top">
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a ng-click="openDialog('com/credentialsDialog')"><i class="fa fa-key"></i></a>
+        </li>
+      </ul>
+      <h3 ng-if="state.current.name">{{state.current.name + '.serviceName'|i18next}}</h3>
+      <div ui-view="header"></div>
+
+    </div>
+
+    <div ui-view="main"></div>
+
+    <div class="nav navbar navbar-default navbar-fixed-bottom" role="navigation">
+      <p class="navbar-text navbar-right">
+        Yet Another AWS Management Console - Copyright 2014 michihiro.
+      </p>
+    </div>
+  </div>
+
+  <!-- build:js js/vendor.js -->
+  <!-- bower:js -->
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script src="bower_components/angular-ui-utils/ui-utils.js"></script>
+  <script src="bower_components/angular-animate/angular-animate.js"></script>
+  <script src="bower_components/hammerjs/hammer.js"></script>
+  <script src="bower_components/momentjs/moment.js"></script>
+  <script src="bower_components/i18next/i18next.js"></script>
+  <script src="bower_components/ng-i18next/dist/ng-i18next.js"></script>
+  <script src="bower_components/ng-context-menu/dist/ng-context-menu.js"></script>
+  <script src="bower_components/sprintf/src/sprintf.js"></script>
+  <script src="bower_components/bootstrap-material-design/dist/js/material.js"></script>
+  <script src="bower_components/bootstrap-material-design/dist/js/ripples.js"></script>
+  <!-- endbower -->
+  <script src="bower_components/momentjs/min/locales.js"></script>
+  <script src="js/vendor/aws-sdk-full.js"></script>
+  <script src="bower_components/chrome-platform-analytics/google-analytics-bundle.js"></script>
+  <!-- endbuild -->
+
+  <!-- build:js js/index.js -->
+  <script src="js/index.js"></script>
+  <script src="js/common/directive.js"></script>
+  <script src="js/common/filter.js"></script>
+  <script src="js/s3/s3.js"></script>
+  <script src="js/s3/s3Directive.js"></script>
+  <script src="js/s3/s3Controller.js"></script>
+  <script src="js/ec2/ec2.js"></script>
+  <script src="js/r53/r53.js"></script>
+  <!-- endbuild -->
+
+  <!-- dist-script -->
+</body>
+
+</html>

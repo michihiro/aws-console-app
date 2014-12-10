@@ -125,9 +125,9 @@
   }
 
 
-  comCredentialsDialogCtrl.$inject = ['$scope', '$timeout', 'credentialsService'];
+  comCredentialsDialogCtrl.$inject = ['$scope', '$timeout', '$filter', 'credentialsService'];
 
-  function comCredentialsDialogCtrl($scope, $timeout, credentialsService) {
+  function comCredentialsDialogCtrl($scope, $timeout, $filter, credentialsService) {
 
     ng.extend($scope, {
       canCancel: false,
@@ -165,7 +165,7 @@
             $scope.$close();
           });
         } else {
-          $scope.error = err.message;
+          $scope.error = err;
           setProcessing(false);
         }
       });

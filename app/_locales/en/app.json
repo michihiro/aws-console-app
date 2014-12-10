@@ -46,6 +46,8 @@
       "sa-east-1": "South America (Sao Paulo)"
     },
     "error": {
+      "InvalidAccessKeyId": "The AWS access key ID is invalid.",
+      "SignatureDoesNotMatch": "The AWS secret access key is invalid.",
       "BucketAlreadyExists": "The requested bucket name is already exist.",
       "InvalidBucketName": "The specified bucket is not valid.",
       "TooManyBuckets": "You have attempted to create more buckets than allowed.",

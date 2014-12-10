@@ -30,7 +30,12 @@
     var history = [];
     var historyIdx = 0;
 
-    $rootScope.$watch('credentials', _listBuckets);
+    $rootScope.$watch('credentials', function() {
+      buckets = [];
+      current = undefined;
+      selected = [];
+      _listBuckets();
+    });
 
     return {
       getBuckets: getBuckets,

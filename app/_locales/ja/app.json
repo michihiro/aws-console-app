@@ -46,6 +46,8 @@
       "sa-east-1": "南アメリカ（サンパウロ）"
     },
     "error": {
+      "InvalidAccessKeyId": "アクセスキーIDが正しくありません。",
+      "SignatureDoesNotMatch": "シークレットアクセスキーが正しくありません。",
       "BucketAlreadyExists": "このバケット名は既に存在します。",
       "InvalidBucketName": "このバケット名は利用できません。",
       "TooManyBuckets": "許可されているバケット数を超えています。",

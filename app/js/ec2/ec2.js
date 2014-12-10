@@ -83,6 +83,13 @@
 
     setCurrentRegion('all');
 
+    $rootScope.$watch('credentials', function() {
+      currentRegion = undefined;
+      instances = {};
+      vpcs = {};
+      setCurrentRegion('all');
+    });
+
     return {
       getCurrentRegion: getCurrentRegion,
       setCurrentRegion: setCurrentRegion,

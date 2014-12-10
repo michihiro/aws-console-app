@@ -1,0 +1,17 @@
+(function() {
+  'use strict';
+  angular.element(document).on({
+    contextmenu: function(ev) {
+      ev.preventDefault();
+    },
+    click: function(ev) {
+      if (ev.ctrlKey) {
+        ev.preventDefault();
+      }
+    }
+  });
+
+  var service = analytics.getService('aws-console');
+  var tracker = service.getTracker('UA-57226565-1');
+  tracker.sendAppView('/');
+})();

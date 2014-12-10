@@ -427,7 +427,7 @@
     return;
 
     function _inputsChanged() {
-      $scope.errorCode = null;
+      $scope.error = null;
     }
 
     function validateReg(exp, val) {
@@ -456,7 +456,7 @@
         $timeout(function() {
           $scope.processing = false;
           if (err) {
-            $scope.errorCode = err.code;
+            $scope.error = err;
           } else {
             s3ListService.updateBuckets($scope.inputs.bucketName);
             $scope.$close();
@@ -484,7 +484,7 @@
         $timeout(function() {
           $scope.processing = false;
           if (err) {
-            $scope.errorCode = err.code;
+            $scope.error = err;
           } else {
             s3ListService.updateBuckets();
             $scope.$close();
@@ -625,16 +625,16 @@
         },
       };
       s3.deleteObjects(params, function(err) {
-        if (err) {
-          console.log(err, err.stack);
-        } else {
-          s3ListService.updateFolder();
-          s3ListService.selectObjects([]);
-          $timeout(function() {
-            $scope.processing = false;
+        $timeout(function() {
+          $scope.processing = false;
+          if (err) {
+            $scope.error = err;
+          } else {
+            s3ListService.updateFolder();
+            s3ListService.selectObjects([]);
             $scope.$close();
-          }, 1000);
-        }
+          }
+        });
       });
     }
   }

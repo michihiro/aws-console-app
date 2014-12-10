@@ -9,7 +9,7 @@
   </div>
 </div>
 <div class="modal-footer">
-  <div class="alert alert-warning" ng-show="errorCode">{{'s3.error.'+errorCode|i18next}}</div>
+  <div class="alert alert-warning" ng-show="error">{{error|errorMsg:'s3'}}</div>
   <button class="btn btn-default"
           ng-click="$dismiss()"
           ng-disabled="processing" >

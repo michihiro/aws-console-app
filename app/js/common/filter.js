@@ -4,7 +4,22 @@
   ng.module('aws-console')
     .filter('bytes', bytesFilter)
     .filter('momentFormat', momentFormatFilter)
+    .filter('errorMsg', errorMsgFilter)
     .service('appFilterService', appFilterService);
+
+  errorMsgFilter.$inject = ['$filter'];
+
+  function errorMsgFilter($filter) {
+    var i18next = $filter('i18next');
+    return function(err, prefix) {
+      if(!err) {
+        return '';
+      }
+      var msgKey = prefix + '.error.' + err.code;
+      var msg = i18next(msgKey);
+      return msg !== msgKey ? msg : err.message;
+    };
+  }
 
   function bytesFilter() {
     var units = ['B', 'kB', 'MB', 'GB', 'TB', 'PB'];

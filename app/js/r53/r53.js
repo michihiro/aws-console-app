@@ -84,6 +84,14 @@
     var currentZone;
     var selected = [];
 
+    $rootScope.$watch('credentials', function() {
+      hostedZones = [];
+      oldHostedZones = [];
+      currentZone = undefined;
+      selected = [];
+      updateHostedZones();
+    });
+
     return {
       getHostedZones: getHostedZones,
       updateHostedZones: updateHostedZones,
@@ -149,6 +157,9 @@
     }
 
     function _updateRecords(zone, nextRecordName, nextRecordType) {
+      if(!zone) {
+        return;
+      }
 
       awsR53().listResourceRecordSets({
         HostedZoneId: zone.Id,
