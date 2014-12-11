@@ -26,7 +26,6 @@
   position: absolute;
   left: 24px;
   top: 10px;
-  width: 120px;
   text-shadow: 1px 1px 0px #fff,-1px -1px 0px #fff, 1px -1px 0px #fff, -1px 1px #fff;
 }
 .ec2-vpc-panel .instance > img {

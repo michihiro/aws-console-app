@@ -4,15 +4,15 @@
   ng.module('aws-console')
     .factory('awsEC2', awsEC2Factory)
     .factory('ec2Info', ec2InfoFactory)
-    .filter('ec2InVpc', ec2InVpcFilter)
+    .filter('ec2InVpcSubnet', ec2InVpcSubnetFilter)
     .controller('ec2HeaderCtrl', ec2HeaderCtrl)
     .controller('ec2Ctrl', ec2Ctrl);
 
-  ec2InVpcFilter.$inject = [];
-  function ec2InVpcFilter() {
-    return function(instances, vpcId) {
+  ec2InVpcSubnetFilter.$inject = [];
+  function ec2InVpcSubnetFilter() {
+    return function(instances, vpcId, subnetId) {
       return instances.filter(function(i) {
-        return i.VpcId === vpcId;
+        return i.VpcId === vpcId && i.SubnetId === subnetId;
       });
     };
   }
@@ -40,38 +40,9 @@
   ec2Ctrl.$inject = ['$scope', '$timeout', 'awsRegions', 'ec2Info'];
 
   function ec2Ctrl($scope, $timeout, awsRegions, ec2Info) {
-    /*
-    var tabs = awsRegions.ec2.map(function(r) {
-      return {
-        region: r,
-        active: ec2Info.getCurrentRegion() === r,
-      };
-    });
-    */
     ng.extend($scope, {
       ec2Info: ec2Info,
-      /*
-      tabs: tabs,
-      getInstances: ec2Info.getInstances,
-      onSelectRegion: onSelectRegion
-      */
     });
-
-    /*
-    $scope.$watch(function() {
-      return ec2Service.getInstances(ec2Service.getCurrentRegion());
-    }, function(i) {
-    });
-
-    $scope.$on('$destroy', function() {
-      $scope.onSelectRegion = null;
-    });
-
-    function onSelectRegion(region) {
-      ec2Info.setCurrentRegion(region);
-      ec2Info.listInstances(region);
-    }
-    */
   }
 
   ec2InfoFactory.$inject = ['$rootScope', '$timeout', 'awsRegions', 'awsEC2'];
@@ -80,6 +51,7 @@
     var currentRegion;
     var instances = {};
     var vpcs = {};
+    var ec2Classic = {};
 
     setCurrentRegion('all');
 
@@ -87,6 +59,7 @@
       currentRegion = undefined;
       instances = {};
       vpcs = {};
+      ec2Classic = {};
       setCurrentRegion('all');
     });
 
@@ -130,14 +103,22 @@
     function getVpcs() {
       var region = getCurrentRegion();
       if(region === 'all') {
-        return Object.keys(vpcs).reduce(function(all, key) {
+        var vpcArr = Object.keys(vpcs).reduce(function(all, key) {
           if(vpcs[key] && vpcs[key].length) {
             all = all.concat(vpcs[key]);
           }
+          if(ec2Classic[key]) {
+            all.push(ec2Classic[key]);
+          }
           return all;
         }, []);
+        return vpcArr;
       } else {
-        return vpcs[region];
+        vpcArr = (vpcs[region] || []).concat();
+        if(ec2Classic[region]) {
+          vpcArr.push(ec2Classic[region]);
+        }
+        return vpcArr;
       }
     }
 
@@ -146,14 +127,31 @@
         if (!data || !data.Vpcs) {
           return;
         }
-        vpcs[region] = data.Vpcs.map(function(v) {
-          v.tags = v.Tags.reduce(function(all, v2) {
-            all[v2.Key] = v2.Value;
-            return all;
-          }, {});
-          v.isOpen = true;
-          v.region = region;
-          return v;
+        $timeout(function() {
+          vpcs[region] = data.Vpcs.map(function(v) {
+            v.tags = v.Tags.reduce(function(all, v2) {
+              all[v2.Key] = v2.Value;
+              return all;
+            }, {});
+            v.isOpen = true;
+            v.region = region;
+
+            awsEC2(region).describeSubnets({
+              Filters: [
+                {
+                  Name: 'vpc-id',
+                  Values: [ v.VpcId ]
+                },
+              ],
+            }, function(err, obj) {
+              if(obj) {
+                $timeout(function() {
+                  v.Subnets = obj.Subnets;
+                });
+              }
+            });
+            return v;
+          });
         });
       });
       awsEC2(region).describeInstances({}, function(err, data) {
@@ -167,10 +165,22 @@
                 all[v2.Key] = v2.Value;
                 return all;
               }, {});
+              if(v.VpcId === undefined) {
+                ec2Classic[region] = {
+                  VpcId: undefined,
+                  isClassic: true,
+                  tags: {
+                    Name:'Ec2-Classic'
+                  },
+                  isOpen: true,
+                  region: region,
+                  Subnets: [{ SubnetId: undefined}],
+                };
+              }
               return v;
             });
 
-            Array.prototype.push.apply(all, ins);//resv.Instances);
+            Array.prototype.push.apply(all, ins);
             return all;
           }, []);
         });
