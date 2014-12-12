@@ -11,9 +11,7 @@ body {
   bottom:0;
   left:0;
   right:0;
-}
-.modal-open .screen {
-  -webkit-filter: grayscale(50%);
+  transition: -webkit-filter 500ms ease-in-out;
 }
 /** func-menu **/
 
@@ -184,11 +182,9 @@ body {
 .modal h3 {
   margin: 0px;
 }
-/*
-.modal .form-group {
-  margin-bottom: 5px;
+.modal-open .screen {
+  -webkit-filter: grayscale(70%);
 }
-*/
 .position-fixed {
   position: fixed;
 }
@@ -259,6 +255,15 @@ body {
 }
 .dropdown-menu {
   background: rgba(255, 255, 255, .9);
+}
+.dropdown-menu li a:hover, .dropdown-menu-default li a:hover {
+  background: #03a9f4;
+  color: #fff;
+}
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  color: #bbb;
 }
 form input.ng-invalid.ng-dirty {
   background-color: hsl(  7, 100%, 95%);
