@@ -22,7 +22,7 @@
   function awsEC2Factory($rootScope) {
     return function(region) {
       return new AWS.EC2({
-        credentials: $rootScope.credentials,
+        credentials: $rootScope.getCredentials(),
         region: region,
       });
     };
@@ -55,7 +55,7 @@
 
     setCurrentRegion('all');
 
-    $rootScope.$watch('credentials', function() {
+    $rootScope.$watch('credentialsId', function() {
       currentRegion = undefined;
       instances = {};
       vpcs = {};
@@ -102,8 +102,9 @@
 
     function getVpcs() {
       var region = getCurrentRegion();
+      var vpcArr;
       if(region === 'all') {
-        var vpcArr = Object.keys(vpcs).reduce(function(all, key) {
+        vpcArr = Object.keys(vpcs).reduce(function(all, key) {
           if(vpcs[key] && vpcs[key].length) {
             all = all.concat(vpcs[key]);
           }
@@ -112,14 +113,13 @@
           }
           return all;
         }, []);
-        return vpcArr;
       } else {
         vpcArr = (vpcs[region] || []).concat();
         if(ec2Classic[region]) {
           vpcArr.push(ec2Classic[region]);
         }
-        return vpcArr;
       }
+      return vpcArr;
     }
 
     function listInstances(region) {

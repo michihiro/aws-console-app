@@ -24,8 +24,6 @@
       s3: regions,
       ec2: regions
     })
-    .service('credentialsService', credentialsService)
-    .controller('comCredentialsDialogCtrl', comCredentialsDialogCtrl)
     .config(appConfig)
     .run(appRun);
 
@@ -84,7 +82,8 @@
     ng.extend($rootScope, {
       state: $state,
       stateParams: $stateParams,
-      openDialog: openDialog
+      getCredentials: credentialsService.getCredentials,
+      openDialog: openDialog,
     });
 
     credentialsService.load(true)
@@ -124,99 +123,5 @@
     }
   }
 
-
-  comCredentialsDialogCtrl.$inject = ['$scope', '$timeout', '$filter', 'credentialsService'];
-
-  function comCredentialsDialogCtrl($scope, $timeout, $filter, credentialsService) {
-
-    ng.extend($scope, {
-      canCancel: false,
-      inputs: {},
-      save: save
-    });
-
-    credentialsService.load().then(function(result) {
-      ng.extend($scope.inputs, result);
-      $scope.canCancel = (result.accessKeyId && result.secretAccessKey);
-    });
-
-    return;
-
-    function save() {
-
-      var credentials = $scope.inputs;
-
-      var s3 = new AWS.S3({
-        credentials: new AWS.Credentials(credentials),
-        params: {
-          Bucket: '',
-          Region: ''
-        }
-      });
-
-      setProcessing(true);
-      $scope.error = null;
-
-      s3.listBuckets(function(err) {
-        if (!err) {
-          credentialsService.save(credentials).then(function() {
-            credentialsService.load(true);
-            setProcessing(false);
-            $scope.$close();
-          });
-        } else {
-          $scope.error = err;
-          setProcessing(false);
-        }
-      });
-    }
-
-    function setProcessing(bool) {
-      $timeout(function() {
-        $scope.processing = bool;
-      });
-    }
-  }
-
-  credentialsService.$inject = ['$rootScope', '$q', '$timeout'];
-
-  function credentialsService($rootScope, $q, $timeout) {
-    var storage = chrome.storage.local;
-
-    return {
-      load: load,
-      save: save
-    };
-
-    function load(flagUpdate) {
-      var deferred = $q.defer();
-
-      storage.get('credentials', function(val) {
-        if (val && val.credentials) {
-          $timeout(function() {
-            if (flagUpdate) {
-              $rootScope.credentials = new AWS.Credentials(val.credentials);
-            }
-            deferred.resolve(val.credentials);
-          });
-        } else {
-          deferred.reject({});
-        }
-      });
-      return deferred.promise;
-    }
-
-    function save(credentials) {
-      var deferred = $q.defer();
-
-      chrome.storage.local.set({
-        credentials: credentials
-      }, function() {
-        deferred.resolve();
-      });
-
-      return deferred.promise;
-    }
-  }
 
 })(angular);

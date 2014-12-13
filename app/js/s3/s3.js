@@ -13,7 +13,7 @@
   function awsS3Factory($rootScope) {
     return function(region) {
       return new AWS.S3({
-        credentials: $rootScope.credentials,
+        credentials: $rootScope.getCredentials(),
         region: region,
       });
     };
@@ -30,7 +30,7 @@
     var history = [];
     var historyIdx = 0;
 
-    $rootScope.$watch('credentials', function() {
+    $rootScope.$watch('credentialsId', function() {
       buckets = [];
       current = undefined;
       selected = [];
@@ -133,7 +133,7 @@
     }
 
     function _listBuckets() {
-      if (!$rootScope.credentials) {
+      if (!$rootScope.getCredentials()) {
         buckets.length = 0;
         return;
       }

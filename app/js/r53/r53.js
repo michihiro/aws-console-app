@@ -12,7 +12,7 @@
   function awsR53Factory($rootScope) {
     return function() {
       return new AWS.Route53({
-        credentials: $rootScope.credentials,
+        credentials: $rootScope.getCredentials(),
       });
     };
   }
@@ -84,7 +84,7 @@
     var currentZone;
     var selected = [];
 
-    $rootScope.$watch('credentials', function() {
+    $rootScope.$watch('credentialsId', function() {
       hostedZones = [];
       oldHostedZones = [];
       currentZone = undefined;
@@ -111,7 +111,7 @@
     }
 
     function _listHostedZones(marker) {
-      if (!$rootScope.credentials) {
+      if (!$rootScope.getCredentials()) {
         hostedZones.length = 0;
         oldHostedZones.length = 0;
         return;
