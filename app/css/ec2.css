@@ -11,6 +11,26 @@
 .ec2-vpc-panel .panel-body {
   padding: 4px;
 }
+.ec2-vpc-panel .subnet {
+  margin: -1em 0 1em 0;
+}
+.ec2-vpc-panel .subet-title {
+  transform: translate(0, 1em);
+}
+.ec2-vpc-panel .subet-title > div {
+  display:inline-block;
+  background: #fff;
+  padding: 4px;
+  margin: 0 10px;
+}
+.ec2-vpc-panel .subet-title > div:last-child {
+  float:right
+}
+.ec2-vpc-panel .subnet-body {
+  overflow: hidden;
+  border: 1px solid #aaa;
+  padding-top: 10px;
+}
 .ec2-vpc-panel .instance {
   position: relative;
   display: inline-block;

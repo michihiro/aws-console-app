@@ -14,15 +14,20 @@
         <span ng-if="!v.isClassic && v.tags.Name">{{v.tags.Name}} ( {{v.VpcId}} )</span>
         <span ng-if="!v.isClassic && !v.tags.Name">{{v.VpcId}}</span>
       </accordion-heading>
-      <div ng-repeat="s in v.Subnets">
-        {{s.SubnetId}} {{s.CidrBlock}} {{s.AvailabilityZone}}
-        <div ng-repeat="i in ec2Info.getInstances() | ec2InVpcSubnet:v.VpcId:s.SubnetId">
-          <div class="instance">
-            <img src="images/Instance.svg" class="state-{{i.State.Name}}">
-            <div>
-              <div ng-if="i.tags.Name">{{i.tags.Name}}</div>
-              <div ng-if="!i.tags.Name">( {{i.InstanceId}} )</div>
-              <div> {{i.InstanceType}} - {{i.State.Name}}</div>
+      <div ng-repeat="s in v.Subnets" class="subnet">
+        <div class="subet-title">
+          <div>{{s.SubnetId}} - {{s.CidrBlock}}</div>
+          <div>{{s.AvailabilityZone}}</div>
+        </div>
+        <div class="subnet-body">
+          <div ng-repeat="i in ec2Info.getInstances() | ec2InVpcSubnet:v.VpcId:s.SubnetId">
+            <div class="instance">
+              <img src="images/Instance.svg" class="state-{{i.State.Name}}">
+              <div>
+                <div ng-if="i.tags.Name">{{i.tags.Name}}</div>
+                <div ng-if="!i.tags.Name">( {{i.InstanceId}} )</div>
+                <div> {{i.InstanceType}} - {{i.State.Name}}</div>
+              </div>
             </div>
           </div>
         </div>
