@@ -52,6 +52,7 @@
     var instances = {};
     var vpcs = {};
     var ec2Classic = {};
+    var selected = [];
 
     setCurrentRegion('all');
 
@@ -60,6 +61,7 @@
       instances = {};
       vpcs = {};
       ec2Classic = {};
+      selected = [];
       setCurrentRegion('all');
     });
 
@@ -69,7 +71,22 @@
       getInstances: getInstances,
       getVpcs: getVpcs,
       listInstances: listInstances,
+      selectInstances: selectInstances,
+      getSelectedInstances: getSelectedInstances,
+      isSelectedInstance: isSelectedInstance
     };
+
+    function selectInstances(sel) {
+      selected = sel;
+    }
+
+    function getSelectedInstances() {
+      return selected;
+    }
+
+    function isSelectedInstance(instance) {
+      return selected.indexOf(instance) >= 0;
+    }
 
     function getCurrentRegion() {
       return currentRegion;
