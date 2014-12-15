@@ -16,7 +16,8 @@
     "ng-context-menu": "~1.0.0",
     "animate.css": "~3.2.0",
     "sprintf": "~1.0.2",
-    "bootstrap-material-design": "~0.1.6"
+    "bootstrap-material-design": "~0.1.6",
+    "cryptojslib": "~3.1.2"
   },
   "devDependencies": {}
 }
