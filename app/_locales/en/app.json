@@ -84,6 +84,7 @@
     "name": "Domain Name",
     "ttl": "TTL",
     "type": "Type",
-    "value": "Value"
+    "value": "Value",
+    "noHostedZone": "No hosted zone found."
   }
 }

@@ -2,6 +2,9 @@
   <div class="r53-left">
     <div class="r53-left-header">{{'r53.zones'|i18next}}</div>
     <ul class="nav nav-pills nav-stacked" style="max-width: 300px;">
+      <li ng-if="r53Info.getHostedZones().length == 0">
+        <div>{{'r53.noHostedZone'|i18next}}</div>
+      </li>
       <li ng-repeat="z in r53Info.getHostedZones() track by $index"
           ng-class="{active:r53Info.getCurrent().Id=== z.Id}">
         <a ng-click="r53Info.setCurrent(z)">

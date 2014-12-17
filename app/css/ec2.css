@@ -59,7 +59,14 @@
   top: 0;
   left: 0;
 }
+.ec2-vpc-panel .instance > img.state-pending {
+  opacity: .5;
+}
+.ec2-vpc-panel .instance > img.state-stopping,
+.ec2-vpc-panel .instance > img.state-shutting-down {
+  -webkit-filter: grayscale(60%);
+}
 .ec2-vpc-panel .instance > img.state-stopped,
-.ec2-vpc-panel .instance > img.stame-terminated {
+.ec2-vpc-panel .instance > img.state-terminated {
   -webkit-filter: grayscale(95%);
 }

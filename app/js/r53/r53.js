@@ -60,8 +60,6 @@
       isSelectedObject: r53Info.isSelectedObject,
     });
 
-    r53Info.updateHostedZones();
-
     return;
 
     function onRowSelect(indexes) {
@@ -79,17 +77,19 @@
   r53InfoFactory.$inject = ['$rootScope', '$timeout', 'awsR53'];
 
   function r53InfoFactory($rootScope, $timeout, awsR53) {
-    var hostedZones = [];
-    var oldHostedZones = [];
+    var hostedZones;
+    var oldHostedZones;
     var currentZone;
     var selected = [];
 
-    $rootScope.$watch('credentialsId', function() {
-      hostedZones = [];
-      oldHostedZones = [];
+    $rootScope.$watch('credentialsId', function(id) {
+      hostedZones = undefined;
+      oldHostedZones = undefined;
       currentZone = undefined;
       selected = [];
-      updateHostedZones();
+      if(id) {
+        updateHostedZones();
+      }
     });
 
     return {
@@ -106,14 +106,14 @@
     }
 
     function updateHostedZones() {
-      oldHostedZones = hostedZones;
+      oldHostedZones = hostedZones || [];
       _listHostedZones();
     }
 
     function _listHostedZones(marker) {
       if (!$rootScope.getCredentials()) {
-        hostedZones.length = 0;
-        oldHostedZones.length = 0;
+        hostedZones = [];
+        oldHostedZones = [];
         return;
       }
 
@@ -135,6 +135,7 @@
             });
             return z;
           });
+          hostedZones = hostedZones || [];
           Array.prototype.push.apply(hostedZones, zones);
 
           if (data.Marker) {

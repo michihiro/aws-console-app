@@ -84,6 +84,7 @@
     "name": "ドメイン名",
     "ttl": "TTL",
     "type": "タイプ",
-    "value": "値"
+    "value": "値",
+    "noHostedZone": "ホストされたゾーンはありません。"
   }
 }
