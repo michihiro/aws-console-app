@@ -3,9 +3,16 @@
     "credentials": "クレデンシャル",
     "accessKeyId": "アクセスキーID",
     "secretAccessKey": "シークレットアクセスキー",
+    "setPassword": "起動パスワード設定",
+    "setPasswordMsg": "アプリ起動時のパスワードを設定します。次回起動時にはパスワード入力が必要です。",
+    "inputPassword": "パスワード入力",
+    "password": "パスワード",
+    "password2": "パスワード（再入力）",
     "action": "操作",
     "cancel": "キャンセル",
-    "save": "保存"
+    "save": "保存",
+    "ok": "OK",
+    "set": "設定する"
   },
   "s3": {
     "serviceName": "S3",

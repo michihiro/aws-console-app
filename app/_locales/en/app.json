@@ -3,9 +3,16 @@
     "credentials": "Credentials",
     "accessKeyId": "Access Key ID",
     "secretAccessKey": "Secret Access Key",
+    "setPassword": "Set your password",
+    "setPasswordMsg": "Set your password at start up of this application.",
+    "inputPassword": "Input password",
+    "password": "Password",
+    "password2": "Re-enter Password",
     "action": "Action",
     "cancel": "Cancel",
-    "save": "Save"
+    "save": "Save",
+    "ok": "OK",
+    "set": "Set"
   },
   "s3": {
     "serviceName": "S3",
