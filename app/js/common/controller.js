@@ -178,7 +178,6 @@
   comPasswordDialogCtrl.$inject = ['$scope', '$timeout', '$q', 'passwordService', 'credentialsService', 'dialogInputs', 'appFocusOn'];
 
   function comPasswordDialogCtrl($scope, $timeout, $q, passwordService, credentialsService, dialogInputs, appFocusOn) {
-    var storage = chrome.storage.local;
 
     ng.extend($scope, {
       mode: dialogInputs.mode,
@@ -205,7 +204,7 @@
     function setPassword() {
       var promise;
       if($scope.mode === 'update') {
-        promise = passwordService.auth($scope.inputs.currentPassword)
+        promise = passwordService.auth($scope.inputs.currentPassword);
       } else {
         promise = $q.when();
       }
@@ -217,7 +216,7 @@
               $scope.$close($scope.inputs.newPassword);
             });
           });
-       });
+      });
     }
   }
 
