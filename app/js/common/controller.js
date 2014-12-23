@@ -133,10 +133,13 @@
       return deferred.promise;
     }
 
-    function save(credentials) {
+    function save(inCredentials) {
       var deferred = $q.defer();
-
-      passwordService.encryptCredentials(JSON.stringify(credentials))
+      inCredentials = inCredentials || credentials;
+      if(!inCredentials) {
+        return $q.when();
+      }
+      passwordService.encryptCredentials(JSON.stringify(inCredentials))
         .then(function(data) {
           chrome.storage.local.set({
             encCredentials: data,
@@ -145,12 +148,13 @@
           });
         });
 
+/*
       chrome.storage.local.set({
-        credentials: credentials
+        credentials: inCredentials
       }, function() {
         deferred.resolve();
       });
-
+*/
       return deferred.promise;
     }
 
@@ -171,9 +175,9 @@
 
   }
 
-  comPasswordDialogCtrl.$inject = ['$scope', 'passwordService', 'dialogInputs'];
+  comPasswordDialogCtrl.$inject = ['$scope', '$timeout', '$q', 'passwordService', 'credentialsService', 'dialogInputs', 'appFocusOn'];
 
-  function comPasswordDialogCtrl($scope, passwordService, dialogInputs) {
+  function comPasswordDialogCtrl($scope, $timeout, $q, passwordService, credentialsService, dialogInputs, appFocusOn) {
     var storage = chrome.storage.local;
 
     ng.extend($scope, {
@@ -181,6 +185,10 @@
       inputs: {},
       auth: auth,
       setPassword: setPassword,
+    });
+
+    $timeout(function() {
+      appFocusOn('password');
     });
 
     function auth() {
@@ -195,11 +203,21 @@
     }
 
     function setPassword() {
-      var hash = CryptoJS.SHA256($scope.inputs.password + chrome.runtime.id)
-                 .toString(CryptoJS.enc.Base64);
-      storage.set({passwordHash: hash}, function() {
-        $scope.$close($scope.inputs.password);
-      });
+      var promise;
+      if($scope.mode === 'update') {
+        promise = passwordService.auth($scope.inputs.currentPassword)
+      } else {
+        promise = $q.when();
+      }
+      promise.then(function() {
+        passwordService.setPassword($scope.inputs.newPassword)
+          .then(function() {
+            credentialsService.save().then(function() {
+              credentialsService.load(true);
+              $scope.$close($scope.inputs.newPassword);
+            });
+          });
+       });
     }
   }
 
@@ -247,6 +265,7 @@
       encryptCredentials: encryptCredentials,
       decryptCredentials: decryptCredentials,
       auth: auth,
+      setPassword: setPassword,
     };
 
     function decryptCredentials(inData) {
@@ -300,6 +319,17 @@
         } else {
           deferred.reject();
         }
+      });
+      return deferred.promise;
+    }
+
+    function setPassword(inPassword) {
+      var deferred = $q.defer();
+      var hash = CryptoJS.SHA256(inPassword + chrome.runtime.id)
+                 .toString(CryptoJS.enc.Base64);
+      storage.set({passwordHash: hash}, function() {
+        password = inPassword;
+        deferred.resolve();
       });
       return deferred.promise;
     }

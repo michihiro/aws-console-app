@@ -38,6 +38,9 @@
         <li>
           <a ng-click="openDialog('com/credentialsDialog')"><i class="fa fa-key"></i></a>
         </li>
+        <li>
+          <a ng-click="openDialog('com/passwordDialog', {mode:'update'})"><i class="fa fa-key"></i></a>
+        </li>
       </ul>
       <h3 ng-if="state.current.name">{{state.current.name + '.serviceName'|i18next}}</h3>
       <div ui-view="header"></div>
