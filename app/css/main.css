@@ -74,8 +74,11 @@ body {
   left: 40px;
   margin: 0;
 }
-.navbar-fixed-top .container {
-  margin: 0;
+.navbar-fixed-top .btn-group.navbar-right {
+  margin: 6px 4px;
+}
+.navbar-fixed-top .btn-group.navbar-right button {
+  padding: 8px 16px;
 }
 .navbar h3 {
   margin: 10px 20px;

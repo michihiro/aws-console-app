@@ -1,6 +1,6 @@
 {
   "com": {
-    "credentials": "クレデンシャル",
+    "setupAwsAccessKey": "AWS アクセスキーの設定",
     "accessKeyId": "アクセスキーID",
     "secretAccessKey": "シークレットアクセスキー",
     "setPassword": "起動パスワード設定",
@@ -15,7 +15,11 @@
     "cancel": "キャンセル",
     "save": "保存",
     "ok": "OK",
-    "set": "設定する"
+    "set": "設定する",
+    "error": {
+      "invalidPassword": "パスワードが正しくありません。",
+      "passwordsDoNotMatch": "パスワードが一致しません。"
+    }
   },
   "s3": {
     "serviceName": "S3",

@@ -1,6 +1,6 @@
 {
   "com": {
-    "credentials": "Credentials",
+    "setupAwsAccessKey": "Setup AWS Access Key",
     "accessKeyId": "Access Key ID",
     "secretAccessKey": "Secret Access Key",
     "setPassword": "Set your password",
@@ -15,7 +15,11 @@
     "cancel": "Cancel",
     "save": "Save",
     "ok": "OK",
-    "set": "Set"
+    "set": "Set",
+    "error": {
+      "invalidPassword": "Invalid password.",
+      "passwordsDoNotMatch": "Passwords do not match."
+    }
   },
   "s3": {
     "serviceName": "S3",

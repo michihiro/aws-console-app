@@ -33,15 +33,12 @@
   function appFocusOnDirective() {
     return {
       restrict: 'A',
-      scope: {
-        name: '@appFocusOn'
-      },
       link: link
     };
 
-    function link(scope, elem) {
+    function link(scope, elem, attr) {
       scope.$on('appFocusOn', function(e, name) {
-        if (name === scope.name) {
+        if (name === attr.appFocusOn) {
           return elem[0].focus();
         }
       });

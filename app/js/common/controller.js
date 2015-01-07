@@ -109,27 +109,7 @@
               });
           });
       });
-/*
-      storage.get('credentials', function(val) {
-        if (!val || !val.credentials) {
-          deferred.reject({});
-          return;
-        }
 
-        $timeout(function() {
-          if (!flagUpdate) {
-            deferred.resolve(val.credentials);
-            return;
-          }
-          credentials = val.credentials;
-          refreshCredentials(credentials.accessKeyId, function(id) {
-            $rootScope.credentialsId = id;
-            deferred.resolve(val.credentials);
-            $interval(refreshCredentials, 600000);
-          });
-        });
-      });
-*/
       return deferred.promise;
     }
 
@@ -148,13 +128,6 @@
           });
         });
 
-/*
-      chrome.storage.local.set({
-        credentials: inCredentials
-      }, function() {
-        deferred.resolve();
-      });
-*/
       return deferred.promise;
     }
 
@@ -182,6 +155,7 @@
     ng.extend($scope, {
       mode: dialogInputs.mode,
       inputs: {},
+      passwordValidator: passwordValidator,
       auth: auth,
       setPassword: setPassword,
     });
@@ -190,11 +164,18 @@
       appFocusOn('password');
     });
 
+    function passwordValidator(val) {
+      return passwordService.auth(val);
+    }
+
     function auth() {
       $scope.processing = true;
-      passwordService.auth($scope.inputs.password)
+      passwordValidator($scope.inputs.password)
         .then(function() {
           $scope.$close($scope.inputs.password);
+        }, function() {
+          $scope.error = { code: 'invalidPassword' };
+          appFocusOn('password');
         })
         .finally(function() {
           $scope.processing = false;
@@ -204,7 +185,11 @@
     function setPassword() {
       var promise;
       if($scope.mode === 'update') {
-        promise = passwordService.auth($scope.inputs.currentPassword);
+        promise = passwordService.auth($scope.inputs.currentPassword)
+          .catch(function() {
+            $scope.error = { code: 'invalidPassword' };
+            return $q.reject();
+          });
       } else {
         promise = $q.when();
       }
