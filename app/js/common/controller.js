@@ -7,9 +7,9 @@
     .factory('passwordService', passwordServiceFactory)
     .controller('comPasswordDialogCtrl', comPasswordDialogCtrl);
 
-  comCredentialsDialogCtrl.$inject = ['$scope', '$timeout', '$filter', 'credentialsService'];
+  comCredentialsDialogCtrl.$inject = ['$scope', '$timeout', '$filter', 'credentialsService', 'appFocusOn'];
 
-  function comCredentialsDialogCtrl($scope, $timeout, $filter, credentialsService) {
+  function comCredentialsDialogCtrl($scope, $timeout, $filter, credentialsService, appFocusOn) {
 
     ng.extend($scope, {
       canCancel: false,
@@ -20,6 +20,8 @@
     credentialsService.load().then(function(result) {
       ng.extend($scope.inputs, result);
       $scope.canCancel = (result.accessKeyId && result.secretAccessKey);
+    }).finally(function() {
+      appFocusOn('accessKeyId');
     });
 
     return;
@@ -172,9 +174,7 @@
       onEnterKeydown: onEnterKeydown,
     });
 
-    $timeout(function() {
-      appFocusOn(inputNames[$scope.mode][0]);
-    });
+    appFocusOn(inputNames[$scope.mode][0]);
 
     function onEnterKeydown(name) {
       if (!$scope.inputs[name] || !$scope.inputs[name].length) {

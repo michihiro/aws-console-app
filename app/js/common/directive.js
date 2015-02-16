@@ -28,9 +28,9 @@
     };
   }
 
-  appFocusOnDirective.$inject = [];
+  appFocusOnDirective.$inject = ['$timeout'];
 
-  function appFocusOnDirective() {
+  function appFocusOnDirective($timeout) {
     return {
       restrict: 'A',
       link: link
@@ -39,7 +39,9 @@
     function link(scope, elem, attr) {
       scope.$on('appFocusOn', function(e, name) {
         if (name === attr.appFocusOn) {
-          return elem[0].focus();
+          $timeout(function() {
+            ng.element(elem[0]).focus().select();
+          });
         }
       });
     }
