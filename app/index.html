@@ -34,18 +34,18 @@
     </div>
 
     <div class="navbar navbar-default navbar-fixed-top">
-      <div class="btn-group navbar-right" dropdown is-open="keys.isopen">
+      <div class="btn-group navbar-right" dropdown is-open="topDropdown.isopen">
         <button class="btn btn-info dropdown-toggle">
           <i class="fa fa-key"></i>
         </button>
         <ul class="dropdown-menu">
           <li>
-            <a ng-click="openDialog('com/credentialsDialog')">
+            <a ng-click="openDialog('com/credentialsDialog'); topDropdown.isopen=false;">
               {{'com.setupAwsAccessKey'|i18next}}
             </a>
           </li>
           <li>
-            <a ng-click="openDialog('com/passwordDialog', {mode:'update'})">
+            <a ng-click="openDialog('com/passwordDialog', {mode:'update'}); topDropdown.isopen=false;">
               {{'com.updatePassword'|i18next}}
             </a>
           </li>

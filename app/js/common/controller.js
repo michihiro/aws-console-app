@@ -102,7 +102,7 @@
               .then(function(id) {
                 $rootScope.credentialsId = id;
                 deferred.resolve(val.credentials);
-                if(intervalPromise) {
+                if (intervalPromise) {
                   $interval.cancel(intervalPromise);
                 }
                 intervalPromise = $interval(refreshCredentials, 600000);
@@ -116,7 +116,7 @@
     function save(inCredentials) {
       var deferred = $q.defer();
       inCredentials = inCredentials || credentials;
-      if(!inCredentials) {
+      if (!inCredentials) {
         return $q.when();
       }
       passwordService.encryptCredentials(JSON.stringify(inCredentials))
@@ -152,17 +152,42 @@
 
   function comPasswordDialogCtrl($scope, $timeout, $q, passwordService, credentialsService, dialogInputs, appFocusOn) {
 
+    var inputNames = {
+      auth: ['password'],
+      update: ['currentPassword', 'newPassword', 'newPassword2'],
+      set: ['newPassword', 'newPassword2'],
+    };
+    var submitFn = {
+      auth: auth,
+      update: setPassword,
+      set: setPassword
+    };
+
     ng.extend($scope, {
       mode: dialogInputs.mode,
       inputs: {},
       passwordValidator: passwordValidator,
       auth: auth,
       setPassword: setPassword,
+      onEnterKeydown: onEnterKeydown,
     });
 
     $timeout(function() {
-      appFocusOn('password');
+      appFocusOn(inputNames[$scope.mode][0]);
     });
+
+    function onEnterKeydown(name) {
+      if (!$scope.inputs[name] || !$scope.inputs[name].length) {
+        return;
+      }
+      if ($scope.inputs.form.$valid) {
+        return submitFn[$scope.mode]();
+      }
+
+      var idx = inputNames[$scope.mode].indexOf(name);
+      idx = ++idx % inputNames[$scope.mode].length;
+      appFocusOn(inputNames[$scope.mode][idx]);
+    }
 
     function passwordValidator(val) {
       return passwordService.auth(val);
@@ -174,7 +199,9 @@
         .then(function() {
           $scope.$close($scope.inputs.password);
         }, function() {
-          $scope.error = { code: 'invalidPassword' };
+          $scope.error = {
+            code: 'invalidPassword'
+          };
           appFocusOn('password');
         })
         .finally(function() {
@@ -184,10 +211,12 @@
 
     function setPassword() {
       var promise;
-      if($scope.mode === 'update') {
+      if ($scope.mode === 'update') {
         promise = passwordService.auth($scope.inputs.currentPassword)
           .catch(function() {
-            $scope.error = { code: 'invalidPassword' };
+            $scope.error = {
+              code: 'invalidPassword'
+            };
             return $q.reject();
           });
       } else {
@@ -212,7 +241,7 @@
     var password;
 
     var jsonFormatter = {
-      stringify: function (cipherParams) {
+      stringify: function(cipherParams) {
         var jsonObj = {
           ct: cipherParams.ciphertext.toString(CryptoJS.enc.Base64),
         };
@@ -227,7 +256,7 @@
         return JSON.stringify(jsonObj);
       },
 
-      parse: function (jsonStr) {
+      parse: function(jsonStr) {
         var jsonObj = JSON.parse(jsonStr);
 
         var cipherParams = CryptoJS.lib.CipherParams.create({
@@ -256,8 +285,10 @@
       var deferred = $q.defer();
       var promise, dlg;
 
-      if(password === undefined) {
-        dlg = $rootScope.openDialog('com/passwordDialog', {mode:'auth'});
+      if (password === undefined) {
+        dlg = $rootScope.openDialog('com/passwordDialog', {
+          mode: 'auth'
+        });
         promise = dlg.result;
       } else {
         promise = $q.when(password);
@@ -265,7 +296,9 @@
 
       promise.then(function(password) {
         var keyStr = password + chrome.runtime.id;
-        var decData = CryptoJS.AES.decrypt(inData, keyStr, {format: jsonFormatter });
+        var decData = CryptoJS.AES.decrypt(inData, keyStr, {
+          format: jsonFormatter
+        });
         deferred.resolve(decData.toString(CryptoJS.enc.Utf8));
       });
 
@@ -276,8 +309,10 @@
       var deferred = $q.defer();
       var promise, dlg;
 
-      if(password === undefined) {
-        dlg = $rootScope.openDialog('com/passwordDialog', {mode:'set'});
+      if (password === undefined) {
+        dlg = $rootScope.openDialog('com/passwordDialog', {
+          mode: 'set'
+        });
         promise = dlg.result;
       } else {
         promise = $q.when(password);
@@ -285,9 +320,10 @@
 
       promise.then(function(password) {
         var keyStr = password + chrome.runtime.id;
-        var encData = CryptoJS.AES.encrypt(inData, keyStr, {format: jsonFormatter})
-          .toString();
-        deferred.resolve(encData);
+        var encData = CryptoJS.AES.encrypt(inData, keyStr, {
+          format: jsonFormatter
+        });
+        deferred.resolve(encData.toString());
       });
 
       return deferred.promise;
@@ -297,7 +333,7 @@
       var deferred = $q.defer();
       var hash = CryptoJS.SHA256(inPassword + chrome.runtime.id).toString(CryptoJS.enc.Base64);
       storage.get('passwordHash', function(val) {
-        if(val.passwordHash === hash) {
+        if (val.passwordHash === hash) {
           password = inPassword;
           deferred.resolve();
         } else {
@@ -310,8 +346,10 @@
     function setPassword(inPassword) {
       var deferred = $q.defer();
       var hash = CryptoJS.SHA256(inPassword + chrome.runtime.id)
-                 .toString(CryptoJS.enc.Base64);
-      storage.set({passwordHash: hash}, function() {
+        .toString(CryptoJS.enc.Base64);
+      storage.set({
+        passwordHash: hash
+      }, function() {
         password = inPassword;
         deferred.resolve();
       });
