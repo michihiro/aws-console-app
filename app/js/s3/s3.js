@@ -22,7 +22,7 @@
   s3ListServiceFactory.$inject = ['$rootScope', '$timeout', 'awsS3'];
 
   function s3ListServiceFactory($rootScope, $timeout, awsS3) {
-    var buckets = [];
+    var buckets;
     var current;
     var selected = [];
     var _listFolderRequest = {};
@@ -31,7 +31,7 @@
     var historyIdx = 0;
 
     $rootScope.$watch('credentialsId', function() {
-      buckets = [];
+      buckets = undefined;
       current = undefined;
       selected = [];
       _listBuckets();
@@ -64,7 +64,7 @@
       if (current !== folder) {
         history.length = historyIdx;
         history.push(folder);
-        if(history.length <= HISTORY_MAX) {
+        if (history.length <= HISTORY_MAX) {
           historyIdx++;
         } else {
           history.shift();
@@ -81,7 +81,7 @@
     }
 
     function goPrev() {
-      if(hasPrev()) {
+      if (hasPrev()) {
         var folder = history[historyIdx - 2];
         historyIdx--;
         _listFolder(folder);
@@ -95,7 +95,7 @@
     }
 
     function goNext() {
-      if(hasNext()) {
+      if (hasNext()) {
         var folder = history[historyIdx];
         historyIdx++;
         _listFolder(folder);
@@ -110,6 +110,7 @@
           Name: newBucket,
           bucketName: newBucket,
         };
+        buckets = buckets || [];
         buckets.push(bucket);
         setCurrent(bucket);
       }
@@ -134,18 +135,18 @@
 
     function _listBuckets() {
       if (!$rootScope.getCredentials()) {
-        buckets.length = 0;
+        buckets = undefined;
         return;
       }
 
       var s3 = awsS3();
       s3.listBuckets(function(err, result) {
         if (err) {
-          buckets.length = 0;
+          buckets = undefined;
           return;
         }
 
-        var bucketNames = buckets.map(function(v) {
+        var bucketNames = (buckets || []).map(function(v) {
           return v.Name;
         });
 
@@ -182,6 +183,7 @@
           }
         });
         $timeout(function() {
+          buckets = buckets || [];
           buckets.length = 0;
           Array.prototype.push.apply(buckets, newBuckets);
         });
@@ -608,7 +610,7 @@
           reader.readEntries(function(result) {
             Array.prototype.push.apply(entries, result);
             defer.resolve(uploadList);
-          }, function(err)  {
+          }, function(err) {
             console.log(err);
             defer.reject(err);
           });
