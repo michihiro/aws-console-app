@@ -1,3 +1,6 @@
+.wait-cursor {
+  cursor: wait;
+}
 .s3-top {
   position: absolute;
   left: 0;

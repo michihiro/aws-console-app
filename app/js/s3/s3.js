@@ -339,23 +339,33 @@
     }
   }
 
-  s3DownloadService.$inject = ['$rootScope', '$q', '$modal', 's3ListService', 's3NotificationsService', 'awsS3'];
+  s3DownloadService.$inject = ['$timeout', '$q', '$modal', 's3ListService', 's3NotificationsService', 'awsS3'];
 
-  function s3DownloadService($rootScope, $q, $modal, s3ListService, s3NotificationsService, awsS3) {
+  function s3DownloadService($timeout, $q, $modal, s3ListService, s3NotificationsService, awsS3) {
     var MAX_DOWNLOAD_NUM = 1000;
     var ERR_TOO_MAY_OBJECTS = 'errTooManyObjects';
+    var sysWaiting;
 
     return {
-      download: download
+      download: download,
+      getSysWaiting: getSysWaiting,
     };
 
+    function getSysWaiting() {
+      return sysWaiting;
+    }
+
     function download(objs) {
-      _getUrls(objs)
-        .then(function(urlData) {
-          _saveAllObjects(urlData);
-        }, function() {
-          _alert();
-        });
+      sysWaiting = true;
+      $timeout(function() {
+        _getUrls(objs)
+          .then(function(urlData) {
+            _saveAllObjects(urlData);
+            sysWaiting = false;
+          }, function() {
+            _alert();
+          });
+      });
     }
 
     function _alert() {
@@ -554,6 +564,7 @@
         if (dirEntry) {
           defer.resolve(dirEntry);
         } else {
+          console.log('chrome.fileSystem.chooseEntry', chrome.runtime.lastError.message);
           defer.reject();
         }
       });

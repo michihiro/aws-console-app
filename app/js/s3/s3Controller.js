@@ -194,7 +194,7 @@
       s3Actions: s3Actions,
       onDblClickList: onDblClickList,
       downloadObjects: downloadObjects,
-
+      getSysWaiting: s3DownloadService.getSysWaiting,
       onRowSelect: onRowSelect,
       isSelectedObject: s3ListService.isSelectedObject,
       isOpenTreeMenu: false,
@@ -537,12 +537,10 @@
         Body: new Blob([]),
       };
       s3.putObject(uploadParam, function() {
-        $timeout(function() {
-          s3Actions.creatingFolder = false;
-        });
         s3ListService.updateFolder();
       });
       s3ListService.selectObjects([]);
+      s3Actions.creatingFolder = false;
       $scope.folderName = '';
     }
   }
