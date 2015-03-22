@@ -18,25 +18,55 @@ $(function() {
         var $this = $(this);
         var top = $this.offset().top;
         var bottom = top + $this.height();
-        $this.toggleClass('show',
+        $this.toggleClass('show-section',
           top < scrollTop + winHeight && bottom > scrollTop);
       });
     }, 200);
   });
 
-  $('a.smooth-scroll').click(function() {
+  $('a[href^=#]').click(function() {
     if (location.pathname.replace(/^\//,'') !==
       this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
       return;
     }
-    var target = $('a[name=' + this.hash.slice(1) +']');
-    if (target.length) {
-      $('html,body').animate({
-        scrollTop: target.offset().top
-      }, 400);
-      return false;
-    }
+    var name = this.hash.slice(1);
+    return scrollTo(name);
   });
 
   $('a:not([href^=#])').attr('target', '_blank');
+
+  function scrollTo(name) {
+    var namePrev, nameNext, target;
+    $('a[name]').each(function() {
+      var $this = $(this);
+      if (!target) {
+        if ($this.attr('name') === name) {
+          target = $this;
+        } else {
+          namePrev = $this.attr('name');
+        }
+      } else {
+        nameNext = nameNext || $this.attr('name');
+      }
+    });
+
+    if (target) {
+      $('html,body').animate({
+        scrollTop: target.offset().top
+      }, 400, function() {
+        $('.section-jump').each(function() {
+          var $this = $(this);
+          if ($this.hasClass('prev')) {
+            $this.find('a').toggle(!!namePrev).attr('href','#'+ namePrev);
+          }
+          else if ($this.hasClass('next')) {
+            $this.find('a').toggle(!!nameNext).attr('href','#'+ nameNext);
+          }
+        });
+      });
+      return false;
+    }
+  }
+
+  scrollTo('home');
 });
