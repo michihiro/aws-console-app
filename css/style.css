@@ -108,7 +108,7 @@ body.thin-header .navbar {
   color: #fff;
 }
 .section-jump a:hover {
-  background: red;
+  background-color: hsla(212, 100%, 10%, 1);
 }
 
 .home {
@@ -137,9 +137,7 @@ body.thin-header .navbar {
 }
 
 .about > section {
- display:flex;
- -webkit-flex-wrap: wrap;
- flex-wrap: wrap;
+ display:inline-block;
 }
 
 .about > section > section {
@@ -152,9 +150,10 @@ body.thin-header .navbar {
 
   background-repeat: no-repeat;
   background-image: radial-gradient(at 0px 0px, 
-    #fff 0%, #fff 20%,
-    transparent 70%,
-    transparent 100%);
+    rgba(255,255,255,1) 0%,
+    rgba(255,255,255,1) 20%,
+    rgba(255,255,255,0) 70%,
+    rgba(255,255,255,0) 100%);
 
   transition: all ease-in-out .8s .4s;
   background-color: hsla(212, 80%, 85%, 0);
