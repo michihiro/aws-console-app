@@ -53,7 +53,7 @@
             </tr>
             <tr ng-repeat="item in getCurrent().list | orderBy:sortExp:sortReverse"
                 row-id="{{ item.id }}"
-                ng-dblClick="onDblClickList(item)"
+                ng-dblclick="onDblClickList(item)"
                 ng-class="{info: isSelectedObject(item)}" >
               <td ng-repeat="col in columns" class="{{col.class}}"
                      ng-style="{width:col.width+'px'}">
