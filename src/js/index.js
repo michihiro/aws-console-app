@@ -13,6 +13,7 @@
   ];
 
   ng.module('aws-console', [
+      'app.templateCache',
       'ngAnimate',
       'ui.router',
       'ui.utils',

@@ -6,14 +6,14 @@
     .directive('s3UploadField', s3UploadFieldDirective)
     .directive('s3Tree', s3TreeDirective);
 
-  s3TreeDirective.$inject = ['$compile', '$http', '$q', 's3ListService'];
+  s3TreeDirective.$inject = ['$compile', '$http', '$templateCache', '$q', 's3ListService'];
 
-  function s3TreeDirective($compile, $http, $q, s3ListService) {
+  function s3TreeDirective($compile, $http, $templateCache, $q, s3ListService) {
     var template;
-    var deferred = $q.defer();
-    $http.get('views/s3/tree.html').then(function(response) {
+    var promise;
+
+    promise = $http.get('views/s3/tree.html', {cache:$templateCache}).then(function(response) {
       template = response.data;
-      deferred.resolve();
     });
 
     return {
@@ -36,7 +36,7 @@
         s3ListService.setCurrent(item);
       };
 
-      deferred.promise.then(function() {
+      promise.then(function() {
         var newElem = ng.element(template);
         $compile(newElem)(scope);
         elem.replaceWith(newElem);

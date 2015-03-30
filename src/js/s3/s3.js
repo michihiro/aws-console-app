@@ -167,7 +167,7 @@
                   ng.extend(bucket, data);
                   _listFolder(bucket);
                 }
-                if (!current) {
+                if (!current && buckets) {
                   setCurrent(buckets[0]);
                 }
               });
