@@ -1,6 +1,4 @@
 appName:
   message: AWS Console App
-  description: The name of the application
 appDescription:
-  message: AWS Consle App
-  description: The description of the application
+  message: Simple AWS Management Console App

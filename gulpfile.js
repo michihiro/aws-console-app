@@ -19,6 +19,8 @@ var minifyCss = require('gulp-minify-css');
 var uglify = require('gulp-uglify');
 var zip = require('gulp-zip');
 var es = require('event-stream');
+var footer = require('gulp-footer');
+var fs = require('fs');
 
 // remove app,dist directory.
 gulp.task('clean', function(callback) {
@@ -38,7 +40,7 @@ gulp.task('manifest', function() {
     .pipe(plumber())
     .pipe(newer({dest:'app', ext:'.json'}))
     .pipe(using())
-    .pipe(yaml({pretty:true}))
+    .pipe(yaml())
     .pipe(gulp.dest('app'));
 });
 
@@ -77,7 +79,7 @@ gulp.task('_locale', function() {
     .pipe(plumber())
     .pipe(newer({dest:'app/_locales', ext:'.json'}))
     .pipe(using())
-    .pipe(yaml({pretty:true}))
+    .pipe(yaml())
     .pipe(gulp.dest('app/_locales'));
 });
 
@@ -153,7 +155,10 @@ gulp.task('usemin', ['default'], function() {
         aggressiveMerging: false,
       }), 'concat'],
       html: [minifyHtml()],
-      js: [uglify({compress:false,mangle: false})]
+      js: [
+        footer(fs.readFileSync('app/js/etc.js')),
+        uglify({compress:false,mangle: false})
+      ]
     }))
     .pipe(gulp.dest('dist'));
 });
@@ -175,10 +180,21 @@ gulp.task('default', [
   'views',
   'views-js',
   'bower',
-  //'usemin',
   '_locale',
   'js',
   'js-vendor',
   'sass',
 ]);
+
+gulp.task('watch', ['default'], function() {
+  gulp.watch('src/*html', ['html']);
+  gulp.watch('src/views/**/*html', ['views']);
+  gulp.watch('app/views/**/*html', ['views-js']);
+  gulp.watch('src/_locales/**/*.yaml', ['_locale']);
+  gulp.watch(['src/js/**/*js', '!src/js/vendor/**js'], ['js']);
+  gulp.watch('src/js/vendor/**/*js', ['js-vendor']);
+  gulp.watch('src/sass/**/*.scss', ['sass']);
+  gulp.watch(['src/images/*','src/mimetype.txt'], ['copy']);
+});
+
 
