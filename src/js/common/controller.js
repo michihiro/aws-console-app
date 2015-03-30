@@ -7,9 +7,9 @@
     .factory('passwordService', passwordServiceFactory)
     .controller('comPasswordDialogCtrl', comPasswordDialogCtrl);
 
-  comCredentialsDialogCtrl.$inject = ['$scope', '$timeout', '$filter', 'credentialsService', 'appFocusOn'];
+  comCredentialsDialogCtrl.$inject = ['$scope', '$timeout', '$filter', '$q', 'credentialsService', 'appFocusOn'];
 
-  function comCredentialsDialogCtrl($scope, $timeout, $filter, credentialsService, appFocusOn) {
+  function comCredentialsDialogCtrl($scope, $timeout, $filter, $q, credentialsService, appFocusOn) {
 
     ng.extend($scope, {
       canCancel: false,
@@ -27,38 +27,60 @@
     return;
 
     function save() {
+      $scope.processing = true;
+      $scope.error = null;
+      $scope.credentials = new AWS.Credentials($scope.inputs);
 
-      var credentials = $scope.inputs;
+      $q.reject()
+        .catch(authWithEC2)
+        .catch(authWithR53)
+        .catch(authWithS3)
+        .then(function() {
+          credentialsService.save($scope.inputs).then(function() {
+            credentialsService.load(true);
+            $scope.$close({});
+          });
+        }, function(err) {
+          $scope.error = err;
+        })
+        .finally(function() {
+          $scope.processing = false;
+        });
+    }
 
-      var s3 = new AWS.S3({
-        credentials: new AWS.Credentials(credentials),
+    function authWithS3() {
+      var deferred = $q.defer();
+      new AWS.S3({
+        credentials: $scope.credentials,
         params: {
           Bucket: '',
           Region: ''
         }
+      }).listBuckets(function(err) {
+        deferred[err ? 'reject' : 'resolve'](err);
       });
-
-      setProcessing(true);
-      $scope.error = null;
-
-      s3.listBuckets(function(err) {
-        if (!err) {
-          credentialsService.save(credentials).then(function() {
-            credentialsService.load(true);
-            setProcessing(false);
-            $scope.$close();
-          });
-        } else {
-          $scope.error = err;
-          setProcessing(false);
-        }
-      });
+      return deferred.promise;
     }
 
-    function setProcessing(bool) {
-      $timeout(function() {
-        $scope.processing = bool;
+    function authWithEC2() {
+      var deferred = $q.defer();
+      new AWS.EC2({
+        credentials: $scope.credentials,
+        region: 'us-east-1'
+      }).describeRegions({DryRun: true}, function(err) {
+        deferred[err ? 'reject' : 'resolve'](err);
       });
+      return deferred.promise;
+    }
+
+    function authWithR53() {
+      var deferred = $q.defer();
+      new AWS.Route53({
+        credentials: $scope.credentials,
+      }).listHostedZones(function(err) {
+        deferred[err ? 'reject' : 'resolve'](err);
+      });
+      return deferred.promise;
     }
   }
 

@@ -135,14 +135,14 @@
 
     function _listBuckets() {
       if (!$rootScope.getCredentials()) {
-        buckets = undefined;
+        buckets = [];
         return;
       }
 
       var s3 = awsS3();
       s3.listBuckets(function(err, result) {
         if (err) {
-          buckets = undefined;
+          buckets = [];
           return;
         }
 
