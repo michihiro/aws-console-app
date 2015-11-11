@@ -1,21 +1,14 @@
 (function(ng) {
   'use strict';
 
+  var REFRESH_INTERVAL = 60000;
+  var REFRESH_INTERVAL2 = 10000;
+
   ng.module('aws-console')
     .factory('awsEC2', awsEC2Factory)
     .factory('ec2Info', ec2InfoFactory)
-    .filter('ec2InVpcSubnet', ec2InVpcSubnetFilter)
     .controller('ec2HeaderCtrl', ec2HeaderCtrl)
     .controller('ec2Ctrl', ec2Ctrl);
-
-  ec2InVpcSubnetFilter.$inject = [];
-  function ec2InVpcSubnetFilter() {
-    return function(instances, vpcId, subnetId) {
-      return instances.filter(function(i) {
-        return i.VpcId === vpcId && i.SubnetId === subnetId;
-      });
-    };
-  }
 
   awsEC2Factory.$inject = ['$rootScope'];
 
@@ -37,24 +30,30 @@
     });
   }
 
-  ec2Ctrl.$inject = ['$scope', '$timeout', 'awsRegions', 'ec2Info'];
+  ec2Ctrl.$inject = ['$scope', '$interval', 'awsRegions', 'ec2Info'];
 
-  function ec2Ctrl($scope, $timeout, awsRegions, ec2Info) {
+  function ec2Ctrl($scope, $interval, awsRegions, ec2Info) {
     ng.extend($scope, {
       ec2Info: ec2Info,
     });
+
+    var refreshTimer = $interval(ec2Info.refresh, REFRESH_INTERVAL);
+    $scope.$on('$destroy', onDestroy);
+    ec2Info.refresh();
+
+    function onDestroy() {
+      $interval.cancel(refreshTimer);
+    }
   }
 
   ec2InfoFactory.$inject = ['$rootScope', '$timeout', 'awsRegions', 'awsEC2'];
 
   function ec2InfoFactory($rootScope, $timeout, awsRegions, awsEC2) {
-    var currentRegion;
+    var currentRegion = 'all';
     var instances = {};
     var vpcs = {};
     var ec2Classic = {};
     var selected = [];
-
-    setCurrentRegion('all');
 
     $rootScope.$watch('credentialsId', function() {
       currentRegion = undefined;
@@ -73,8 +72,19 @@
       listInstances: listInstances,
       selectInstances: selectInstances,
       getSelectedInstances: getSelectedInstances,
-      isSelectedInstance: isSelectedInstance
+      isSelectedInstance: isSelectedInstance,
+      refresh: refresh
     };
+
+    function refresh() {
+      if(currentRegion === 'all') {
+        awsRegions.ec2.forEach(function(r) {
+          listInstances(r);
+        });
+      } else {
+        listInstances(currentRegion);
+      }
+    }
 
     function selectInstances(sel) {
       selected = sel;
@@ -93,28 +103,14 @@
     }
 
     function setCurrentRegion(region) {
-      if(region === 'all') {
-        awsRegions.ec2.forEach(function(r) {
-          listInstances(r);
-        });
-      } else {
-        listInstances(region);
-      }
       currentRegion = region;
+      refresh();
     }
 
-    function getInstances() {
-      var region = getCurrentRegion();
-      if(region === 'all') {
-        return Object.keys(instances).reduce(function(all, key) {
-          if(instances[key] && instances[key].length) {
-            all = all.concat(instances[key]);
-          }
-          return all;
-        }, []);
-      } else {
-        return instances[region];
-      }
+    function getInstances(region, vpcId, subnetId) {
+      return instances[region].filter(function(i) {
+        return i.VpcId === vpcId && i.SubnetId === subnetId;
+      });
     }
 
     function getVpcs() {
@@ -140,67 +136,87 @@
     }
 
     function listInstances(region) {
+      _describeVpcs(region);
+      _describeInstances(region);
+    }
+
+    function _describeVpcs(region) {
       awsEC2(region).describeVpcs({}, function(err, data) {
         if (!data || !data.Vpcs) {
           return;
         }
-        $timeout(function() {
-          vpcs[region] = data.Vpcs.map(function(v) {
-            v.tags = v.Tags.reduce(function(all, v2) {
-              all[v2.Key] = v2.Value;
-              return all;
-            }, {});
-            v.isOpen = true;
-            v.region = region;
+        var vpcsBack = vpcs || {};
+        var regionIdx = awsRegions.ec2.indexOf(region);
+        vpcs[region] = data.Vpcs.map(function(v) {
 
-            awsEC2(region).describeSubnets({
-              Filters: [
-                {
-                  Name: 'vpc-id',
-                  Values: [ v.VpcId ]
-                },
-              ],
-            }, function(err, obj) {
-              if(obj) {
-                $timeout(function() {
-                  v.Subnets = obj.Subnets;
-                });
-              }
-            });
-            return v;
+          (vpcsBack[region] || []).some(function(v2, idx) {
+            if (v2.VpcId === v2.VpcId) {
+              v = ng.extend(v2, v);
+              vpcsBack[region].splice(idx, 1);
+              return true;
+            }
           });
+
+          v.tags = v.Tags.reduce(function(all, v2) {
+            all[v2.Key] = v2.Value;
+            return all;
+          }, {});
+          v.isOpen = true;
+          v.region = region;
+          v.regionIdx = regionIdx;
+
+          awsEC2(region).describeSubnets({
+            Filters: [
+              {
+                Name: 'vpc-id',
+                Values: [ v.VpcId ]
+              },
+            ],
+          }, function(err, obj) {
+            if(obj) {
+              $timeout(function() {
+                v.Subnets = obj.Subnets;
+              });
+            }
+          });
+          return v;
         });
       });
+    }
+
+    function _describeInstances(region) {
+      var tempStates = ['pending', 'shutting-down', 'stopping'];
       awsEC2(region).describeInstances({}, function(err, data) {
         if (!data || !data.Reservations) {
           return;
         }
-        $timeout(function() {
-          instances[region] = data.Reservations.reduce(function(all, resv) {
-            var ins = resv.Instances.map(function(v) {
-              v.tags = v.Tags.reduce(function(all, v2) {
-                all[v2.Key] = v2.Value;
-                return all;
-              }, {});
-              if(v.VpcId === undefined) {
-                ec2Classic[region] = {
-                  VpcId: undefined,
-                  isClassic: true,
-                  tags: {
-                    Name:'Ec2-Classic'
-                  },
-                  isOpen: true,
-                  region: region,
-                  Subnets: [{ SubnetId: undefined}],
-                };
-              }
-              return v;
-            });
+        instances[region] = data.Reservations.reduce(function(all, resv) {
+          var ins = resv.Instances.map(function(v) {
+            v.tags = v.Tags.reduce(function(all, v2) {
+              all[v2.Key] = v2.Value;
+              return all;
+            }, {});
+            if(v.VpcId === undefined && v.State.Name !== 'terminated') {
+              ec2Classic[region] = {
+                VpcId: undefined,
+                isClassic: true,
+                tags: {
+                  Name:'Ec2-Classic'
+                },
+                isOpen: true,
+                region: region,
+                Subnets: [{ SubnetId: undefined}],
+              };
+            }
+            if (tempStates.indexOf(v.State.Name) >= 0) {
+              $timeout(_describeInstances.bind(null, region), REFRESH_INTERVAL2);
+            }
+            return v;
+          });
 
-            Array.prototype.push.apply(all, ins);
-            return all;
-          }, []);
-        });
+          Array.prototype.push.apply(all, ins);
+          return all;
+        }, []);
       });
     }
   }

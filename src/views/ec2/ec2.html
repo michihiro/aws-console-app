@@ -21,7 +21,7 @@
           <div>{{s.AvailabilityZone}}</div>
         </div>
         <div class="subnet-body">
-          <div ng-repeat="i in ec2Info.getInstances() | ec2InVpcSubnet:v.VpcId:s.SubnetId">
+          <div ng-repeat="i in ec2Info.getInstances(v.region, v.VpcId, s.SubnetId)">
             <div class="instance"
                  ng-class="{selected: ec2Info.isSelectedInstance(i)}"
                  ng-click="ec2Info.selectInstances([i])">
