@@ -115,9 +115,13 @@
 
     function getVpcs() {
       var region = getCurrentRegion();
-      var vpcArr;
+      var vpcArr, regions;
       if(region === 'all') {
-        vpcArr = Object.keys(vpcs).reduce(function(all, key) {
+        regions = Object.keys(vpcs);
+        if (!regions.length) {
+          return undefined;
+        }
+        vpcArr = regions.reduce(function(all, key) {
           if(vpcs[key] && vpcs[key].length) {
             all = all.concat(vpcs[key]);
           }
@@ -127,7 +131,10 @@
           return all;
         }, []);
       } else {
-        vpcArr = (vpcs[region] || []).concat();
+        if (!vpcs[region]) {
+          return undefined;
+        }
+        vpcArr = vpcs[region].concat();
         if(ec2Classic[region]) {
           vpcArr.push(ec2Classic[region]);
         }

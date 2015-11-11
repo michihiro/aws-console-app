@@ -1,35 +1,39 @@
 <div class="func-view">
   <accordion close-others="false">
     <accordion-group class="panel-default ec2-vpc-panel"
-                     ng-repeat="v in ec2Info.getVpcs()"
+                     ng-repeat="v in ec2Info.getVpcs() | orderBy:['regionIdx','tags.Name','VpcId']"
                      is-open="v.isOpen"
                      ng-if="v.Subnets">
       <accordion-heading>
-        <div class="vpc-region" ng-if="ec2Info.getCurrentRegion()=='all'">
-          {{'ec2.regionName.'+v.region|i18next}}
+        <div class="vpc-region" ng-if="ec2Info.getCurrentRegion()=='all'"
+             ng-bind="'ec2.regionName.'+v.region|i18next">
         </div>
         <i class="fa fa-chevron-right" ng-class="{'fa-rotate-90': v.isOpen}"></i>
 
         <span ng-if="v.isClassic">EC2 Classic</span>
-        <span ng-if="!v.isClassic && v.tags.Name">{{v.tags.Name}} ( {{v.VpcId}} )</span>
-        <span ng-if="!v.isClassic && !v.tags.Name">{{v.VpcId}}</span>
+        <span ng-if="!v.isClassic && v.tags.Name"
+              ng-bind="v.tags.Name+' ( ' + v.VpcId + ' )'"></span>
+        <span ng-if="!v.isClassic && !v.tags.Name"
+              ng-bind="v.VpcId"></span>
       </accordion-heading>
-      <div ng-repeat="s in v.Subnets" class="subnet">
+      <div class="subnet"
+           ng-repeat="s in v.Subnets | orderBy:['tags.Name', 'SubnetId']">
         <div class="subet-title">
           <div ng-if="!s.SubnetId">EC2 Classic</div>
-          <div ng-if="s.SubnetId">{{s.SubnetId}} - {{s.CidrBlock}}</div>
-          <div>{{s.AvailabilityZone}}</div>
+          <div ng-if="s.SubnetId"
+               ng-bind="s.SubnetId +' - ' + s.CidrBlock"></div>
+          <div ng-bind="s.AvailabilityZone"></div>
         </div>
         <div class="subnet-body">
-          <div ng-repeat="i in ec2Info.getInstances(v.region, v.VpcId, s.SubnetId)">
+          <div ng-repeat="i in ec2Info.getInstances(v.region, v.VpcId, s.SubnetId) | orderBy:['tags.Name','InstanceId']">
             <div class="instance"
                  ng-class="{selected: ec2Info.isSelectedInstance(i)}"
                  ng-click="ec2Info.selectInstances([i])">
-              <img src="images/Instance.svg" class="state-{{i.State.Name}}">
-              <div>
-                <div ng-if="i.tags.Name">{{i.tags.Name}}</div>
-                <div ng-if="!i.tags.Name">( {{i.InstanceId}} )</div>
-                <div> {{i.InstanceType}} - {{i.State.Name}}</div>
+              <img src="images/Instance.svg" ng-class="'state-' + i.State.Name">
+              <div class="instance-name"
+                   ng-bind="i.tags.Name ? i.tags.Name : '( ' + i.InstanceId + ' )'"></div>
+              <div class="instance-state"
+                   ng-bind="i.InstanceType + ' - ' + i.State.Name">
               </div>
             </div>
           </div>

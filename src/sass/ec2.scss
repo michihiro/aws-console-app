@@ -30,6 +30,7 @@
   overflow: hidden;
   border: 1px solid #aaa;
   padding-top: 10px;
+  min-height: 20px;
 }
 .ec2-vpc-panel .instance {
   position: relative;
@@ -46,11 +47,19 @@
 .ec2-vpc-panel .instance.selected {
   background-color: rgba(0,128,255,.2);
 }
-.ec2-vpc-panel .instance > div {
+.ec2-vpc-panel .instance .instance-name {
   display: inline-block;
   position: absolute;
-  left: 24px;
-  top: 10px;
+  left: 16px;
+  top: 8px;
+  font-size: 1.4em;
+  text-shadow: 1px 1px 0px #fff,-1px -1px 0px #fff, 1px -1px 0px #fff, -1px 1px #fff;
+}
+.ec2-vpc-panel .instance .instance-state {
+  display: inline-block;
+  position: absolute;
+  right: 16px;
+  bottom: 8px;
   text-shadow: 1px 1px 0px #fff,-1px -1px 0px #fff, 1px -1px 0px #fff, -1px 1px #fff;
 }
 .ec2-vpc-panel .instance > img {
