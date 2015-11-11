@@ -196,7 +196,15 @@
       onEnterKeydown: onEnterKeydown,
     });
 
-    appFocusOn(inputNames[$scope.mode][0]);
+    $(window).on('focus', _focus);
+    $scope.$on('$destroy', function() {
+      $(window).off('focus', _focus);
+    });
+    _focus();
+
+    function _focus() {
+      appFocusOn(inputNames[$scope.mode][0]);
+    }
 
     function onEnterKeydown(name) {
       if (!$scope.inputs[name] || !$scope.inputs[name].length) {
