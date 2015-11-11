@@ -52,6 +52,7 @@ s3:
     us-west-1: US 西海岸（北カルフォルニア）
     us-west-2: US 西海岸（オレゴン）
     eu-west-1: EU （アイルランド）
+    eu-central-1: EU （フランクフルト）
     ap-southeast-1: アジアパシフィック（シンガポール）
     ap-southeast-2: アジアパシフィック（シドニー）
     ap-northeast-1: アジアパシフィック（東京）
@@ -66,6 +67,7 @@ s3:
     NoSuchBucket: 指定したバケットは存在しません。
     ServiceUnavailable: サービスが利用できません。
     InternalError: サーバー内部エラー
+    AccessDenied: アクセスできません。
 ec2:
   serviceName: EC2
   regionName:
@@ -74,6 +76,7 @@ ec2:
     us-west-2: US 西海岸（オレゴン）
     us-west-1: US 西海岸（北カルフォルニア）
     eu-west-1: EU （アイルランド）
+    eu-central-1: EU （フランクフルト）
     ap-southeast-1: アジアパシフィック（シンガポール）
     ap-southeast-2: アジアパシフィック（シドニー）
     ap-northeast-1: アジアパシフィック（東京）

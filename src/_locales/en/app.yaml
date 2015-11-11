@@ -51,6 +51,7 @@ s3:
     us-west-1: US West (Northern California)
     us-west-2: US West (Oregon)
     eu-west-1: EU (Ireland)
+    eu-central-1: EU (Frankfurt)
     ap-southeast-1: Asia Pacific (Singapore)
     ap-southeast-2: Asia Pacific (Sydney)
     ap-northeast-1: Asia Pacific（Tokyo）
@@ -65,6 +66,7 @@ s3:
     NoSuchBucket: The specified bucket does not exist.
     ServiceUnavailable: Service Unavailable
     InternalError: Internal Server Error
+    AccessDenied: Access Denied
 ec2:
   serviceName: EC2
   regionName:
@@ -73,6 +75,7 @@ ec2:
     us-west-2: US West (Oregon)
     us-west-1: US West (Northern California)
     eu-west-1: EU (Ireland)
+    eu-central-1: EU (Frankfurt)
     ap-southeast-1: Asia Pacific (Singapore)
     ap-southeast-2: Asia Pacific (Sydney)
     ap-northeast-1: Asia Pacific（Tokyo）

@@ -13,6 +13,8 @@
   function awsS3Factory($rootScope) {
     return function(region) {
       return new AWS.S3({
+        s3ForcePathStyle: true,
+        signatureVersion: 'v4',
         credentials: $rootScope.getCredentials(),
         region: region,
       });

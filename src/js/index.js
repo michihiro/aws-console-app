@@ -6,6 +6,7 @@
     'us-west-2',
     'us-west-1',
     'eu-west-1',
+    'eu-central-1',
     'ap-southeast-1',
     'ap-southeast-2',
     'ap-northeast-1',
@@ -69,8 +70,6 @@
       fallbackLng: 'en',
       resGetPath: '_locales/__lng__/app.json',
     };
-
-    AWS.CognitoIdentityCredentials.prototype.storage = {};
   }
 
 
