@@ -145,9 +145,9 @@
     });
   }
 
-  s3Ctrl.$inject = ['$scope', '$state', '$stateParams', '$filter', '$timeout', 's3Actions', 's3DownloadService', 's3ListService', 'appFilterService'];
+  s3Ctrl.$inject = ['$scope', '$state', '$stateParams', '$filter', '$timeout', '$window', 's3Actions', 's3DownloadService', 's3ListService', 'appFilterService'];
 
-  function s3Ctrl($scope, $state, $stateParams, $filter, $timeout, s3Actions, s3DownloadService, s3ListService, appFilterService) {
+  function s3Ctrl($scope, $state, $stateParams, $filter, $timeout, $window, s3Actions, s3DownloadService, s3ListService, appFilterService) {
 
     var columns = [
       {
@@ -181,6 +181,17 @@
     ];
 
     ng.extend($scope, {
+      treeWidth: 190,
+      panHandles: {
+        panstart: function(ev) {
+          $scope._treeWidth = $scope.treeWidth;
+          $scope._treeWidthMax = $($window).width() - 200;
+        },
+        pan: function(ev) {
+          var w = $scope._treeWidth + ev.deltaX;
+          $scope.treeWidth = Math.min(Math.max(w, 50), $scope._treeWidthMax);
+        }
+      },
 
       getCurrent: s3ListService.getCurrent,
       setCurrent: s3ListService.setCurrent,

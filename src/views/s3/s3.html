@@ -1,11 +1,14 @@
 <div class="func-view" ng-class="{'wait-cursor':getSysWaiting()}">
-  <div class="s3-left">
+  <div class="s3-left" ng-style="{width:treeWidth}">
     <div class="s3-tree-header">{{'s3.buckets'|i18next}}</div>
     <div class="s3-tree" context-menu data-target="s3-tree-context-menu" ng-controller="s3TreeCtrl">
       <s3-tree data="getBuckets()"></s3-tree>
     </div>
   </div>
-  <div class="s3-right" s3-upload-field="dropOpt">
+  <div class="s3-split-handle" ng-style="{left:treeWidth}"
+       app-pan="panHandles"></div>
+  <div class="s3-right" ng-style="{left:treeWidth + 10}"
+       s3-upload-field="dropOpt">
     <div class="s3-upload-fileld-cover" ng-if="dropOpt.active"></div>
     <div class="table-outer" context-menu data-target="s3-list-context-menu">
       <div class="table-header-spacer"></div>

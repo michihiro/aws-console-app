@@ -9,6 +9,7 @@
     .directive('tableOuter', tableOuter)
     .directive('appFocusOn', appFocusOnDirective)
     .factory('appFocusOn', appFocusOnFactory)
+    .directive('appPan', appPanDirective)
     .directive('tabHeadingsScroller', tabHeadingsScroller)
     .directive('modalDialog', modalDialogDirective);
 
@@ -55,6 +56,51 @@
         return $rootScope.$broadcast('appFocusOn', name);
       });
     };
+  }
+
+  appPanDirective.$inject = ['$timeout'];
+
+  function appPanDirective($timeout) {
+    var PAN_EVENTS = 'panstart pan panmove, panup pandown panleft panright panend pancancel';
+    return {
+      restrict: 'A',
+      link: link
+    };
+
+    function link(scope, elem, attr) {
+      var opt = {
+        recognizers: [
+          [Hammer.Pan]
+        ]
+      };
+      scope._hm = new Hammer.Manager(elem[0], opt)
+        .on(PAN_EVENTS, _onPanEvent);
+      scope._opt = scope.$eval(attr.appPan) || {};
+
+      elem.on('$destroy', _onDestroy);
+
+      return;
+
+      function _onPanEvent(ev) {
+        var fn = scope._opt[ev.type];
+        if (fn) {
+          $timeout(function() {
+            if (typeof fn === 'function') {
+              fn(ev);
+            } else {
+              scope.$eval(fn, {
+                $event: ev
+              });
+            }
+          });
+        }
+      }
+
+      function _onDestroy() {
+        scope._hm.destroy();
+        scope._hm = null;
+      }
+    }
   }
 
   tableOuter.$inject = [];

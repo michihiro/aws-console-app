@@ -1,6 +1,7 @@
 body {
   margin: 0;
   padding: 0;
+  background-color: #f7f7f7;
 }
 [ng-cloak] {
   display: none !important;
@@ -218,9 +219,11 @@ body {
 .table-container .table > tbody > tr > td {
   padding: 0;
 }
+/*
 .table-striped > tbody > tr:nth-child(even).info > td {
  background-color: #c4e4f3;
 }
+*/
 
 .th-inner {
   position: absolute;
