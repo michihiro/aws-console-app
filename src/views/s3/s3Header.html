@@ -1,15 +1,15 @@
 <div class="s3-header">
   <div class="btn-group" dropdown is-open="s3Actions.isMenuOpened">
     <button class="btn btn-info dropdown-toggle">
-      <span>{{'com.action'|i18next}}</span>
+      <span ng-bind="'com.action'|i18next"></span>
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
       <li ng-repeat="m in actions"
           ng-class="{disabled:m.disabled}">
         <a ng-class="{withoutripple:m.disabled}"
-           ng-click="(!m.disabled || $event.stopPropagation()) && m.onClick($event)">
-          {{m.label|i18next}}
+           ng-click="(!m.disabled || $event.stopPropagation()) && m.onClick($event)"
+           ng-bind="m.label|i18next">
         </a>
       </li>
     </ul>

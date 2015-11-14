@@ -1,6 +1,6 @@
 <div class="func-view" ng-class="{'wait-cursor':getSysWaiting()}">
   <div class="s3-left" ng-style="{width:treeWidth}">
-    <div class="s3-tree-header">{{'s3.buckets'|i18next}}</div>
+    <div class="s3-tree-header" ng-bind="'s3.buckets'|i18next"></div>
     <div class="s3-tree" context-menu data-target="s3-tree-context-menu" ng-controller="s3TreeCtrl">
       <s3-tree data="getBuckets()"></s3-tree>
     </div>
@@ -20,7 +20,7 @@
                   ng-style="{width:col.width+'px'}">
                 <div class="th-inner"
                      ng-style="{left:col.left+'px',width:col.width+'px','-webkit-transform':'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
-                  <span>{{col.name|i18next}}</span>
+                  <span ng-bind="col.name|i18next"></span>
                   <div class="sort-mark" ng-click="setSort(col)">
                     <i ng-if="sortCol==col.col && !sortReverse" class="fa fa-sort-up"></i>
                     <i ng-if="sortCol==col.col && sortReverse" class="fa fa-sort-down"></i>
@@ -51,19 +51,19 @@
             </tr>
             <tr ng-if="getCurrent().list.length === 0 && !s3Actions.creatingFolder">
              <td colspan="{{columns.length}}" style="text-align:center">
-              {{'s3.noObject'|i18next}}
+               <div class="td-inner" ng-bind="'s3.noObject'|i18next"></div>
              </td>
             </tr>
             <tr ng-repeat="item in getCurrent().list | orderBy:sortExp:sortReverse"
                 row-id="{{ item.id }}"
                 ng-dblclick="onDblClickList(item)"
                 ng-class="{info: isSelectedObject(item)}" >
-              <td ng-repeat="col in columns" class="{{col.class}}"
+              <td ng-repeat="col in columns" ng-class="col.class"
                      ng-style="{width:col.width+'px'}">
                 <div class="td-inner" ng-style="{width: col.width+'px'}">
                   <i ng-if="col.iconFn" class="fa {{col.iconFn(item)}}"></i>
-                  <span ng-if="col.filterFn">{{col.filterFn(item[col.col])}}</span>
-                  <span ng-if="!col.filterFn">{{item[col.col]}}</span>
+                  <span ng-if="col.filterFn" ng-bind="col.filterFn(item[col.col])"></span>
+                  <span ng-if="!col.filterFn" ng-bind="item[col.col]"></span>
                 </div>
               </td>
             </tr>
@@ -81,13 +81,13 @@
            ng-mouseleave="n._hover=false"
            class="alert alert-info">
         <div class="progress">
-          <span>{{n.percent}}%</span>
+          <span ng-bind="n.percent + '%'"></span>
           <div class="progress-bar progress-bar-material-lightgrey active"
                ng-class="{fin: n.percent==100}"
                ng-style="{width: n.percent+'%'}">
           </div>
         </div>
-        <div>{{n.sizeProcessed}} / {{n.sizeTotal}} bytes </div>
+        <div ng-bind="n.sizeProcessed + ' / ' + n.sizeTotal +' bytes'"></div>
       </div>
     </div>
 
@@ -99,8 +99,8 @@
     <li ng-repeat="m in treeMenu"
         ng-class="{disabled:m.disabled}">
       <a ng-class="{withoutripple:m.disabled}"
-         ng-click="(!m.disabled || $event.stopPropagation()) && m.onClick($event)">
-        {{m.label|i18next}}
+         ng-click="(!m.disabled || $event.stopPropagation()) && m.onClick($event)"
+         ng-bind="m.label|i18next">
       </a>
     </li>
   </ul>
@@ -111,8 +111,8 @@
     <li ng-repeat="m in listMenu"
         ng-class="{disabled:m.disabled}">
       <a ng-class="{withoutripple:m.disabled}"
-         ng-click="(!m.disabled || $event.stopPropagation()) && m.onClick($event)">
-        {{m.label|i18next}}
+         ng-click="(!m.disabled || $event.stopPropagation()) && m.onClick($event)"
+         ng-bind="m.label|i18next">
       </a>
     </li>
   </ul>
