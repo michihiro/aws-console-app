@@ -154,7 +154,7 @@ gulp.task('usemin', ['default'], function() {
       css: [minifyCss({
         aggressiveMerging: false,
       }), 'concat'],
-      html: [minifyHtml()],
+      //html: [minifyHtml()],
       js: [
         footer(fs.readFileSync('app/js/etc.js')),
         uglify({compress:false,mangle: false})

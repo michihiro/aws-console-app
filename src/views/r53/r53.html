@@ -1,14 +1,15 @@
 <div class="func-view">
   <div class="r53-left">
-    <div class="r53-left-header">{{'r53.zones'|i18next}}</div>
+    <div class="r53-left-header" ng-bind="'r53.zones'|i18next"></div>
     <ul class="nav nav-pills nav-stacked" style="max-width: 300px;">
       <li ng-if="r53Info.getHostedZones().length == 0">
-        <div>{{'r53.noHostedZone'|i18next}}</div>
+        <div ng-bind="'r53.noHostedZone'|i18next"></div>
       </li>
       <li ng-repeat="z in r53Info.getHostedZones() track by $index"
           ng-class="{active:r53Info.getCurrent().Id=== z.Id}">
         <a ng-click="r53Info.setCurrent(z)">
-          <i class="fa fa-globe" ng-class="{local:z.Config.PrivateZone}"></i>{{z.Name}}
+          <i class="fa fa-globe" ng-class="{local:z.Config.PrivateZone}"></i>
+          <span ng-bind="z.Name"></span>
         </a>
       </li>
     </ul>
@@ -25,7 +26,7 @@
                   ng-style="{width:col.width+'px'}">
                 <div class="th-inner"
                      ng-style="{left:col.left+'px',width:col.width+'px','-webkit-transform':'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
-                  <span>{{col.name|i18next}}</span>
+                  <span ng-bind="col.name|i18next"></span>
                   <div class="sort-mark" ng-click="setSort(col)">
                     <i ng-if="sortCol==col.col && !sortReverse" class="fa fa-sort-up"></i>
                     <i ng-if="sortCol==col.col && sortReverse" class="fa fa-sort-down"></i>
@@ -48,20 +49,24 @@
              </td>
             </tr>
             <tr ng-if="r53Info.getCurrent().list.length === 0">
-             <td colspan="{{columns.length}}" style="text-align:center">
-              {{'r53.noRecords'|i18next}}
+             <td colspan="{{columns.length}}" style="text-align:center"
+                 ng-bind="'r53.noRecords'|i18next">
              </td>
             </tr>
             <tr ng-repeat="item in r53Info.getCurrent().list | orderBy:sortExp:sortReverse"
                 row-id="{{ item.id }}"
                 ng-dblclick="onDblClickList(item)"
                 ng-class="{info: isSelectedObject(item)}" >
-              <td ng-repeat="col in columns" class="{{col.class}}"
+              <td ng-repeat="col in columns" ng-class="col.class"
                      ng-style="{width:col.width+'px'}">
                 <div class="td-inner" ng-style="{width: col.width+'px'}">
-                  <span ng-if="col.isArray" ng-repeat="val in item[col.col] track by $index">{{val}}<br></span>
-                  <span ng-if="!col.isArray && col.filterFn">{{col.filterFn(item[col.col])}}</span>
-                  <span ng-if="!col.isArray && !col.filterFn">{{item[col.col]}}</span>
+                  <div ng-if="col.isArray"
+                       ng-repeat="val in item[col.col] track by $index"
+                       ng-bind="val"></div>
+                  <div ng-if="!col.isArray && col.filterFn"
+                       ng-bind="col.filterFn(item[col.col])"></div>
+                  <div ng-if="!col.isArray && !col.filterFn"
+                       ng-bind="item[col.col]"></div>
                 </div>
               </td>
             </tr>

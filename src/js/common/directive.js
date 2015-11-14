@@ -349,6 +349,8 @@
     };
 
     function link(scope, elem) {
+      var container = elem.parents('.table-container');
+      var containerScrollLeft;
       var opt = {
         recognizers: [[Hammer.Pan]]
       };
@@ -364,10 +366,12 @@
       return;
 
       function _onPanstart() {
+        containerScrollLeft = container.scrollLeft();
         scope._width = scope.opt.width || 50;
       }
 
       function _onPanend() {
+        container.scrollLeft(containerScrollLeft);
         scope._width = null;
       }
 

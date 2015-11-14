@@ -60,6 +60,8 @@
       isSelectedObject: r53Info.isSelectedObject,
     });
 
+    r53Info.updateHostedZones();
+
     return;
 
     function onRowSelect(indexes) {
@@ -74,17 +76,18 @@
 
   }
 
-  r53InfoFactory.$inject = ['$rootScope', '$timeout', 'awsR53'];
+  r53InfoFactory.$inject = ['$rootScope', '$timeout', '$q', 'awsR53'];
 
-  function r53InfoFactory($rootScope, $timeout, awsR53) {
+  function r53InfoFactory($rootScope, $timeout, $q, awsR53) {
     var hostedZones;
+    var hostedZonesWork;
     var oldHostedZones;
+    var listHostedZonePromise;
     var currentZone;
     var selected = [];
 
     $rootScope.$watch('credentialsId', function(id) {
       hostedZones = undefined;
-      oldHostedZones = undefined;
       currentZone = undefined;
       selected = [];
       if(id) {
@@ -106,22 +109,31 @@
     }
 
     function updateHostedZones() {
+      if (listHostedZonePromise) {
+        return listHostedZonePromise;
+      }
       oldHostedZones = hostedZones || [];
-      _listHostedZones();
+      hostedZonesWork = [];
+      listHostedZonePromise = _listHostedZones().then(function() {
+        listHostedZonePromise = null;
+      });
     }
 
     function _listHostedZones(marker) {
       if (!$rootScope.getCredentials()) {
         hostedZones = [];
         oldHostedZones = [];
-        return;
+        return $q.when();
       }
+
+      var defer = $q.defer();
 
       awsR53().listHostedZones({
         Marker: marker
       }, function(err, data) {
         if (!data || !data.HostedZones) {
-          return;
+          hostedZones = [];
+          return defer.resolve();
         }
         $timeout(function() {
           var zones = data.HostedZones.map(function(z) {
@@ -135,17 +147,25 @@
             });
             return z;
           });
-          hostedZones = hostedZones || [];
-          Array.prototype.push.apply(hostedZones, zones);
+          Array.prototype.push.apply(hostedZonesWork, zones);
 
           if (data.Marker) {
-            _listHostedZones(data.Marker);
+            _listHostedZones(data.Marker).then(function() {
+              defer.resolve();
+            });
+          } else {
+            hostedZones = hostedZonesWork;
+            if (hostedZones.indexOf(currentZone) < 0) {
+              currentZone = hostedZones[0];
+            }
+            defer.resolve();
+            _updateRecords(currentZone);
           }
-          if(!currentZone) {
-            setCurrent(hostedZones[0]);
-          }
+
         });
       });
+
+      return defer.promise;
     }
 
     function getCurrent() {
