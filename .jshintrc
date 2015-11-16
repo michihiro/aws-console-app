@@ -20,6 +20,7 @@
     "smarttabs": true,
     "latedef": "nofunc",
     "globals" : {
+        "$": true,
         "angular": true,
         "chrome": true,
         "AWS": true,

@@ -73,9 +73,9 @@
   }
 
 
-  appRun.$inject = ['$rootScope', '$state', '$stateParams', '$modal', 'credentialsService'];
+  appRun.$inject = ['$rootScope', '$filter', '$state', '$stateParams', '$modal', 'credentialsService'];
 
-  function appRun($rootScope, $state, $stateParams, $modal, credentialsService) {
+  function appRun($rootScope, $filter, $state, $stateParams, $modal, credentialsService) {
 
     var storage = chrome.storage.local;
 
@@ -103,6 +103,12 @@
         $state.go(val.lastState.name, val.lastState.params);
       }
     });
+
+    $rootScope.i18nextReady = false;
+    $rootScope.$on('i18nextLanguageChange', function() {
+      $rootScope.i18nextReady = true;
+    });
+    $filter('i18next')('');
 
     return;
 

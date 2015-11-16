@@ -285,7 +285,7 @@
         .on('pan', _onPan);
 
       elem.on('$destroy', _onDestroy);
-
+      elem.css('margin-bottom', 0);
       return;
 
       function _onPanstart() {

@@ -76,13 +76,16 @@ body {
   margin: 0;
 }
 .navbar-fixed-top .btn-group.navbar-right {
-  margin: 6px 4px;
+  margin: 4px;
 }
 .navbar-fixed-top .btn-group.navbar-right button {
   padding: 8px 16px;
 }
+.navbar {
+  min-height: 40px;
+}
 .navbar h3 {
-  margin: 10px 20px;
+  margin: 8px 12px;
   color: #fff;
 }
 .navbar .navbar-nav > li > a {
@@ -94,6 +97,9 @@ body {
 }
 .navbar-fixed-bottom .navbar-text.navbar-right:last-child {
   margin-right: 15px;
+}
+.nav-pills > li > a {
+  border-radius: 0;
 }
 
 /** button **/
@@ -149,7 +155,9 @@ body {
 }
 [ui-view="header"] {
   top: 0;
-  left: 100px;
+  left: 104px;
+  right: 48px;
+  padding: 4px;
 }
 [ui-view="main"] {
   top: 0;
@@ -166,15 +174,12 @@ body {
   position: absolute;
   left: 0;
   right: 0;
-  top: 52px;
+  top: 48px;
   bottom: 60px;
 }
 /* modal */
-.modal-body {
-  padding: 24px 12px;
-}
 .modal-content {
-  border-radius: 6px;
+//  border-radius: 6px;
 }
 .modal.fade .modal-dialog {
   transition: transform .1s ease;
@@ -189,6 +194,18 @@ body {
 .modal-open .screen {
   -webkit-filter: grayscale(70%);
 }
+.modal-content .modal-header {
+  padding: 12px 16px;
+  background-color: #4285f4;
+  color: #fff;
+}
+.modal-content .modal-body {
+  padding: 16px 16px 12px;
+}
+.modal-content .modal-footer {
+  padding: 12px 16px;
+}
+
 .position-fixed {
   position: fixed;
 }

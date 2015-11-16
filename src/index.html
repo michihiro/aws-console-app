@@ -24,7 +24,7 @@
   <!-- endbuild -->
 </head>
 
-<body ng-cloak>
+<body ng-cloak ng-show="i18nextReady">
   <div class="screen">
     <div class="func-menu"
          ng-mouseenter="opened=true"
@@ -43,18 +43,18 @@
         </button>
         <ul class="dropdown-menu">
           <li>
-            <a ng-click="openDialog('com/credentialsDialog'); topDropdown.isopen=false;">
-              {{'com.setupAwsAccessKey'|i18next}}
+            <a ng-click="openDialog('com/credentialsDialog'); topDropdown.isopen=false;"
+               ng-bind="'com.setupAwsAccessKey'|i18next">
             </a>
           </li>
           <li>
-            <a ng-click="openDialog('com/passwordDialog', {mode:'update'}); topDropdown.isopen=false;">
-              {{'com.updatePassword'|i18next}}
+            <a ng-click="openDialog('com/passwordDialog', {mode:'update'}); topDropdown.isopen=false;"
+               ng-bind="'com.updatePassword'|i18next">
             </a>
           </li>
         </ul>
       </div>
-      <h3 ng-if="state.current.name">{{state.current.name + '.serviceName'|i18next}}</h3>
+      <h3 ng-if="state.current.name" ng-bind="state.current.name + '.serviceName'|i18next"></h3>
       <div ui-view="header"></div>
 
     </div>

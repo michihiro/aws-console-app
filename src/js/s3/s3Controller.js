@@ -177,7 +177,7 @@
     ng.extend($scope, {
       treeWidth: 190,
       panHandles: {
-        panstart: function(ev) {
+        panstart: function() {
           $scope._treeWidth = $scope.treeWidth;
           $scope._treeWidthMax = $($window).width() - 200;
         },
