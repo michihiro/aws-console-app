@@ -2,13 +2,16 @@
   'use strict';
 
   var REFRESH_INTERVAL = 60000;
-  var REFRESH_INTERVAL2 = 10000;
+  var REFRESH_INTERVAL2 = 15000;
+  var rebootingInstanceIds = {};
 
   ng.module('aws-console')
     .factory('awsEC2', awsEC2Factory)
     .factory('ec2Info', ec2InfoFactory)
+    .factory('ec2Actions', ec2ActionsFactory)
     .controller('ec2HeaderCtrl', ec2HeaderCtrl)
-    .controller('ec2Ctrl', ec2Ctrl);
+    .controller('ec2Ctrl', ec2Ctrl)
+    .controller('ec2ChangeInstanceStateDialogCtrl', ec2ChangeInstanceStateDialogCtrl);
 
   awsEC2Factory.$inject = ['$rootScope'];
 
@@ -21,12 +24,50 @@
     };
   }
 
-  ec2HeaderCtrl.$inject = ['$scope', 'awsRegions', 'ec2Info'];
+  ec2ActionsFactory.$inject = ['$rootScope', 'ec2Info'];
 
-  function ec2HeaderCtrl($scope, awsRegions, ec2Info) {
+  function ec2ActionsFactory($rootScope, ec2Info) {
+    var scope = $rootScope.$new();
+
+    ng.extend(scope, {
+      all: ['startInstance', 'rebootInstance', 'stopInstance', 'terminateInstance'],
+      onClick: onClick,
+      isDisabled: isDisabled,
+    });
+
+    return scope;
+
+    function onClick(ev, key) {
+      if (isDisabled(key)) {
+        return;
+      }
+      scope.isOpenHeaderMenu = false;
+      $rootScope.openDialog('ec2/changeInstanceStateDialog', {mode:key});
+    }
+
+    function isDisabled(key) {
+      var enableStates = {
+        startInstance: ['stopped'],
+        rebootInstance: ['running'],
+        stopInstance: ['pending', 'running'],
+        terminateInstance: ['pending', 'running', 'stopping', 'stopped']
+      };
+      var selected = ec2Info.getSelectedInstances();
+      var enable = enableStates[key];
+      return ! (selected || []).some(function(i) {
+        return enable.indexOf(i.State.Name) >= 0;
+      });
+    }
+
+  }
+
+  ec2HeaderCtrl.$inject = ['$scope', 'awsRegions', 'ec2Info', 'ec2Actions'];
+
+  function ec2HeaderCtrl($scope, awsRegions, ec2Info, ec2Actions) {
     ng.extend($scope, {
       awsRegions: awsRegions,
       ec2Info: ec2Info,
+      ec2Actions: ec2Actions,
     });
   }
 
@@ -46,9 +87,9 @@
     }
   }
 
-  ec2InfoFactory.$inject = ['$rootScope', '$timeout', 'awsRegions', 'awsEC2'];
+  ec2InfoFactory.$inject = ['$rootScope', '$timeout', '$q', 'awsRegions', 'awsEC2'];
 
-  function ec2InfoFactory($rootScope, $timeout, awsRegions, awsEC2) {
+  function ec2InfoFactory($rootScope, $timeout, $q, awsRegions, awsEC2) {
     var currentRegion = 'all';
     var instances = {};
     var vpcs = {};
@@ -73,8 +114,25 @@
       selectInstances: selectInstances,
       getSelectedInstances: getSelectedInstances,
       isSelectedInstance: isSelectedInstance,
-      refresh: refresh
+      refresh: refresh,
+      setRebooting: setRebooting
     };
+
+    function setRebooting(region, instanceIds) {
+      var now = Date.now(), rebooting;
+
+      rebootingInstanceIds[region] = rebootingInstanceIds[region] || {};
+      rebooting = rebootingInstanceIds[region];
+
+      Object.keys(rebooting).forEach(function(id) {
+        if (rebooting[id] < now - 60000) {
+          delete rebooting[id];
+        }
+      });
+      (instanceIds || []).forEach(function(id) {
+        rebooting[id] = now;
+      });
+    }
 
     function refresh() {
       if(currentRegion === 'all') {
@@ -108,7 +166,7 @@
     }
 
     function getInstances(region, vpcId, subnetId) {
-      return instances[region].filter(function(i) {
+      return (instances[region] || []).filter(function(i) {
         return i.VpcId === vpcId && i.SubnetId === subnetId;
       });
     }
@@ -143,13 +201,18 @@
     }
 
     function listInstances(region) {
-      _describeVpcs(region);
-      _describeInstances(region);
+      return $q.all([
+        _describeVpcs(region),
+        _describeInstances(region)
+      ]);
     }
 
     function _describeVpcs(region) {
+      var defer = $q.defer();
       awsEC2(region).describeVpcs({}, function(err, data) {
+        defer.resolve();
         if (!data || !data.Vpcs) {
+          vpcs[region] = [];
           return;
         }
         var vpcsBack = vpcs || {};
@@ -164,11 +227,12 @@
             }
           });
 
+          v.region = region;
           v.tags = v.Tags.reduce(function(all, v2) {
             all[v2.Key] = v2.Value;
             return all;
           }, {});
-          v.isOpen = true;
+          v.isOpen = (v.isOpen !== undefined) ? v.isOpen : true;
           v.region = region;
           v.regionIdx = regionIdx;
 
@@ -189,16 +253,34 @@
           return v;
         });
       });
+      return defer.promise;
     }
 
     function _describeInstances(region) {
-      var tempStates = ['pending', 'shutting-down', 'stopping'];
+      var defer = $q.defer();
+      var tempStates = ['pending', 'shutting-down', 'stopping', 'rebooting'];
       awsEC2(region).describeInstances({}, function(err, data) {
+        var needRefresh;
+        defer.resolve();
         if (!data || !data.Reservations) {
           return;
         }
+
+        var now = Date.now();
+        var oldInstances = instances[region];
         instances[region] = data.Reservations.reduce(function(all, resv) {
           var ins = resv.Instances.map(function(v) {
+            (oldInstances || []).some(function(v2, idx) {
+              if (v.InstanceId === v2.InstanceId) {
+                delete v2.VpcId;
+                delete v2.SubnetId;
+                v = ng.extend(v2, v);
+                oldInstances.splice(idx, 1);
+                return true;
+              }
+            });
+
+            v.region = region;
             v.tags = v.Tags.reduce(function(all, v2) {
               all[v2.Key] = v2.Value;
               return all;
@@ -215,17 +297,67 @@
                 Subnets: [{ SubnetId: undefined}],
               };
             }
-            if (tempStates.indexOf(v.State.Name) >= 0) {
-              $timeout(_describeInstances.bind(null, region), REFRESH_INTERVAL2);
+
+            if (v.State.Name === 'running' &&
+              rebootingInstanceIds[region] &&
+              rebootingInstanceIds[region][v.InstanceId] > now - 60000) {
+              v.State.Name = 'rebooting';
             }
+            needRefresh = needRefresh || (tempStates.indexOf(v.State.Name) >= 0);
+
             return v;
           });
 
           Array.prototype.push.apply(all, ins);
           return all;
         }, []);
+        if (needRefresh) {
+          $timeout(_describeInstances.bind(null, region), REFRESH_INTERVAL2);
+        }
       });
+      return defer.promise;
     }
   }
 
+  ec2ChangeInstanceStateDialogCtrl.$inject = ['$scope', '$q', 'awsEC2', 'ec2Info', 'dialogInputs'];
+
+  function ec2ChangeInstanceStateDialogCtrl($scope, $q, awsEC2, ec2Info, dialogInputs) {
+    var instances = ec2Info.getSelectedInstances();
+    var instanceIds = instances.map(function(v) {
+      return v.InstanceId;
+    });
+
+    ng.extend($scope, {
+      mode: dialogInputs.mode,
+      instances: ec2Info.getSelectedInstances(),
+      command: command
+    });
+
+    return;
+
+    function command(op, additionalParam) {
+      var params = ng.extend({
+        InstanceIds: instanceIds,
+      }, additionalParam);
+
+      var region = $scope.instances[0].region;
+      $scope.processing = true;
+      awsEC2(region)[op + 'Instances'](params, function(err) {
+        $scope.processing = false;
+        if (err) {
+          $scope.error = err;
+          return;
+        }
+
+        if (op === 'reboot') {
+          ec2Info.setRebooting(region, instanceIds);
+        }
+
+        ec2Info.listInstances(region).then(function() {
+          $scope.$close();
+        });
+      });
+    }
+  }
+  
 })(angular);

@@ -1,11 +1,32 @@
 .ec2-header > * {
   display: inline-block;
 }
+.ec2-header .btn {
+  padding: 8px 12px;
+}
 .ec2-vpc-panel {
   margin: 2px 4px;
 }
 .ec2-vpc-panel .vpc-region {
   float: right;
+}
+.ec2-vpc-panel .bagde {
+  display: inline-block;
+  margin-left: 20px;
+}
+.ec2-vpc-panel .bagde > span {
+  display: inline-block;
+  width: 2em;
+  height: 2em;
+  line-height: 2em;
+  text-align: center;
+  transform: translateY(-0.2em);
+  border-radius: 50%;
+  background: hsla(217, 89%, 61%, 0.4);
+  border: 1px solid #FFF;
+  box-sizing: content-box;
+  font-size: .7em;
+  font-weight: bold;
 }
 .ec2-vpc-panel .panel-body {
   padding: 4px;

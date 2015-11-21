@@ -12,9 +12,11 @@ com:
   password: パスワード
   action: 操作
   cancel: キャンセル
-  save: 保存
+  save: 保存する
   ok: OK
   set: 設定する
+  create: 作成する
+  delete: 削除する
   error:
     invalidPassword: パスワードが正しくありません。
     passwordsDoNotMatch: パスワードが一致しません。
@@ -81,6 +83,15 @@ ec2:
     ap-southeast-2: アジアパシフィック（シドニー）
     ap-northeast-1: アジアパシフィック（東京）
     sa-east-1: 南アメリカ（サンパウロ）
+  instance: インスタンス
+  start: 起動
+  stop: 停止
+  reboot: 再起動
+  terminate: 削除
+  startInstance: インスタンスの起動
+  stopInstance: インスタンスの停止
+  rebootInstance: インスタンスの再起動
+  terminateInstance: インスタンスの削除
 r53:
   serviceName: Route53
   zones: ゾーン

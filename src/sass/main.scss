@@ -51,6 +51,7 @@ body {
   -webkit-filter: grayscale(100%);
   transition: -webkit-filter .2s ease;
 }
+.func-menu a.active img,
 .func-menu a:hover img {
   -webkit-filter: grayscale(0%);
 }
