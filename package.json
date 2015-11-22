@@ -1,6 +1,6 @@
 {
   "name": "aws-console-app",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "dependencies": {},
   "devDependencies": {
     "del": "^1.1.1",

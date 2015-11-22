@@ -3,6 +3,7 @@ temp
 .tmp
 app
 dist
+dist.*
 .sass-cache
 app/bower_components
 test/bower_components
