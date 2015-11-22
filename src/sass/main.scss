@@ -150,6 +150,8 @@ body {
 }
 .alert {
   text-align: left;
+  margin-bottom: 4px;
+  padding: 8px;
 }
 [ui-view] {
   position: absolute;
@@ -294,6 +296,10 @@ form input.ng-invalid.ng-dirty {
 }
 form input.ng-valid.ng-dirty {
   background-color: hsl(187, 100%, 95%);
+}
+textarea.form-control {
+  margin-top: 8px;
+  resize: vertical;
 }
 [dropdown].btn-group {
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.23), 0 1px 1px rgba(0, 0, 0, 0.16);

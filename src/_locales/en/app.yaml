@@ -91,6 +91,22 @@ ec2:
   stopInstance: Stop Instance
   rebootInstance: Reboot Instance
   terminateInstance: Terminate Instance
+  startInstanceMsg:
+   - Are you sure you want to start this instance?
+   - Are you sure you want to start these instances?
+  rebootInstanceMsg:
+   - Are you sure you want to reboot this instance?
+   - Are you sure you want to reboot these instances?
+  stopInstanceMsg:
+   - Are you sure you want to stop this instance?
+   - Are you sure you want to stop these instances?
+  stopInstanceMsg2: |+
+   Note that when your instances are stopped:
+   Any data on the ephemeral storage of your instances will be lost.
+  terminateInstanceMsg:
+   - Are you sure you want to terminate this instance?
+   - Are you sure you want to terminate these instances?
+  terminateInstancesMsg2: ""
 r53:
   serviceName: Route53
   zones: Zones

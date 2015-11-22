@@ -84,14 +84,30 @@ ec2:
     ap-northeast-1: アジアパシフィック（東京）
     sa-east-1: 南アメリカ（サンパウロ）
   instance: インスタンス
-  start: 起動
+  start: 開始
   stop: 停止
   reboot: 再起動
   terminate: 削除
-  startInstance: インスタンスの起動
+  startInstance: インスタンスの開始
   stopInstance: インスタンスの停止
   rebootInstance: インスタンスの再起動
   terminateInstance: インスタンスの削除
+  startInstanceMsg:
+   - このインスタンスを開始してよろしいですか？
+   - これらのインスタンスを開始してよろしいですか？
+  rebootInstanceMsg:
+   - このインスタンスを再起動してよろしいですか？
+   - これらのインスタンスを再起動してよろしいですか？
+  stopInstanceMsg:
+   - このインスタンスを停止してよろしいですか？
+   - これらのインスタンスを停止してよろしいですか？
+  stopInstanceMsg2: |+
+   インスタンスを停止すると
+   インスタンスのエフェメラルストレージ上のデータは失われます。
+  terminateInstanceMsg:
+   - このインスタンスを削除してよろしいですか？
+   - これらのインスタンスを削除してよろしいですか？
+  terminateInstancesMsg2: ""
 r53:
   serviceName: Route53
   zones: ゾーン

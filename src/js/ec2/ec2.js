@@ -30,7 +30,8 @@
     var scope = $rootScope.$new();
 
     ng.extend(scope, {
-      all: ['startInstance', 'rebootInstance', 'stopInstance', 'terminateInstance'],
+      //all: ['startInstance', 'rebootInstance', 'stopInstance', 'terminateInstance'],
+      all: ['startInstance', 'rebootInstance', 'stopInstance' ],
       onClick: onClick,
       isDisabled: isDisabled,
     });
@@ -327,9 +328,14 @@
       return v.InstanceId;
     });
 
+    var mode = dialogInputs.mode;
+    var btnClass = mode === 'stopInstance' ? 'btn-warning' :
+      mode === 'terminateInstance' ? 'btn-danger' : 'btn-info';
+
     ng.extend($scope, {
-      mode: dialogInputs.mode,
+      mode: mode,
       instances: ec2Info.getSelectedInstances(),
+      btnClass: btnClass,
       command: command
     });
 
@@ -345,7 +351,9 @@
       awsEC2(region)[op + 'Instances'](params, function(err) {
         $scope.processing = false;
         if (err) {
-          $scope.error = err;
+          $scope.$apply(function() {          
+            $scope.error = err;
+          });
           return;
         }
 

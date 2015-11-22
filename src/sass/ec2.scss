@@ -88,14 +88,27 @@
   top: 0;
   left: 0;
 }
-.ec2-vpc-panel .instance > img.state-pending {
-  opacity: .5;
+.ec2-vpc-panel .instance > img.state-pending,
+.ec2-vpc-panel .instance > img.state-stopping {
+  animation: ec2-instace-state-change 1.6s infinite;
 }
-.ec2-vpc-panel .instance > img.state-stopping,
-.ec2-vpc-panel .instance > img.state-shutting-down {
-  -webkit-filter: grayscale(60%);
-}
-.ec2-vpc-panel .instance > img.state-stopped,
-.ec2-vpc-panel .instance > img.state-terminated {
+.ec2-vpc-panel .instance > img.state-stopped {
   -webkit-filter: grayscale(95%);
+}
+.ec2-vpc-panel .instance > img.state-shutting-down {
+  animation: ec2-instace-state-change2 1.6s infinite;
+}
+.ec2-vpc-panel .instance > img.state-terminated {
+  opacity: .5; 
+  -webkit-filter: grayscale(95%);
+}
+@keyframes ec2-instace-state-change {
+  0% { -webkit-filter: grayscale(0%); }
+  50% { -webkit-filter: grayscale(95%); }
+  100% { -webkit-filter: grayscale(0%); }
+}
+@keyframes ec2-instace-state-change2 {
+  0% { -webkit-filter: grayscale(95%); opacity: 1 }
+  50% { -webkit-filter: grayscale(95%); opacity: .5 }
+  100% { -webkit-filter: grayscale(95%); opacity: 1 }
 }
