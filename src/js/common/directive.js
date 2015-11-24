@@ -9,7 +9,7 @@
     .directive('tableOuter', tableOuter)
     .directive('appFocusOn', appFocusOnDirective)
     .factory('appFocusOn', appFocusOnFactory)
-    .directive('appPan', appPanDirective)
+    .directive('appHammer', appHammerDirective)
     .directive('tabHeadingsScroller', tabHeadingsScroller)
     .directive('modalDialog', modalDialogDirective);
 
@@ -58,47 +58,64 @@
     };
   }
 
-  appPanDirective.$inject = ['$timeout'];
+  appHammerDirective.$inject = [];
 
-  function appPanDirective($timeout) {
-    var PAN_EVENTS = 'panstart pan panmove, panup pandown panleft panright panend pancancel';
+  function appHammerDirective() {
+    var EVENTS = {
+      Pan: 'pan panstart panmove panend pancancel panleft panright panup pandown'.split(' '),
+      Pinch: 'pinch pinchstart pinchmove pinchend pinchcancel pinchin pinchout'.split(' '),
+      Press: 'press pressup'.split(' '),
+      Rotate: 'rotate rotatestart rotatemove rotateend rotatecancel'.split(' '),
+      Swipe: 'swipe swipeleft swiperight swipeup swipedown'.split(' '),
+      Tap: 'tap'.split(' '),
+    };
+    var RECOGNIZERS = Object.keys(EVENTS).reduce(function(all, key) {
+      EVENTS[key].forEach(function(evName) {
+        all[evName] = Hammer[key];
+      });
+      return all;
+    }, {});
+
     return {
       restrict: 'A',
       link: link
     };
 
     function link(scope, elem, attr) {
-      var opt = {
-        recognizers: [
-          [Hammer.Pan]
-        ]
-      };
-      scope._hm = new Hammer.Manager(elem[0], opt)
-        .on(PAN_EVENTS, _onPanEvent);
-      scope._opt = scope.$eval(attr.appPan) || {};
-
+      var _opt = scope.$eval(attr.appHammer) || {};
+      var _evNames = Object.keys(_opt);
+      var recognizers = _evNames.reduce(function(all, evName) {
+        var recg = RECOGNIZERS[evName];
+        if (recg && all.indexOf(recg) < 0) {
+          all.push([recg]);
+        }
+        return all;
+      }, []);
+      var _hm = new Hammer.Manager(elem[0], {
+        recognizers: recognizers
+      });
+      _evNames.forEach(function(evName) {
+        _hm.on(evName, _onEvent);
+      });
       elem.on('$destroy', _onDestroy);
 
       return;
 
-      function _onPanEvent(ev) {
-        var fn = scope._opt[ev.type];
-        if (fn) {
-          $timeout(function() {
-            if (typeof fn === 'function') {
-              fn(ev);
-            } else {
-              scope.$eval(fn, {
-                $event: ev
-              });
-            }
-          });
-        }
+      function _onEvent(ev) {
+        var fn = _opt[ev.type];
+        scope.$apply(function() {
+          if (typeof fn === 'function') {
+            fn(ev);
+          } else {
+            scope.$eval(fn, {
+              $event: ev
+            });
+          }
+        });
       }
 
       function _onDestroy() {
-        scope._hm.destroy();
-        scope._hm = null;
+        _hm.destroy();
       }
     }
   }
