@@ -64,11 +64,12 @@ gulp.task('views', function() {
 
 gulp.task('views-js', ['views'], function() {
   return gulp.src(['app/views/**/*html'])
+    .pipe(minifyHtml({empty: true}))
     .pipe(ngTemplates({
       filename: 'template-cache.js',
       module: 'app.templateCache',
-      path: function (path) {
-        return path.replace(/^.*app\//, '');
+      path: function (path, base) {
+        return path.replace(base, '');
       }
     }))
     .pipe(gulp.dest('app/js/'));
@@ -117,7 +118,7 @@ gulp.task('sass', function() {
 // install bower components
 gulp.task('bower', function() {
   return bower()
-    .pipe(gulp.dest('app/bower_components'))
+    .pipe(gulp.dest('app/bower_components'));
 });
 
 // gulpfile
@@ -132,19 +133,19 @@ gulp.task('copy-dist', ['default'], function() {
   tasks.push(
     gulp.src(['app/_locales/**', 'app/images/**', 'app/manifest.json', 'app/mimetype.txt'], { base: 'app' })
       .pipe(gulp.dest('dist'))
-  )
+  );
   tasks.push(
     gulp.src(['app/bower_components/**/*.+(eot|svg|ttf|woff)'])
       .pipe(rename(function(path) {
         path.dirname = '';
       }))
       .pipe(gulp.dest('dist/fonts'))
-  )
+  );
   tasks.push(
     gulp.src(['app/js/main.js'], { base: 'app' })
       .pipe(uglify({compress: false,mangle: false}))
       .pipe(gulp.dest('dist'))
-  )
+  );
   return es.concat.apply(null, tasks);
 });
 
@@ -154,7 +155,7 @@ gulp.task('usemin', ['default'], function() {
       css: [minifyCss({
         aggressiveMerging: false,
       }), 'concat'],
-      //html: [minifyHtml()],
+      html: [minifyHtml({empty: true})],
       js: [
         footer(fs.readFileSync('app/js/etc.js')),
         uglify({compress:false,mangle: false})
