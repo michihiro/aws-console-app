@@ -105,7 +105,8 @@ body {
 
 /** button **/
 .btn {
- text-transform: none;
+  text-transform: none;
+  padding: 8px 12px;
 }
 .btn label {
   margin: 0;
@@ -179,6 +180,7 @@ body {
   right: 0;
   top: 48px;
   bottom: 60px;
+  overflow: auto;
 }
 /* modal */
 .modal-content {
