@@ -92,6 +92,8 @@
     var temporaryCredentials;
     var intervalPromise;
 
+    window.addEventListener('online',  _onOnline);
+
     return {
       getCredentials: getCredentials,
       load: load,
@@ -163,13 +165,16 @@
       });
       tempCred.refresh(function() {
         temporaryCredentials = tempCred;
-        AWS.config.credentials = null;
-        temporaryCredentials.masterCredentials = null;
         deferred.resolve(credId);
       });
       return deferred.promise;
     }
 
+    function _onOnline() {
+      if (temporaryCredentials && temporaryCredentials.needsRefresh()) {
+        temporaryCredentials.refresh();
+      }
+    }
   }
 
   comPasswordDialogCtrl.$inject = ['$scope', '$timeout', '$q', 'passwordService', 'credentialsService', 'dialogInputs', 'appFocusOn'];
