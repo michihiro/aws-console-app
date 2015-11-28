@@ -4,6 +4,9 @@
 .ec2-header .btn {
   padding: 8px 12px;
 }
+.no-instances {
+  margin: 8px 6px;
+}
 .ec2-vpc-panel {
   margin: 2px 4px;
 }
@@ -67,20 +70,32 @@
 .ec2-vpc-panel .instance.selected {
   background-color: rgba(0,128,255,.2);
 }
+.ec2-vpc-panel .instance div {
+  text-shadow: 1px 1px 0px #eee,-1px -1px 0px #eee, 1px -1px 0px #eee, -1px 1px #eee;
+}
 .ec2-vpc-panel .instance .instance-name {
   display: inline-block;
   position: absolute;
-  left: 16px;
+  left: 8px;
+  right: 8px;
   top: 8px;
+  text-align: right;
+}
+.ec2-vpc-panel .instance .instance-name > div:nth-child(1) {
   font-size: 1.4em;
-  text-shadow: 1px 1px 0px #fff,-1px -1px 0px #fff, 1px -1px 0px #fff, -1px 1px #fff;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
+  text-align: left;
 }
 .ec2-vpc-panel .instance .instance-state {
   display: inline-block;
   position: absolute;
-  right: 16px;
+  left: 8px;
+  right: 8px;
   bottom: 8px;
-  text-shadow: 1px 1px 0px #fff,-1px -1px 0px #fff, 1px -1px 0px #fff, -1px 1px #fff;
+  text-align: right;
 }
 .ec2-vpc-panel .instance > img {
   width: 120px;

@@ -20,7 +20,7 @@
              ng-bind="'ec2.instance'|i18next"></label>
       <div class="col-xs-8 form-control-static">
         <div ng-repeat="i in instances"
-             ng-bind="i.InstanceId">
+             ng-bind="i.tags.Name ? i.tags.Name+' ('+i.InstanceId+')' : i.InstanceId">
         </div>
       </div>
     </div>
@@ -33,30 +33,11 @@
           ng-disabled="processing">
     <label>{{'com.cancel'|i18next}}</label>
   </button>
-  
   <button class="btn btn-loading"
           ng-class="btnClass"
-          ng-repeat="s in ['start', 'reboot', 'stop', 'terminate']"
-          ng-if="mode==s+'Instance'"
-          ng-click="command(s)"
+          ng-click="command()"
           ng-disabled="processing || form.$invalid">
     <label ng-show="processing" class="loading"></label>
-    <label>{{'ec2.'+s|i18next}}</label>
+    <label>{{'ec2.'+btnLabel|i18next}}</label>
   </button>
-  <!--
-  <button class="btn btn-loading btn-info"
-          ng-if="mode=='startInstance'"
-          ng-click="start()"
-          ng-disabled="processing || form.$invalid">
-    <label ng-show="processing" class="loading"></label>
-    <label>{{'ec2.start'|i18next}}</label>
-  </button>
-  <button class="btn btn-loading btn-danger"
-          ng-if="mode=='stopInstance'"
-          ng-click="stop()"
-          ng-disabled="processing || form.$invalid">
-    <label ng-show="processing" class="loading"></label>
-    <label>{{'ec2.stop'|i18next}}</label>
-  </button>
-  -->
 </div>

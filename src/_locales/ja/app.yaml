@@ -88,26 +88,27 @@ ec2:
   stop: 停止
   reboot: 再起動
   terminate: 削除
-  startInstance: インスタンスの開始
-  stopInstance: インスタンスの停止
-  rebootInstance: インスタンスの再起動
-  terminateInstance: インスタンスの削除
-  startInstanceMsg:
+  startInstances: インスタンスの開始
+  stopInstances: インスタンスの停止
+  rebootInstances: インスタンスの再起動
+  terminateInstances: インスタンスの削除
+  noInstances: インスタンスはありません。
+  startInstancesMsg:
    - このインスタンスを開始してよろしいですか？
    - これらのインスタンスを開始してよろしいですか？
-  rebootInstanceMsg:
+  rebootInstancesMsg:
    - このインスタンスを再起動してよろしいですか？
    - これらのインスタンスを再起動してよろしいですか？
-  stopInstanceMsg:
+  stopInstancesMsg:
    - このインスタンスを停止してよろしいですか？
    - これらのインスタンスを停止してよろしいですか？
-  stopInstanceMsg2: |+
+  stopInstancesMsg2: |+
    インスタンスを停止すると
    インスタンスのエフェメラルストレージ上のデータは失われます。
-  terminateInstanceMsg:
+  terminateInstancesMsg:
    - このインスタンスを削除してよろしいですか？
    - これらのインスタンスを削除してよろしいですか？
-  terminateInstancesMsg2: ""
+  terminateInstancessMsg2: ""
 r53:
   serviceName: Route53
   zones: ゾーン

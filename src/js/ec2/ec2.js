@@ -30,8 +30,8 @@
     var scope = $rootScope.$new();
 
     ng.extend(scope, {
-      //all: ['startInstance', 'rebootInstance', 'stopInstance', 'terminateInstance'],
-      all: ['startInstance', 'rebootInstance', 'stopInstance' ],
+      //all: ['startInstances', 'rebootInstances', 'stopInstances', 'terminateInstances'],
+      all: ['startInstances', 'rebootInstances', 'stopInstances' ],
       onClick: onClick,
       isDisabled: isDisabled,
     });
@@ -48,10 +48,10 @@
 
     function isDisabled(key) {
       var enableStates = {
-        startInstance: ['stopped'],
-        rebootInstance: ['running'],
-        stopInstance: ['pending', 'running'],
-        terminateInstance: ['pending', 'running', 'stopping', 'stopped']
+        startInstances: ['stopped'],
+        rebootInstances: ['running'],
+        stopInstances: ['pending', 'running'],
+        terminateInstances: ['pending', 'running', 'stopping', 'stopped']
       };
       var selected = ec2Info.getSelectedInstances();
       var enable = enableStates[key];
@@ -329,26 +329,28 @@
     });
 
     var mode = dialogInputs.mode;
-    var btnClass = mode === 'stopInstance' ? 'btn-warning' :
-      mode === 'terminateInstance' ? 'btn-danger' : 'btn-info';
+    var btnLabel = mode.replace(/Instances$/, '');
+    var btnClass = mode === 'stopInstances' ? 'btn-warning' :
+      mode === 'terminateInstances' ? 'btn-danger' : 'btn-info';
 
     ng.extend($scope, {
       mode: mode,
       instances: ec2Info.getSelectedInstances(),
+      btnLabel: btnLabel,
       btnClass: btnClass,
       command: command
     });
 
     return;
 
-    function command(op, additionalParam) {
+    function command(additionalParam) {
       var params = ng.extend({
         InstanceIds: instanceIds,
       }, additionalParam);
 
       var region = $scope.instances[0].region;
       $scope.processing = true;
-      awsEC2(region)[op + 'Instances'](params, function(err) {
+      awsEC2(region)[mode](params, function(err) {
         $scope.processing = false;
         if (err) {
           $scope.$apply(function() {          
@@ -357,7 +359,7 @@
           return;
         }
 
-        if (op === 'reboot') {
+        if (mode === 'rebootInstances') {
           ec2Info.setRebooting(region, instanceIds);
         }
 

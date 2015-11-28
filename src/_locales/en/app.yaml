@@ -87,23 +87,23 @@ ec2:
   stop: Stop
   reboot: Reboot
   terminate: Terminate
-  startInstance: Start Instance
-  stopInstance: Stop Instance
-  rebootInstance: Reboot Instance
-  terminateInstance: Terminate Instance
-  startInstanceMsg:
+  startInstances: Start Instance
+  stopInstances: Stop Instance
+  rebootInstances: Reboot Instance
+  terminateInstances: Terminate Instance
+  startInstancesMsg:
    - Are you sure you want to start this instance?
    - Are you sure you want to start these instances?
-  rebootInstanceMsg:
+  rebootInstancesMsg:
    - Are you sure you want to reboot this instance?
    - Are you sure you want to reboot these instances?
-  stopInstanceMsg:
+  stopInstancesMsg:
    - Are you sure you want to stop this instance?
    - Are you sure you want to stop these instances?
-  stopInstanceMsg2: |+
+  stopInstancesMsg2: |+
    Note that when your instances are stopped:
    Any data on the ephemeral storage of your instances will be lost.
-  terminateInstanceMsg:
+  terminateInstancesMsg:
    - Are you sure you want to terminate this instance?
    - Are you sure you want to terminate these instances?
   terminateInstancesMsg2: ""

@@ -1,5 +1,8 @@
 <div class="func-view">
   <accordion close-others="false">
+    <div class="no-instances"
+         ng-if="ec2Info.getVpcs() && !ec2Info.getVpcs().length"
+         ng-bind="'ec2.noInstances'|i18next"></div>
     <accordion-group class="panel-default ec2-vpc-panel"
                      ng-repeat="v in ec2Info.getVpcs() | orderBy:['regionIdx','tags.Name','VpcId']"
                      is-open="v.isOpen"
@@ -25,13 +28,19 @@
           <div ng-bind="s.AvailabilityZone"></div>
         </div>
         <div class="subnet-body">
+          <div class="no-instances"
+               ng-if="!ec2Info.getInstances(v.region, v.VpcId, s.SubnetId).length"
+               ng-bind="'ec2.noInstances'|i18next"></div>
           <div ng-repeat="i in ec2Info.getInstances(v.region, v.VpcId, s.SubnetId) | orderBy:['tags.Name','InstanceId']">
             <div class="instance"
                  ng-class="{selected: ec2Info.isSelectedInstance(i)}"
                  ng-click="ec2Info.selectInstances([i])">
               <img src="images/Instance.svg" ng-class="'state-' + i.State.Name">
-              <div class="instance-name"
-                   ng-bind="i.tags.Name ? i.tags.Name : '( ' + i.InstanceId + ' )'"></div>
+              <div class="instance-name">
+                <div ng-bind="i.tags.Name ? i.tags.Name : i.InstanceId"
+                     ng-attr-title="{{i.tags.Name ? i.tags.Name : '( ' + i.InstanceId + ' )'}}"></div>
+                <div ng-bind="i.tags.Name ? '( ' + i.InstanceId + ' )': ''"></div>
+              </div>
               <div class="instance-state"
                    ng-bind="i.InstanceType + ' - ' + i.State.Name">
               </div>
