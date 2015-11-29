@@ -1,29 +1,17 @@
 'use strict';
 
 var gulp = require('gulp');
-var rename = require('gulp-rename');
 var plumber = require('gulp-plumber');
-var del = require('del');
 var newer = require('gulp-newer');
 var using = require('gulp-using');
-var yaml = require('gulp-yaml');
-var jshint = require('gulp-jshint');
-var htmlhint = require('gulp-htmlhint');
-var stylish = require('jshint-stylish');
-var ngTemplates = require('gulp-ng-templates');
-var sass = require('gulp-sass');
-var bower = require('gulp-bower');
-var usemin = require('gulp-usemin');
-var minifyHtml = require('gulp-minify-html');
-var minifyCss = require('gulp-minify-css');
-var uglify = require('gulp-uglify');
-var zip = require('gulp-zip');
-var es = require('event-stream');
-var footer = require('gulp-footer');
-var fs = require('fs');
+
+if (!global.Promise) {
+  global.Promise = require('es6-promise').Promise;
+}
 
 // remove app,dist directory.
 gulp.task('clean', function(callback) {
+  var del = require('del');
   del(['app','dist'], callback);
 });
 
@@ -36,15 +24,25 @@ gulp.task('copy', function() {
 });
 
 gulp.task('manifest', function() {
+  var yaml = require('gulp-yaml');
+  var pkg = require('./package');
+  var es = require('event-stream');
   return gulp.src('src/manifest.yaml')
     .pipe(plumber())
     .pipe(newer({dest:'app', ext:'.json'}))
     .pipe(using())
     .pipe(yaml())
+    .pipe(es.map(function(file, cb){
+      var data = JSON.parse(file.contents);
+      data.version = pkg.version;
+      file.contents = new Buffer(JSON.stringify(data));
+      return cb(null, file);
+    }))
     .pipe(gulp.dest('app'));
 });
 
 gulp.task('html', function() {
+  var htmlhint = require('gulp-htmlhint');
   return gulp.src(['src/*html'])
     .pipe(newer('app'))
     .pipe(using())
@@ -54,6 +52,7 @@ gulp.task('html', function() {
 });
 
 gulp.task('views', function() {
+  var htmlhint = require('gulp-htmlhint');
   return gulp.src(['src/views/**/*html'])
     .pipe(newer('app/views'))
     .pipe(using())
@@ -63,6 +62,8 @@ gulp.task('views', function() {
 });
 
 gulp.task('views-js', ['views'], function() {
+  var ngTemplates = require('gulp-ng-templates');
+  var minifyHtml = require('gulp-minify-html');
   return gulp.src(['app/views/**/*html'])
     .pipe(minifyHtml({empty: true}))
     .pipe(ngTemplates({
@@ -76,6 +77,7 @@ gulp.task('views-js', ['views'], function() {
 });
 
 gulp.task('_locale', function() {
+  var yaml = require('gulp-yaml');
   return gulp.src('src/_locales/**/*.yaml')
     .pipe(plumber())
     .pipe(newer({dest:'app/_locales', ext:'.json'}))
@@ -86,6 +88,8 @@ gulp.task('_locale', function() {
 
 // lint and copy js files to build directory.
 gulp.task('js', function() {
+  var jshint = require('gulp-jshint');
+  var stylish = require('jshint-stylish');
   return gulp.src(['src/js/**/*js', '!src/js/vendor/**js'])
     .pipe(newer('app/js'))
     .pipe(using())
@@ -103,6 +107,7 @@ gulp.task('js-vendor', function() {
 
 // compile sass to css
 gulp.task('sass', function() {
+  var sass = require('gulp-sass');
   return gulp.src(['src/sass/**/*.scss'])
     .pipe(plumber())
     .pipe(newer({dest:'app/css', ext:'.css'}))
@@ -117,18 +122,24 @@ gulp.task('sass', function() {
 
 // install bower components
 gulp.task('bower', function() {
+  var bower = require('gulp-bower');
   return bower()
     .pipe(gulp.dest('app/bower_components'));
 });
 
 // gulpfile
 gulp.task('self', function() {
+  var jshint = require('gulp-jshint');
+  var stylish = require('jshint-stylish');
   return gulp.src(['gulpfile.js'])
     .pipe(jshint())
     .pipe(jshint.reporter(stylish));
 });
 
 gulp.task('copy-dist', ['default'], function() {
+  var rename = require('gulp-rename');
+  var uglify = require('gulp-uglify');
+  var es = require('event-stream');
   var tasks = [];
   tasks.push(
     gulp.src(['app/_locales/**', 'app/images/**', 'app/manifest.json', 'app/mimetype.txt'], { base: 'app' })
@@ -150,12 +161,19 @@ gulp.task('copy-dist', ['default'], function() {
 });
 
 gulp.task('usemin', ['default'], function() {
+  var fs = require('fs');
+  var usemin = require('gulp-usemin');
+  var minifyCss = require('gulp-minify-css');
+  var uglify = require('gulp-uglify');
+  var footer = require('gulp-footer');
+  var minifyHtml = require('gulp-minify-html');
   return gulp.src('app/index.html')
+    .pipe(plumber())
     .pipe(usemin({
       css: [minifyCss({
         aggressiveMerging: false,
       }), 'concat'],
-      //html: [minifyHtml({empty: true})],
+      html: [minifyHtml({empty: true})],
       js: [
         footer(fs.readFileSync('app/js/etc.js')),
         uglify({compress:false,mangle: false})
@@ -166,6 +184,7 @@ gulp.task('usemin', ['default'], function() {
 
 // create zip package
 gulp.task('build', ['copy-dist', 'usemin'], function() {
+  var zip = require('gulp-zip');
   var pkg = require('./package');
   var zipFile = pkg.name + '-v' + pkg.version + '.zip';
   return gulp.src(['dist/**/*'])
@@ -180,7 +199,7 @@ gulp.task('default', [
   'html',
   'views',
   'views-js',
-  'bower',
+//  'bower',
   '_locale',
   'js',
   'js-vendor',
