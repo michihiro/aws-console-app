@@ -20,7 +20,6 @@ com:
   error:
     invalidPassword: パスワードが正しくありません。
     passwordsDoNotMatch: パスワードが一致しません。
-
 s3:
   serviceName: S3
   buckets: バケット
@@ -117,3 +116,23 @@ r53:
   type: タイプ
   value: 値
   noHostedZone: ホストされたゾーンはありません。
+  createHostedZone: ホストゾーンの作成
+  deleteHostedZone: ホストゾーンの削除
+  createRRSet: レコードセットの作成
+  updateRRSet: レコードセットの変更
+  deleteRRSet: レコードセットの削除
+  domainName: ドメイン名
+  comment: コメント
+  hostedZoneType: タイプ
+  notPrivateZone: パブリック
+  privateZone: プライベート（VPC用）
+  rrsetType: タイプ
+  ttlBtn:
+    "1min": 1分
+    "5min": 5分
+    "1hour": 1時間
+    "1day": 1日
+  error:
+    AccessDenied: アクセスできません。
+    InvalidDomainName: ドメイン名が正しくありません。
+    RRSetAlreadyExists: すでに登録されています。

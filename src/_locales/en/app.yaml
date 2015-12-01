@@ -115,3 +115,23 @@ r53:
   type: Type
   value: Value
   noHostedZone: No hosted zone found.
+  createHostedZone: Create Hosted Zone
+  deleteHostedZone: Delete Hosted Zone
+  createRRSet: Create Record Set
+  updateRRSet: Update Record Set
+  deleteRRSet: Delete Record Set
+  domainName: Domain Name
+  comment: Comment
+  hostedZoneType: Type
+  notPrivateZone: Public
+  privateZone: Private (for VPC)
+  rrsetType: Type
+  ttlBtn:
+    "1min": 1min
+    "5min": 5min
+    "1hour": 1hour
+    "1day": 1day
+  error:
+    AccessDenied: Access Denied.
+    InvalidDomainName: Domain Name is Invalid.
+    RRSetAlreadyExists: Record Set is already exists.

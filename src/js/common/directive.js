@@ -11,7 +11,8 @@
     .factory('appFocusOn', appFocusOnFactory)
     .directive('appHammer', appHammerDirective)
     .directive('tabHeadingsScroller', tabHeadingsScroller)
-    .directive('modalDialog', modalDialogDirective);
+    .directive('modalDialog', modalDialogDirective)
+    .directive('appElasticTextarea', appElasticTextareaDirective);
 
   appRightClick.$inject = ['$parse'];
 
@@ -315,7 +316,7 @@
         scope._transXMax = $window.innerWidth - elem[0].offsetWidth - elem[0].offsetLeft;
         scope._transYMin = -elem[0].offsetTop;
         scope._transYMax = $window.innerHeight - elem[0].offsetHeight - elem[0].offsetTop;
-        if(scope._transYMax < scope._transYMin) {
+        if (scope._transYMax < scope._transYMin) {
           scope._transYMax = scope._transYMin;
         }
       }
@@ -519,4 +520,28 @@
       }
     }
   }
+
+  appElasticTextareaDirective.$inject = ['$timeout', '$parse'];
+
+  function appElasticTextareaDirective($timeout, $parse) {
+    return {
+      restrict: 'A',
+      link: link
+    };
+    function link(scope, elem, attrs) {
+      var opt = $parse(attrs.appElasticTextarea)(scope);
+
+      elem.on('input change', _resize);
+      //elem.css('height', '1.6em');
+      $timeout(_resize);
+
+      function _resize() {
+        var h = elem[0].scrollHeight;
+        if (elem.height() < h) {
+          elem.height(Math.min(h, opt.max));
+        }
+      }
+    }
+  }
+
 })(angular);
