@@ -17,6 +17,7 @@
   s3ActionsFactory.$inject = ['$rootScope', 's3ListService', 's3DownloadService'];
 
   function s3ActionsFactory($rootScope, s3ListService, s3DownloadService) {
+    var actionsObj;
     var actions = {
       createBucket: {
         label: 's3.createBucket',
@@ -62,7 +63,7 @@
       },
     };
 
-    var actionsObj = {
+    actionsObj = {
       all: [
         actions.createBucket,
         //actions.bucketProperties,

@@ -4,7 +4,7 @@
 </div>
 <div class="modal-body">
   <div class="alert">
-    <p ng-i18next="[i18next]({sprintf:[bucketName]})s3.deleteBktMsg"></p>
+    <p ng-bind="'s3.deleteBktMsg'|i18next|sprintf:bucketName"></p>
   </div>
 </div>
 <div class="modal-footer">

@@ -1,8 +1,10 @@
 <div class="func-view" ng-class="{'wait-cursor':getSysWaiting()}">
   <div class="s3-left" ng-style="{width:treeWidth}">
     <div class="s3-tree-header" ng-bind="'s3.buckets'|i18next"></div>
-    <div class="s3-tree" context-menu data-target="s3-tree-context-menu" ng-controller="s3TreeCtrl">
-      <s3-tree data="getBuckets()"></s3-tree>
+    <div ng-controller="s3TreeCtrl">
+      <div class="s3-tree" context-menu data-target="s3-tree-context-menu">
+        <s3-tree data="getBuckets()"></s3-tree>
+      </div>
     </div>
   </div>
   <div class="s3-split-handle" ng-style="{left:treeWidth}"
