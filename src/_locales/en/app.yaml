@@ -46,8 +46,10 @@ s3:
   startUpload: Start Upload
   uploadTo: Upload to
   storageClass: Storage Class
-  standard: Standard
-  reducedRedundancy: Reduced Redundancy
+  storageClassName: 
+    STANDARD: Standard
+    REDUCED_REDUNDANCY: Reduced Redundancy
+    STANDARD_IA: Standard - Infrequent Access
   regionName:
     us-east-1: US East (Northern Virginia)
     us-west-1: US West (Northern California)

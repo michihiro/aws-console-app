@@ -306,6 +306,7 @@
     ng.extend($scope, {
       uploadInfo: dialogInputs.uploadInfo,
       columns: columns,
+      storageClasses: [ 'STANDARD', 'REDUCED_REDUNDANCY', 'STANDARD_IA' ],
       folder: s3ListService.getCurrent(),
       inputs: {
         storageClass: 'STANDARD'

@@ -72,13 +72,12 @@
     }
 
     function s3StorageClass(obj) {
-      if (obj === 'STANDARD' || obj === 'REDUCED_REDUNDANCY') {
-        var s = obj.toLowerCase().replace(/(_)(.)/g, function(all, a1, a2) {
-          return a2.toUpperCase();
-        });
-        return i18next('s3.' + s);
+      if(!obj || !obj.length) {
+        return '-';
       }
-      return '-';
+      var k = 's3.storageClassName.' + obj;
+      var s = i18next(k);
+      return s !== k ? s : obj;
     }
   }
 

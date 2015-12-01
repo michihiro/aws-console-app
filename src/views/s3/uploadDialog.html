@@ -11,14 +11,10 @@
     <label class="col-xs-4 control-label">{{'s3.storageClass'|i18next}}</label>
     <div class="btn-group">
       <button class="btn btn-default"
-             ng-class="{'btn-info':inputs.storageClass=='STANDARD'}"
-             ng-model="inputs.storageClass" btn-radio="'STANDARD'">
-        {{'s3.standard'|i18next}}
-      </button>
-      <button class="btn btn-default"
-             ng-class="{'btn-info':inputs.storageClass=='REDUCED_REDUNDANCY'}"
-             ng-model="inputs.storageClass" btn-radio="'REDUCED_REDUNDANCY'">
-        {{'s3.reducedRedundancy'|i18next}}
+              ng-repeat="s in storageClasses"
+              ng-class="{'btn-info':inputs.storageClass==s}"
+              ng-model="inputs.storageClass" btn-radio="s">
+        {{'s3.storageClassName.'+s|i18next}}
       </button>
     </div>
   </div>

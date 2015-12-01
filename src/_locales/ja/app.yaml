@@ -46,8 +46,10 @@ s3:
   startUpload: アップロード開始
   uploadTo: アップロード先
   storageClass: ストレージ クラス
-  standard: 標準
-  reducedRedundancy: 低冗長化
+  storageClassName: 
+    STANDARD: 標準
+    REDUCED_REDUNDANCY: 低冗長化
+    STANDARD_IA: 標準 - 低頻度アクセス
   regionName:
     us-east-1: US 東海岸（北バージニア）
     us-west-1: US 西海岸（北カルフォルニア）
