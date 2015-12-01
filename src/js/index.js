@@ -110,6 +110,10 @@
     });
     $filter('i18next')('');
 
+    $.getJSON('manifest.json', function(json) {
+      $rootScope.appVersion = json.version;
+    });
+
     return;
 
     function openDialog(dlgName, opt, modalOpt) {
