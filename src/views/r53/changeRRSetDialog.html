@@ -1,0 +1,115 @@
+<div class="modal-header">
+  <button class="close" ng-click="$dismiss()">&times;</button>
+  <h3 ng-bind="'r53.'+mode|i18next"></h3>
+</div>
+<div class="modal-body">
+  <form name="form" class="form-horizontal" ng-if="mode!='deleteRRSet'">
+    <div class="form-group">
+      <label class="col-xs-3 control-label"
+             ng-bind="'r53.domainName'|i18next"></label>
+      <div class="col-xs-4"
+           ng-if="inputs.subDomain !== zone">
+        <input class="form-control" name="domainName"
+               spellcheck="false"
+               app-focus-on="domainName"
+               ng-model="inputs.subDomain"
+               ng-required="true"
+               ui-validate="'isValidSubDomain($value)'"
+               ng-disabled="processing">
+      </div>
+      <label class="form-control-static"
+             ng-if="inputs.subDomain !== zone"
+             ng-bind="'.' + zone"></label>
+      <label class="form-control-static col-xs-9"
+             ng-if="inputs.subDomain === zone"
+             ng-bind="zone"></label>
+    </div>
+    <div class="form-group">
+      <label class="col-xs-3 control-label"
+             ng-bind="'r53.rrsetType'|i18next"></label>
+      <div class="col-xs-9">
+        <div class="btn-group" dropdown is-open="isOpen.types">
+          <button class="btn btn-info dropdown-toggle"
+                  data-toggle="dropdown"
+                  ng-disabled="processing || inputs.subDomain == zone">
+            <span ng-bind="inputs.type"></span>
+            <span class="caret" ng-if="inputs.subDomain != zone"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li ng-repeat="t in types"
+                ng-class="{disabled: t == 'SOA'}"
+                ng-click="(t != 'SOA') || $event.stopPropagation()">
+              <a ng-click="(t != 'SOA') && (inputs.type=t)"
+                 ng-bind="t"></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-xs-3 control-label"
+             ng-bind="'r53.ttl'|i18next"></label>
+      <div class="col-xs-2">
+        <input class="form-control" name="ttl"
+               app-focus-on="ttl"
+               ng-model="inputs.ttl"
+               ng-required="true"
+               ng-pattern="/^[1-9]([0-9])*$/"
+               ng-disabled="processing">
+      </div>
+      <div class="col-xs-7">
+        <div class="btns">
+          <button class="btn btn-info"
+                  ng-repeat="b in ttlBtns"
+                  ng-bind="(ttlBtnVal == b.val ? '+' : '') + ('r53.ttlBtn.' + b.label | i18next)"
+                  ng-click="onClickTtlBtn(b)"></button>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-xs-3 control-label"
+             ng-bind="'r53.value'|i18next"></label>
+      <div class="col-xs-9">
+        <textarea app-elastic-textarea="{max:160}"
+                  spellcheck="false"
+                  class="form-control" name="domainName"
+                  app-focus-on="value"
+                  ng-model="inputs.values"
+                  ng-required="true"
+                  ui-validate="'isValidValues($value)'"
+                  ui-validate-watch="'inputs.type'"
+                  ng-disabled="processing"></textarea>
+      </div>
+    </div>
+  </form>
+  <form name="form" class="form-horizontal" ng-if="mode=='deleteRRSet'">
+    <div class="form-group">
+      <label class="col-xs-3 control-label"
+             ng-bind="('r53.domainName'|i18next)+ ' - ' + ('r53.rrsetType'|i18next)"></label>
+      <div class="col-xs-4"
+           ng-if="inputs.subDomain !== zone">
+        <div class="form-control-static"
+             ng-repeat="r in rrsets"
+             ng-bind="r.Name + '-' +r.Type"></div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <div class="alert alert-warning" ng-show="error"
+       ng-bind="error|errorMsg:'r53'"></div>
+  <button class="btn btn-default"
+          ng-click="$dismiss()"
+          ng-disabled="processing">
+    <label ng-show="processing" class="loading"></label>
+    <label ng-bind="'com.cancel'|i18next"></label>
+  </button>
+
+  <button class="btn btn-loading"
+          ng-class="{'btn-info':!form.$invalid,'btn-default':form.$invalid}"
+          ng-click="command()"
+          ng-disabled="processing || form.$invalid">
+    <label ng-show="processing" class="loading"></label>
+    <label ng-bind="mode === 'createRRSet' ? 'com.create' : mode === 'updateRRSet' ? 'com.save' : 'com.delete'|i18next"></label>
+  </button>
+</div>

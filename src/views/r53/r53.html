@@ -1,22 +1,29 @@
 <div class="func-view">
-  <div class="r53-left">
+  <div class="r53-left" ng-style="{width:treeWidth}">
     <div class="r53-left-header" ng-bind="'r53.zones'|i18next"></div>
-    <ul class="nav nav-pills nav-stacked" style="max-width: 300px;">
+    <ul class="nav nav-pills nav-stacked"
+        context-menu="r53Actions.isOpenHeaderMenu=false"
+        data-target="r53-zone-context-menu">
       <li ng-if="r53Info.getHostedZones().length == 0">
         <div ng-bind="'r53.noHostedZone'|i18next"></div>
       </li>
       <li ng-repeat="z in r53Info.getHostedZones() track by $index"
           ng-class="{active:r53Info.getCurrent().Id=== z.Id}">
-        <a ng-click="r53Info.setCurrent(z)">
+        <a ng-click="r53Info.setCurrent(z)"
+           app-right-click="r53Info.setCurrent(z)">
           <i class="fa fa-globe" ng-class="{local:z.Config.PrivateZone}"></i>
           <span ng-bind="z.Name"></span>
         </a>
       </li>
     </ul>
   </div>
-  <div class="r53-right">
+  <div class="r53-split-handle" ng-style="{left:treeWidth}"
+       app-hammer="panHandles"></div>
+  <div class="r53-right" ng-style="{left:treeWidth + 10}"
   
-    <div class="table-outer">
+    <div class="table-outer"
+         context-menu="r53Actions.isOpenHeaderMenu=false"
+         data-target="r53-rr-context-menu">
       <div class="table-header-spacer"></div>
       <div class="table-container" app-bind-scroll-position="tableScroll">
         <table class="table table-striped">
@@ -77,3 +84,25 @@
   </div>
 </div>
 
+<div class="dropdown position-fixed" id="r53-zone-context-menu">
+  <ul class="dropdown-menu">
+    <li ng-repeat="m in r53Actions.zone"
+        ng-class="{disabled:r53Actions.isDisabled(m)}">
+      <a ng-class="{withoutripple:r53Actions.isDisabled(m)}"
+         ng-click="r53Actions.onClick($event, m);"
+         ng-bind="'r53.'+m|i18next">
+      </a>
+    </li>
+  </ul>
+</div>
+<div class="dropdown position-fixed" id="r53-rr-context-menu">
+  <ul class="dropdown-menu">
+    <li ng-repeat="m in r53Actions.rrset"
+        ng-class="{disabled:r53Actions.isDisabled(m)}">
+      <a ng-class="{withoutripple:r53Actions.isDisabled(m)}"
+         ng-click="r53Actions.onClick($event, m);"
+         ng-bind="'r53.'+m|i18next">
+      </a>
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,73 @@
+<div class="modal-header">
+  <button class="close" ng-click="$dismiss()">&times;</button>
+  <h3 ng-bind="'r53.createHostedZone'|i18next"></h3>
+</div>
+<div class="modal-body">
+  <form name="inputs.form" class="form-horizontal">
+    <div class="form-group">
+      <label class="col-xs-3 control-label"
+             ng-bind="'r53.domainName'|i18next"></label>
+      <div class="col-xs-9">
+        <input class="form-control" name="domainName"
+               spellcheck="false"
+               app-focus-on="domainName"
+               ng-model="inputs.domainName"
+               ng-required="true"
+               ui-validate="'isValidHostedZone($value)'"
+               ng-disabled="processing">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-xs-3 control-label"
+             ng-bind="'r53.comment'|i18next"></label>
+      <div class="col-xs-9">
+        <input class="form-control" name="comment"
+               ng-model="inputs.comment"
+               ng-disabled="processing">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-xs-3 control-label"
+             ng-bind="'r53.hostedZoneType'|i18next"></label>
+      <div class="col-xs-9">
+        <div class="btn-group" dropdown is-open="selectType.isopen">
+          <button class="btn btn-info dropdown-toggle"
+                  ng-disabled="processing || true">
+            <span ng-bind="inputs.privateZone?'r53.privateZone':'r53.notPrivateZone'|i18next">
+            </span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li ng-if="inputs.privateZone">
+              <a ng-click="inputs.privateZone=false;selectType.isopen=false"
+                 ng-bind="'r53.notPrivateZone'|i18next">
+              </a>
+            </li>
+            <li ng-if="!inputs.privateZone">
+              <a ng-click="inputs.privateZone=true;selectType.isopen=false"
+                 ng-bind="'r53.privateZone'|i18next">
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <div class="alert alert-warning" ng-show="error"
+       ng-bind="error|errorMsg:'r53'"></div>
+  <button class="btn btn-default"
+          ng-click="$dismiss()"
+          ng-disabled="processing">
+    <label ng-show="processing" class="loading"></label>
+    <label ng-bind="'com.cancel'|i18next"></label>
+  </button>
+  <button class="btn btn-loading"
+          ng-class="{'btn-info':!inputs.form.$invalid,'btn-default':inputs.form.$invalid}"
+          ng-click="create()"
+          ng-disabled="processing || inputs.form.$invalid">
+    <label ng-show="processing" class="loading"></label>
+    <label ng-bind="'com.create'|i18next"></label>
+  </button>
+</div>
