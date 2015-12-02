@@ -180,10 +180,11 @@
   function r53ChangeRRSetDialogCtrl($scope, $timeout, $q, awsR53, appFocusOn, r53Info, dialogInputs) {
     var currentZone = r53Info.getCurrent();
     var mode = dialogInputs.mode;
-    var reg = new RegExp('.' + currentZone.Name + '$');
+    var reg = new RegExp('.?' + currentZone.Name + '$');
     var rrsets = r53Info.getSelectedObjects();
     var rrset = mode === 'updateRRSet' ? rrsets[0] : {};
     var subDomain = (rrset.Name || '').replace(reg, '');
+    var isZoneRRSet = rrset.Name === currentZone.Name;
     var type = rrset.Type || 'A';
 
     ng.extend($scope, {
@@ -195,6 +196,7 @@
         ttl: rrset.TTL || 300,
         values: (rrset.Values || []).join('\n'),
       },
+      isZoneRRSet: isZoneRRSet,
       rrsets: rrsets,
       delrrsets: {},
       types: [
@@ -289,7 +291,8 @@
     }
 
     function _mkReqParam() {
-      var vals = _getValues($scope.inputs.values);
+      var inputs = $scope.inputs;
+      var vals = _getValues(inputs.values);
       var changes;
 
       if (mode !== 'deleteRRSet') {
@@ -297,11 +300,11 @@
         changes = [{
           Action: mode === 'createRRSet' ? 'CREATE' : 'UPSERT',
           ResourceRecordSet: {
-            Name: $scope.inputs.subDomain + '.' + currentZone.Name,
-            Type: $scope.inputs.type,
-            TTL: +$scope.inputs.ttl,
+            Name: isZoneRRSet ? currentZone.Name : inputs.subDomain + '.' + currentZone.Name,
+            Type: inputs.type,
+            TTL: +inputs.ttl,
             ResourceRecords: vals.map(function(v) {
-              if ($scope.inputs.type === 'TXT' && !v.match(/^".*"$/)) {
+              if (inputs.type === 'TXT' && !v.match(/^".*"$/)) {
                 v = '"' + v.replace(/([\\"])/g, '\\$1') + '"';
               }
               return {
