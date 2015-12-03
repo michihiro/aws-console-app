@@ -119,9 +119,13 @@ r53:
   noHostedZone: No hosted zone found.
   createHostedZone: Create Hosted Zone
   deleteHostedZone: Delete Hosted Zone
+  deleteHostedZoneMsg: Are you sure you want to delete this Hosted Zone?
   createRRSet: Create Record Set
   updateRRSet: Update Record Set
   deleteRRSet: Delete Record Set
+  deleteRRSetMsg:
+   - Are you sure you want to delete this Record Set?
+   - Are you sure you want to delete these Record Sets?
   domainName: Domain Name
   comment: Comment
   hostedZoneType: Type

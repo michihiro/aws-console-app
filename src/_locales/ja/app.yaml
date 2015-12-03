@@ -120,9 +120,13 @@ r53:
   noHostedZone: ホストされたゾーンはありません。
   createHostedZone: ホストゾーンの作成
   deleteHostedZone: ホストゾーンの削除
+  deleteHostedZoneMsg: このホストゾーンを削除してよろしいですか？
   createRRSet: レコードセットの作成
   updateRRSet: レコードセットの変更
   deleteRRSet: レコードセットの削除
+  deleteRRSetMsg:
+   - このレコードセットを削除してよろしいですか？
+   - これらのレコードセットを削除してよろしいですか？
   domainName: ドメイン名
   comment: コメント
   hostedZoneType: タイプ
