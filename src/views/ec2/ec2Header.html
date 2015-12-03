@@ -1,6 +1,6 @@
 <div class="ec2-header">
   <div class="btn-group" dropdown is-open="ec2Actions.isOpenHeaderMenu">
-    <button class="btn btn-info dropdown-toggle">
+    <button class="btn btn-info" dropdown-toggle>
       <span ng-bind="'com.action'|i18next"></span>
       <span class="caret"></span>
     </button>
@@ -14,7 +14,7 @@
     </ul>
   </div>
   <div class="btn-group pull-right" dropdown is-open="selectRegion.isopen">
-    <button class="btn btn-info dropdown-toggle" ng-disabled="processing">
+    <button class="btn btn-info" dropdown-toggle ng-disabled="processing">
       <span>{{'ec2.regionName.'+ec2Info.getCurrentRegion()|i18next}}</span>
       <span class="caret"></span>
     </button>

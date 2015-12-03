@@ -284,11 +284,14 @@
 
     return {
       restrict: 'C',
-      scope: true,
       link: link
     };
 
     function link(scope, elem) {
+      var _hm;
+      var _transPos;
+      var _transXMin, _transXMax;
+      var _transYMin, _transYMax;
       var header = elem.find('.modal-header');
       var opt = {
         recognizers: [[Hammer.Pan]]
@@ -297,7 +300,7 @@
         cursor: 'move'
       });
 
-      scope._hm = new Hammer.Manager(header[0], opt)
+      _hm = new Hammer.Manager(header[0], opt)
         .on('panstart', _onPanstart)
         .on('panend', _onPanend)
         .on('pan', _onPan);
@@ -307,23 +310,23 @@
       return;
 
       function _onPanstart() {
-        scope._transPos = scope._transPos || {
+        _transPos = _transPos || {
           x: 0,
           y: 0
         };
 
-        scope._transXMin = -elem[0].offsetLeft;
-        scope._transXMax = $window.innerWidth - elem[0].offsetWidth - elem[0].offsetLeft;
-        scope._transYMin = -elem[0].offsetTop;
-        scope._transYMax = $window.innerHeight - elem[0].offsetHeight - elem[0].offsetTop;
-        if (scope._transYMax < scope._transYMin) {
-          scope._transYMax = scope._transYMin;
+        _transXMin = -elem[0].offsetLeft;
+        _transXMax = $window.innerWidth - elem[0].offsetWidth - elem[0].offsetLeft;
+        _transYMin = -elem[0].offsetTop;
+        _transYMax = $window.innerHeight - elem[0].offsetHeight - elem[0].offsetTop;
+        if(_transYMax < _transYMin) {
+          _transYMax = _transYMin;
         }
       }
 
       function _onPanend(ev) {
         var pos = _getTranslatePos(ev);
-        scope._transPos = pos;
+        _transPos = pos;
       }
 
       function _onPan(ev) {
@@ -335,12 +338,12 @@
       }
 
       function _getTranslatePos(ev) {
-        var x = scope._transPos.x + ev.deltaX;
-        var y = scope._transPos.y + ev.deltaY;
-        x = (x < scope._transXMin) ? scope._transXMin :
-          (x > scope._transXMax) ? scope._transXMax : x;
-        y = (y < scope._transYMin) ? scope._transYMin :
-          (y > scope._transYMax) ? scope._transYMax : y;
+        var x = _transPos.x + ev.deltaX;
+        var y = _transPos.y + ev.deltaY;
+        x = (x < _transXMin) ? _transXMin :
+          (x > _transXMax) ? _transXMax : x;
+        y = (y < _transYMin) ? _transYMin :
+          (y > _transYMax) ? _transYMax : y;
         return {
           x: x,
           y: y
@@ -348,8 +351,8 @@
       }
 
       function _onDestroy() {
-        scope._hm.destroy();
-        scope._hm = null;
+        _hm.destroy();
+        _hm = null;
       }
     }
   }

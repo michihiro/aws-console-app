@@ -31,7 +31,7 @@
              ng-bind="'r53.hostedZoneType'|i18next"></label>
       <div class="col-xs-9">
         <div class="btn-group" dropdown is-open="selectType.isopen">
-          <button class="btn btn-info dropdown-toggle"
+          <button class="btn btn-info" dropdown-toggle
                   ng-disabled="processing || true">
             <span ng-bind="inputs.privateZone?'r53.privateZone':'r53.notPrivateZone'|i18next">
             </span>
