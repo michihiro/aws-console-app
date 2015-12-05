@@ -53,9 +53,14 @@
         stopInstances: ['pending', 'running'],
         terminateInstances: ['pending', 'running', 'stopping', 'stopped']
       };
+      var isStartOrStop = (key === 'startInstances' || key === 'stopInstances');
       var selected = ec2Info.getSelectedInstances();
       var enable = enableStates[key];
       return ! (selected || []).some(function(i) {
+        if (isStartOrStop &&
+          (i.RootDeviceType !== 'ebs' || i.InstanceLifecycle === 'spot')) {
+          return false;
+        }
         return enable.indexOf(i.State.Name) >= 0;
       });
     }
