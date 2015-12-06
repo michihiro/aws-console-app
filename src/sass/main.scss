@@ -6,6 +6,10 @@ body {
 [ng-cloak] {
   display: none !important;
 }
+.no-animate {
+  -webkit-transition: none !important;
+  transition: none !important;
+}
 .screen {
   position:absolute;
   top:0;
@@ -193,10 +197,12 @@ body {
 .modal h3 {
   margin: 0px;
 }
+/*
 .modal-open .screen {
   -webkit-filter: blur(.75px)  grayscale(70%);
 //  transform: scale(.995);
 }
+*/
 .modal-content .modal-header {
   padding: 12px 16px;
   background-color: #4285f4;
@@ -283,7 +289,7 @@ body {
   z-index: 10;
 }
 .dropdown-menu {
-  background: rgba(255, 255, 255, .9);
+  background: rgba(255, 255, 255, .95);
 }
 .dropdown-menu li a:hover, .dropdown-menu-default li a:hover {
   background: #03a9f4;
@@ -293,6 +299,9 @@ body {
 .dropdown-menu > .disabled > a:hover,
 .dropdown-menu > .disabled > a:focus {
   color: #bbb;
+}
+.dropdown-menu .divider {
+  background-color: #e5e5e5;
 }
 form textarea.ng-invalid.ng-dirty,
 form input.ng-invalid.ng-dirty {

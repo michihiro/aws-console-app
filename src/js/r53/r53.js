@@ -355,50 +355,168 @@
     }
   }
 
-  r53CreateHostedZoneDialogCtrl.$inject = ['$scope', '$timeout', 'awsR53', 'appFocusOn', 'r53Info'];
+  r53CreateHostedZoneDialogCtrl.$inject = ['$scope', '$timeout', '$q', 'awsR53', 'awsEC2', 'awsRegions', 'appFocusOn', 'r53Info'];
 
-  function r53CreateHostedZoneDialogCtrl($scope, $timeout, awsR53, appFocusOn, r53Info) {
+  function r53CreateHostedZoneDialogCtrl($scope, $timeout, $q, awsR53, awsEC2, awsRegions, appFocusOn, r53Info) {
+    var vpcs;
+
     ng.extend($scope, {
-      inputs: {},
-      isValidHostedZone: r53Info.isValidHostedZone,
+      inputs: {
+        associatedVpcs: [{}]
+      },
+      isValidHostedZone: isValidHostedZone,
+      isValidPrivateZone: isValidPrivateZone,
+      getVpcs: getVpcs,
+      setAssociatedVpc: setAssociatedVpc,
       create: create
     });
 
+    $scope.$watch('inputs.associatedVpcs', function(avpcs) {
+      if(avpcs && (!avpcs.length || avpcs[avpcs.length - 1].VpcId)) {
+        avpcs.push({});
+      }
+    }, true);
+
     appFocusOn('domainName');
+    return;
+
+    function isValidPrivateZone(v) {
+      console.log(!v , $scope.inputs.associatedVpcs[0].VpcId);
+      return !v || $scope.inputs.associatedVpcs[0].VpcId;
+    }
+
+    function setAssociatedVpc(v, $index) {
+      $scope.inputs.associatedVpcs[$index] = v;
+    }
+
+    function isValidHostedZone(v) {
+      if ($scope.inputs.privateZone) {
+        return r53Info.isValidLocalDomain('a.' + v);
+      } else {
+        return r53Info.isValidDomain(v);
+      }
+    }
+
+    function getVpcs() {
+      if (!vpcs) {
+        _describeVpcs();
+      }
+      return vpcs;
+    }
+
+    function _describeVpcs() {
+      vpcs = {};
+      awsRegions.ec2.forEach(_describeVpcsOfRegion);
+    }
+
+    function _describeVpcsOfRegion(region) {
+      awsEC2(region).describeVpcs({}, _describeVpcsDone.bind(null, region));
+    }
+
+    function _describeVpcsDone(region, err, data) {
+      if (err) {
+        return;
+      }
+      $scope.$apply(function() {
+        vpcs[region] = data.Vpcs;
+        vpcs[region].forEach(function(v) {
+        v.region = region;
+          v.tags = v.Tags.reduce(function(all, v2) {
+            all[v2.Key] = v2.Value;
+            return all;
+          }, {});
+        });
+      });
+    }
 
     function create() {
-      var inputs = $scope.inputs;
       $scope.processing = true;
       $scope.error = undefined;
-      awsR53().createHostedZone({
+      var associatedVpcs = $scope.inputs.associatedVpcs.filter(function(v) {
+        return !!v.VpcId;
+      });
+      var promise = $q.when().then(_createHostedZone);
+      var i, l;
+      for(i=1, l=associatedVpcs.length; i<l; i++) {
+        promise = promise.then(_associateVPCWithHostedZone(associatedVpcs.region,
+associatedVpcs.VpcId));
+      }
+
+      promise.then(_done)
+        .catch(_fail);
+    }
+
+    function _createHostedZone() {
+      var defer = $q.defer();
+      var inputs = $scope.inputs;
+      var params = {
         CallerReference: 'createHostedZone-' + Date.now(),
         Name: inputs.domainName,
         HostedZoneConfig: {
           Comment: inputs.comment,
-          PrivateZone: inputs.privateZone,
+          // sdk bug...
+          //PrivateZone: inputs.privateZone,
+        },
+      };
+      if(inputs.privateZone) {
+        params.VPC = {
+          VPCId: inputs.associatedVpcs[0].VpcId,
+          VPCRegion: inputs.associatedVpcs[0].region,
+        };
+      }
+
+      awsR53().createHostedZone(params, function(err, data) {
+        if (err) {
+          defer.reject(err);
+        } else {
+          defer.resolve(data.HostedZone.Id);
         }
-      }, function(err, data) {
-        $timeout(done.bind(null, err, data));
       });
 
-      function done(err, data) {
-        $scope.processing = false;
-        if (err) {
-          $scope.error = err;
-          return;
-        }
-        var hostedZoneId = data.HostedZone.Id;
-        r53Info.updateHostedZones()
-          .then(function() {
-            r53Info.getHostedZones().some(function(zone) {
-              if (zone.Id === hostedZoneId) {
-                r53Info.setCurrent(zone);
-                return true;
-              }
-            });
-            $scope.$close();
-          });
+      return defer.promise;
+    }
+
+    function _associateVPCWithHostedZone(vpcRegion, vpcId) {
+      return function (hostedZoneId) {
+        var defer = $q.defer();
+        var params = {
+          HostedZoneId: hostedZoneId,
+          VPC: {
+            VPCId: vpcId,
+            VPCRegion: vpcRegion
+          },
+        };
+        awsR53().associateVPCWithHostedZone(params, function(err) {
+          if (err) {
+            defer.reject(err);
+          } else {
+            defer.resolve(hostedZoneId);
+          }
+        });
+        return defer.promise;
+      };
+    }
+
+    function _fail(err) {
+      $scope.processing = false;
+      if (err) {
+        $scope.error = err;
+        return;
       }
+    }
+
+    function _done(hostedZoneId) {
+      $scope.processing = false;
+      r53Info.updateHostedZones()
+        .then(function() {
+          r53Info.getHostedZones().some(function(zone) {
+            if (zone.Id === hostedZoneId) {
+              r53Info.setCurrent(zone);
+              return true;
+            }
+          });
+          $scope.$close();
+        });
     }
   }
 
@@ -476,8 +594,8 @@
         SRV: isValidSRV,
         SPF: isValidTXT // TODO
       },
-      isValidHostedZone: isValidDomain,
       isValidDomain: isValidDomain,
+      isValidLocalDomain: isValidLocalDomain,
       isValidWildcardDomain: isValidWildcardDomain,
     };
 
@@ -611,6 +729,10 @@
 
     function isValidDomain(v) {
       return !!(v || '').match(/^([a-zA-Z0-9]\.|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]\.)+[a-zA-Z]{2,}\.?$/);
+    }
+
+    function isValidLocalDomain(v) {
+      return !!(v || '').match(/^([a-zA-Z0-9]\.|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]\.)+[a-zA-Z]+\.?$/);
     }
 
     function isValidWildcardDomain(v) {

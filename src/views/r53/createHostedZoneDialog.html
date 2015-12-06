@@ -14,6 +14,7 @@
                ng-model="inputs.domainName"
                ng-required="true"
                ui-validate="'isValidHostedZone($value)'"
+               ui-validate-watch="'inputs.privateZone'"
                ng-disabled="processing">
       </div>
     </div>
@@ -30,6 +31,9 @@
       <label class="col-xs-3 control-label"
              ng-bind="'r53.hostedZoneType'|i18next"></label>
       <div class="col-xs-9">
+        <input type="hidden" ng-model="inputs.privateZone"
+               ui-validate="'isValidPrivateZone($value)'"
+               ui-validate-watch="'inputs.associatedVpcs[0].VpcId'">
         <div class="btn-group" dropdown is-open="selectType.isopen">
           <button class="btn btn-info" dropdown-toggle
                   ng-disabled="processing || true">
@@ -49,6 +53,40 @@
               </a>
             </li>
           </ul>
+        </div>
+      </div>
+    </div>
+    <div class="form-group" ng-if="inputs.privateZone==true">
+      <label class="col-xs-3 control-label"
+             ng-bind="'r53.associatedVpc'|i18next"></label>
+      <div class="col-xs-9">
+        <div ng-repeat="(idx, associatedVpc) in inputs.associatedVpcs"
+             class="vpc-input">
+          <div class="btn-group no-animate" dropdown>
+            <button class="btn btn-info" dropdown-toggle
+                    ng-disabled="processings">
+              <span ng-if="associatedVpc.VpcId"
+                    ng-bind="(associatedVpc.tags.Name ? associatedVpc.tags.Name + ' (' + associatedVpc.VpcId +')' : associatedVpc.VpcId) + ' - ' + ('ec2.regionName.'+associatedVpc.region|i18next)">
+              </span>
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li class="dropdown-header"
+                  ng-repeat-start="(r, vpc) in getVpcs()"
+                  ng-if="vpc.length"
+                  ng-bind="'ec2.regionName.'+r|i18next"></li>
+              <li ng-repeat-end ng-repeat="v in vpc"
+                  ng-class="{disabled: inputs.associatedVpcs.indexOf(v) >= 0}">
+                <a ng-click="inputs.associatedVpcs.indexOf(v) < 0 && setAssociatedVpc(v, idx)"
+                   ng-bind="v.tags.Name ? v.tags.Name + ' (' + v.VpcId +')': v.VpcId"></a>
+              </li>
+            </ul>
+            <button class="btn btn-info remove-vpc"
+                    ng-if="inputs.associatedVpcs.length && associatedVpc.VpcId"
+                    ng-click="inputs.associatedVpcs.splice(idx,1)">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>

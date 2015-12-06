@@ -131,6 +131,7 @@ r53:
   hostedZoneType: Type
   notPrivateZone: Public
   privateZone: Private (for VPC)
+  associatedVpc: Associated VPC
   rrsetType: Type
   ttlBtn:
     "1min": 1min

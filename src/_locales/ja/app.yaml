@@ -132,6 +132,7 @@ r53:
   hostedZoneType: タイプ
   notPrivateZone: パブリック
   privateZone: プライベート（VPC用）
+  associatedVpc: 連携VPC
   rrsetType: タイプ
   ttlBtn:
     "1min": 1分

@@ -56,3 +56,9 @@
   color: #aaa;
   cursor: pointer;
 }
+.btn-group .btn.remove-vpc {
+  margin-left: 1px;
+}
+.vpc-input:nth-of-type(n+2) {
+  margin-top: 6px;
+}
