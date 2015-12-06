@@ -67,7 +67,7 @@
       new AWS.EC2({
         credentials: $scope.credentials,
         region: 'us-east-1'
-      }).describeRegions({DryRun: true}, function(err) {
+      }).describeRegions({}, function(err) {
         deferred[err ? 'reject' : 'resolve'](err);
       });
       return deferred.promise;
