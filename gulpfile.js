@@ -29,7 +29,7 @@ gulp.task('manifest', function() {
   var es = require('event-stream');
   return gulp.src('src/manifest.yaml')
     .pipe(plumber())
-    .pipe(newer({dest:'app', ext:'.json'}))
+    //.pipe(newer({dest:'app', ext:'.json'}))
     .pipe(using())
     .pipe(yaml())
     .pipe(es.map(function(file, cb){
@@ -70,7 +70,7 @@ gulp.task('views-js', ['views'], function() {
       filename: 'template-cache.js',
       module: 'app.templateCache',
       path: function (path, base) {
-        return path.replace(base, '');
+        return path.replace(base, 'views/');
       }
     }))
     .pipe(gulp.dest('app/js/'));
@@ -141,8 +141,16 @@ gulp.task('copy-dist', ['default'], function() {
   var uglify = require('gulp-uglify');
   var es = require('event-stream');
   var tasks = [];
+  var manifest = require('./app/manifest');
+  var files = ['app/_locales/**', 'app/images/**', 'app/manifest.json', 'app/mimetype.txt'];
+  manifest.app.background.scripts.forEach(function(f) {
+    if (!f.match(/js\/main\.js$/)) {
+      files.push('app/' + f);
+    }
+  });
+
   tasks.push(
-    gulp.src(['app/_locales/**', 'app/images/**', 'app/manifest.json', 'app/mimetype.txt'], { base: 'app' })
+    gulp.src(files, { base: 'app' })
       .pipe(gulp.dest('dist'))
   );
   tasks.push(
@@ -173,10 +181,17 @@ gulp.task('usemin', ['default'], function() {
       css: [minifyCss({
         aggressiveMerging: false,
       }), 'concat'],
+      css2: [minifyCss({
+        aggressiveMerging: false,
+      }), 'concat'],
       html: [minifyHtml({empty: true})],
       js: [
+	footer(';/*EOF*/;'), 'concat',
+        uglify({compress:{}, mangle: false})
+      ],
+      js2: [
         footer(fs.readFileSync('app/js/etc.js')),
-        uglify({compress:false,mangle: false})
+        uglify({compress:{}, mangle: false})
       ]
     }))
     .pipe(gulp.dest('dist'));
