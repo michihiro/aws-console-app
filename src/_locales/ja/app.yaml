@@ -16,6 +16,7 @@ com:
   ok: OK
   set: 設定する
   create: 作成する
+  update: 変更する
   delete: 削除する
   error:
     invalidPassword: パスワードが正しくありません。
@@ -119,6 +120,7 @@ r53:
   value: 値
   noHostedZone: ホストされたゾーンはありません。
   createHostedZone: ホストゾーンの作成
+  updateHostedZone: ホストゾーンの変更
   deleteHostedZone: ホストゾーンの削除
   deleteHostedZoneMsg: このホストゾーンを削除してよろしいですか？
   createRRSet: レコードセットの作成

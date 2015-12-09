@@ -29,10 +29,10 @@
     var actions = {
       all: [
         'createRRSet', 'updateRRSet', 'deleteRRSet', '',
-        'createHostedZone', 'deleteHostedZone'
+        'createHostedZone', 'updateHostedZone', 'deleteHostedZone'
       ],
       zone: [
-        'createHostedZone', 'deleteHostedZone'
+        'createHostedZone', 'updateHostedZone', 'deleteHostedZone'
       ],
       rrset: [
         'createRRSet', 'updateRRSet', 'deleteRRSet'
@@ -54,16 +54,20 @@
         $rootScope.openDialog('r53/changeRRSetDialog', {
           mode: key
         });
+      } else if (key === 'updateHostedZone') {
+        $rootScope.openDialog('r53/createHostedZoneDialog', {
+          mode: key
+        });
       } else {
-        $rootScope.openDialog('r53/' + key + 'Dialog');
+        $rootScope.openDialog('r53/' + key + 'Dialog', {
+          mode: key
+        });
       }
     }
 
     function isDisabled(key) {
-      if (key === 'deleteHostedZone' || key === 'createRRSet') {
-        if (!r53Info.getCurrent()) {
-          return true;
-        }
+      if (key === 'deleteHostedZone' || key === 'updateHostedZone' || key === 'createRRSet') {
+        return !r53Info.getCurrent();
       }
       var selected = r53Info.getSelectedObjects() || [];
       var currentZone = r53Info.getCurrent();
@@ -355,24 +359,41 @@
     }
   }
 
-  r53CreateHostedZoneDialogCtrl.$inject = ['$scope', '$timeout', '$q', 'awsR53', 'awsEC2', 'awsRegions', 'appFocusOn', 'r53Info'];
+  r53CreateHostedZoneDialogCtrl.$inject = ['$scope', '$timeout', '$q', 'awsR53', 'awsEC2', 'awsRegions', 'appFocusOn', 'r53Info', 'dialogInputs'];
 
-  function r53CreateHostedZoneDialogCtrl($scope, $timeout, $q, awsR53, awsEC2, awsRegions, appFocusOn, r53Info) {
+  function r53CreateHostedZoneDialogCtrl($scope, $timeout, $q, awsR53, awsEC2, awsRegions, appFocusOn, r53Info, dialogInputs) {
     var vpcs;
+    var mode = dialogInputs.mode;
+    var currentZone = r53Info.getCurrent();
+    var inputs = {
+      associatedVpcs: [{}]
+    };
+    var associatedVpcsOrg;
+
+    if (mode === 'updateHostedZone') {
+      inputs = ng.extend(inputs, {
+        domainName: currentZone.Name,
+        comment: currentZone.Config.Comment,
+        privateZone: currentZone.Config.PrivateZone
+      });
+      $scope.ready = false;
+      getVpcs();
+    } else {
+      $scope.ready = true;
+    }
 
     ng.extend($scope, {
-      inputs: {
-        associatedVpcs: [{}]
-      },
+      mode: mode,
+      inputs: inputs,
       isValidHostedZone: isValidHostedZone,
       isValidPrivateZone: isValidPrivateZone,
       getVpcs: getVpcs,
       setAssociatedVpc: setAssociatedVpc,
-      create: create
+      command: command
     });
 
     $scope.$watch('inputs.associatedVpcs', function(avpcs) {
-      if(avpcs && (!avpcs.length || avpcs[avpcs.length - 1].VpcId)) {
+      if (avpcs && (!avpcs.length || avpcs[avpcs.length - 1].VpcId)) {
         avpcs.push({});
       }
     }, true);
@@ -381,7 +402,6 @@
     return;
 
     function isValidPrivateZone(v) {
-      console.log(!v , $scope.inputs.associatedVpcs[0].VpcId);
       return !v || $scope.inputs.associatedVpcs[0].VpcId;
     }
 
@@ -406,44 +426,96 @@
 
     function _describeVpcs() {
       vpcs = {};
-      awsRegions.ec2.forEach(_describeVpcsOfRegion);
+      var promises = [$q.when()];
+      promises = promises.concat(awsRegions.ec2.map(_describeVpcsOfRegion));
+      $q.all(promises).then(function() {
+        if (mode === 'updateHostedZone') {
+          associatedVpcsOrg = (currentZone.VPCs || []).map(function(v) {
+            return vpcs[v.VPCRegion].filter(function(vpc) {
+              return vpc.VpcId === v.VPCId;
+            })[0];
+          });
+          inputs.associatedVpcs = associatedVpcsOrg.concat();
+        }
+        $scope.ready = true;
+      });
     }
 
     function _describeVpcsOfRegion(region) {
-      awsEC2(region).describeVpcs({}, _describeVpcsDone.bind(null, region));
+      var defer = $q.defer();
+      awsEC2(region).describeVpcs({}, _describeVpcsDone.bind(null, region, defer));
+      return defer.promise;
     }
 
-    function _describeVpcsDone(region, err, data) {
+    function _describeVpcsDone(region, defer, err, data) {
       if (err) {
-        return;
+        return defer.reject(err);
       }
       $scope.$apply(function() {
         vpcs[region] = data.Vpcs;
         vpcs[region].forEach(function(v) {
-        v.region = region;
+          v.region = region;
           v.tags = v.Tags.reduce(function(all, v2) {
             all[v2.Key] = v2.Value;
             return all;
           }, {});
         });
       });
+      defer.resolve();
     }
 
-    function create() {
+    function command() {
+      if ($scope.processing) {
+        return;
+      }
       $scope.processing = true;
       $scope.error = undefined;
       var associatedVpcs = $scope.inputs.associatedVpcs.filter(function(v) {
         return !!v.VpcId;
       });
-      var promise = $q.when().then(_createHostedZone);
-      var i, l;
-      for(i=1, l=associatedVpcs.length; i<l; i++) {
-        promise = promise.then(_associateVPCWithHostedZone(associatedVpcs.region,
-associatedVpcs.VpcId));
+      var promise;
+
+      if (mode === 'createHostedZone') {
+        promise = _createHostedZone();
+
+        associatedVpcs.slice(1).forEach(function(avpc) {
+          promise = promise.then(_associateVPC(avpc.region, avpc.VpcId, true));
+        });
+      } else {
+        promise = $q.when(currentZone.Id);
+        associatedVpcs.forEach(function(vpc) {
+          if (associatedVpcsOrg.indexOf(vpc) < 0) {
+            promise = promise.then(_associateVPC(vpc.region, vpc.VpcId, true));
+          }
+        });
+        associatedVpcsOrg.forEach(function(vpc) {
+          if (associatedVpcs.indexOf(vpc) < 0) {
+            promise = promise.then(_associateVPC(vpc.region, vpc.VpcId, false));
+          }
+        });
+        if (inputs.comment !== currentZone.Config.Comment) {
+          promise = promise.then(_updateHostedZoneComment);
+        }
       }
 
       promise.then(_done)
         .catch(_fail);
+    }
+
+    function _updateHostedZoneComment() {
+      var defer = $q.defer();
+      var params = {
+        Id: currentZone.Id,
+        Comment: inputs.comment
+      };
+      awsR53().updateHostedZoneComment(params, function(err) {
+        if (err) {
+          defer.reject(err);
+        } else {
+          defer.resolve(currentZone.Id);
+        }
+      });
+      return defer.promise;
     }
 
     function _createHostedZone() {
@@ -458,7 +530,7 @@ associatedVpcs.VpcId));
           //PrivateZone: inputs.privateZone,
         },
       };
-      if(inputs.privateZone) {
+      if (inputs.privateZone) {
         params.VPC = {
           VPCId: inputs.associatedVpcs[0].VpcId,
           VPCRegion: inputs.associatedVpcs[0].region,
@@ -476,8 +548,8 @@ associatedVpcs.VpcId));
       return defer.promise;
     }
 
-    function _associateVPCWithHostedZone(vpcRegion, vpcId) {
-      return function (hostedZoneId) {
+    function _associateVPC(vpcRegion, vpcId, flag) {
+      return function(hostedZoneId) {
         var defer = $q.defer();
         var params = {
           HostedZoneId: hostedZoneId,
@@ -486,7 +558,8 @@ associatedVpcs.VpcId));
             VPCRegion: vpcRegion
           },
         };
-        awsR53().associateVPCWithHostedZone(params, function(err) {
+        var method = flag ? 'associateVPCWithHostedZone' : 'disassociateVPCFromHostedZone';
+        awsR53()[method](params, function(err) {
           if (err) {
             defer.reject(err);
           } else {
@@ -615,6 +688,20 @@ associatedVpcs.VpcId));
       return listHostedZonePromise;
     }
 
+    function _getHostedZones(id) {
+      var defer = $q.defer();
+      awsR53().getHostedZone({
+        Id: id
+      }, function(err, data) {
+        if (err) {
+          defer.reject(err);
+        } else {
+          defer.resolve(data);
+        }
+      });
+      return defer.promise;
+    }
+
     function _listHostedZones(marker) {
       if (!$rootScope.getCredentials()) {
         hostedZones = [];
@@ -626,40 +713,52 @@ associatedVpcs.VpcId));
       var defer = $q.defer();
 
       awsR53().listHostedZones({
+        //MaxItems: '1',
         Marker: marker
       }, function(err, data) {
         if (!data || !data.HostedZones) {
           hostedZones = [];
           return defer.resolve();
         }
-        $timeout(function() {
-          var zones = data.HostedZones.map(function(z) {
-            oldHostedZones.some(function(o, idx) {
-              if (o.Id !== z.Id) {
-                return false;
-              }
-              ng.extend(z, o);
-              oldHostedZones.splice(idx, 1);
-              return true;
-            });
-            return z;
-          });
-          Array.prototype.push.apply(hostedZonesWork, zones);
 
-          if (data.Marker) {
-            _listHostedZones(data.Marker).then(function() {
+        var promises = [$q.when()];
+        var zones = data.HostedZones.map(function(z) {
+          oldHostedZones.some(function(o, idx) {
+            if (o.Id !== z.Id) {
+              return false;
+            }
+            ng.extend(z, o);
+            oldHostedZones.splice(idx, 1);
+            return true;
+          });
+          promises.push(
+            _getHostedZones(z.Id).then(function(data) {
+              z.VPCs = data.VPCs;
+              z.Config.Comment = data.HostedZone.Config.Comment;
+            })
+          );
+          return z;
+        });
+        Array.prototype.push.apply(hostedZonesWork, zones);
+
+        $q.all(promises).then(function() {
+          if (data.IsTruncated) {
+            _listHostedZones(data.NextMarker).then(function() {
               defer.resolve();
             });
           } else {
-            hostedZones = hostedZonesWork;
+            hostedZones = hostedZonesWork.sort(function(a, b) {
+              a = [+a.Config.PrivateZone, a.Name, a.Id].join('_');
+              b = [+b.Config.PrivateZone, b.Name, b.Id].join('_');
+              return a > b ? 1 : a < b ? -1 : 0;
+            });
             if (hostedZones.indexOf(currentZone) < 0) {
               currentZone = hostedZones[0];
             }
             defer.resolve();
             updateRecords(currentZone);
           }
-
-        });
+        }, defer.reject);
       });
 
       return defer.promise;

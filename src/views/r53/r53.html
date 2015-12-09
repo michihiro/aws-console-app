@@ -1,15 +1,16 @@
 <div class="func-view">
-  <div class="r53-left" ng-style="{width:treeWidth}">
+  <div class="r53-left" ng-style="{width:treeWidth}"
+       context-menu="r53Actions.isOpenHeaderMenu=false"
+       data-target="r53-zone-context-menu">
     <div class="r53-left-header" ng-bind="'r53.zones'|i18next"></div>
-    <ul class="nav nav-pills nav-stacked"
-        context-menu="r53Actions.isOpenHeaderMenu=false"
-        data-target="r53-zone-context-menu">
+    <ul class="nav nav-pills nav-stacked">
       <li ng-if="r53Info.getHostedZones().length == 0">
         <div ng-bind="'r53.noHostedZone'|i18next"></div>
       </li>
       <li ng-repeat="z in r53Info.getHostedZones() track by $index"
           ng-class="{active:r53Info.getCurrent().Id=== z.Id}">
         <a ng-click="r53Info.setCurrent(z)"
+           ng-dblclick="openDialog('r53/createHostedZoneDialog', {mode: 'updateHostedZone'})"
            app-right-click="r53Info.setCurrent(z)">
           <i class="fa fa-globe" ng-class="{local:z.Config.PrivateZone}"></i>
           <span ng-bind="z.Name"></span>

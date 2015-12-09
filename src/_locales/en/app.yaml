@@ -16,6 +16,7 @@ com:
   ok: OK
   set: Set
   create: Create
+  update: Update
   delete: Delete
   error:
     invalidPassword: Invalid password.
@@ -118,6 +119,7 @@ r53:
   value: Value
   noHostedZone: No hosted zone found.
   createHostedZone: Create Hosted Zone
+  updateHostedZone: Update Hosted Zone
   deleteHostedZone: Delete Hosted Zone
   deleteHostedZoneMsg: Are you sure you want to delete this Hosted Zone?
   createRRSet: Create Record Set
