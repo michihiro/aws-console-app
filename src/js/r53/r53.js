@@ -6,7 +6,7 @@
     .factory('r53Info', r53InfoFactory)
     .factory('r53Actions', r53ActionsFactory)
     .controller('r53HeaderCtrl', r53HeaderCtrl)
-    .controller('r53CreateHostedZoneDialogCtrl', r53CreateHostedZoneDialogCtrl)
+    .controller('r53ChangeHostedZoneDialogCtrl', r53ChangeHostedZoneDialogCtrl)
     .controller('r53DeleteHostedZoneDialogCtrl', r53DeleteHostedZoneDialogCtrl)
     .controller('r53ChangeRRSetDialogCtrl', r53ChangeRRSetDialogCtrl)
     .controller('r53Ctrl', r53Ctrl);
@@ -54,8 +54,8 @@
         $rootScope.openDialog('r53/changeRRSetDialog', {
           mode: key
         });
-      } else if (key === 'updateHostedZone') {
-        $rootScope.openDialog('r53/createHostedZoneDialog', {
+      } else if (key === 'createHostedZone' || key === 'updateHostedZone') {
+        $rootScope.openDialog('r53/changeHostedZoneDialog', {
           mode: key
         });
       } else {
@@ -359,9 +359,9 @@
     }
   }
 
-  r53CreateHostedZoneDialogCtrl.$inject = ['$scope', '$timeout', '$q', 'awsR53', 'awsEC2', 'awsRegions', 'appFocusOn', 'r53Info', 'dialogInputs'];
+  r53ChangeHostedZoneDialogCtrl.$inject = ['$scope', '$timeout', '$q', 'awsR53', 'awsEC2', 'awsRegions', 'appFocusOn', 'r53Info', 'dialogInputs'];
 
-  function r53CreateHostedZoneDialogCtrl($scope, $timeout, $q, awsR53, awsEC2, awsRegions, appFocusOn, r53Info, dialogInputs) {
+  function r53ChangeHostedZoneDialogCtrl($scope, $timeout, $q, awsR53, awsEC2, awsRegions, appFocusOn, r53Info, dialogInputs) {
     var vpcs;
     var mode = dialogInputs.mode;
     var currentZone = r53Info.getCurrent();
@@ -481,7 +481,7 @@
         associatedVpcs.slice(1).forEach(function(avpc) {
           promise = promise.then(_associateVPC(avpc.region, avpc.VpcId, true));
         });
-      } else {
+      } else if (mode === 'updateHostedZone') {
         promise = $q.when(currentZone.Id);
         associatedVpcs.forEach(function(vpc) {
           if (associatedVpcsOrg.indexOf(vpc) < 0) {
@@ -496,6 +496,8 @@
         if (inputs.comment !== currentZone.Config.Comment) {
           promise = promise.then(_updateHostedZoneComment);
         }
+      } else if (mode === 'deleteHostedZone') {
+        promise = _deleteHostedZone();
       }
 
       promise.then(_done)
@@ -545,6 +547,22 @@
         }
       });
 
+      return defer.promise;
+    }
+
+    function _deleteHostedZone() {
+      var defer = $q.defer();
+      var params = {
+        Id: currentZone.Id
+      };
+
+      awsR53().deleteHostedZone(params, function(err) {
+        if (err) {
+          defer.reject(err);
+        } else {
+          defer.resolve(currentZone.Id);
+        }
+      });
       return defer.promise;
     }
 

@@ -10,7 +10,7 @@
       <li ng-repeat="z in r53Info.getHostedZones() track by $index"
           ng-class="{active:r53Info.getCurrent().Id=== z.Id}">
         <a ng-click="r53Info.setCurrent(z)"
-           ng-dblclick="openDialog('r53/createHostedZoneDialog', {mode: 'updateHostedZone'})"
+           ng-dblclick="openDialog('r53/changeHostedZoneDialog', {mode: 'updateHostedZone'})"
            app-right-click="r53Info.setCurrent(z)">
           <i class="fa fa-globe" ng-class="{local:z.Config.PrivateZone}"></i>
           <span ng-bind="z.Name"></span>
