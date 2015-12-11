@@ -7,7 +7,6 @@
     .factory('r53Actions', r53ActionsFactory)
     .controller('r53HeaderCtrl', r53HeaderCtrl)
     .controller('r53ChangeHostedZoneDialogCtrl', r53ChangeHostedZoneDialogCtrl)
-    .controller('r53DeleteHostedZoneDialogCtrl', r53DeleteHostedZoneDialogCtrl)
     .controller('r53ChangeRRSetDialogCtrl', r53ChangeRRSetDialogCtrl)
     .controller('r53Ctrl', r53Ctrl);
 
@@ -54,12 +53,8 @@
         $rootScope.openDialog('r53/changeRRSetDialog', {
           mode: key
         });
-      } else if (key === 'createHostedZone' || key === 'updateHostedZone') {
-        $rootScope.openDialog('r53/changeHostedZoneDialog', {
-          mode: key
-        });
       } else {
-        $rootScope.openDialog('r53/' + key + 'Dialog', {
+        $rootScope.openDialog('r53/changeHostedZoneDialog', {
           mode: key
         });
       }
@@ -370,7 +365,7 @@
     };
     var associatedVpcsOrg;
 
-    if (mode === 'updateHostedZone') {
+    if (mode !== 'createHostedZone') {
       inputs = ng.extend(inputs, {
         domainName: currentZone.Name,
         comment: currentZone.Config.Comment,
@@ -393,7 +388,8 @@
     });
 
     $scope.$watch('inputs.associatedVpcs', function(avpcs) {
-      if (avpcs && (!avpcs.length || avpcs[avpcs.length - 1].VpcId)) {
+      if (mode !== 'deleteHostedZone' &&
+        avpcs && (!avpcs.length || avpcs[avpcs.length - 1].VpcId)) {
         avpcs.push({});
       }
     }, true);
@@ -429,7 +425,7 @@
       var promises = [$q.when()];
       promises = promises.concat(awsRegions.ec2.map(_describeVpcsOfRegion));
       $q.all(promises).then(function() {
-        if (mode === 'updateHostedZone') {
+        if (mode !== 'createHostedZone') {
           associatedVpcsOrg = (currentZone.VPCs || []).map(function(v) {
             return vpcs[v.VPCRegion].filter(function(vpc) {
               return vpc.VpcId === v.VPCId;
@@ -609,40 +605,6 @@
           $scope.$close();
         });
     }
-  }
-
-  r53DeleteHostedZoneDialogCtrl.$inject = ['$scope', '$timeout', 'awsR53', 'appFocusOn', 'r53Info'];
-
-  function r53DeleteHostedZoneDialogCtrl($scope, $timeout, awsR53, appFocusOn, r53Info) {
-    ng.extend($scope, {
-      inputs: r53Info.getCurrent(),
-      del: del
-    });
-
-    function del() {
-      var inputs = $scope.inputs;
-      $scope.processing = true;
-      $scope.error = undefined;
-
-      awsR53().deleteHostedZone({
-        Id: inputs.Id
-      }, function(err, data) {
-        $timeout(_done.bind(null, err, data));
-      });
-    }
-
-    function _done(err) {
-      $scope.processing = false;
-      if (err) {
-        $scope.error = err;
-        return;
-      }
-      r53Info.updateHostedZones()
-        .then(function() {
-          $scope.$close();
-        });
-    }
-
   }
 
   r53InfoFactory.$inject = ['$rootScope', '$timeout', '$q', 'awsR53'];

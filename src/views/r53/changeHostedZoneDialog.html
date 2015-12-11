@@ -4,6 +4,10 @@
 </div>
 <div class="modal-body">
   <form name="inputs.form" class="form-horizontal">
+    <div class="form-group" ng-if="mode=='deleteHostedZone'">
+      <div class="col-xs-12"
+           ng-bind="'r53.deleteHostedZoneMsg'|i18next"></div>
+    </div>
     <div class="form-group">
       <label class="col-xs-3 control-label"
              ng-bind="'r53.domainName'|i18next"></label>
@@ -22,7 +26,7 @@
              ng-bind="inputs.domainName"></div>
       </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" ng-if="mode!=='deleteHostedZone'">
       <label class="col-xs-3 control-label"
              ng-bind="'r53.comment'|i18next"></label>
       <div class="col-xs-9">
@@ -40,7 +44,7 @@
                ui-validate-watch="'inputs.associatedVpcs[0].VpcId'">
         <div class="btn-group" dropdown is-open="selectType.isopen">
           <button class="btn btn-info" dropdown-toggle
-                  ng-disabled="processing || mode === 'updateHostedZone'">
+                  ng-disabled="processing || mode != 'createHostedZone'">
             <span ng-bind="inputs.privateZone?'r53.privateZone':'r53.notPrivateZone'|i18next">
             </span>
             <span class="caret"></span>
@@ -68,11 +72,11 @@
              class="vpc-input">
           <div class="btn-group no-animate" dropdown>
             <button class="btn btn-info" dropdown-toggle
-                    ng-disabled="!ready || processing">
+                    ng-disabled="mode=='deleteHostedZone' || !ready || processing">
               <span ng-if="associatedVpc.VpcId"
                     ng-bind="(associatedVpc.tags.Name ? associatedVpc.tags.Name + ' (' + associatedVpc.VpcId +')' : associatedVpc.VpcId) + ' - ' + ('ec2.regionName.'+associatedVpc.region|i18next)">
               </span>
-              <span class="caret"></span>
+              <span class="caret" ng-if="mode!='deleteHostedZone'"></span>
             </button>
             <ul class="dropdown-menu">
               <li class="dropdown-header"
@@ -86,7 +90,7 @@
               </li>
             </ul>
             <button class="btn btn-info remove-vpc"
-                    ng-if="inputs.associatedVpcs.length && associatedVpc.VpcId"
+                    ng-if="mode!='deleteHostedZone'&&inputs.associatedVpcs.length && associatedVpc.VpcId"
                     ng-click="inputs.associatedVpcs.splice(idx,1)">
               <i class="fa fa-times"></i>
             </button>
@@ -106,11 +110,12 @@
     <label ng-bind="'com.cancel'|i18next"></label>
   </button>
   <button class="btn btn-loading"
-          ng-class="{'btn-info':!inputs.form.$invalid,'btn-default':inputs.form.$invalid}"
+          ng-class="{'btn-info':mode!='deleteHostedZone'&&!inputs.form.$invalid,'btn-warning':mode=='deleteHostedZone'&&!inputs.form.$invalid,'btn-default':inputs.form.$invalid}"
           ng-click="command()"
           ng-disabled="!ready || processing || inputs.form.$invalid">
     <label ng-show="processing" class="loading"></label>
     <label ng-if="mode=='createHostedZone'" ng-bind="'com.create'|i18next"></label>
     <label ng-if="mode=='updateHostedZone'" ng-bind="'com.update'|i18next"></label>
+    <label ng-if="mode=='deleteHostedZone'" ng-bind="'com.delete'|i18next"></label>
   </button>
 </div>
