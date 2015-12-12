@@ -155,7 +155,11 @@
     }
 
     function sortExp(item) {
-      return item[$scope.sortCol];
+      var sortCol = $scope.sortCol;
+      if (sortCol === 'Name') {
+        return item['nameForSort'];
+      }
+      return item[sortCol];
     }
 
     function onRowSelect(indexes) {
@@ -790,6 +794,8 @@
 
         $timeout(function() {
           var resourceRecordSets = data.ResourceRecordSets.map(function(v) {
+            v.nameForSort = (v.Name.split('.').reverse().join('.')) +
+             (v.Type === 'SOA' ? '.__' : v.Type === 'NS' ? '._' : '.') + v.Type;
             v.Values = v.ResourceRecords.map(function(rr) {
               return rr.Value;
             });
