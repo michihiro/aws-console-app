@@ -75,7 +75,8 @@
           return true;
         }
         return selected.some(function(r) {
-          return r.Name.replace(/\.$/, '') === currentZone.Name.replace(/\.$/, '');
+          return r.Name.replace(/\.$/, '') === currentZone.Name.replace(/\.$/, '') &&
+            (r.Type === 'SOA' || r.Type === 'NS');
         });
       }
     }
@@ -183,7 +184,8 @@
     var rrsets = r53Info.getSelectedObjects();
     var rrset = mode === 'updateRRSet' ? rrsets[0] : {};
     var subDomain = (rrset.Name || '').replace(reg, '');
-    var isZoneRRSet = rrset.Name === currentZone.Name;
+    var isZoneRRSet = rrset.Name === currentZone.Name && 
+      (rrset.Type === 'SOA' || rrset.Type === 'NS');
     var type = rrset.Type || 'A';
 
     ng.extend($scope, {
@@ -220,18 +222,30 @@
       command: command,
     });
 
-    function _getValues(value) {
-      return (value || '').split(/[\s]*\n[\s]*/).filter(function(v) {
-        return v.length;
-      });
+    function _getValues(value, type) {
+      if (type === 'TXT') {
+        return [(value || '')];
+      } else {
+        return (value || '').split(/[\s]*\n[\s]*/).filter(function(v) {
+          return v.length;
+        });
+      }
+    }
+
+    function getDomainName() {
+      var inSubDomain = $scope.inputs.subDomain;
+      return inSubDomain.length ? (inSubDomain + '.' + currentZone.Name) :
+        currentZone.Name;
     }
 
     function isValidSubDomain(value) {
-      return r53Info.isValidWildcardDomain(value + '.' + $scope.inputs.zone);
+      value = value || '';
+      return !value.length ||
+        r53Info.isValidWildcardDomain(value + '.' + $scope.inputs.zone);
     }
 
     function isValidValues(value) {
-      var vals = _getValues(value);
+      var vals = _getValues(value, $scope.inputs.type);
 
       return vals.length && (!vals.some(function(v) {
         return !r53Info.isValidValue[$scope.inputs.type](v);
@@ -267,7 +281,8 @@
         return $q.when();
       }
       var defer = $q.defer();
-      var inputName = inputs.subDomain + '.' + currentZone.Name;
+      var inSubDomain = inputs.subDomain || '';
+      var inputName = inSubDomain + (inSubDomain.length ? '.' : '') + currentZone.Name;
       var inputType = inputs.type;
       awsR53().listResourceRecordSets({
         HostedZoneId: currentZone.Id,
@@ -291,15 +306,15 @@
 
     function _mkReqParam() {
       var inputs = $scope.inputs;
-      var vals = _getValues(inputs.values);
-      var changes;
+      var vals = _getValues(inputs.values, inputs.type);
+      var changes = [];
 
       if (mode !== 'deleteRRSet') {
         vals = vals.length ? vals : [''];
-        changes = [{
+        changes.push({
           Action: mode === 'createRRSet' ? 'CREATE' : 'UPSERT',
           ResourceRecordSet: {
-            Name: isZoneRRSet ? currentZone.Name : inputs.subDomain + '.' + currentZone.Name,
+            Name: getDomainName(),
             Type: inputs.type,
             TTL: +inputs.ttl,
             ResourceRecords: vals.map(function(v) {
@@ -311,10 +326,12 @@
               };
             })
           }
-        }];
-      } else {
-        changes = rrsets.map(function(r) {
-          return {
+        });
+      }
+      if (mode === 'deleteRRSet' ||
+        (mode === 'updateRRSet' && (inputs.subDomain !== subDomain || inputs.type !== type))) {
+        rrsets.forEach(function(r) {
+          changes.push({
             Action: 'DELETE',
             ResourceRecordSet: {
               Name: r.Name,
@@ -322,7 +339,7 @@
               TTL: r.TTL,
               ResourceRecords: r.ResourceRecords
             }
-          };
+          });
         });
       }
 
@@ -838,7 +855,7 @@
     }
 
     function isValidTXT(v) {
-      return !!v.match(/^[\x20-\x7E]+$/);
+      return !!v.match(/^[\x20-\x7E]+$/g);
     }
 
     function isValidSRV(v) {

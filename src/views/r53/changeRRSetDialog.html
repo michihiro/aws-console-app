@@ -18,7 +18,7 @@
       </div>
       <label class="form-control-static"
              ng-if="!isZoneRRSet"
-             ng-bind="'.' + zone"></label>
+             ng-bind="(inputs.subDomain.length ? '.' : '') + zone"></label>
       <label class="form-control-static col-xs-9"
              ng-if="isZoneRRSet"
              ng-bind="zone"></label>
@@ -88,7 +88,7 @@
       <label class="col-xs-4 control-label"
              ng-bind="('r53.domainName'|i18next)+ ' - ' + ('r53.rrsetType'|i18next)"></label>
       <div class="col-xs-8"
-           ng-if="!isZoneRRSet">
+           ng-if="inputs.subDomain.length">
         <div class="form-control-static"
              ng-repeat="r in rrsets"
              ng-bind="r.Name + '-' +r.Type"></div>
