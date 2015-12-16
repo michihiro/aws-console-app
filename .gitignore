@@ -10,3 +10,7 @@ test/bower_components
 .*.swp
 *.bak
 package/*
+*.tar
+*.taz
+*.tar.gz
+*.tar.bz2
