@@ -1,25 +1,28 @@
 <div class="modal-header">
   <button class="close" ng-click="$dismiss()">&times;</button>
-  <h3>{{'s3.uploadObjects'|i18next}}</h3>
+  <h3 ng-bind="::'s3.uploadObjects'|i18next"></h3>
 </div>
 <div class="modal-body s3-upload-dialog form-horizontal">
-  <div class="form-group">
-    <label class="col-xs-4 control-label">{{'s3.uploadTo'|i18next}}</label>
-    <label class="col-xs-4 form-control-static">{{folder.bucketName}} / {{folder.Prefix}}</label>
+  <div class="form-group has-success">
+    <label class="col-xs-4 control-label"
+           ng-bind="::'s3.uploadTo'|i18next"></label>
+    <div class="col-xs-4 form-control-static"
+         ng-bind="::folder.bucketName + ' / ' + folder.Prefix"></div>
   </div>
-  <div class="form-group">
-    <label class="col-xs-4 control-label">{{'s3.storageClass'|i18next}}</label>
-    <div class="btn-group">
+  <div class="form-group has-success">
+    <label class="col-xs-4 control-label"
+           ng-bind="::'s3.storageClass'|i18next"></label>
+    <div class="btn-group btn-group-raised">
       <button class="btn btn-default"
+              ng-bind="::'s3.storageClassName.'+s|i18next"
               ng-repeat="s in storageClasses"
-              ng-class="{'btn-info':inputs.storageClass==s}"
+              ng-class="{'btn-success':inputs.storageClass==s}"
               ng-model="inputs.storageClass" btn-radio="s">
-        {{'s3.storageClassName.'+s|i18next}}
       </button>
     </div>
   </div>
   <div class="form-group">
-    <label class="col-xs-4">{{uploadInfo.uploadList.length}} Files, {{uploadInfo.uploadList.total|bytes}}</label>
+    <div class="col-xs-12" ng-bind="uploadInfo.uploadList.length + ' Files, ' + (uploadInfo.uploadList.total|bytes)"></div>
   </div>
 
   <div class="modal-body-inner">
@@ -32,7 +35,7 @@
               <th ng-repeat="col in columns">
                 <div class="th-inner"
                      ng-style="{left:col.left,width:col.width+'px','-webkit-transform':'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
-                  <span>{{col.name|i18next}}</span>
+                  <span ng-bind="::col.name|i18next"></span>
                   <div class="table-resize-handle"
                        app-bind-width="col"></div>
                 </div>
@@ -41,13 +44,13 @@
           </thead>
           <tbody>
             <tr ng-repeat="item in uploadFiles"
-                row-id="{{ item.path }}">
+                ng-attr-row-id="{{ item.path }}">
               <td ng-repeat="col in columns" class="{{col.class}}"
                   ng-style="{width:col.width+'px'}">
                 <div class="td-inner" ng-style="{width: col.width+'px'}">
                   <span ng-if="col.checkbox"><input type="checkbox" ng-model="item.check"></span>
-                  <span ng-if="col.col && col.filterFn">{{col.filterFn(item[col.col])}}</span>
-                  <span ng-if="col.col && !col.filterFn">{{item[col.col]}}</span>
+                  <span ng-if="col.col && col.filterFn" ng-bind="::col.filterFn(item[col.col])"></span>
+                  <span ng-if="col.col && !col.filterFn" ng-bind="::item[col.col]"></span>
                 </div>
               </td>
             </tr>
@@ -56,19 +59,19 @@
       </div>
     </div>
   </div>
+  <div class="cover" ng-if="processing"><div class="modal-loader"></div></div>
 </div>
 <div class="modal-footer">
   <div class="alert alert-warning" ng-show="error">{{error}}</div>
-  <button class="btn btn-default"
-          ng-click="$dismiss()"
-          ng-disabled="processing" >
-    <label ng-show="processing" class="loading"></label>
-    <label>{{'com.cancel'|i18next}}</label>
+  <button class="btn btn-raised btn-default"
+          ng-bind="::'com.cancel'|i18next"
+          ng-click="$dismiss()">
   </button>
-  <button class="btn btn-info btn-loading"
+  <button class="btn btn-raised"
+          ng-class="{'btn-success':isReady}"
+          ng-bind="::'s3.startUpload'|i18next"
           ng-click="upload()"
           ng-disabled="processing || !isReady" >
-    <label ng-show="processing" class="loading"></label>
-    <label>{{'s3.startUpload'|i18next}}</label>
   </button>
+  <div class="cover" ng-if="processing"></div>
 </div>

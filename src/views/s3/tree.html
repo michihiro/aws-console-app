@@ -19,7 +19,7 @@
       <img ng-if="!item.Prefix && item.list.length" src="images/S3BucketWithObjects.svg">
       <img ng-if="!item.Prefix && !item.list.length" src="images/S3Bucket.svg">
       <i ng-if="item.Prefix" class="fa fa-folder-o" style="text-indent:0;"></i>
-      <span>{{item.Name}}</span>
+      <span ng-bind="::item.Name"></span>
     </a>
     <div ng-show="item.opened" class="s3-child">
       <s3-tree data="item.folders" depth="depth+1"></s3-tree>

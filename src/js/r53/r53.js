@@ -157,7 +157,7 @@
     function sortExp(item) {
       var sortCol = $scope.sortCol;
       if (sortCol === 'Name') {
-        return item['nameForSort'];
+        return item.nameForSort;
       }
       return item[sortCol];
     }
@@ -184,6 +184,11 @@
   function r53ChangeRRSetDialogCtrl($scope, $timeout, $q, awsR53, appFocusOn, r53Info, dialogInputs) {
     var currentZone = r53Info.getCurrent();
     var mode = dialogInputs.mode;
+    var btnLabels = {
+      createRRSet: 'com.create',
+      updateRRSet: 'com.save',
+      deleteRRSet: 'com.delete'
+    };
     var reg = new RegExp('.?' + currentZone.Name + '$');
     var rrsets = r53Info.getSelectedObjects();
     var rrset = mode === 'updateRRSet' ? rrsets[0] : {};
@@ -194,6 +199,8 @@
 
     ng.extend($scope, {
       mode: mode,
+      btnLabel: btnLabels[mode],
+      btnClass: mode !== 'deleteRRSet' ? 'btn-success' : 'btn-danger',
       zone: currentZone.Name,
       inputs: {
         subDomain: subDomain,
@@ -380,6 +387,11 @@
   function r53ChangeHostedZoneDialogCtrl($scope, $timeout, $q, awsR53, awsEC2, awsRegions, appFocusOn, r53Info, dialogInputs) {
     var vpcs;
     var mode = dialogInputs.mode;
+    var btnLabels = {
+      createHostedZone: 'com.create',
+      updateHostedZone: 'com.update',
+      deleteHostedZone: 'com.delete'
+    };
     var currentZone = r53Info.getCurrent();
     var inputs = {
       associatedVpcs: [{}]
@@ -400,6 +412,8 @@
 
     ng.extend($scope, {
       mode: mode,
+      btnLabel: btnLabels[mode],
+      btnClass: mode!=='deleteHostedZone' ? 'btn-success' : 'btn-danger',
       inputs: inputs,
       isValidHostedZone: isValidHostedZone,
       isValidPrivateZone: isValidPrivateZone,
@@ -418,8 +432,8 @@
     appFocusOn('domainName');
     return;
 
-    function isValidPrivateZone(v) {
-      return !v || $scope.inputs.associatedVpcs[0].VpcId;
+    function isValidPrivateZone() {
+      return !$scope.inputs.privateZone || $scope.inputs.associatedVpcs[0].VpcId;
     }
 
     function setAssociatedVpc(v, $index) {
@@ -614,7 +628,6 @@
     }
 
     function _done(hostedZoneId) {
-      $scope.processing = false;
       r53Info.updateHostedZones()
         .then(function() {
           r53Info.getHostedZones().some(function(zone) {

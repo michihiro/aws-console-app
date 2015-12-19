@@ -12,6 +12,7 @@
     .directive('appHammer', appHammerDirective)
     .directive('tabHeadingsScroller', tabHeadingsScroller)
     .directive('modalDialog', modalDialogDirective)
+    .directive('formGroup', formGroupDirective)
     .directive('appElasticTextarea', appElasticTextareaDirective);
 
   appRightClick.$inject = ['$parse'];
@@ -540,9 +541,44 @@
 
       function _resize() {
         var h = elem[0].scrollHeight;
-        if (elem.height() < h) {
-          elem.height(Math.min(h, opt.max));
+        if (elem[0].clientHeight < h) {
+          elem.innerHeight(Math.min(h, opt.max));
         }
+      }
+    }
+  }
+
+  formGroupDirective.$inject = ['$timeout'];
+
+  function formGroupDirective($timeout) {
+    return {
+      restrict: 'C',
+      link: link
+    };
+
+    function link(scope, elem) {
+      $timeout(_init.bind(null, scope, elem));
+    }
+
+    function _init(scope, elem) {
+      var formName = elem.parent('form').attr('name');
+      var child = elem.find('input, textarea').toArray();
+      var watchNames = child.reduce(_reduceFn, []);
+
+      scope.$watchGroup(watchNames, _onVaidityChange);
+
+      function _onVaidityChange(val) {
+        var invalid = val.some(function(v) { return v; });
+        elem.toggleClass('has-success', !invalid);
+        elem.toggleClass('has-warning', invalid);
+      }
+
+      function _reduceFn(all, el) {
+        var name = $(el).attr('name');
+        if (name) {
+          all.push(formName + '.' + name + '.$invalid');
+        }
+        return all;
       }
     }
   }

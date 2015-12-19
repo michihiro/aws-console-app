@@ -1,24 +1,23 @@
 <div class="modal-header">
   <button class="close" ng-click="$dismiss()">&times;</button>
-  <h3>{{'s3.deleteBucket'|i18next}}</h3>
+  <h3 ng-bind="::'s3.deleteBucket'|i18next"></h3>
 </div>
 <div class="modal-body">
-  <div class="alert">
-    <p ng-bind="'s3.deleteBktMsg'|i18next|sprintf:bucketName"></p>
+  <div class="alert alert-warning">
+    <p ng-bind="::'s3.deleteBktMsg'|i18next|sprintf:bucketName"></p>
   </div>
+  <div class="cover" ng-if="processing"><div class="modal-loader"></div></div>
 </div>
 <div class="modal-footer">
-  <div class="alert alert-warning" ng-show="error">{{error|errorMsg:'s3'}}</div>
-  <button class="btn btn-default"
-          ng-click="$dismiss()"
-          ng-disabled="processing" >
-    <label ng-show="processing" class="loading"></label>
-    <label>{{'com.cancel'|i18next}}</label>
+  <div class="alert alert-warning" ng-show="error" ng-bind="error|errorMsg:'s3'"></div>
+  <button class="btn btn-raised btn-default"
+          ng-bind="::'com.cancel'|i18next"
+          ng-click="$dismiss()">
   </button>
-  <button class="btn btn-loading" ng-class="{'btn-danger':!form.$invalid}" 
+  <button class="btn btn-raised" ng-class="{'btn-danger':!form.$invalid}" 
+          ng-bind="::'s3.delete'|i18next"
           ng-click="deleteBucket()"
           ng-disabled="processing || form.$invalid" >
-    <label ng-show="processing" class="loading"></label>
-    <label>{{'s3.delete'|i18next}}</label>
   </button>
+  <div class="cover" ng-if="processing"></div>
 </div>

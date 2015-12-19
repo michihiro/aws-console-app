@@ -30,13 +30,17 @@
       $scope.processing = true;
       $scope.error = null;
       $scope.credentials = new AWS.Credentials($scope.inputs);
-
       $q.reject()
         .catch(authWithEC2)
         .catch(authWithR53)
         .catch(authWithS3)
         .then(function() {
-          credentialsService.save($scope.inputs).then(function() {
+          var inputs = $scope.inputs;
+          var credentials = {
+            accessKeyId: inputs.accessKeyId,
+            secretAccessKey: inputs.secretAccessKey
+          };
+          credentialsService.save(credentials).then(function() {
             credentialsService.load(true);
             $scope.$close({});
           });

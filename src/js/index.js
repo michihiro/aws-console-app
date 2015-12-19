@@ -71,8 +71,10 @@
       fallbackLng: 'en',
       resGetPath: '_locales/__lng__/app.json',
     };
-  }
 
+    $.material.options.validate = false;
+    $.material.init();
+  }
 
   appRun.$inject = ['$rootScope', '$filter', '$state', '$stateParams', '$modal', 'credentialsService'];
 
@@ -133,6 +135,4 @@
       });
     }
   }
-
-
 })(angular);

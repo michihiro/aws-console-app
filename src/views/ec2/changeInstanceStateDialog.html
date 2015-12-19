@@ -1,43 +1,43 @@
 <div class="modal-header">
   <button class="close" ng-click="$dismiss()">&times;</button>
-  <h3 ng-bind="'ec2.'+mode|i18next"></h3>
+  <h3 ng-bind="::'ec2.'+mode|i18next"></h3>
 </div>
 <div class="modal-body">
   <form name="form" class="form-horizontal">
     <div class="form-group">
       <div class="col-xs-12"
-           ng-bind="'ec2.'+mode+'Msg.'+(instances.length>1 ? 1 : 0)|i18next"></div>
+           ng-bind="::'ec2.'+mode+'Msg.'+(instances.length>1 ? 1 : 0)|i18next"></div>
     </div>
     <div class="form-group"
          ng-if="mode=='stopInstance'">
       <div class="col-xs-12">
         <div class="alert alert-warning"
-             ng-bind="'ec2.'+mode+'Msg2'|i18next"></div>
+             ng-bind="::'ec2.'+mode+'Msg2'|i18next"></div>
       </div>
     </div>
     <div class="form-group">
       <label class="col-xs-4 control-label"
-             ng-bind="'ec2.instance'|i18next"></label>
+             ng-bind="::'ec2.instance'|i18next"></label>
       <div class="col-xs-8 form-control-static">
         <div ng-repeat="i in instances"
-             ng-bind="i.tags.Name ? i.tags.Name+' ('+i.InstanceId+')' : i.InstanceId">
+             ng-bind="::i.tags.Name ? i.tags.Name+' ('+i.InstanceId+')' : i.InstanceId">
         </div>
       </div>
     </div>
   </form>
+  <div class="cover" ng-if="processing"><div class="modal-loader"></div></div>
 </div>
 <div class="modal-footer">
-  <div class="alert alert-danger" ng-show="error">{{error|errorMsg:'ec2'}}</div>
-  <button class="btn btn-default"
-          ng-click="$dismiss()"
-          ng-disabled="processing">
-    <label>{{'com.cancel'|i18next}}</label>
+  <div class="alert alert-danger" ng-show="error" ng-bind="error|errorMsg:'ec2'"></div>
+  <button class="btn btn-raised"
+          ng-bind="::'com.cancel'|i18next"
+          ng-click="$dismiss()">
   </button>
-  <button class="btn btn-loading"
+  <button class="btn btn-raised"
+          ng-bind="::'ec2.'+btnLabel|i18next"
           ng-class="btnClass"
           ng-click="command()"
           ng-disabled="processing || form.$invalid">
-    <label ng-show="processing" class="loading"></label>
-    <label>{{'ec2.'+btnLabel|i18next}}</label>
   </button>
+  <div class="cover" ng-if="processing"></div>
 </div>

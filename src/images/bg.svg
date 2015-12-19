@@ -1,0 +1,8 @@
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='120' height='192' viewBox='0 0 10 16'>
+  <g id='c'>
+    <path fill='#fefefe' stroke="#f0f0f0" stroke-width=".1" d='M0 0l5 3v5l-5 -3z'/>
+    <path fill='#f7f7f7' stroke="#f0f0f0" stroke-width=".1" d='M10 0l-5 3v5l5 -3'/>
+  </g>
+  <use x='5' y='8' xlink:href='#c' />
+  <use x='-5' y='8' xlink:href='#c' />
+</svg>

@@ -1,27 +1,27 @@
 <div class="modal-header">
   <button class="close" ng-click="$dismiss()">&times;</button>
-  <h3>{{'s3.deleteConfirmation'|i18next}}</h3>
+  <h3 ng-bind="::'s3.deleteConfirmation'|i18next"></h3>
 </div>
 <div class="modal-body">
-  <div class="alert">
+  <div class="alert alert-warning">
     <p ng-if="keys.length == 1"
        ng-bind="'s3.deleteObjMsg1'|i18next|sprintf:keys[0].Key"></p>
     <p ng-if="keys.length > 1"
        ng-bind="'s3.deleteObjMsg2'|i18next|sprintf:keys.length"></p>
   </div>
+  <div class="cover" ng-if="processing"><div class="modal-loader"></div></div>
 </div>
 <div class="modal-footer">
-  <div class="alert alert-warning" ng-show="error">{{error|errorMsg:'s3'}}</div>
-  <button class="btn btn-default"
+  <div class="alert alert-warning" ng-show="error" ng-bind="error|errorMsg:'s3'"></div>
+  <button class="btn btn-raised btn-default"
+          ng-bind="::'com.cancel'|i18next"
           ng-click="$dismiss()"
           ng-disabled="processing" >
-    <label ng-show="processing" class="loading"></label>
-    <label>{{'com.cancel'|i18next}}</label>
   </button>
-  <button class="btn btn-loading" ng-class="{'btn-danger':!form.$invalid}" 
+  <button class="btn btn-raised" ng-class="{'btn-danger':isReady}" 
+          ng-bind="::'s3.delete'|i18next"
           ng-click="drop()"
           ng-disabled="processing || !isReady" >
-    <label ng-show="processing" class="loading"></label>
-    <label>{{'s3.delete'|i18next}}</label>
   </button>
+  <div class="cover" ng-if="processing"></div>
 </div>

@@ -9,7 +9,7 @@
     "angular-ui-utils": "=0.1.1",
     "animate.css": "~3.4.0",
     "bootstrap": "~3.3.6",
-    "bootstrap-material-design": "=0.1.6",
+    "bootstrap-material-design": "~0.5.5",
     "components-font-awesome": "~4.1.0",
     "cryptojslib": "~3.1.2",
     "hammerjs": "~2.0.4",

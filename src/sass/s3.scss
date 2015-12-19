@@ -71,9 +71,13 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 10px;
-  background-color: #ccc;
+  width: 20px;
+  margin-left: -5px;
+  background: linear-gradient(to right,
+    rgba(#fff, .5) 4px, #222 4px, #222 5px, rgba(#fff, .5) 5px,
+    rgba(#fff, .5) 10px, rgba(#fff, 0) 11px);
   cursor: col-resize;
+  z-index: 2;
 }
 .s3-upload-dialog .modal-body-inner {
   position: relative;
@@ -232,8 +236,15 @@
   padding: 8px 12px;
 }
 .s3-header > .breadcrumb {
+  margin: 0 0 0 8px;
   padding: 2px 16px 2px 8px;
-  margin-bottom: 0;
+  background: #444;
+  a {
+    color: hsla(175,99%,40%,1);
+  }
+  a:hover, a:focus {
+    color: hsla(175,99%,45%,1);
+  }
 }
 .s3-header li a:hover.disabled,
 .s3-header li a:focus.disabled {
