@@ -2,7 +2,7 @@
   <div class="s3-left" ng-style="{width:treeWidth}">
     <div class="s3-tree-header" ng-bind="'s3.buckets'|i18next"></div>
     <div ng-controller="s3TreeCtrl">
-      <div class="s3-tree" context-menu data-target="s3-tree-context-menu">
+      <div id="s3-tree" class="s3-tree">
         <s3-tree data="getBuckets()"></s3-tree>
       </div>
     </div>
@@ -12,7 +12,7 @@
   <div class="s3-right" ng-style="{left:treeWidth}"
        s3-upload-field="dropOpt">
     <div class="s3-upload-fileld-cover" ng-if="dropOpt.active"></div>
-    <div class="table-outer" context-menu data-target="s3-list-context-menu">
+    <div id="s3-list" class="table-outer">
       <div class="table-header-spacer"></div>
       <div class="table-container" app-bind-scroll-position="tableScroll">
         <table class="table table-striped">
@@ -96,7 +96,7 @@
   </div>
 </div>
 
-<div class="dropdown position-fixed" id="s3-tree-context-menu">
+<div dropdown class="position-fixed" contextmenu-for="#s3-tree">
   <ul class="dropdown-menu" role="menu">
     <li ng-repeat="m in treeMenu"
         ng-class="{disabled:m.disabled}">
@@ -108,7 +108,7 @@
   </ul>
 </div>
 
-<div class="dropdown position-fixed" id="s3-list-context-menu">
+<div dropdown class="position-fixed" contextmenu-for="#s3-list">
   <ul class="dropdown-menu" role="menu">
     <li ng-repeat="m in listMenu"
         ng-class="{disabled:m.disabled}">

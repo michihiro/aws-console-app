@@ -13,7 +13,8 @@
     .directive('tabHeadingsScroller', tabHeadingsScroller)
     .directive('modalDialog', modalDialogDirective)
     .directive('formGroup', formGroupDirective)
-    .directive('appElasticTextarea', appElasticTextareaDirective);
+    .directive('appElasticTextarea', appElasticTextareaDirective)
+    .directive('contextmenuFor', contextmenuForDirective);
 
   appRightClick.$inject = ['$parse'];
 
@@ -579,6 +580,39 @@
           all.push(formName + '.' + name + '.$invalid');
         }
         return all;
+      }
+    }
+  }
+
+  contextmenuForDirective.$inject = ['$document', '$parse'];
+
+  function contextmenuForDirective($document, $parse) {
+    return {
+      priority: -1,
+      link: link
+    };
+
+    function link(scope, elem, attr) {
+      var selector = attr.contextmenuFor;
+      if (!selector || !selector.length) {
+        return;
+      }
+      if (!attr.isOpen) {
+        attr.isOpen = '_isOpen["' + selector + '"]';
+      }
+
+      $document.on('contextmenu', selector, _onContextMenu);
+      scope.$on('$destroy', function() {
+        $document.off('contextmenu', selector, _onContextMenu);
+      });
+
+      function _onContextMenu(ev) {
+        ev.preventDefault();
+        elem.css({
+          left: ev.clientX,
+          top: ev.clientY,
+        });
+        $parse(attr.isOpen).assign(scope, true);
       }
     }
   }

@@ -343,7 +343,7 @@ body {
 .btn-group {
   margin: 1px;
 }
-.dropdown.position-fixed {
+[dropdown].position-fixed {
   z-index: 10;
 }
 .position-fixed .dropdown-menu {

@@ -17,7 +17,6 @@
     "is_js": "~0.7.4",
     "jquery": "~2.1.4",
     "momentjs": "~2.8.4",
-    "ng-context-menu": "~1.0.2",
     "ng-i18next": "~0.5.2",
     "sprintf": "~1.0.3"
   },

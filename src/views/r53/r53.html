@@ -1,7 +1,5 @@
 <div class="func-view">
-  <div class="r53-left" ng-style="{width:treeWidth}"
-       context-menu="r53Actions.isOpenHeaderMenu=false"
-       data-target="r53-zone-context-menu">
+  <div id="r53-left" class="r53-left" ng-style="{width:treeWidth}">
     <div class="r53-left-header" ng-bind="'r53.zones'|i18next"></div>
     <ul class="nav nav-pills nav-stacked">
       <li ng-if="r53Info.getHostedZones().length == 0">
@@ -20,11 +18,9 @@
   </div>
   <div class="r53-split-handle" ng-style="{left:treeWidth}"
        app-hammer="panHandles"></div>
-  <div class="r53-right" ng-style="{left:treeWidth}">
+  <div id="r53-right" class="r53-right" ng-style="{left:treeWidth}">
   
-    <div class="table-outer"
-         context-menu="r53Actions.isOpenHeaderMenu=false"
-         data-target="r53-rr-context-menu">
+    <div class="table-outer">
       <div class="table-header-spacer"></div>
       <div class="table-container" app-bind-scroll-position="tableScroll">
         <table class="table table-striped">
@@ -85,7 +81,7 @@
   </div>
 </div>
 
-<div class="dropdown position-fixed" id="r53-zone-context-menu">
+<div dropdown class="position-fixed" contextmenu-for="#r53-left">
   <ul class="dropdown-menu">
     <li ng-repeat="m in r53Actions.zone"
         ng-class="{disabled:r53Actions.isDisabled(m)}">
@@ -96,7 +92,7 @@
     </li>
   </ul>
 </div>
-<div class="dropdown position-fixed" id="r53-rr-context-menu">
+<div dropdown class="position-fixed" contextmenu-for="#r53-right">
   <ul class="dropdown-menu">
     <li ng-repeat="m in r53Actions.rrset"
         ng-class="{disabled:r53Actions.isDisabled(m)}">

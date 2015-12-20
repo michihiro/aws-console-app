@@ -20,8 +20,7 @@
       'ui.utils',
       'ui.bootstrap',
       'jm.i18next',
-      'sprintf',
-      'ng-context-menu'
+      'sprintf'
     ])
     .constant('awsRegions', {
       s3: regions,
