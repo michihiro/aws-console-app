@@ -53,3 +53,15 @@
     </accordion-group>
   </accordion>
 </div>
+
+<div dropdown class="position-fixed" contextmenu-for=".subnet-body">
+  <ul class="dropdown-menu">
+    <li ng-repeat="m in ec2Actions.all"
+        ng-class="{disabled:ec2Actions.isDisabled(m)}">
+      <a ng-class="{withoutripple:ec2Actions.isDisabled(m)}"
+         ng-click="ec2Actions.onClick($event, m);"
+         ng-bind="'ec2.'+m|i18next">
+      </a>
+    </li>
+  </ul>
+</div>

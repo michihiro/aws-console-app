@@ -151,10 +151,11 @@
 
     function link(scope, elem, attr) {
       var _selectedIdx = [];
+      var startPos, endPos;
       var opt = {
         recognizers: [[Hammer.Pan], [Hammer.Tap]]
       };
-      scope._selectRect = ng.element('<div></div>')
+      var _selectRect = $('<div></div>')
         .appendTo('body')
         .css({
           position: 'absolute',
@@ -163,11 +164,12 @@
           zIndex: 10
         });
 
-      scope._mc = new Hammer.Manager(elem[0], opt)
+      var _mc = new Hammer.Manager(elem[0], opt)
         .on('tap', _onTap)
         .on('panstart', _onPanstart)
         .on('panend', _onPanend)
-        .on('pan', _onPan);
+        .on('pancancel', _onPanend)
+        .on('panmove', _onPanmove);
 
       elem.on('$destroy', _onDestroy);
 
@@ -189,7 +191,7 @@
             );
           } else if (ev.srcEvent.ctrlKey || ev.srcEvent.metaKey) {
             idx = _selectedIdx.indexOf(pos.idx);
-            if (idx > 0) {
+            if (idx >= 0) {
               _selectedIdx.splice(idx, 1);
             } else {
               _selectedIdx.push(pos.idx);
@@ -205,22 +207,25 @@
       }
 
       function _onPanstart(ev) {
-        scope.startPos = _getIndexFromPosition(ev);
+        startPos = _getIndexFromPosition(ev);
       }
 
-      function _onPanend() {
-        scope.startPos = scope.endPos = null;
-        scope._selectRect.css({
+      function _onPanend(ev) {
+        startPos = endPos = null;
+        _selectRect.css({
           display: 'none'
         });
       }
 
-      function _onPan(ev) {
+      function _onPanmove(ev) {
         var handler = $parse(attr.appOnRowSelected);
-        scope.endPos = _getIndexFromPosition(ev);
-        if (scope.startPos && scope.endPos) {
+        _selectRect.css({display: 'none'});
+        endPos = _getIndexFromPosition(ev);
+        _selectRect.css({display: 'block'});
+        if (startPos && endPos) {
+
           scope.$apply(function() {
-            _selectedIdx = _getSequence(scope.startPos.idx, scope.endPos.idx);
+            _selectedIdx = _getSequence(startPos.idx, endPos.idx);
             handler(scope, {
               $event: ev.originalEvent,
               $indexes: _selectedIdx
@@ -237,11 +242,11 @@
         var y = srcEvent.pageY - (isStart ? ev.deltaY : 0);
         var tr = document.elementFromPoint(x, y);
         var trScope;
-        while (tr.tagName !== 'TR' && tr.parentNode) {
+        while (tr && tr.tagName !== 'TR' && tr.parentNode) {
           tr = tr.parentNode;
         }
-        if (tr.tagName === 'TR') {
-          trScope = ng.element(tr).scope();
+        if (tr && tr.tagName === 'TR') {
+          trScope = $(tr).scope();
           if (typeof trScope.$index === 'number') {
             return {
               x: x,
@@ -254,21 +259,19 @@
       }
 
       function _setRect() {
-        var start = scope.startPos;
-        var end = scope.endPos;
-        scope._selectRect.css({
-          left: Math.min(start.x, end.x),
-          top: Math.min(start.y, end.y),
-          width: Math.abs(start.x - end.x),
-          height: Math.abs(start.y - end.y),
+        _selectRect.css({
+          left: Math.min(startPos.x, endPos.x),
+          top: Math.min(startPos.y, endPos.y),
+          width: Math.abs(startPos.x - endPos.x),
+          height: Math.abs(startPos.y - endPos.y),
           display: 'block'
         });
       }
 
       function _onDestroy() {
-        scope._mc.destroy();
-        scope._mc = null;
-        scope._selectRect.remove();
+        _mc.destroy();
+        _mc = null;
+        _selectRect.remove();
       }
     }
 
@@ -608,11 +611,26 @@
 
       function _onContextMenu(ev) {
         ev.preventDefault();
-        elem.css({
-          left: ev.clientX,
-          top: ev.clientY,
+        var left = ev.clientX;
+        var top = ev.clientY;
+
+        var target = $(ev.target).closest(selector);
+        var targetPos = target.offset();
+        var menu = elem.find('.dropdown-menu');
+        var menuH = menu.height();
+        var menuW = menu.width();
+        var posTop = top - targetPos.top;
+        var posLeft = left - targetPos.left;
+
+        elem.toggleClass('dropup',
+          posTop > menuH && posTop + menuH > target.height());
+        menu.toggleClass('dropdown-menu-right',
+          posLeft > menuW && posLeft + menuW > target.width());
+        elem.css({left: left, top: top});
+
+        scope.$apply(function() {
+          $parse(attr.isOpen).assign(scope, true);
         });
-        $parse(attr.isOpen).assign(scope, true);
       }
     }
   }

@@ -380,6 +380,19 @@ body {
 .dropdown-menu .divider {
   background-color: #e5e5e5;
 }
+
+.open > .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+}
+
+.dropdown-menu {
+  display: block;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 200ms ease;
+}
+
 /*
 form textarea.ng-invalid.ng-dirty,
 form input.ng-invalid.ng-dirty {

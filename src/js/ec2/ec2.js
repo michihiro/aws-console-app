@@ -77,11 +77,12 @@
     });
   }
 
-  ec2Ctrl.$inject = ['$scope', '$interval', 'awsRegions', 'ec2Info'];
+  ec2Ctrl.$inject = ['$scope', '$interval', 'awsRegions', 'ec2Info', 'ec2Actions'];
 
-  function ec2Ctrl($scope, $interval, awsRegions, ec2Info) {
+  function ec2Ctrl($scope, $interval, awsRegions, ec2Info, ec2Actions) {
     ng.extend($scope, {
       ec2Info: ec2Info,
+      ec2Actions: ec2Actions,
     });
 
     var refreshTimer = $interval(ec2Info.refresh, REFRESH_INTERVAL);
@@ -336,7 +337,7 @@
     var mode = dialogInputs.mode;
     var btnLabel = mode.replace(/Instances$/, '');
     var btnClass = mode === 'stopInstances' ? 'btn-warning' :
-      mode === 'terminateInstances' ? 'btn-danger' : 'btn-info';
+      mode === 'terminateInstances' ? 'btn-danger' : 'btn-success';
 
     ng.extend($scope, {
       mode: mode,
