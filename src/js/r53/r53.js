@@ -75,7 +75,7 @@
           return true;
         }
         return selected.some(function(r) {
-          return r.Name.replace(/\.$/, '') === currentZone.Name.replace(/\.$/, '') &&
+          return r && r.Name.replace(/\.$/, '') === currentZone.Name.replace(/\.$/, '') &&
             (r.Type === 'SOA' || r.Type === 'NS');
         });
       }
@@ -462,7 +462,7 @@
       $q.all(promises).then(function() {
         if (mode !== 'createHostedZone') {
           associatedVpcsOrg = (currentZone.VPCs || []).map(function(v) {
-            return vpcs[v.VPCRegion].filter(function(vpc) {
+            return (vpcs[v.VPCRegion] || []).filter(function(vpc) {
               return vpc.VpcId === v.VPCId;
             })[0];
           });
@@ -784,6 +784,7 @@
 
     function setCurrent(zone) {
       currentZone = zone;
+      selected = [];
       updateRecords(zone);
     }
 

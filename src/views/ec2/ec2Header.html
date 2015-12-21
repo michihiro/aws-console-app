@@ -1,33 +1,33 @@
 <div class="ec2-header">
   <div class="btn-group" dropdown is-open="ec2Actions.isOpenHeaderMenu">
     <button class="btn" dropdown-toggle>
-      <span ng-bind="'com.action'|i18next"></span>
+      <span ng-bind="::'com.action'|i18next"></span>
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
       <li ng-repeat="m in ec2Actions.all"
           ng-class="{disabled:ec2Actions.isDisabled(m)}">
-        <a ng-click="ec2Actions.onClick($event, m);">
-          <span>{{'ec2.'+m|i18next}}</span>
+        <a ng-click="ec2Actions.onClick($event, m);"
+           ng-bind="::'ec2.'+m|i18next">
         </a>
       </li>
     </ul>
   </div>
   <div class="btn-group pull-right" dropdown is-open="selectRegion.isopen">
     <button class="btn btn-info" dropdown-toggle ng-disabled="processing">
-      <span>{{'ec2.regionName.'+ec2Info.getCurrentRegion()|i18next}}</span>
+      <span ng-bind="'ec2.regionName.'+ec2Info.getCurrentRegion()|i18next"></span>
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
       <li ng-if="r !== 'all'">
-        <a ng-click="ec2Info.setCurrentRegion('all');selectRegion.isopen=false">
-          <span>{{'ec2.regionName.all'|i18next}}</span>
+        <a ng-click="ec2Info.setCurrentRegion('all');selectRegion.isopen=false"
+           ng-bind="::'ec2.regionName.all'|i18next">
         </a>
       </li>
       <li ng-repeat="r in awsRegions.ec2" ng-if="r !== inputs.region">
         <a ng-class="{'btn-info':inputs.region==r}"
-           ng-click="ec2Info.setCurrentRegion(r);selectRegion.isopen=false">
-          <span>{{'ec2.regionName.'+r|i18next}} - {{r}}</span>
+           ng-click="ec2Info.setCurrentRegion(r);selectRegion.isopen=false"
+           ng-bind="::('ec2.regionName.'+r|i18next) + ' - '+ r">
         </a>
       </li>
     </ul>

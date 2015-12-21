@@ -308,7 +308,10 @@ body {
   background-color: rgba(255, 255, 255, 0.8);
 }
 .table-striped > tbody > tr:nth-of-type(odd) {
-    background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.4);
+}
+.table > tbody > tr.selected > td {
+  background-color: rgba(#f90, 0.7)
 }
 
 .th-inner {
@@ -325,8 +328,10 @@ body {
   line-height: 1.8em;
   padding: .05em .4em;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  &, & > * {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 .table-resize-handle {
   position: absolute;

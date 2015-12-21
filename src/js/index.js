@@ -73,6 +73,11 @@
 
     $.material.options.validate = false;
     $.material.init();
+    $(document).on('keydown', 'form input', function(ev) {
+      if (ev.which === 13) {
+        ev.preventDefault();
+      }
+    });
   }
 
   appRun.$inject = ['$rootScope', '$filter', '$state', '$stateParams', '$modal', 'credentialsService'];

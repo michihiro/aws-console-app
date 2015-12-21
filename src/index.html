@@ -24,8 +24,8 @@
   <!-- endbuild -->
 </head>
 
-<body ng-cloak ng-show="i18nextReady">
-  <div class="screen">
+<body ng-cloak>
+  <div class="screen" ng-if="i18nextReady">
     <div class="func-menu"
          ng-mouseenter="opened=true"
          ng-mouseleave="opened=false"
