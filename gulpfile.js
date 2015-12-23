@@ -108,9 +108,9 @@ gulp.task('js-vendor', function() {
 // compile sass to css
 gulp.task('sass', function() {
   var sass = require('gulp-sass');
-  return gulp.src(['src/sass/**/*.scss'])
+  return gulp.src(['src/sass/style.scss'])
     .pipe(plumber())
-    .pipe(newer({dest:'app/css', ext:'.css'}))
+    //.pipe(newer({dest:'app/css', ext:'.css'}))
     .pipe(using())
     .pipe(sass({
       style: 'expanded',

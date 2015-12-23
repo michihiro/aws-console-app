@@ -226,11 +226,20 @@ body {
 }
 /* modal */
 .modal.fade .modal-dialog {
-  transition: transform .1s ease;
-  transform: scale(1.05);
+  transform: none;
+  perspective: 1600px;
+  .modal-content {
+    transition: transform .25s ease-in, opacity .4s ease-in;
+    opacity: 0;
+    transform: rotateX(90deg) scale(.6);
+    transform-origin: 50% 0%;
+  }
 }
 .modal.in .modal-dialog {
-  transform: scale(1);
+  .modal-content {
+    opacity: 1;
+    transform: rotateX(0deg);
+  }
 }
 .modal h3 {
   margin: 0px;
