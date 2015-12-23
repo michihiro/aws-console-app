@@ -17,93 +17,53 @@
   s3ActionsFactory.$inject = ['$rootScope', 's3ListService', 's3DownloadService'];
 
   function s3ActionsFactory($rootScope, s3ListService, s3DownloadService) {
-    var actionsObj;
-    var actions = {
-      createBucket: {
-        label: 's3.createBucket',
-        onClick: function() {
-          $rootScope.openDialog('s3/createBucketDialog');
-          actionsObj.isMenuOpened = false;
-        }
-      },
-      deleteBucket: {
-        label: 's3.deleteBucket',
-        onClick: function() {
-          $rootScope.openDialog('s3/deleteBucketDialog');
-          actionsObj.isMenuOpened = false;
-        }
-      },
-      downloadObjects: {
-        label: 's3.downloadObjects',
-        onClick: function() {
-          downloadObjects();
-          actionsObj.isMenuOpened = false;
-        }
-      },
-      bucketProperties: {
-        label: 's3.bucketProperties',
-        onClick: function() {
-          $rootScope.openDialog('s3/bucketPropertiesDialog');
-          actionsObj.isMenuOpened = false;
-        }
-      },
-      createFolder: {
-        label: 's3.createFolder',
-        onClick: function() {
-          actionsObj.creatingFolder = true;
-          actionsObj.isMenuOpened = false;
-        }
-      },
-      deleteObjects: {
-        label: 's3.deleteObjects',
-        onClick: function() {
-          $rootScope.openDialog('s3/deleteObjectsDialog');
-          actionsObj.isMenuOpened = false;
-        }
-      },
-    };
+    var scope = $rootScope.$new();
 
-    actionsObj = {
+    var actions = {
       all: [
-        actions.createBucket,
-        //actions.bucketProperties,
-        actions.deleteBucket,
-        actions.createFolder,
-        actions.downloadObjects,
-        actions.deleteObjects,
+        'createBucket', 'deleteBucket', '',
+        'createFolder', 'downloadObjects', 'deleteObjects'
       ],
       tree: [
-        actions.createBucket,
-        //actions.bucketProperties,
-        actions.deleteBucket,
+        'createBucket', 'deleteBucket'
       ],
       list: [
-        actions.createFolder,
-        actions.downloadObjects,
-        actions.deleteObjects,
+        'createFolder', 'downloadObjects', 'deleteObjects'
       ],
     };
-
-    $rootScope.$watch(function() {
-      return s3ListService.getCurrent();
-    }, function(current) {
-      actions.createFolder.disabled = !current;
-      actions.bucketProperties.disabled =
-      actions.deleteBucket.disabled =
-        (!current || current.Prefix !== undefined);
+    ng.extend(scope, actions, {
+      onClick: onClick,
+      isDisabled: isDisabled,
     });
 
-    $rootScope.$watch(function() {
-      return s3ListService.getSelectedObjects();
-    }, function(selected) {
-      actions.downloadObjects.disabled = !selected || !selected.length;
-      actions.deleteObjects.disabled = !selected || !selected.length;
-    });
+    return scope;
 
-    return actionsObj;
+    function onClick(ev, key) {
+      if (isDisabled(key)) {
+        return;
+      }
 
-    function downloadObjects() {
-      s3DownloadService.download(s3ListService.getSelectedObjects());
+      if (key === 'downloadObjects') {
+        s3DownloadService.download(s3ListService.getSelectedObjects());
+      } else if (key === 'createFolder') {
+        scope.creatingFolder = true;
+      } else {
+        scope.openDialog('s3/' + key + 'Dialog');
+      }
+    }
+
+    function isDisabled(key) {
+      var current = s3ListService.getCurrent();
+      var selected = s3ListService.getSelectedObjects();
+      if (key === 'createFolder') {
+        return !current;
+      }
+      if (key === 'deleteBucket') {
+        return !current || current.Prefix !== undefined;
+      }
+      if (key === 'downloadObjects' || key === 'deleteObjects') {
+        return !selected || !selected.length;
+      }
     }
   }
 
@@ -113,7 +73,6 @@
 
     ng.extend($scope, {
       s3Actions: s3Actions,
-      actions: s3Actions.all,
       breadcrumb: [],
       getCurrent: s3ListService.getCurrent,
       setCurrent: s3ListService.setCurrent,
@@ -195,8 +154,6 @@
       sortExp: sortExp,
       sortCol: 'Name',
       sortReverse: false,
-      treeMenu: s3Actions.tree,
-      listMenu: s3Actions.list,
       s3Actions: s3Actions,
       onDblClickList: onDblClickList,
       downloadObjects: downloadObjects,

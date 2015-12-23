@@ -97,24 +97,24 @@
 </div>
 
 <div dropdown class="position-fixed" contextmenu-for="#s3-tree">
-  <ul class="dropdown-menu" role="menu">
-    <li ng-repeat="m in treeMenu"
-        ng-class="{disabled:m.disabled}">
-      <a ng-class="{withoutripple:m.disabled}"
-         ng-click="(!m.disabled || $event.stopPropagation()) && m.onClick($event)"
-         ng-bind="m.label|i18next">
+  <ul class="dropdown-menu">
+    <li ng-repeat="m in s3Actions.tree"
+        ng-class="{disabled:s3Actions.isDisabled(m)}">
+      <a ng-class="{withoutripple:s3Actions.isDisabled(m)}"
+         ng-click="s3Actions.onClick($event, m);"
+         ng-bind="'s3.'+m|i18next">
       </a>
     </li>
   </ul>
 </div>
 
 <div dropdown class="position-fixed" contextmenu-for="#s3-list">
-  <ul class="dropdown-menu" role="menu">
-    <li ng-repeat="m in listMenu"
-        ng-class="{disabled:m.disabled}">
-      <a ng-class="{withoutripple:m.disabled}"
-         ng-click="(!m.disabled || $event.stopPropagation()) && m.onClick($event)"
-         ng-bind="m.label|i18next">
+  <ul class="dropdown-menu">
+    <li ng-repeat="m in s3Actions.list"
+        ng-class="{disabled:s3Actions.isDisabled(m)}">
+      <a ng-class="{withoutripple:s3Actions.isDisabled(m)}"
+         ng-click="s3Actions.onClick($event, m);"
+         ng-bind="'s3.'+m|i18next">
       </a>
     </li>
   </ul>

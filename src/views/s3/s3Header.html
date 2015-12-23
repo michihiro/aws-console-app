@@ -5,11 +5,10 @@
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
-      <li ng-repeat="m in actions"
-          ng-class="{disabled:m.disabled}">
-        <a ng-class="{withoutripple:m.disabled}"
-           ng-click="(!m.disabled || $event.stopPropagation()) && m.onClick($event)"
-           ng-bind="::m.label|i18next">
+      <li ng-repeat="m in s3Actions.all"
+          ng-class="{divider:!m.length, disabled:s3Actions.isDisabled(m)}">
+        <a ng-if="m.length" ng-click="s3Actions.onClick($event, m);"
+           ng-bind="::'s3.'+m|i18next">
         </a>
       </li>
     </ul>
