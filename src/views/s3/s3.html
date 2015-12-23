@@ -81,15 +81,17 @@
       <div ng-repeat="n in getNotifications()"
            ng-mouseenter="n._hover=true"
            ng-mouseleave="n._hover=false"
-           class="alert alert-info">
-        <div class="progress">
-          <span ng-bind="n.percent + '%'"></span>
-          <div class="progress-bar progress-bar-material-lightgrey active"
-               ng-class="{fin: n.percent==100}"
-               ng-style="{width: n.percent+'%'}">
+           class="panel">
+        <div class="panel-body">
+          <div class="progress">
+            <span ng-bind="n.percent + '%'"></span>
+            <div class="progress-bar progress-bar-success"
+                 ng-class="{fin: n.percent==100}"
+                 ng-style="{width: n.percent+'%'}">
+            </div>
           </div>
+          <div ng-bind="n.sizeProcessed + ' / ' + n.sizeTotal +' bytes'"></div>
         </div>
-        <div ng-bind="n.sizeProcessed + ' / ' + n.sizeTotal +' bytes'"></div>
       </div>
     </div>
 

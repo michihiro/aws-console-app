@@ -251,7 +251,7 @@
         var trElems = elem.find('tbody tr');
         var tr, trScope;
 
-        if (y < 0) {
+        if (ev.type !== 'panstart' && y < 0) {
           tr = trElems[0];
         } else if (y > h) {
           tr = trElems[trElems.length - 1];
@@ -378,9 +378,9 @@
     }
   }
 
-  appBindWidthDirective.$inject = ['$timeout'];
+  appBindWidthDirective.$inject = [];
 
-  function appBindWidthDirective($timeout) {
+  function appBindWidthDirective() {
     return {
       restrict: 'A',
       scope: {
@@ -422,7 +422,7 @@
           return;
         }
         var w = scope._width + ev.deltaX;
-        $timeout(function() {
+        scope.$apply(function() {
           scope.opt.width = w > 50 ? w : 50;
           _setLeft();
         });

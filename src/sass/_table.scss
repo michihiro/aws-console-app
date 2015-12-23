@@ -1,0 +1,83 @@
+
+.table-outer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.table-header-spacer {
+  height: 1.8em;
+}
+.table-container {
+  height: calc(100% - 1.8em);
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  .table {
+    table-layout: fixed;
+    width: auto;
+
+    thead > tr > th,
+    tbody > tr > td {
+      padding: 0;
+    }
+  }
+}
+
+.table-striped > tbody {
+  > tr:nth-of-type(even) {
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+  > tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+}
+.table > tbody > tr.selected > td {
+  background-color: rgba(#f90, 0.7)
+}
+
+.th-inner {
+  position: absolute;
+  line-height: 1.8em;
+  top: 0;
+  padding: .05em .4em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: rgba(255,255,255,.9);
+}
+.td-inner {
+  line-height: 1.8em;
+  padding: .05em .4em;
+  white-space: nowrap;
+  &, & > * {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.table-resize-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  min-height: 100%;
+  background-image: -webkit-gradient(linear, left top, right top,
+    color-stop(0, rgba(0, 0, 0, 0)),
+    color-stop(0.4, rgba(0, 0, 0, 0)),
+    color-stop(0.5, rgba(0, 0, 0, .1)),
+    color-stop(0.6, rgba(0, 0, 0, 0)),
+    color-stop(1, rgba(0, 0, 0, 0)));
+}
+.table-resize-handle:hover {
+  background-image: -webkit-gradient(linear, left top, right top,
+    color-stop(0, rgba(0, 0, 0, 0)),
+    color-stop(0.4, rgba(0, 0, 0, 0)),
+    color-stop(0.5, rgba(0, 0, 0, .25)),
+    color-stop(0.6, rgba(0, 0, 0, 0)),
+    color-stop(1, rgba(0, 0, 0, 0)));
+  cursor: ew-resize;
+}
