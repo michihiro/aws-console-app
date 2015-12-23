@@ -23,7 +23,7 @@
     <div class="table-outer">
       <div class="table-header-spacer"></div>
       <div class="table-container" app-bind-scroll-position="tableScroll">
-        <table class="table table-striped">
+        <table class="table table-striped" app-on-row-selected="onRowSelect($indexes)">
           <thead>
             <tr>
               <th ng-repeat="col in columns"
@@ -41,7 +41,7 @@
               </th>
             </tr>
           </thead>
-          <tbody app-on-row-selected="onRowSelect($indexes)">
+          <tbody>
             <tr ng-if="getCurrent() && getCurrent().list === undefined">
              <td colspan="{{columns.length}}">
                <div class="td-inner">

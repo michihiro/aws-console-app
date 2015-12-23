@@ -155,8 +155,14 @@
       var opt = {
         recognizers: [[Hammer.Pan], [Hammer.Tap]]
       };
+      var _selectRectParent = $('<div></div>')
+        .insertBefore(elem)
+        .css({
+          position: 'relative',
+          height: 0
+        });
       var _selectRect = $('<div></div>')
-        .appendTo('body')
+        .appendTo(_selectRectParent)
         .css({
           position: 'absolute',
           border: '1px dashed #777',
@@ -210,7 +216,7 @@
         startPos = _getIndexFromPosition(ev);
       }
 
-      function _onPanend(ev) {
+      function _onPanend() {
         startPos = endPos = null;
         _selectRect.css({
           display: 'none'
@@ -237,20 +243,30 @@
 
       function _getIndexFromPosition(ev) {
         var srcEvent = ev.srcEvent ? ev.srcEvent : ev;
-        var isStart = ev.type === 'panstart';
-        var x = srcEvent.pageX - (isStart ? ev.deltaX : 0);
-        var y = srcEvent.pageY - (isStart ? ev.deltaY : 0);
-        var tr = document.elementFromPoint(x, y);
-        var trScope;
-        while (tr && tr.tagName !== 'TR' && tr.parentNode) {
-          tr = tr.parentNode;
+        var offset = elem.offset();
+        var x = srcEvent.x - offset.left;
+        var y = srcEvent.y - offset.top;
+        var h = elem.height();
+        var w = elem.width();
+        var trElems = elem.find('tbody tr');
+        var tr, trScope;
+
+        if (y < 0) {
+          tr = trElems[0];
+        } else if (y > h) {
+          tr = trElems[trElems.length - 1];
+        } else {
+          tr = document.elementFromPoint(srcEvent.x, srcEvent.y);
+          while (tr && tr.tagName !== 'TR' && tr.parentNode) {
+            tr = tr.parentNode;
+          }
         }
         if (tr && tr.tagName === 'TR') {
           trScope = $(tr).scope();
           if (typeof trScope.$index === 'number') {
             return {
-              x: x,
-              y: y,
+              x: Math.min(Math.max(x, 0), w),
+              y: Math.min(Math.max(y, 0), h),
               idx: trScope.$index
             };
           }
