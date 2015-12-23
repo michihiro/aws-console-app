@@ -18,9 +18,18 @@ com:
   create: 作成する
   update: 変更する
   delete: 削除する
+  passwordStrength: パスワード強度
+  passwordScore:
+    - 
+    - 非常に弱い
+    - 弱い
+    - 普通
+    - 強い
+    - 非常に強い
   error:
     invalidPassword: パスワードが正しくありません。
     passwordsDoNotMatch: パスワードが一致しません。
+  errorTitle: エラー
 s3:
   serviceName: S3
   buckets: バケット

@@ -275,4 +275,9 @@ textarea.form-control {
   margin: 4px 0 12px 0;
 }
 
-
+.password-score {
+  font-size: .8em;
+  .progress {
+    margin-bottom: 0;
+  }
+}

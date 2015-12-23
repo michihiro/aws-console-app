@@ -18,7 +18,8 @@
     "jquery": "~2.1.4",
     "momentjs": "~2.8.4",
     "ng-i18next": "~0.5.2",
-    "sprintf": "~1.0.3"
+    "sprintf": "~1.0.3",
+    "zxcvbn": "~4.2.0"
   },
   "devDependencies": {}
 }

@@ -18,6 +18,14 @@ com:
   create: Create
   update: Update
   delete: Delete
+  passwordStrength: Password strength
+  passwordScore:
+    - 
+    - Very weak
+    - Weak
+    - Good
+    - Strong
+    - Very strong
   error:
     invalidPassword: Invalid password.
     passwordsDoNotMatch: Passwords do not match.

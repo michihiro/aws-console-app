@@ -200,6 +200,10 @@
       mode: dialogInputs.mode,
       inputs: {},
       passwordValidator: passwordValidator,
+      strength: strength,
+      strengthType: [
+        '', 'danger', 'warning', 'info', 'success', 'success'
+      ],
       auth: auth,
       setPassword: setPassword,
       onEnterKeydown: onEnterKeydown,
@@ -210,6 +214,12 @@
       $(window).off('focus', _focus);
     });
     _focus();
+
+    function strength($value) {
+      $scope.passwordScore = (!$value || !$value) ? 0 :
+        zxcvbn($value || '').score + 1;
+      return true;
+    }
 
     function _focus() {
       appFocusOn(inputNames[$scope.mode][0]);
