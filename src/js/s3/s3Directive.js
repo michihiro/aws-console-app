@@ -44,9 +44,9 @@
     }
   }
 
-  s3UploadFieldDirective.$inject = ['$timeout', '$q', 's3UploadService'];
+  s3UploadFieldDirective.$inject = ['$q', 's3UploadService'];
 
-  function s3UploadFieldDirective($timeout, $q, s3UploadService) {
+  function s3UploadFieldDirective($q, s3UploadService) {
 
     ng.element(document).on({
       dragover: function(ev) {
@@ -65,7 +65,6 @@
     };
 
     function link(scope, elem) {
-      var timeoutPromise;
 
       elem.on({
         dragover: dragOver,
@@ -82,24 +81,16 @@
         ev.preventDefault();
         ev.originalEvent.dataTransfer.dropEffect = 'copy';
 
-        $timeout(function() {
-          if (timeoutPromise) {
-            $timeout.cancel(timeoutPromise);
-            timeoutPromise = null;
-          }
+        scope.$apply(function() {
           scope.opt.active = true;
         });
       }
 
       function dragLeave() {
-        if (timeoutPromise) {
-          $timeout.cancel(timeoutPromise);
-        }
-        timeoutPromise = $timeout(function() {
+        scope.$apply(function() {
           scope.opt.active = false;
-          timeoutPromise = null;
           scope.uploadInfo = null;
-        }, 500);
+        });
       }
 
       function drop(ev) {
@@ -123,7 +114,7 @@
         }
 
         uploadInfo = s3UploadService.createUploadList(entries);
-        uploadInfo.promise.then(onceOnDrop, onError, onceOnDrop);
+        uploadInfo.promise.then(onceOnDrop, onError, _claer);
 
         var onDrop = scope.opt.onDrop;
 
@@ -132,20 +123,15 @@
             onDrop(uploadInfo);
           }
           onDrop = null;
-          $timeout(function() {
-            scope.opt.active = false;
-            timeoutPromise = null;
-            scope.uploadInfo = null;
-          });
         }
 
         function onError() {
-          $timeout(function() {
-            scope.opt.active = false;
-            timeoutPromise = null;
-            scope.uploadInfo = null;
-          });
           // TODO;
+        }
+
+        function _claer() {
+          scope.opt.active = false;
+          scope.uploadInfo = null;
         }
       }
     }

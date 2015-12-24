@@ -10,8 +10,8 @@
   <div class="s3-split-handle" ng-style="{left:treeWidth}"
        app-hammer="panHandles"></div>
   <div class="s3-right" ng-style="{left:treeWidth}"
-       s3-upload-field="dropOpt">
-    <div class="s3-upload-fileld-cover" ng-if="dropOpt.active"></div>
+       s3-upload-field="dropOpt"
+       ng-class="{'upload-active':dropOpt.active}">
     <div id="s3-list" class="table-outer">
       <div class="table-header-spacer"></div>
       <div class="table-container" app-bind-scroll-position="tableScroll">

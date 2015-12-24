@@ -605,12 +605,20 @@
         var entry = entries.shift();
         if (entry.isFile) {
           entry.getMetadata(function(metadata) {
-            uploadList.push({
+            var item = {
               check: true,
-              entry: entry,
               path: entry.fullPath.replace(/^\//, ''),
               size: metadata.size
+            };
+            Object.defineProperties(item, {
+              entry: {
+                enumerable: false,
+                get: function(entry) {
+                  return entry;
+                }.bind(null, entry)
+              }
             });
+            uploadList.push(item);
             uploadList.total += metadata.size;
             defer.notify(uploadList);
             defer.resolve(uploadList);

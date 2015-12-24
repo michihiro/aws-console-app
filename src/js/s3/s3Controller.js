@@ -249,11 +249,13 @@
       {
         col: 'path',
         name: 's3.name',
+        sortable: true,
         width: 400
       },
       {
         col: 'size',
         name: 's3.size',
+        sortable: true,
         class: 'text-right',
         filterFn: appFilterService.byteFn,
         width: 130
@@ -263,6 +265,10 @@
     ng.extend($scope, {
       uploadInfo: dialogInputs.uploadInfo,
       columns: columns,
+      setSort: setSort,
+      sortExp: sortExp,
+      sortCol: 'path',
+      sortReverse: false,
       storageClasses: [ 'STANDARD', 'REDUCED_REDUNDANCY', 'STANDARD_IA' ],
       folder: s3ListService.getCurrent(),
       inputs: {
@@ -271,28 +277,44 @@
       upload: upload
     });
 
+    $scope.$watch('uploadInfo.uploadList', function(list) {
+      $scope.uploadOverview = list.reduce(function(all, v) {
+        if (v.check) {
+          all.total += v.size;
+          all.num ++;
+        }
+        return all;
+      }, {total: 0, num: 0});
+      $scope.isReady = !!$scope.uploadOverview.num;
+    }, true);
+
     $scope.uploadInfo.promise.then(function() {
-      $scope.uploadFiles = $scope.uploadInfo.uploadList;
       $scope.isReady = true;
-      $scope.$watch(function() {
-        return ($scope.uploadInfo.uploadList || []).some(_isChecked);
-      }, function(isReady) {
-        $scope.isReady = isReady;
-      }, true);
     }, function() {
       $scope.$dismiss();
-    }, function() { //(uploadFiles) {
-      //$scope.uploadFiles = $scope.uploadInfo.uploadList.slice();
     });
 
     return;
+
+    function setSort(col) {
+      if ($scope.sortCol === col.col) {
+        $scope.sortReverse = !$scope.sortReverse;
+      } else {
+        $scope.sortCol = col.col;
+        $scope.sortReverse = false;
+      }
+    }
+
+    function sortExp(item) {
+      return item[$scope.sortCol];
+    }
 
     function _isChecked(v) {
       return v.check;
     }
 
     function upload() {
-      var promises = $scope.uploadFiles.filter(_isChecked).map(_uploadOne);
+      var promises = $scope.uploadInfo.uploadList.filter(_isChecked).map(_uploadOne);
       $scope.processing = true;
 
       $scope.notification = {
@@ -301,9 +323,7 @@
         numProcessed: 0,
         sizes: [],
         sizeProcessed: 0,
-        sizeTotal: $scope.uploadFiles.map(function(v) {
-          return v.size;
-        }).reduce(_sum, 0),
+        sizeTotal: $scope.uploadOverview.total,
       };
       s3NotificationsService.add($scope.notification);
       $scope.$close();

@@ -22,7 +22,7 @@
     </div>
   </div>
   <div class="form-group">
-    <div class="col-xs-12" ng-bind="uploadInfo.uploadList.length + ' Files, ' + (uploadInfo.uploadList.total|bytes)"></div>
+    <div class="col-xs-12" ng-bind="uploadOverview.num + ' Files, ' + (uploadOverview.total|bytes)"></div>
   </div>
 
   <div class="modal-body-inner">
@@ -35,7 +35,12 @@
               <th ng-repeat="col in columns">
                 <div class="th-inner"
                      ng-style="{left:col.left,width:col.width+'px','-webkit-transform':'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
-                  <span ng-bind="::col.name|i18next"></span>
+                  <span ng-bind="::col.name ? (col.name|i18next) : '&nbsp;'"></span>
+                  <div class="sort-mark" ng-if="col.sortable" ng-click="setSort(col)">
+                    <i ng-if="sortCol==col.col && !sortReverse" class="fa fa-sort-up"></i>
+                    <i ng-if="sortCol==col.col && sortReverse" class="fa fa-sort-down"></i>
+                  </div>
+
                   <div class="table-resize-handle"
                        app-bind-width="col"></div>
                 </div>
@@ -43,12 +48,16 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="item in uploadFiles"
+            <tr ng-repeat="item in uploadInfo.uploadList | orderBy:sortExp:sortReverse"
+                ng-click="item.check=!item.check"
+                ng-class="{'not-checked':!item.check}"
                 ng-attr-row-id="{{ item.path }}">
               <td ng-repeat="col in columns" class="{{col.class}}"
                   ng-style="{width:col.width+'px'}">
                 <div class="td-inner" ng-style="{width: col.width+'px'}">
-                  <span ng-if="col.checkbox"><input type="checkbox" ng-model="item.check"></span>
+                  <span ng-if="col.checkbox">
+                    <input type="checkbox" ng-model="item.check" ng-click="$event.stopPropagation()">
+                  </span>
                   <span ng-if="col.col && col.filterFn" ng-bind="::col.filterFn(item[col.col])"></span>
                   <span ng-if="col.col && !col.filterFn" ng-bind="::item[col.col]"></span>
                 </div>

@@ -102,16 +102,6 @@
   opacity: 1;
   transform: translate3d(0, 0, 0);
 }
-.s3-right th .sort-mark {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 15px;
-  text-align: right;
-  color: #aaa;
-  cursor: pointer;
-}
 .s3-right table input {
   padding: 0 8px;
 }
@@ -167,15 +157,8 @@
   }
 }
 
-.s3-upload-fileld-cover {
-  z-index: 1000;
-  content: ' ';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(128, 128, 128, .2);
+[s3-upload-field].upload-active {
+  background: rgba(#000, .2);
 }
 
 .s3-header > * {
@@ -210,3 +193,7 @@
 .s3-upload-dialog .form-group {
   margin-bottom: 10px;
 }
+.s3-upload-dialog .not-checked .td-inner {
+  text-decoration: line-through;
+}
+

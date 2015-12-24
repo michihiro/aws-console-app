@@ -81,3 +81,14 @@
     color-stop(1, rgba(0, 0, 0, 0)));
   cursor: ew-resize;
 }
+
+.sort-mark {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 15px;
+  text-align: right;
+  color: #aaa;
+  cursor: pointer;
+}
