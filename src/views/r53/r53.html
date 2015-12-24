@@ -2,6 +2,14 @@
   <div id="r53-left" class="r53-left" ng-style="{width:treeWidth}">
     <div class="r53-left-header" ng-bind="'r53.zones'|i18next"></div>
     <ul class="nav nav-pills nav-stacked">
+      <li ng-if="$root.getCredentials() && r53Info.getHostedZones()==undefined">
+        <div>
+          <div class="loader"></div>
+          <div class="loader"></div>
+          <div class="loader"></div>
+          <div class="loader"></div>
+        </div>
+      </li>
       <li ng-if="r53Info.getHostedZones().length == 0">
         <div ng-bind="'r53.noHostedZone'|i18next"></div>
       </li>
@@ -42,7 +50,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-if="getCurrent() && getCurrent().list === undefined">
+            <tr ng-if="r53Info.getCurrent() && r53Info.getCurrent().list === undefined">
              <td colspan="{{columns.length}}">
                <div class="td-inner">
                  <div class="loader"></div>

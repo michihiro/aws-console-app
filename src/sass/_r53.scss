@@ -15,18 +15,13 @@
   right: 0;
 }
 .r53-left .r53-left-header {
-  position:absolute;
   line-height: 1.8em;
-  top: 0;
   padding: .05em .4em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: bold;
-}
-.r53-left .nav {
-  margin-top: 1.8em;
-  border-top: 2px solid rgb(221, 221, 221);
+  border-bottom: 1px solid #aaa;
 }
 .r53-left .nav > li > a {
   padding: 2px;
@@ -45,10 +40,21 @@
   width: 20px;
   margin-left: -5px;
   background: linear-gradient(to right,
-    rgba(#fff, .5) 4px, #222 4px, #222 5px, rgba(#fff, .5) 5px,
-    rgba(#fff, .5) 10px, rgba(#fff, 0) 11px);
-  cursor: col-resize;
+    rgba(#fff, 0) 4px, #222 4px, #222 5px, rgba(#fff, 0) 5px,
+    rgba(#fff, 0) 10px, rgba(#fff, 0) 11px);
   z-index: 2;
+  &:hover {
+    cursor: col-resize;
+  }
+}
+.r53-right tr.ng-enter {
+  transition: all .2s ease;
+  opacity: 0;
+  transform: translate3d(0, -10px, 0);
+}
+.r53-right tr.ng-enter.ng-enter-active {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
 }
 .btn-group .btn.remove-vpc {
   margin-left: 1px;

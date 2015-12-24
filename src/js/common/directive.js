@@ -4,7 +4,7 @@
   ng.module('aws-console')
     .directive('appRightClick', appRightClick)
     .directive('appBindWidth', appBindWidthDirective)
-    .directive('appBindScrollPosition', appBindScrollPosition)
+    //.directive('appBindScrollPosition', appBindScrollPosition)
     .directive('appOnRowSelected', appOnRowSelected)
     .directive('tableOuter', tableOuter)
     .directive('appFocusOn', appFocusOnDirective)
@@ -227,9 +227,8 @@
         var handler = $parse(attr.appOnRowSelected);
         _selectRect.css({display: 'none'});
         endPos = _getIndexFromPosition(ev);
-        _selectRect.css({display: 'block'});
         if (startPos && endPos) {
-
+          _selectRect.css({display: 'block'});
           scope.$apply(function() {
             _selectedIdx = _getSequence(startPos.idx, endPos.idx);
             handler(scope, {
@@ -299,9 +298,9 @@
     }
   }
 
-  modalDialogDirective.$inject = ['$timeout', '$window'];
+  modalDialogDirective.$inject = ['$window'];
 
-  function modalDialogDirective($timeout, $window) {
+  function modalDialogDirective($window) {
 
     return {
       restrict: 'C',
@@ -444,9 +443,10 @@
     }
   }
 
-  appBindScrollPosition.$inject = ['$window', '$timeout'];
+  /*
+  appBindScrollPosition.$inject = [];
 
-  function appBindScrollPosition($window, $timeout) {
+  function appBindScrollPosition() {
     return {
       restrict: 'A',
       scope: {
@@ -458,13 +458,14 @@
     function link(scope, elem) {
       scope.pos = scope.pos || {};
       elem.on('scroll', function() {
-        $timeout(function() {
+        scope.$apply(function() {
           scope.pos.scrollLeft = elem[0].scrollLeft;
           scope.pos.scrollTop = elem[0].scrollTop;
         });
       });
     }
   }
+  */
 
   tabHeadingsScroller.$inject = ['$timeout'];
 

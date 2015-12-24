@@ -13,24 +13,21 @@
   bottom: 0;
 }
 .s3-left .s3-tree-header {
-  position: absolute;
   line-height: 1.8em;
-  top: 0;
   padding: .05em .4em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: bold;
+  border-bottom: 1px solid #aaa;
 }
 .s3-left .s3-tree {
   position: absolute;
   left: 0;
-  top: 1.8em;
+  top: calc(1.8em + 2px);
   bottom: 0;
-  right:0;
+  right: 2px;
   overflow: scroll;
-  border-right: 1px solid rgba(0,0,0,.2);
-  border-top: 2px solid rgb(221, 221, 221);
 }
 .s3-left i.fa-caret-right {
  padding: 0 4px;
@@ -74,10 +71,12 @@
   width: 20px;
   margin-left: -5px;
   background: linear-gradient(to right,
-    rgba(#fff, .5) 4px, #222 4px, #222 5px, rgba(#fff, .5) 5px,
-    rgba(#fff, .5) 10px, rgba(#fff, 0) 11px);
-  cursor: col-resize;
+    rgba(#fff, 0) 4px, #222 4px, #222 5px, rgba(#fff, 0) 5px,
+    rgba(#fff, 0) 10px, rgba(#fff, 0) 11px);
   z-index: 2;
+  &:hover {
+    cursor: col-resize;
+  }
 }
 .s3-upload-dialog .modal-body-inner {
   position: relative;
@@ -88,7 +87,6 @@
   right: 0;
   top: 0;
   bottom: 0;
-  border-right: 1px solid #428bca;
 }
 .s3-right table i {
   margin-right: .2em;

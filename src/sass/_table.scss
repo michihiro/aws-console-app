@@ -9,7 +9,7 @@
   overflow-y: hidden;
 }
 .table-header-spacer {
-  height: 1.8em;
+  height: calc(1.8em + 1px);
 }
 .table-container {
   height: calc(100% - 1.8em);
@@ -20,9 +20,14 @@
     table-layout: fixed;
     width: auto;
 
+    thead > tr > th {
+      border-bottom: none;
+    }
+
     thead > tr > th,
     tbody > tr > td {
       padding: 0;
+      border-top: none;
     }
   }
 }
@@ -48,14 +53,19 @@
   overflow: hidden;
   text-overflow: ellipsis;
   background: rgba(255,255,255,.9);
+  border-bottom: 1px solid #aaa;
 }
 .td-inner {
   line-height: 1.8em;
   padding: .05em .4em;
   white-space: nowrap;
+  border-top: 1px solid #ddd;
   &, & > * {
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+  tr:first-child & {
+    border-top-color: transparent;
   }
 }
 
@@ -65,20 +75,18 @@
   right: 0;
   width: 10px;
   min-height: 100%;
-  background-image: -webkit-gradient(linear, left top, right top,
-    color-stop(0, rgba(0, 0, 0, 0)),
-    color-stop(0.4, rgba(0, 0, 0, 0)),
-    color-stop(0.5, rgba(0, 0, 0, .1)),
-    color-stop(0.6, rgba(0, 0, 0, 0)),
-    color-stop(1, rgba(0, 0, 0, 0)));
+  background-image: linear-gradient(to right,
+   rgba(255, 255, 255, 0) 4px,
+   #444 4px,
+   rgba(255, 255, 255, 0) 5px,
+   rgba(255, 255, 255, 0) 10px);
 }
 .table-resize-handle:hover {
-  background-image: -webkit-gradient(linear, left top, right top,
-    color-stop(0, rgba(0, 0, 0, 0)),
-    color-stop(0.4, rgba(0, 0, 0, 0)),
-    color-stop(0.5, rgba(0, 0, 0, .25)),
-    color-stop(0.6, rgba(0, 0, 0, 0)),
-    color-stop(1, rgba(0, 0, 0, 0)));
+  background-image: linear-gradient(to right,
+   rgba(255, 255, 255, 0) 4px,
+   #444 4px, #444 5px,
+   rgba(255, 255, 255, 0) 5px,
+   rgba(255, 255, 255, 0) 10px);
   cursor: ew-resize;
 }
 

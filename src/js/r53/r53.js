@@ -90,9 +90,9 @@
     });
   }
 
-  r53Ctrl.$inject = ['$scope', '$window', '$timeout', '$filter', 'r53Actions', 'r53Info'];
+  r53Ctrl.$inject = ['$scope', '$window', '$filter', 'r53Actions', 'r53Info'];
 
-  function r53Ctrl($scope, $window, $timeout, $filter, r53Actions, r53Info) {
+  function r53Ctrl($scope, $window, $filter, r53Actions, r53Info) {
     var columns = [{
       width: 250,
       col: 'Name',
@@ -179,9 +179,9 @@
     }
   }
 
-  r53ChangeRRSetDialogCtrl.$inject = ['$scope', '$timeout', '$q', 'awsR53', 'appFocusOn', 'r53Info', 'dialogInputs'];
+  r53ChangeRRSetDialogCtrl.$inject = ['$scope', '$q', 'awsR53', 'appFocusOn', 'r53Info', 'dialogInputs'];
 
-  function r53ChangeRRSetDialogCtrl($scope, $timeout, $q, awsR53, appFocusOn, r53Info, dialogInputs) {
+  function r53ChangeRRSetDialogCtrl($scope, $q, awsR53, appFocusOn, r53Info, dialogInputs) {
     var currentZone = r53Info.getCurrent();
     var mode = dialogInputs.mode;
     var btnLabels = {
@@ -382,9 +382,9 @@
     }
   }
 
-  r53ChangeHostedZoneDialogCtrl.$inject = ['$scope', '$timeout', '$q', 'awsR53', 'awsEC2', 'awsRegions', 'appFocusOn', 'r53Info', 'dialogInputs'];
+  r53ChangeHostedZoneDialogCtrl.$inject = ['$scope', '$q', 'awsR53', 'awsEC2', 'awsRegions', 'appFocusOn', 'r53Info', 'dialogInputs'];
 
-  function r53ChangeHostedZoneDialogCtrl($scope, $timeout, $q, awsR53, awsEC2, awsRegions, appFocusOn, r53Info, dialogInputs) {
+  function r53ChangeHostedZoneDialogCtrl($scope, $q, awsR53, awsEC2, awsRegions, appFocusOn, r53Info, dialogInputs) {
     var vpcs;
     var mode = dialogInputs.mode;
     var btnLabels = {
@@ -641,13 +641,14 @@
     }
   }
 
-  r53InfoFactory.$inject = ['$rootScope', '$timeout', '$q', 'awsR53'];
+  r53InfoFactory.$inject = ['$rootScope', '$q', 'awsR53'];
 
-  function r53InfoFactory($rootScope, $timeout, $q, awsR53) {
+  function r53InfoFactory($rootScope, $q, awsR53) {
     var hostedZones;
     var hostedZonesWork;
-    var oldHostedZones;
+    var hostedZonesOld;
     var listHostedZonePromise;
+    var listRecodsPromise = {};
     var currentZone;
     var selected = [];
 
@@ -694,7 +695,7 @@
       if (listHostedZonePromise) {
         return listHostedZonePromise;
       }
-      oldHostedZones = hostedZones || [];
+      hostedZonesOld = (hostedZones || []).concat();
       hostedZonesWork = [];
       listHostedZonePromise = _listHostedZones().then(function() {
         listHostedZonePromise = null;
@@ -719,7 +720,7 @@
     function _listHostedZones(marker) {
       if (!$rootScope.getCredentials()) {
         hostedZones = [];
-        oldHostedZones = [];
+        hostedZonesOld = [];
         currentZone = undefined;
         return $q.when();
       }
@@ -737,12 +738,12 @@
 
         var promises = [$q.when()];
         var zones = data.HostedZones.map(function(z) {
-          oldHostedZones.some(function(o, idx) {
+          hostedZonesOld.some(function(o, idx) {
             if (o.Id !== z.Id) {
               return false;
             }
-            ng.extend(z, o);
-            oldHostedZones.splice(idx, 1);
+            z = ng.extend(o, z);
+            hostedZonesOld.splice(idx, 1);
             return true;
           });
           promises.push(
@@ -788,10 +789,23 @@
       updateRecords(zone);
     }
 
-    function updateRecords(zone, nextRecordName, nextRecordType) {
-      if (!zone) {
-        return;
+    function updateRecords(zone) {
+      if (listRecodsPromise[zone.Id]) {
+        return listRecodsPromise[zone.Id];
       }
+      zone.listOld = (zone.list || []).concat();
+      zone.listWork = [];
+      listRecodsPromise[zone.Id] = _listRecords(zone).finally(function() {
+        listRecodsPromise[zone.Id] = null;
+      });
+      return listRecodsPromise[zone.Id];
+    }
+
+    function _listRecords(zone, nextRecordName, nextRecordType) {
+      if (!zone) {
+        return $q.when();
+      }
+      var defer = $q.defer();
 
       awsR53().listResourceRecordSets({
         HostedZoneId: zone.Id,
@@ -799,28 +813,36 @@
         StartRecordName: nextRecordName,
         StartRecordType: nextRecordType
       }, function(err, data) {
-        if (!nextRecordName) {
-          zone.list = [];
-        }
         if (!data || !data.ResourceRecordSets) {
-          return;
+          return defer.promise();
         }
 
-        $timeout(function() {
-          var resourceRecordSets = data.ResourceRecordSets.map(function(v) {
-            v.nameForSort = (v.Name.split('.').reverse().join('.')) +
-             (v.Type === 'SOA' ? '.__' : v.Type === 'NS' ? '._' : '.') + v.Type;
-            v.Values = v.ResourceRecords.map(function(rr) {
-              return rr.Value;
-            });
-            return v;
+        var resourceRecordSets = (data.ResourceRecordSets || []).map(function(v) {
+          zone.listOld.some(function(old, idx) {
+            if(old.Name === v.Name && old.Type === v.Type) {
+              v = ng.extend(old, v);
+              zone.listOld.splice(idx, 1);
+              return true;
+            }
           });
-          Array.prototype.push.apply(zone.list, resourceRecordSets);
-          if (data.IsTruncated) {
-            updateRecords(zone, data.NextRecordName, data.NextRecordType);
-          }
+
+          v.nameForSort = (v.Name.split('.').reverse().join('.')) +
+           (v.Type === 'SOA' ? '.__' : v.Type === 'NS' ? '._' : '.') + v.Type;
+          v.Values = v.ResourceRecords.map(function(rr) {
+            return rr.Value;
+          });
+          return v;
         });
+        Array.prototype.push.apply(zone.listWork, resourceRecordSets);
+        if (data.IsTruncated) {
+          _listRecords(zone, data.NextRecordName, data.NextRecordType)
+            .then(defer.resolve, defer.fail);
+        } else {
+          zone.list = zone.listWork;
+          defer.resolve();
+        }
       });
+      return defer.promise;
     }
 
     function selectObjects(sel) {
