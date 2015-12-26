@@ -250,7 +250,7 @@
         var trElems = elem.find('tbody tr');
         var tr, trScope;
 
-        if (ev.type !== 'panstart' && y < 0) {
+        if (ev.type !== 'panstart' && ev.type !== 'tap' && y < 0) {
           tr = trElems[0];
         } else if (y > h) {
           tr = trElems[trElems.length - 1];

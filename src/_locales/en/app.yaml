@@ -41,6 +41,7 @@ s3:
   createFolder: Create Folder
   downloadObjects: Download
   uploadObjects: Upload Files
+  uploadFolder: Upload Folder
   deleteObjects: Delete
   deleteConfirmation: Delete Confirmation
   deleteObjMsg1: Are you sure you want to delete %s?

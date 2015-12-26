@@ -44,9 +44,9 @@
     }
   }
 
-  s3UploadFieldDirective.$inject = ['$q', 's3UploadService'];
+  s3UploadFieldDirective.$inject = ['$parse', '$q', 's3UploadService'];
 
-  function s3UploadFieldDirective($q, s3UploadService) {
+  function s3UploadFieldDirective($parse, $q, s3UploadService) {
 
     ng.element(document).on({
       dragover: function(ev) {
@@ -58,13 +58,10 @@
 
     return {
       restrict: 'A',
-      scope: {
-        opt: '=s3UploadField'
-      },
       link: link
     };
 
-    function link(scope, elem) {
+    function link(scope, elem, attr) {
 
       elem.on({
         dragover: dragOver,
@@ -81,16 +78,12 @@
         ev.preventDefault();
         ev.originalEvent.dataTransfer.dropEffect = 'copy';
 
-        scope.$apply(function() {
-          scope.opt.active = true;
-        });
+        setActive(true);
       }
 
       function dragLeave() {
-        scope.$apply(function() {
-          scope.opt.active = false;
-          scope.uploadInfo = null;
-        });
+        scope.uploadInfo = null;
+        setActive(false);
       }
 
       function drop(ev) {
@@ -114,15 +107,12 @@
         }
 
         uploadInfo = s3UploadService.createUploadList(entries);
-        uploadInfo.promise.then(onceOnDrop, onError, _claer);
-
-        var onDrop = scope.opt.onDrop;
+        uploadInfo.promise.then(onceOnDrop, onError).finally(_claer);
 
         function onceOnDrop() {
-          if (onDrop) {
-            onDrop(uploadInfo);
-          }
-          onDrop = null;
+          $parse(attr.s3UploadField)(scope, {
+            $uploadInfo: uploadInfo,
+          });
         }
 
         function onError() {
@@ -130,9 +120,13 @@
         }
 
         function _claer() {
-          scope.opt.active = false;
+          setActive(false);
           scope.uploadInfo = null;
         }
+      }
+
+      function setActive(flg) {
+        elem.toggleClass('upload-active', flg);
       }
     }
   }

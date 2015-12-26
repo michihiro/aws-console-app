@@ -5,7 +5,7 @@
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
-      <li ng-repeat="m in s3Actions.all"
+      <li ng-repeat="m in s3Actions.all track by $index"
           ng-class="{divider:!m.length, disabled:s3Actions.isDisabled(m)}">
         <a ng-if="m.length" ng-click="s3Actions.onClick($event, m);"
            ng-bind="::'s3.'+m|i18next">

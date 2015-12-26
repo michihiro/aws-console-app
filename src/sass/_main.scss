@@ -27,7 +27,7 @@ body {
   bottom: 0;
   left: 0;
   width: 40px;
-  transition: width .2s ease;
+  transition: width .2s ease 0s;
   background-color: #222;
   z-index: 1040;
   box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, .1);
@@ -35,6 +35,7 @@ body {
 }
 .func-menu.opened {
   width: 140px;
+  transition: width .2s ease .4s;
   box-shadow: 1px 1px 4px 4px rgba(0, 0, 0, .1);
 }
 .func-menu a {
@@ -223,7 +224,8 @@ body {
   color: #bbb;
 }
 .dropdown-menu .divider {
-  background-color: #e5e5e5;
+  margin: 4px 0;
+  background-color: #777;
 }
 
 .open > .dropdown-menu {

@@ -584,12 +584,35 @@
     }
   }
 
-  s3UploadService.$inject = ['$q'];
+  s3UploadService.$inject = ['$rootScope', '$q', 's3ListService'];
 
-  function s3UploadService($q) {
+  function s3UploadService($rootScope, $q, s3ListService) {
     return {
       createUploadList: createUploadList,
+      uploadFiles: uploadFiles
     };
+
+    function uploadFiles(isDirectory) {
+      var opt = isDirectory ? {
+        type: 'openDirectory'
+      } : {
+        type: 'openFile',
+        acceptsMultiple: true
+      };
+      chrome.fileSystem.chooseEntry(opt, function(entries) {
+        if (!entries) {
+          console.log('chrome.fileSystem.chooseEntry', chrome.runtime.lastError.message);
+          return;
+        }
+        if (!entries.length) {
+          entries = [entries];
+        }
+        $rootScope.openDialog('s3/uploadDialog', {
+          uploadInfo: createUploadList(entries),
+          folder: s3ListService.getCurrent()
+        });
+      });
+    }
 
     function createUploadList(entries) {
       var uploadList = [];

@@ -14,21 +14,23 @@
     .controller('s3CreateFolderCtrl', s3CreateFolderCtrl)
     .controller('s3DeleteObjectsDialogCtrl', s3DeleteObjectsDialogCtrl);
 
-  s3ActionsFactory.$inject = ['$rootScope', 's3ListService', 's3DownloadService'];
+  s3ActionsFactory.$inject = ['$rootScope', 's3ListService', 's3DownloadService', 's3UploadService'];
 
-  function s3ActionsFactory($rootScope, s3ListService, s3DownloadService) {
+  function s3ActionsFactory($rootScope, s3ListService, s3DownloadService, s3UploadService) {
     var scope = $rootScope.$new();
 
     var actions = {
       all: [
         'createBucket', 'deleteBucket', '',
-        'createFolder', 'downloadObjects', 'deleteObjects'
+        'downloadObjects', 'deleteObjects', '',
+        'uploadObjects', 'uploadFolder', 'createFolder'
       ],
       tree: [
         'createBucket', 'deleteBucket'
       ],
       list: [
-        'createFolder', 'downloadObjects', 'deleteObjects'
+        'downloadObjects', 'deleteObjects', '',
+        'uploadObjects', 'uploadFolder', 'createFolder'
       ],
     };
     ng.extend(scope, actions, {
@@ -45,6 +47,8 @@
 
       if (key === 'downloadObjects') {
         s3DownloadService.download(s3ListService.getSelectedObjects());
+      } else if (key.match(/^upload(.*)/)) {
+        s3UploadService.uploadFiles(RegExp.$1 === 'Folder');
       } else if (key === 'createFolder') {
         scope.creatingFolder = true;
       } else {
@@ -270,7 +274,7 @@
       sortCol: 'path',
       sortReverse: false,
       storageClasses: [ 'STANDARD', 'REDUCED_REDUNDANCY', 'STANDARD_IA' ],
-      folder: s3ListService.getCurrent(),
+      folder: dialogInputs.folder,
       inputs: {
         storageClass: 'STANDARD'
       },
@@ -337,7 +341,9 @@
 
       promises.forEach(function(p) {
         p.then(function() {
-          s3ListService.updateFolder(s3ListService.getCurrent());
+          if ($scope.folder === s3ListService.getCurrent()) {
+            s3ListService.updateFolder($scope.folder);
+          }
           $scope.notification.numProcessed++;
         }, null, function(progress) {
           var notif = $scope.notification;

@@ -42,6 +42,7 @@ s3:
   createFolder: フォルダ作成
   downloadObjects: ダウンロード
   uploadObjects: ファイルのアップロード
+  uploadFolder: フォルダーのアップロード
   deleteObjects: 削除
   deleteConfirmation: 削除の確認
   deleteObjMsg1: "%s を削除しますか？"

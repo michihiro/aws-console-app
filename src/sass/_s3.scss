@@ -155,8 +155,15 @@
   }
 }
 
-[s3-upload-field].upload-active {
+[s3-upload-field].upload-active::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   background: rgba(#000, .2);
+  pointer-events: none;
 }
 
 .s3-header > * {
