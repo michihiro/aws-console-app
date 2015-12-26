@@ -27,6 +27,7 @@
         "AWS": true,
         "CryptoJS": true,
         "Hammer": true,
-        "moment": true
+        "moment": true,
+        "zxcvbn": true
     }
 }
