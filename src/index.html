@@ -22,50 +22,9 @@
 </head>
 
 <body ng-cloak>
-  <div class="screen" ng-if="i18nextReady">
-    <div class="func-menu"
-         ng-mouseenter="opened=true"
-         ng-mouseleave="opened=false"
-         ng-class="{opened:opened}">
-      <a class="menuicon" ng-click="opened=!opened"><i class="fa fa-navicon"></i></a>
-      <a ui-sref="s3" ui-sref-active="active" ng-click="opened=false"><img src="images/S3.svg"><div>S3</div></a>
-      <a ui-sref="ec2" ui-sref-active="active" ng-click="opened=false"><img src="images/EC2.svg"><div>EC2</div></a>
-      <a ui-sref="r53" ui-sref-active="active" ng-click="opened=false"><img src="images/Route53.svg"><div>Route53</div></a>
-    </div>
-
-    <div class="navbar navbar-fixed-top">
-      <div class="btn-group navbar-right" dropdown is-open="topDropdown.isopen">
-        <button class="btn btn-info" dropdown-toggle>
-          <i class="fa fa-key"></i>
-        </button>
-        <ul class="dropdown-menu">
-          <li>
-            <a ng-click="openDialog('com/credentialsDialog'); topDropdown.isopen=false;"
-               ng-bind="'com.setupAwsAccessKey'|i18next">
-            </a>
-          </li>
-          <li>
-            <a ng-click="openDialog('com/passwordDialog', {mode:'update'}); topDropdown.isopen=false;"
-               ng-bind="'com.updatePassword'|i18next">
-            </a>
-          </li>
-        </ul>
-      </div>
-      <h3 ng-if="state.current.name" ng-bind="state.current.name + '.serviceName'|i18next"></h3>
-      <div ui-view="header"></div>
-
-    </div>
-
-    <div ui-view="main"></div>
-
-    <div class="nav navbar navbar-default navbar-fixed-bottom" role="navigation">
-      <p class="navbar-text navbar-right">
-        Simple AWS Console App {{appVersion}} - Copyright 2015 michihiro.
-      </p>
-    </div>
-  </div>
-
+  <div ng-include="'views/com/body.html'"></div>
   <!-- build:js js/vendor.min.js -->
+  <div>
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
   <script src="bower_components/angular/angular.js"></script>
@@ -100,9 +59,11 @@
   <script src="js/s3/s3Directive.js"></script>
   <script src="js/s3/s3Controller.js"></script>
   <script src="js/ec2/ec2.js"></script>
+  <script src="js/ec2/ec2Controller.js"></script>
   <script src="js/r53/r53.js"></script>
   <script src="js/template-cache.js"></script>
   <!-- endbuild -->
+  </div>
 
 </body>
 

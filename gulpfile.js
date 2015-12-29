@@ -186,7 +186,7 @@ gulp.task('usemin', ['default'], function() {
       }), 'concat'],
       html: [minifyHtml({empty: true})],
       js: [
-	footer(';/*EOF*/;'), 'concat',
+        footer(';/*EOF*/;'), 'concat',
         uglify({compress:{}, mangle: false})
       ],
       js2: [

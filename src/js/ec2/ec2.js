@@ -1,17 +1,13 @@
 (function(ng) {
   'use strict';
 
-  var REFRESH_INTERVAL = 60000;
-  var REFRESH_INTERVAL2 = 15000;
+  var REFRESH_TIMEOUT = 15000;
   var rebootingInstanceIds = {};
 
   ng.module('aws-console')
     .factory('awsEC2', awsEC2Factory)
     .factory('ec2Info', ec2InfoFactory)
-    .factory('ec2Actions', ec2ActionsFactory)
-    .controller('ec2HeaderCtrl', ec2HeaderCtrl)
-    .controller('ec2Ctrl', ec2Ctrl)
-    .controller('ec2ChangeInstanceStateDialogCtrl', ec2ChangeInstanceStateDialogCtrl);
+    .factory('ec2Actions', ec2ActionsFactory);
 
   awsEC2Factory.$inject = ['$rootScope'];
 
@@ -67,36 +63,9 @@
 
   }
 
-  ec2HeaderCtrl.$inject = ['$scope', 'awsRegions', 'ec2Info', 'ec2Actions'];
+  ec2InfoFactory.$inject = ['$rootScope', '$q', 'awsRegions', 'awsEC2'];
 
-  function ec2HeaderCtrl($scope, awsRegions, ec2Info, ec2Actions) {
-    ng.extend($scope, {
-      awsRegions: awsRegions,
-      ec2Info: ec2Info,
-      ec2Actions: ec2Actions,
-    });
-  }
-
-  ec2Ctrl.$inject = ['$scope', '$interval', 'awsRegions', 'ec2Info', 'ec2Actions'];
-
-  function ec2Ctrl($scope, $interval, awsRegions, ec2Info, ec2Actions) {
-    ng.extend($scope, {
-      ec2Info: ec2Info,
-      ec2Actions: ec2Actions,
-    });
-
-    var refreshTimer = $interval(ec2Info.refresh, REFRESH_INTERVAL);
-    $scope.$on('$destroy', onDestroy);
-    ec2Info.refresh();
-
-    function onDestroy() {
-      $interval.cancel(refreshTimer);
-    }
-  }
-
-  ec2InfoFactory.$inject = ['$rootScope', '$timeout', '$q', 'awsRegions', 'awsEC2'];
-
-  function ec2InfoFactory($rootScope, $timeout, $q, awsRegions, awsEC2) {
+  function ec2InfoFactory($rootScope, $q, awsRegions, awsEC2) {
     var currentRegion = 'all';
     var instances = {};
     var vpcs = {};
@@ -116,6 +85,7 @@
       getCurrentRegion: getCurrentRegion,
       setCurrentRegion: setCurrentRegion,
       getInstances: getInstances,
+      getNumOfRunningInstances: getNumOfRunningInstances,
       getVpcs: getVpcs,
       listInstances: listInstances,
       selectInstances: selectInstances,
@@ -174,8 +144,13 @@
 
     function getInstances(region, vpcId, subnetId) {
       return (instances[region] || []).filter(function(i) {
-        return i.VpcId === vpcId && i.SubnetId === subnetId;
+        return i.VpcId === vpcId && (subnetId === undefined || i.SubnetId === subnetId);
       });
+    }
+
+    function getNumOfRunningInstances(region, vpcId, subnetId) {
+      return getInstances(region, vpcId).filter(function(instance) {
+      }).length;
     }
 
     function getVpcs() {
@@ -217,9 +192,9 @@
     function _describeVpcs(region) {
       var defer = $q.defer();
       awsEC2(region).describeVpcs({}, function(err, data) {
-        defer.resolve();
         if (!data || !data.Vpcs) {
           vpcs[region] = [];
+          defer.resolve();
           return;
         }
         var vpcsBack = vpcs || {};
@@ -252,13 +227,14 @@
             ],
           }, function(err, obj) {
             if(obj) {
-              $timeout(function() {
-                v.Subnets = obj.Subnets;
-              });
+              v.Subnets = obj.Subnets;
             }
+            $rootScope.$digest();
           });
           return v;
         });
+        defer.resolve();
+        $rootScope.$digest();
       });
       return defer.promise;
     }
@@ -268,8 +244,8 @@
       var tempStates = ['pending', 'shutting-down', 'stopping', 'rebooting'];
       awsEC2(region).describeInstances({}, function(err, data) {
         var needRefresh;
-        defer.resolve();
         if (!data || !data.Reservations) {
+          defer.resolve();
           return;
         }
 
@@ -319,61 +295,12 @@
           return all;
         }, []);
         if (needRefresh) {
-          $timeout(_describeInstances.bind(null, region), REFRESH_INTERVAL2);
+          setTimeout(_describeInstances.bind(null, region), REFRESH_TIMEOUT);
         }
+        defer.resolve();
       });
       return defer.promise;
     }
   }
 
-  ec2ChangeInstanceStateDialogCtrl.$inject = ['$scope', '$q', 'awsEC2', 'ec2Info', 'dialogInputs'];
-
-  function ec2ChangeInstanceStateDialogCtrl($scope, $q, awsEC2, ec2Info, dialogInputs) {
-    var instances = ec2Info.getSelectedInstances();
-    var instanceIds = instances.map(function(v) {
-      return v.InstanceId;
-    });
-
-    var mode = dialogInputs.mode;
-    var btnLabel = mode.replace(/Instances$/, '');
-    var btnClass = mode === 'stopInstances' ? 'btn-warning' :
-      mode === 'terminateInstances' ? 'btn-danger' : 'btn-success';
-
-    ng.extend($scope, {
-      mode: mode,
-      instances: ec2Info.getSelectedInstances(),
-      btnLabel: btnLabel,
-      btnClass: btnClass,
-      command: command
-    });
-
-    return;
-
-    function command(additionalParam) {
-      var params = ng.extend({
-        InstanceIds: instanceIds,
-      }, additionalParam);
-
-      var region = $scope.instances[0].region;
-      $scope.processing = true;
-      awsEC2(region)[mode](params, function(err) {
-        $scope.processing = false;
-        if (err) {
-          $scope.$apply(function() {          
-            $scope.error = err;
-          });
-          return;
-        }
-
-        if (mode === 'rebootInstances') {
-          ec2Info.setRebooting(region, instanceIds);
-        }
-
-        ec2Info.listInstances(region).then(function() {
-          $scope.$close();
-        });
-      });
-    }
-  }
-  
 })(angular);

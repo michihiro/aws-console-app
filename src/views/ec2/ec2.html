@@ -18,6 +18,9 @@
               ng-bind="v.tags.Name+' ( ' + v.VpcId + ' )'"></span>
         <span ng-if="!v.isClassic && !v.tags.Name"
               ng-bind="v.VpcId"></span>
+        <span class="badge"
+              ng-bind="ec2Info.getNumOfRunningInstances(v.region, v.VpcId)">
+        </span>
       </accordion-heading>
       <div class="subnet"
            ng-repeat="s in v.Subnets | orderBy:['tags.Name', 'SubnetId']">

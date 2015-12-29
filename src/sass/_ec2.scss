@@ -17,19 +17,9 @@
   display: inline-block;
   margin-left: 20px;
 }
-.ec2-vpc-panel .bagde > span {
-  display: inline-block;
-  width: 2em;
-  height: 2em;
-  line-height: 2em;
-  text-align: center;
-  transform: translateY(-0.2em);
-  border-radius: 50%;
-  background: hsla(217, 89%, 61%, 0.4);
-  border: 1px solid #FFF;
-  box-sizing: content-box;
-  font-size: .7em;
-  font-weight: bold;
+.ec2-vpc-panel .panel-heading .badge {
+  margin-left: 8px;
+  vertical-align: bottom;
 }
 .ec2-vpc-panel .panel-body {
   padding: 4px;
