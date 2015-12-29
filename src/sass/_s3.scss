@@ -92,13 +92,13 @@
   margin-right: .2em;
 }
 .s3-right tr.ng-enter {
-  transition: all .2s ease;
+  transition: all .2s ease-in-out;
   opacity: 0;
-  transform: translate3d(0, -10px, 0);
+  transform: rotateX(90deg);
 }
 .s3-right tr.ng-enter.ng-enter-active {
   opacity: 1;
-  transform: translate3d(0, 0, 0);
+  transform: rotateX(0);
 }
 .s3-right table input {
   padding: 0 8px;

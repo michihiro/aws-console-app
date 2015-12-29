@@ -49,6 +49,9 @@
         .state(service, {
           url : '/' + service,
           views: {
+            title: {
+              template: '{{state.current.name + \'.serviceName\'|i18next}}'
+            },
             header: {
               templateUrl: 'views/' + service + '/' + service + 'Header.html',
               controller: service + 'HeaderCtrl'

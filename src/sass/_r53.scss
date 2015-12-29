@@ -50,11 +50,11 @@
 .r53-right tr.ng-enter {
   transition: all .2s ease;
   opacity: 0;
-  transform: translate3d(0, -10px, 0);
+  transform: rotateX(90deg);
 }
 .r53-right tr.ng-enter.ng-enter-active {
   opacity: 1;
-  transform: translate3d(0, 0, 0);
+  transform: rotateX(0);
 }
 .btn-group .btn.remove-vpc {
   margin-left: 1px;
