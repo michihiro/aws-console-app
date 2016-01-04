@@ -203,7 +203,6 @@ body {
 .position-fixed {
   position: fixed;
 }
-/** table **/
 
 .btn-group {
   margin: 1px;
@@ -266,10 +265,10 @@ form input.ng-valid.ng-dirty {
 */
 .form-group {
   padding-bottom: 4px;
-  margin: 8px 0 0 0;
+  margin: 4px 0 0 0;
 }
 .form-group [dropdown] {
-  margin-top: -4px;
+  margin-top: -2px;
 }
 .form-group .btns {
   .btn {

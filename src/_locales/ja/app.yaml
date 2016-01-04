@@ -121,6 +121,15 @@ ec2:
    - このインスタンスを削除してよろしいですか？
    - これらのインスタンスを削除してよろしいですか？
   terminateInstancessMsg2: ""
+  runInstances: インスタンスの作成
+  selectKeyPair: キーペアの選択
+  subnetVpcRegion: サブネット / VPC / リージョン 
+  AMI: AMI
+  instanceType: インスタンスタイプ
+  nameTag: ネームタグ
+  securityGroups: セキュリティグループ
+  keyName: キーペア名
+  keyFingerprint: Fingerprint
 r53:
   serviceName: Route53
   zones: ゾーン

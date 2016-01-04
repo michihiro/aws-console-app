@@ -1,0 +1,27 @@
+us-east-1:
+  - id : ami-60b6c60a
+    name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+us-west-2:
+  - id : ami-f0091d91
+    name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+us-west-1:
+  - id : ami-d5ea86b5
+    name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+eu-west-1:
+  - id : ami-bff32ccc
+    name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+eu-central-1:
+  - id : ami-bc5b48d0
+    name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+ap-southeast-1:
+  - id : ami-c9b572aa
+    name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+ap-northeast-1:
+  - id : ami-383c1956
+    name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+ap-southeast-2:
+  - id : ami-48d38c2b
+    name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+sa-east-1:
+  - id : ami-6817af04
+    name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type

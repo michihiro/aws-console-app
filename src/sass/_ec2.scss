@@ -117,3 +117,10 @@
   50% { -webkit-filter: grayscale(95%); opacity: .5 }
   100% { -webkit-filter: grayscale(95%); opacity: 1 }
 }
+
+.ec2-select-keypair-dialog {
+  .modal-body-inner {
+    position: relative;
+    min-height: 200px;
+  }
+}

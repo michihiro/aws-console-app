@@ -1,0 +1,143 @@
+<div class="modal-header">
+  <button class="close" ng-click="$dismiss()">&times;</button>
+  <h3 ng-bind="::'ec2.runInstances'|i18next"></h3>
+</div>
+<div class="modal-body run-instances-dialog">
+  <form name="inputs.form" class="form-horizontal">
+<!--
+    <tabset>
+      <tab heading="_">
+-->
+    <div class="form-group">
+      <label class="col-xs-3 control-label"
+             ng-bind="::'ec2.subnetVpcRegion'|i18next"></label>
+      <div class="col-xs-9">
+        <input name="subnet" type="hidden" ng-model="inputs.subnet" required>
+        <div class="btn-group" dropdown>
+          <button class="btn" dropdown-toggle
+                  ng-disabled="processing">
+            <span ng-if="inputs.subnet"
+                  ng-bind="getDisplayName(inputs.subnet, 'tags', 'SubnetId') + ' - ' + inputs.subnet.CidrBlock">
+            </span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header"
+                ng-repeat-start="v in ec2Info.getVpcs()"
+                ng-bind="(v.tags.Name ? v.tags.Name + ' (' + v.VpcId +')': v.VpcId) + ' - ' + ('ec2.regionName.'+v.region|i18next)"
+                ng-if="v.Subnets.length">
+            </li>
+            <li ng-repeat-end
+                ng-repeat="s in v.Subnets">
+              <a ng-click="inputs.subnet=s"
+                 ng-bind="(s.tags.Name ? s.tags.Name + ' (' + s.SubnetId +')': s.SubnetId) + ' - ' + s.CidrBlock"></a>
+            </li>
+          </ul>
+        </div>
+        <div ng-bind="getDisplayName(inputs.subnet, 'vpcTags', 'VpcId') + (inputs.subnet.region ? (' / ' + ('ec2.regionName.'+inputs.subnet.region|i18next)) : '')">
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-xs-3 control-label"
+             ng-bind="::'ec2.AMI'|i18next"></label>
+      <div class="col-xs-9">
+        <input name="ami" type="hidden" ng-model="inputs.ami" required>
+        <div class="btn-group" dropdown>
+          <button class="btn" dropdown-toggle
+                  ng-disabled="processing || !inputs.subnet">
+            <span ng-if="inputs.ami"
+                  ng-bind="inputs.ami.name + ' (' + inputs.ami.ImageId + ')'"></span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li ng-repeat="a in ec2Info.getAMIs(inputs.subnet.region)">
+              <a ng-click="inputs.ami=a"
+                 ng-bind="a.name + ' (' + a.ImageId +')'"></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-xs-3 control-label"
+             ng-bind="::'ec2.instanceType'|i18next"></label>
+      <div class="col-xs-9">
+        <input name="instanceType" type="hidden" ng-model="inputs.instanceType" required>
+        <div class="btn-group" dropdown>
+          <button class="btn" dropdown-toggle
+                  ng-disabled="processing">
+            <span ng-if="inputs.instanceType"
+                  ng-bind="inputs.instanceType.type"></span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header"
+                ng-repeat-start="tg in ec2Info.getInstanceTypes()"
+                ng-bind="::tg.family">
+            </li>
+            <li ng-repeat-end
+                ng-repeat="t in tg.types">
+              <a ng-click="inputs.instanceType=t"
+                 ng-bind="::t.type + ' (' + t.vCpu + 'vCPU, ' + t.memory + 'GB memory)'"></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-xs-3 control-label"
+             ng-bind="::'ec2.nameTag'|i18next"></label>
+      <div class="col-xs-9">
+        <input class="form-control" name="name" ng-model="inputs.name">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-xs-3 control-label"
+             ng-bind="::'ec2.securityGroups'|i18next"></label>
+      <div class="col-xs-9">
+        <input name="securityGroups" type="hidden" ng-model="inputs.securityGroups[0].GroupId" required>
+        <div ng-repeat="(idx, group) in inputs.securityGroups">
+        <div class="btn-group" dropdown>
+          <button class="btn" dropdown-toggle
+                  ng-disabled="processing || !inputs.subnet">
+            <span ng-if="inputs.securityGroups[idx]"
+                  ng-bind="inputs.securityGroups[idx].GroupName + ' (' + inputs.securityGroups[idx].GroupId + ')'"></span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li ng-repeat="g in ec2Info.getSecurityGroups(inputs.subnet.region, inputs.subnet.VpcId)"
+                ng-class="{disabled:inputs.securityGroups.indexOf(g) >= 0}">
+              <a ng-click="(inputs.securityGroups.indexOf(g)<0) && setSecurityGroup(g, idx)"
+                 ng-bind="g.GroupName + ' (' + g.VpcId + ')'"></a>
+            </li>
+          </ul>
+          <button class="btn remove-group"
+                  ng-if="inputs.securityGroups.length && group.GroupId"
+                  ng-disabled="processing"
+                  ng-click="inputs.securityGroups.splice(idx,1)">
+            <i class="fa fa-times"></i>
+          </button>
+        </div>
+        </div>
+      </div>
+    </div>
+<!--
+      </tab>
+    </tabset>
+-->
+  </form>
+  <div class="cover" ng-if="processing"><div class="modal-loader"></div></div>
+</div>
+<div class="modal-footer">
+  <div class="alert alert-danger" ng-show="error" ng-bind="error|errorMsg:'ec2'"></div>
+  <button class="btn btn-raised"
+          ng-bind="::'com.cancel'|i18next"
+          ng-click="$dismiss()"></button>
+  <button class="btn btn-raised"
+          ng-bind="::'com.create'|i18next"
+          ng-click="launch()"
+          ng-class="{'btn-success':!inputs.form.$invalid}"
+          ng-disabled="processing || inputs.form.$invalid"></button>
+  <div class="cover" ng-if="processing"></div>
+</div>

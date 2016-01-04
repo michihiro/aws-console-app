@@ -26,8 +26,8 @@
     var scope = $rootScope.$new();
 
     ng.extend(scope, {
-      //all: ['startInstances', 'rebootInstances', 'stopInstances', 'terminateInstances'],
-      all: ['startInstances', 'rebootInstances', 'stopInstances' ],
+      //all: ['startInstances', 'rebootInstances', 'stopInstances', 'terminateInstances' , '', 'runInstances' ],
+      all: ['startInstances', 'rebootInstances', 'stopInstances'],
       onClick: onClick,
       isDisabled: isDisabled,
     });
@@ -39,10 +39,24 @@
         return;
       }
       scope.isOpenHeaderMenu = false;
-      $rootScope.openDialog('ec2/changeInstanceStateDialog', {mode:key});
+      if (key === 'runInstances') {
+        $rootScope.openDialog('ec2/runInstancesDialog', {}, {
+          size: 'lg'
+        });
+      } else {
+        $rootScope.openDialog('ec2/changeInstanceStateDialog', {
+          mode: key
+        });
+      }
     }
 
     function isDisabled(key) {
+      if (!key || !key.length) {
+        return true;
+      }
+      if (key === 'runInstances') {
+        return false;
+      }
       var enableStates = {
         startInstances: ['stopped'],
         rebootInstances: ['running'],
@@ -52,7 +66,7 @@
       var isStartOrStop = (key === 'startInstances' || key === 'stopInstances');
       var selected = ec2Info.getSelectedInstances();
       var enable = enableStates[key];
-      return ! (selected || []).some(function(i) {
+      return !(selected || []).some(function(i) {
         if (isStartOrStop &&
           (i.RootDeviceType !== 'ebs' || i.InstanceLifecycle === 'spot')) {
           return false;
@@ -63,14 +77,19 @@
 
   }
 
-  ec2InfoFactory.$inject = ['$rootScope', '$q', 'awsRegions', 'awsEC2'];
+  ec2InfoFactory.$inject = ['$rootScope', '$q', '$resource', 'awsRegions', 'awsEC2'];
 
-  function ec2InfoFactory($rootScope, $q, awsRegions, awsEC2) {
+  function ec2InfoFactory($rootScope, $q, $resource, awsRegions, awsEC2) {
     var currentRegion = 'all';
     var instances = {};
     var vpcs = {};
     var ec2Classic = {};
+    var securityGroups = {};
     var selected = [];
+    var amiResource = $resource('conf/ami.json').get();
+    var amis = {};
+    var instanceTypeResource = $resource('conf/instanceType.json').query();
+    var instanceTypes;
 
     $rootScope.$watch('credentialsId', function() {
       currentRegion = undefined;
@@ -87,16 +106,24 @@
       getInstances: getInstances,
       getNumOfRunningInstances: getNumOfRunningInstances,
       getVpcs: getVpcs,
+      getSecurityGroups: getSecurityGroups,
       listInstances: listInstances,
       selectInstances: selectInstances,
       getSelectedInstances: getSelectedInstances,
       isSelectedInstance: isSelectedInstance,
       refresh: refresh,
-      setRebooting: setRebooting
+      setRebooting: setRebooting,
+      getAMIs: getAMIs,
+      getInstanceTypes: getInstanceTypes,
     };
 
+    function getInstanceTypes() {
+      return instanceTypeResource;
+    }
+
     function setRebooting(region, instanceIds) {
-      var now = Date.now(), rebooting;
+      var now = Date.now();
+      var rebooting;
 
       rebootingInstanceIds[region] = rebootingInstanceIds[region] || {};
       rebooting = rebootingInstanceIds[region];
@@ -112,7 +139,7 @@
     }
 
     function refresh() {
-      if(currentRegion === 'all') {
+      if (currentRegion === 'all') {
         awsRegions.ec2.forEach(function(r) {
           listInstances(r);
         });
@@ -148,24 +175,25 @@
       });
     }
 
-    function getNumOfRunningInstances(region, vpcId, subnetId) {
-      return getInstances(region, vpcId).filter(function(instance) {
+    function getNumOfRunningInstances(region, vpcId) {
+      return getInstances(region, vpcId).filter(function(i) {
+        return i.State.Name === 'running' || i.State.Name === 'rebooting';
       }).length;
     }
 
     function getVpcs() {
       var region = getCurrentRegion();
       var vpcArr, regions;
-      if(region === 'all') {
+      if (region === 'all') {
         regions = Object.keys(vpcs);
         if (!regions.length) {
           return undefined;
         }
         vpcArr = regions.reduce(function(all, key) {
-          if(vpcs[key] && vpcs[key].length) {
+          if (vpcs[key] && vpcs[key].length) {
             all = all.concat(vpcs[key]);
           }
-          if(ec2Classic[key]) {
+          if (ec2Classic[key]) {
             all.push(ec2Classic[key]);
           }
           return all;
@@ -175,11 +203,35 @@
           return undefined;
         }
         vpcArr = vpcs[region].concat();
-        if(ec2Classic[region]) {
+        if (ec2Classic[region]) {
           vpcArr.push(ec2Classic[region]);
         }
       }
       return vpcArr;
+    }
+
+    function getSecurityGroups(region, vpcId) {
+      var groups = securityGroups[region];
+      if (region && groups === undefined) {
+        securityGroups[region] = null;
+        _describeSecurityGroups(region);
+      }
+      return groups ? groups.filter(function(g) {
+        return !vpcId || g.VpcId === vpcId;
+      }) : groups;
+    }
+
+    function _describeSecurityGroups(region) {
+      var defer = $q.defer();
+      awsEC2(region).describeSecurityGroups({}, function(err, data) {
+        if (err) {
+          securityGroups[region] = undefined;
+          return defer.reject(err);
+        }
+        securityGroups[region] = (data.SecurityGroups || []);
+        defer.resolve(securityGroups[region]);
+      });
+      return defer.promise;
     }
 
     function listInstances(region) {
@@ -219,15 +271,21 @@
           v.regionIdx = regionIdx;
 
           awsEC2(region).describeSubnets({
-            Filters: [
-              {
-                Name: 'vpc-id',
-                Values: [ v.VpcId ]
-              },
-            ],
+            Filters: [{
+              Name: 'vpc-id',
+              Values: [v.VpcId]
+            }],
           }, function(err, obj) {
-            if(obj) {
-              v.Subnets = obj.Subnets;
+            if (obj) {
+              v.Subnets = obj.Subnets.map(function(s) {
+                s.tags = s.Tags.reduce(function(all, s2) {
+                  all[s2.Key] = s2.Value;
+                  return all;
+                }, {});
+                s.region = region;
+                s.vpcTags = v.tags;
+                return s;
+              });
             }
             $rootScope.$digest();
           });
@@ -268,16 +326,18 @@
               all[v2.Key] = v2.Value;
               return all;
             }, {});
-            if(v.VpcId === undefined && v.State.Name !== 'terminated') {
+            if (v.VpcId === undefined && v.State.Name !== 'terminated') {
               ec2Classic[region] = {
                 VpcId: undefined,
                 isClassic: true,
                 tags: {
-                  Name:'Ec2-Classic'
+                  Name: 'Ec2-Classic'
                 },
                 isOpen: true,
                 region: region,
-                Subnets: [{ SubnetId: undefined}],
+                Subnets: [{
+                  SubnetId: undefined
+                }]
               };
             }
 
@@ -300,6 +360,40 @@
         defer.resolve();
       });
       return defer.promise;
+    }
+
+    function getAMIs(region) {
+      if (amis[region] === undefined && amiResource[region]) {
+        amis[region] = null;
+        _describeImages(region);
+      }
+      return amis[region];
+    }
+
+    function _describeImages(region) {
+      var defer = $q.defer();
+      var opt = {
+        ImageIds: amiResource[region].map(function(ami) {
+          return ami.id;
+        })
+      };
+      awsEC2(region).describeImages(opt, function(err, data) {
+        if (err) {
+          amis[region] = undefined;
+          return defer.reject(err);
+        }
+        amis[region] = data.Images.map(function(ami) {
+          ami.region = region;
+          amiResource[region].some(function(a) {
+            if (ami.ImageId === a.id) {
+              ami.name = a.name;
+              return true;
+            }
+          });
+          return ami;
+        });
+        defer.resolve();
+      });
     }
   }
 

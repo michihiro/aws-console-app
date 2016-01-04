@@ -86,6 +86,16 @@ gulp.task('_locale', function() {
     .pipe(gulp.dest('app/_locales'));
 });
 
+gulp.task('conf', function() {
+  var yaml = require('gulp-yaml');
+  return gulp.src('src/conf/*.yaml')
+    .pipe(plumber())
+    .pipe(newer({dest:'app/conf', ext:'.json'}))
+    .pipe(using())
+    .pipe(yaml())
+    .pipe(gulp.dest('app/conf'));
+});
+
 // lint and copy js files to build directory.
 gulp.task('js', function() {
   var jshint = require('gulp-jshint');
@@ -142,7 +152,7 @@ gulp.task('copy-dist', ['default'], function() {
   var es = require('event-stream');
   var tasks = [];
   var manifest = require('./app/manifest');
-  var files = ['app/_locales/**', 'app/images/**', 'app/manifest.json', 'app/mimetype.txt'];
+  var files = ['app/_locales/**', 'app/conf/**', 'app/images/**', 'app/manifest.json', 'app/mimetype.txt'];
   manifest.app.background.scripts.forEach(function(f) {
     if (!f.match(/js\/main\.js$/)) {
       files.push('app/' + f);
@@ -216,6 +226,7 @@ gulp.task('default', [
   'views-js',
 //  'bower',
   '_locale',
+  'conf',
   'js',
   'js-vendor',
   'sass',
@@ -226,6 +237,7 @@ gulp.task('watch', ['default'], function() {
   gulp.watch('src/views/**/*html', ['views']);
   gulp.watch('app/views/**/*html', ['views-js']);
   gulp.watch('src/_locales/**/*.yaml', ['_locale']);
+  gulp.watch('src/conf/*.yaml', ['conf']);
   gulp.watch(['src/js/**/*js', '!src/js/vendor/**js'], ['js']);
   gulp.watch('src/js/vendor/**/*js', ['js-vendor']);
   gulp.watch('src/sass/**/*.scss', ['sass']);

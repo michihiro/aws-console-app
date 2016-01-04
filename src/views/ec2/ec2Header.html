@@ -6,15 +6,15 @@
     </button>
     <ul class="dropdown-menu">
       <li ng-repeat="m in ec2Actions.all"
-          ng-class="{disabled:ec2Actions.isDisabled(m)}">
-        <a ng-click="ec2Actions.onClick($event, m);"
+          ng-class="{divider:!m.length, disabled:ec2Actions.isDisabled(m)}">
+        <a ng-if="m.length" ng-click="ec2Actions.onClick($event, m);"
            ng-bind="::'ec2.'+m|i18next">
         </a>
       </li>
     </ul>
   </div>
   <div class="btn-group pull-right" dropdown is-open="selectRegion.isopen">
-    <button class="btn btn-info" dropdown-toggle ng-disabled="processing">
+    <button class="btn" dropdown-toggle ng-disabled="processing">
       <span ng-bind="'ec2.regionName.'+ec2Info.getCurrentRegion()|i18next"></span>
       <span class="caret"></span>
     </button>
@@ -25,8 +25,7 @@
         </a>
       </li>
       <li ng-repeat="r in awsRegions.ec2" ng-if="r !== inputs.region">
-        <a ng-class="{'btn-info':inputs.region==r}"
-           ng-click="ec2Info.setCurrentRegion(r);selectRegion.isopen=false"
+        <a ng-click="ec2Info.setCurrentRegion(r);selectRegion.isopen=false"
            ng-bind="::('ec2.regionName.'+r|i18next) + ' - '+ r">
         </a>
       </li>

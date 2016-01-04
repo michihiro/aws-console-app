@@ -103,6 +103,7 @@ ec2:
   stopInstances: Stop Instance
   rebootInstances: Reboot Instance
   terminateInstances: Terminate Instance
+  noInstances: No Insatances,
   startInstancesMsg:
    - Are you sure you want to start this instance?
    - Are you sure you want to start these instances?
@@ -119,6 +120,15 @@ ec2:
    - Are you sure you want to terminate this instance?
    - Are you sure you want to terminate these instances?
   terminateInstancesMsg2: ""
+  runInstances: Launch Instance
+  selectKeyPair: Select a key pair
+  subnetVpcRegion: Subnet / VPC / Region
+  AMI: AMI
+  instanceType: Instance Type
+  nameTag: Name Tag
+  securityGroups: Security Groups
+  keyName: Key pair Name
+  keyFingerprint: Fingerprint
 r53:
   serviceName: Route53
   zones: Zones

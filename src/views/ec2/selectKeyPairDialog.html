@@ -1,0 +1,58 @@
+<div class="modal-header">
+  <button class="close" ng-click="$dismiss()">&times;</button>
+  <h3 ng-bind="::'ec2.selectKeyPair'|i18next"></h3>
+</div>
+<div class="modal-body ec2-select-keypair-dialog">
+  <div class="modal-body-inner">
+    <div class="table-outer">
+      <div class="table-header-spacer"></div>
+      <div class="table-container">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th ng-repeat="col in columns">
+                <div class="th-inner"
+                     ng-style="{left:col.left,width:col.width+'px','-webkit-transform':'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
+                  <span ng-bind="::col.name ? (col.name|i18next) : '&nbsp;'"></span>
+                  <div class="sort-mark" ng-if="col.sortable" ng-click="setSort(col)">
+                    <i ng-if="sortCol==col.col && !sortReverse" class="fa fa-sort-up"></i>
+                    <i ng-if="sortCol==col.col && sortReverse" class="fa fa-sort-down"></i>
+                  </div>
+
+                  <div class="table-resize-handle"
+                       app-bind-width="col"></div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in keypairs | orderBy:sortExp:sortReverse"
+                ng-class="{selected:inputs.keypair==item}" 
+                ng-click="inputs.keypair=item">
+              <td ng-repeat="col in columns" class="{{col.class}}"
+                  ng-style="{width:col.width+'px'}">
+                <div class="td-inner" ng-style="{width: col.width+'px'}">
+                  <span ng-if="col.col && col.filterFn" ng-bind="::col.filterFn(item[col.col])"></span>
+                  <span ng-if="col.col && !col.filterFn" ng-bind="::item[col.col]"></span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="cover" ng-if="processing"><div class="modal-loader"></div></div>
+</div>
+<div class="modal-footer">
+  <div class="alert alert-danger" ng-show="error" ng-bind="error|errorMsg:'ec2'"></div>
+  <button class="btn btn-raised"
+          ng-bind="::'com.cancel'|i18next"
+          ng-click="$dismiss()"></button>
+  <button class="btn btn-raised"
+          ng-bind="::'com.ok'|i18next"
+          ng-click="select()"
+          ng-class="{'btn-success':inputs.keypair}"
+          ng-disabled="processing || !inputs.keypair"></button>
+  <div class="cover" ng-if="processing"></div>
+</div>

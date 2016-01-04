@@ -8,14 +8,15 @@
     'eu-west-1',
     'eu-central-1',
     'ap-southeast-1',
-    'ap-southeast-2',
     'ap-northeast-1',
+    'ap-southeast-2',
     'sa-east-1'
   ];
 
   ng.module('aws-console', [
       'app.templateCache',
       'ngAnimate',
+      'ngResource',
       'ui.router',
       'ui.utils',
       'ui.bootstrap',
