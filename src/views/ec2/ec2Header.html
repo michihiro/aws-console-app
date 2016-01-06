@@ -1,5 +1,5 @@
 <div class="ec2-header">
-  <div class="btn-group" dropdown is-open="ec2Actions.isOpenHeaderMenu">
+  <div class="btn-group" dropdown>
     <button class="btn" dropdown-toggle>
       <span ng-bind="::'com.action'|i18next"></span>
       <span class="caret"></span>
@@ -13,19 +13,19 @@
       </li>
     </ul>
   </div>
-  <div class="btn-group pull-right" dropdown is-open="selectRegion.isopen">
+  <div class="btn-group pull-right" dropdown>
     <button class="btn" dropdown-toggle ng-disabled="processing">
       <span ng-bind="'ec2.regionName.'+ec2Info.getCurrentRegion()|i18next"></span>
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
       <li ng-if="r !== 'all'">
-        <a ng-click="ec2Info.setCurrentRegion('all');selectRegion.isopen=false"
+        <a ng-click="ec2Info.setCurrentRegion('all')"
            ng-bind="::'ec2.regionName.all'|i18next">
         </a>
       </li>
       <li ng-repeat="r in awsRegions.ec2" ng-if="r !== inputs.region">
-        <a ng-click="ec2Info.setCurrentRegion(r);selectRegion.isopen=false"
+        <a ng-click="ec2Info.setCurrentRegion(r)"
            ng-bind="::('ec2.regionName.'+r|i18next) + ' - '+ r">
         </a>
       </li>

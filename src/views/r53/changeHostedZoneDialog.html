@@ -69,8 +69,7 @@
                type="hidden" ng-model="inputs.associatedVpcs[0]"
                ng-disabled="processing"
                ui-validate="'isValidPrivateZone($value)'">
-        <div ng-repeat="(idx, associatedVpc) in inputs.associatedVpcs"
-             class="vpc-input">
+        <div ng-repeat="(idx, associatedVpc) in inputs.associatedVpcs">
           <div class="btn-group no-animate" dropdown>
             <button class="btn" dropdown-toggle
                     ng-class="inputs.form.associatedVpcs.$invalid ? 'btn-danger': ''"

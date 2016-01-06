@@ -267,7 +267,7 @@ form input.ng-valid.ng-dirty {
   padding-bottom: 4px;
   margin: 4px 0 0 0;
 }
-.form-group [dropdown] {
+.form-group [dropdown]:nth-of-child(1) {
   margin-top: -2px;
 }
 .form-group .btns {
@@ -296,3 +296,17 @@ textarea.form-control {
     margin-bottom: 0;
   }
 }
+
+/*
+.nav-tabs {
+  background: transparent;
+  
+  > li.active > a,
+  > li.active > a:hover,
+  > li.active > a:focus {
+    color: #555 !important;
+    border: 1px solid #ddd !important;
+    border-bottom-color: #fff !important;
+  }
+}
+*/
