@@ -65,6 +65,7 @@ gulp.task('views-js', ['views'], function() {
   var ngTemplates = require('gulp-ng-templates');
   var htmlmin = require('gulp-htmlmin');
   return gulp.src(['app/views/**/*html'])
+    .pipe(plumber())
     .pipe(htmlmin({
       removeComments: true,
       removeAttributeQuotes: true,
