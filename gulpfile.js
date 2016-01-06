@@ -17,7 +17,7 @@ gulp.task('clean', function(callback) {
 
 // copy static files
 gulp.task('copy', function() {
-  return gulp.src(['src/images/*','src/mimetype.txt'], { base:'src' })
+  return gulp.src(['src/images/*','src/conf/*.txt'], { base:'src' })
     .pipe(newer('app'))
     .pipe(using())
     .pipe(gulp.dest('app'));
@@ -63,9 +63,13 @@ gulp.task('views', function() {
 
 gulp.task('views-js', ['views'], function() {
   var ngTemplates = require('gulp-ng-templates');
-  var minifyHtml = require('gulp-minify-html');
+  var htmlmin = require('gulp-htmlmin');
   return gulp.src(['app/views/**/*html'])
-    .pipe(minifyHtml({empty: true}))
+    .pipe(htmlmin({
+      removeComments: true,
+      removeAttributeQuotes: true,
+      collapseWhitespace: true
+    }))
     .pipe(ngTemplates({
       filename: 'template-cache.js',
       module: 'app.templateCache',
@@ -152,7 +156,7 @@ gulp.task('copy-dist', ['default'], function() {
   var es = require('event-stream');
   var tasks = [];
   var manifest = require('./app/manifest');
-  var files = ['app/_locales/**', 'app/conf/**', 'app/images/**', 'app/manifest.json', 'app/mimetype.txt'];
+  var files = ['app/_locales/**', 'app/conf/**', 'app/images/**', 'app/manifest.json', 'app/conf/mimetype.txt'];
   manifest.app.background.scripts.forEach(function(f) {
     if (!f.match(/js\/main\.js$/)) {
       files.push('app/' + f);
@@ -181,20 +185,22 @@ gulp.task('copy-dist', ['default'], function() {
 gulp.task('usemin', ['default'], function() {
   var fs = require('fs');
   var usemin = require('gulp-usemin');
-  var minifyCss = require('gulp-minify-css');
+  var cssnano = require('gulp-cssnano');
   var uglify = require('gulp-uglify');
   var footer = require('gulp-footer');
-  var minifyHtml = require('gulp-minify-html');
+  var htmlmin = require('gulp-htmlmin');
   return gulp.src('app/index.html')
     .pipe(plumber())
     .pipe(usemin({
-      css: [minifyCss({
-        aggressiveMerging: false,
+      css: [cssnano({
       }), 'concat'],
-      css2: [minifyCss({
-        aggressiveMerging: false,
+      css2: [cssnano({
       }), 'concat'],
-      html: [minifyHtml({empty: true})],
+      html: [htmlmin({
+        removeComments: true,
+        removeAttributeQuotes: true,
+        collapseWhitespace: true
+      })],
       js: [
         footer(';/*EOF*/;'), 'concat',
         uglify({compress:{}, mangle: false})
@@ -241,7 +247,7 @@ gulp.task('watch', ['default'], function() {
   gulp.watch(['src/js/**/*js', '!src/js/vendor/**js'], ['js']);
   gulp.watch('src/js/vendor/**/*js', ['js-vendor']);
   gulp.watch('src/sass/**/*.scss', ['sass']);
-  gulp.watch(['src/images/*','src/mimetype.txt'], ['copy']);
+  gulp.watch(['src/images/*','src/conf/*.txt'], ['copy']);
 });
 
 

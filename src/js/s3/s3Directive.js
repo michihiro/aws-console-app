@@ -135,7 +135,7 @@
 
   function s3MimetypeFactory($http) {
     var mime = {};
-    $http.get('mimetype.txt').then(_extractMimeTypeString);
+    $http.get('conf/mimetype.txt').then(_extractMimeTypeString);
 
     return function(ext) {
       return mime[ext];
