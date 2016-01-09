@@ -14,7 +14,8 @@
     .directive('modalDialog', modalDialogDirective)
     .directive('formGroup', formGroupDirective)
     .directive('appElasticTextarea', appElasticTextareaDirective)
-    .directive('contextmenuFor', contextmenuForDirective);
+    .directive('contextmenuFor', contextmenuForDirective)
+    .directive('inputmode', inputmodeDirective);
 
   appRightClick.$inject = ['$parse'];
 
@@ -648,6 +649,38 @@
         scope.$apply(function() {
           $parse(attr.isOpen).assign(scope, true);
         });
+      }
+    }
+  }
+
+  inputmodeDirective.$inject = [];
+
+  function inputmodeDirective() { // Umm..
+    return {
+      restrict: 'A',
+      link: link
+    };
+    function link(scope, elem, attr) {
+      if (attr.inputmode !== 'verbatim') {
+        return;
+      }
+
+      var type = attr.type || null;
+      var handlers = {
+        focus: _onFocus,
+        blur: _onBlur
+      };
+
+      elem.on(handlers);
+      elem.on('$destroy', function() {
+        elem.on(handlers);
+      });
+
+      function _onFocus() {
+        elem.attr('type', 'tel');
+      }
+      function _onBlur() {
+        elem.attr('type', type);
       }
     }
   }
