@@ -169,7 +169,7 @@ gulp.task('copy-dist', ['default'], function() {
       .pipe(gulp.dest('dist'))
   );
   tasks.push(
-    gulp.src(['app/bower_components/**/*.+(eot|svg|ttf|woff)'])
+    gulp.src(['app/bower_components/**/*.woff'])
       .pipe(rename(function(path) {
         path.dirname = '';
       }))
