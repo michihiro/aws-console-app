@@ -124,14 +124,29 @@ ec2:
    - これらのインスタンスを削除してよろしいですか？
   terminateInstancessMsg2: ""
   runInstances: インスタンスの作成
+  manageVpcSubnet: VPC とサブネットの管理
+  createVpc: VPC の作成
+  createSubnet: サブネットの作成
   selectKeyPair: キーペアの選択
-  subnetVpcRegion: サブネット / VPC / リージョン 
+  region: リージョン
+  availabilityZone: ゾーン
+  noPreference: 指定しない
+  vpc: VPC
+  subnet: サブネット
+  cidrBlock: CIDRブロック
+  publicIp: パブリック IP
+  mapPublicIpOnLaunch: 自動割り当てパブリック IP を有効化
   AMI: AMI
   instanceType: インスタンスタイプ
+  instanceFamilyDescription:
+    generalPurpose: 汎用
+    computeOptimized: コンピューティングの最適化
   nameTag: ネームタグ
   securityGroups: セキュリティグループ
   keyName: キーペア名
   keyFingerprint: Fingerprint
+  error:
+    VpcLimitExceeded: VPC の上限数を超えました。
 r53:
   serviceName: Route53
   zones: ゾーン

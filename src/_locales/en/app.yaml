@@ -123,14 +123,29 @@ ec2:
    - Are you sure you want to terminate these instances?
   terminateInstancesMsg2: ""
   runInstances: Launch Instance
+  manageVpcSubnet: Manage VPC and Subnet
+  createVpc: Create VPC
+  createSubnet: Create Subnet
   selectKeyPair: Select a key pair
-  subnetVpcRegion: Subnet / VPC / Region
+  region: Region
+  availabilityZone: Zone
+  noPreference: No preference
+  vpc: VPC
+  subnet: Subnet
+  cidrBlock: CIDR block
+  publicIp: Public IP
+  mapPublicIpOnLaunch: Enable auto-assign Public IP
   AMI: AMI
   instanceType: Instance Type
+  instanceFamilyDescription:
+    generalPurpose: General purpose
+    computeOptimized: Compute optimized
   nameTag: Name Tag
   securityGroups: Security Groups
   keyName: Key pair Name
   keyFingerprint: Fingerprint
+  error:
+    VpcLimitExceeded: The maximum number of VPCs has been reached.
 r53:
   serviceName: Route53
   zones: Zones

@@ -38,7 +38,7 @@
       if (isDisabled(key)) {
         return;
       }
-      scope.isOpenHeaderMenu = false;
+
       if (key === 'runInstances') {
         $rootScope.openDialog('ec2/runInstancesDialog', {}, {
           size: 'lg'
@@ -81,6 +81,7 @@
 
   function ec2InfoFactory($rootScope, $q, $resource, awsRegions, awsEC2) {
     var currentRegion = 'all';
+    var availabilityZones = {};
     var instances = {};
     var vpcs = {};
     var ec2Classic = {};
@@ -89,7 +90,7 @@
     var amiResource = $resource('conf/ami.json').get();
     var amis = {};
     var instanceTypeResource = $resource('conf/instanceType.json').query();
-    var instanceTypes;
+    var unavailableInstanceFamilyResource = $resource('conf/unavailableInstanceFamily.json').get();
 
     $rootScope.$watch('credentialsId', function() {
       currentRegion = undefined;
@@ -103,6 +104,8 @@
     return {
       getCurrentRegion: getCurrentRegion,
       setCurrentRegion: setCurrentRegion,
+      getAvailabilityZones: getAvailabilityZones,
+      getDisplayName: getDisplayName,
       getInstances: getInstances,
       getNumOfRunningInstances: getNumOfRunningInstances,
       getVpcs: getVpcs,
@@ -115,10 +118,14 @@
       setRebooting: setRebooting,
       getAMIs: getAMIs,
       getInstanceTypes: getInstanceTypes,
+      isValidCidrBlock: isValidCidrBlock
     };
 
-    function getInstanceTypes() {
-      return instanceTypeResource;
+    function getInstanceTypes(region) {
+      var unavailableFamilies = unavailableInstanceFamilyResource[region] || [];
+      return instanceTypeResource.filter(function(type) {
+        return unavailableFamilies.indexOf(type.family) < 0;
+      });
     }
 
     function setRebooting(region, instanceIds) {
@@ -138,13 +145,12 @@
       });
     }
 
-    function refresh() {
-      if (currentRegion === 'all') {
-        awsRegions.ec2.forEach(function(r) {
-          listInstances(r);
-        });
+    function refresh(region) {
+      region = region || currentRegion;
+      if (region === 'all') {
+        return $q.all(awsRegions.ec2.map(listInstances));
       } else {
-        listInstances(currentRegion);
+        return listInstances(region);
       }
     }
 
@@ -169,6 +175,28 @@
       refresh();
     }
 
+    function getAvailabilityZones(region) {
+      if (region && availabilityZones[region] === undefined) {
+        availabilityZones[region] = null;
+        awsEC2(region).describeAvailabilityZones({}, function(err, data) {
+          availabilityZones[region] = err ? undefined :
+            data.AvailabilityZones.map(function(z) {
+              return z.ZoneName;
+            });
+        });
+      }
+      return availabilityZones[region];
+    }
+
+    function getDisplayName(o, tagStr, idStr) {
+      if (!o) {
+        return '';
+      }
+      var name = (o[tagStr] || {}).Name;
+      var id = o[idStr];
+      return name ? name + '(' + id + ')' : id;
+    }
+
     function getInstances(region, vpcId, subnetId) {
       return (instances[region] || []).filter(function(i) {
         return i.VpcId === vpcId && (subnetId === undefined || i.SubnetId === subnetId);
@@ -181,8 +209,8 @@
       }).length;
     }
 
-    function getVpcs() {
-      var region = getCurrentRegion();
+    function getVpcs(region) {
+      region = region || getCurrentRegion();
       var vpcArr, regions;
       if (region === 'all') {
         regions = Object.keys(vpcs);
@@ -245,12 +273,13 @@
       var defer = $q.defer();
       awsEC2(region).describeVpcs({}, function(err, data) {
         if (!data || !data.Vpcs) {
-          vpcs[region] = [];
           defer.resolve();
           return;
         }
         var vpcsBack = vpcs || {};
         var regionIdx = awsRegions.ec2.indexOf(region);
+        var promises = [$q.when()];
+
         vpcs[region] = data.Vpcs.map(function(v) {
 
           (vpcsBack[region] || []).some(function(v2, idx) {
@@ -270,29 +299,46 @@
           v.region = region;
           v.regionIdx = regionIdx;
 
-          awsEC2(region).describeSubnets({
-            Filters: [{
-              Name: 'vpc-id',
-              Values: [v.VpcId]
-            }],
-          }, function(err, obj) {
-            if (obj) {
-              v.Subnets = obj.Subnets.map(function(s) {
-                s.tags = s.Tags.reduce(function(all, s2) {
-                  all[s2.Key] = s2.Value;
-                  return all;
-                }, {});
-                s.region = region;
-                s.vpcTags = v.tags;
-                return s;
-              });
-            }
-            $rootScope.$digest();
-          });
+          promises.push(_describeSubnets(v));
+
           return v;
         });
-        defer.resolve();
-        $rootScope.$digest();
+        $q.all(promises).then(function() {
+          defer.resolve();
+        });
+      });
+      return defer.promise;
+    }
+
+    function _describeSubnets(vpc) {
+      var defer = $q.defer();
+      awsEC2(vpc.region).describeSubnets({
+        Filters: [{
+          Name: 'vpc-id',
+          Values: [vpc.VpcId]
+        }],
+      }, function(err, obj) {
+        var subnetsBack = vpc.Subnets || [];
+
+        if (obj) {
+          vpc.Subnets = obj.Subnets.map(function(s) {
+            subnetsBack.some(function(sb, idx) {
+              if (sb.SubnetId === s.SubnetId) {
+                s = ng.extend(sb, s);
+                subnetsBack.splice(idx, 1);
+                return true;
+              }
+            });
+            s.tags = s.Tags.reduce(function(all, s2) {
+              all[s2.Key] = s2.Value;
+              return all;
+            }, {});
+            s.region = vpc.region;
+            s.vpcTags = vpc.tags;
+            return s;
+          });
+        }
+        defer.resolve(vpc);
       });
       return defer.promise;
     }
@@ -302,6 +348,9 @@
       var tempStates = ['pending', 'shutting-down', 'stopping', 'rebooting'];
       awsEC2(region).describeInstances({}, function(err, data) {
         var needRefresh;
+        if (err) {
+          return defer.reject();
+        }
         if (!data || !data.Reservations) {
           defer.resolve();
           return;
@@ -372,8 +421,9 @@
 
     function _describeImages(region) {
       var defer = $q.defer();
+      var regoinAMIs = amiResource[region] || [];
       var opt = {
-        ImageIds: amiResource[region].map(function(ami) {
+        ImageIds: regoinAMIs.map(function(ami) {
           return ami.id;
         })
       };
@@ -382,18 +432,34 @@
           amis[region] = undefined;
           return defer.reject(err);
         }
-        amis[region] = data.Images.map(function(ami) {
-          ami.region = region;
-          amiResource[region].some(function(a) {
-            if (ami.ImageId === a.id) {
-              ami.name = a.name;
+        amis[region] = regoinAMIs.reduce(function(all, ami) {
+          data.Images.some(function(a) {
+            if (a.ImageId === ami.id) {
+              a.name = ami.name;
+              all.push(a);
               return true;
             }
           });
-          return ami;
-        });
+          return all;
+        }, []);
         defer.resolve();
       });
+    }
+
+    function isValidCidrBlock(v, minMask, maxMask) {
+      var ar = (v || '').split('/');
+
+      return ar && ar.length === 2 &&
+        is.ipv4(ar[0]) && _isNumeric(ar[1]) &&
+        _isInRange(ar[1], minMask, maxMask);
+    }
+
+    function _isNumeric(v) {
+      return ('' + (+v)) === v;
+    }
+
+    function _isInRange(v, min, max) {
+      return min <= (+v) && (+v) <= max;
     }
   }
 

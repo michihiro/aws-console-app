@@ -1,27 +1,86 @@
 us-east-1:
   - id : ami-60b6c60a
     name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+  - id: ami-2051294a
+    name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
+  - id: ami-b7b4fedd
+    name: SUSE Linux Enterprise Server 12 SP1 (HVM), SSD Volume Type
+  - id: ami-d05e75b8
+    name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
 us-west-2:
-  - id : ami-f0091d91
+  - id: ami-f0091d91
     name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+  - id: ami-775e4f16
+    name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
+  - id: ami-d2627db3
+    name: SUSE Linux Enterprise Server 12 SP1 (HVM), SSD Volume Type
+  - id: ami-5189a661
+    name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
 us-west-1:
   - id : ami-d5ea86b5
     name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+  - id: ami-d1315fb1
+    name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
+  - id: ami-6d701b0d
+    name: SUSE Linux Enterprise Server 12 SP 1 (HVM), SSD Volume Type
+  - id: ami-df6a8b9b
+    name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
 eu-west-1:
   - id : ami-bff32ccc
     name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+  - id: ami-8b8c57f8
+    name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
+  - id: ami-f4278487
+    name: SUSE Linux Enterprise Server 12 SP1 (HVM), SSD Volume Type
+  - id: ami-47a23a30
+    name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
 eu-central-1:
   - id : ami-bc5b48d0
     name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+  - id: ami-875042eb
+    name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
+  - id: ami-6bd2ce07
+    name: SUSE Linux Enterprise Server 12 SP1 (HVM), SSD Volume Type
+  - id: ami-accff2b1
+    name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
 ap-southeast-1:
   - id : ami-c9b572aa
     name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+  - id: ami-3f03c55c
+    name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
+  - id: ami-2a19da49
+    name: SUSE Linux Enterprise Server 12 SP 1 (HVM), SSD Volume Type
+  - id: ami-96f1c1c4
+    name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
 ap-northeast-1:
   - id : ami-383c1956
     name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+  - id: ami-0dd8f963
+    name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
+  - id: ami-f8220896
+    name: SUSE Linux Enterprise Server 12 SP1 (HVM), SSD Volume Type
 ap-southeast-2:
   - id : ami-48d38c2b
     name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+  - id : ami-e0c19f83
+    name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
+  - id : ami-0f510a6c
+    name: SUSE Linux Enterprise Server 12 SP 1 (HVM), SSD Volume Type
+  - id : ami-69631053
+    name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
+ap-northeast-2:
+  - id : ami-249b554a
+    name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+  - id: ami-fea46a90
+    name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
+  - id: ami-e9985687
+    name: SUSE Linux Enterprise Server 11 SP4
 sa-east-1:
   - id : ami-6817af04
     name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+  - id: ami-27b3094b
+    name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
+  - id: ami-4ede5922
+    name: SUSE Linux Enterprise Server 12 SP 1 (HVM), SSD Volume Type
+  - id: ami-4d883350
+    name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type

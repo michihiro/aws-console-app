@@ -1,4 +1,5 @@
-- family: General purpose (T2)
+- family: T2
+  familyDescription: generalPurpose
   types:
   - type: t2.nano
     vCpu: 1
@@ -15,7 +16,8 @@
   - type: t2.large
     vCpu: 2
     memory: 8
-- family: General purpose (M4)
+- family: M4
+  familyDescription: generalPurpose
   types:
   - type: m4.large
     vCpu: 2
@@ -32,7 +34,8 @@
   - type: m4.10xlarge
     vCpu: 40
     memory: 169
-- family: General purpose (M3)
+- family: M3
+  familyDescription: generalPurpose
   types:
   - type: m3.medium
     vCpu: 1
@@ -46,3 +49,39 @@
   - type: m3.2xlarge
     vCpu: 8
     memory: 30
+- family: C4
+  familyDescription: computeOptimized
+  types:
+  - type: c4.large
+    vCpu: 2
+    memory: 3.75
+  - type: c4.xlarge
+    vCpu: 4
+    memory: 7.5
+  - type: c4.2xlarge
+    vCpu: 8
+    memory: 15
+  - type: c4.4xlarge
+    vCpu: 16
+    memory: 30
+  - type: c4.8xlarge
+    vCpu: 36
+    memory: 70
+- family: C3
+  familyDescription: computeOptimized
+  types:
+  - type: c3.large
+    vCpu: 2
+    memory: 3.75
+  - type: c3.xlarge
+    vCpu: 4
+    memory: 7.5
+  - type: c3.2xlarge
+    vCpu: 8
+    memory: 15
+  - type: c3.4xlarge
+    vCpu: 16
+    memory: 30
+  - type: c3.8xlarge
+    vCpu: 32
+    memory: 60

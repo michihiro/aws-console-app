@@ -27,17 +27,17 @@
 .ec2-vpc-panel .subnet {
   margin: -1em 0 1em 0;
 }
-.ec2-vpc-panel .subet-title {
+.ec2-vpc-panel .subnet-title {
   transform: translate(0, 1em);
-}
-.ec2-vpc-panel .subet-title > div {
-  display:inline-block;
-  background: #fff;
-  padding: 4px;
-  margin: 0 10px;
-}
-.ec2-vpc-panel .subet-title > div:last-child {
-  float:right
+  > div {
+    display:inline-block;
+    background: #fff;
+     padding: 4px;
+    margin: 0 10px;
+  }
+  > div:last-child {
+    float:right
+  }
 }
 .ec2-vpc-panel .subnet-body {
   overflow: hidden;
@@ -122,5 +122,37 @@
   .modal-body-inner {
     position: relative;
     min-height: 200px;
+  }
+}
+
+.ec2-manage-vpc-subnet-dialog {
+  .vpc-list {
+    padding-right: 0;margin-right: -1px;border-right: 1px solid #999;
+  }
+  .subnet-list {
+    padding-left: 0;border-left: 1px solid #999;
+  }
+  .vpc-subnet {
+    li > a {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow-x: hidden;
+    }
+  }
+  .nav-stacked > li {
+    margin: 0;
+    border-radius:0;
+  }
+  .nav-stacked > li:first-child {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    background: #555;
+    color: #fff;
+  }
+  .nav-stacked > li:first-child > .btn {
+    float: right;
+    margin-top: -8px;
+    margin-bottom: 0px;
   }
 }

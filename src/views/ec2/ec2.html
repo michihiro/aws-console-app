@@ -24,16 +24,18 @@
       </accordion-heading>
       <div class="subnet"
            ng-repeat="s in v.Subnets | orderBy:['tags.Name', 'SubnetId']">
-        <div class="subet-title">
+        <div class="subnet-title">
           <div ng-if="!s.SubnetId">EC2 Classic</div>
           <div ng-if="s.SubnetId"
                ng-bind="s.SubnetId +' - ' + s.CidrBlock"></div>
           <div ng-bind="s.AvailabilityZone"></div>
         </div>
         <div class="subnet-body">
+          <!--
           <div class="no-instances"
                ng-if="!ec2Info.getInstances(v.region, v.VpcId, s.SubnetId).length"
                ng-bind="'ec2.noInstances'|i18next"></div>
+          -->
           <div ng-repeat="i in ec2Info.getInstances(v.region, v.VpcId, s.SubnetId) | orderBy:['tags.Name','InstanceId']">
             <div class="instance"
                  ng-class="{selected: ec2Info.isSelectedInstance(i)}"

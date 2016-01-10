@@ -288,6 +288,12 @@ textarea.form-control {
 }
 .form-group label.control-label {
   margin: 4px 0 12px 0;
+  font-size: 11.5px;
+}
+.checkbox .checkbox-material + span {
+  margin-left: 8px;
+  font-size: 14px;
+  color: #333;
 }
 
 .password-score {

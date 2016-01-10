@@ -8,6 +8,10 @@
     .controller('ec2Ctrl', ec2Ctrl)
     .controller('ec2RunInstancesDialogCtrl', ec2RunInstancesDialogCtrl)
     .controller('ec2ChangeInstanceStateDialogCtrl', ec2ChangeInstanceStateDialogCtrl)
+    .controller('ec2ManageVpcSubnetDialogCtrl', ec2ManageVpcSubnetDialogCtrl)
+    .controller('ec2CreateVpcDialogCtrl', ec2CreateVpcDialogCtrl)
+    .controller('ec2CreateSubnetDialogCtrl', ec2CreateSubnetDialogCtrl)
+    .controller('ec2ManageSecurityGroupsDialogCtrl', ec2ManageSecurityGroupsDialogCtrl)
     .controller('ec2SelectKeyPairDialogCtrl', ec2SelectKeyPairDialogCtrl);
 
   ec2HeaderCtrl.$inject = ['$scope', 'awsRegions', 'ec2Info', 'ec2Actions'];
@@ -28,7 +32,7 @@
       ec2Actions: ec2Actions,
     });
 
-    var refreshTimer = $interval(ec2Info.refresh, REFRESH_INTERVAL);
+    var refreshTimer = $interval(ec2Info.refresh.bind(null, null), REFRESH_INTERVAL);
     $scope.$on('$destroy', onDestroy);
     ec2Info.refresh();
 
@@ -87,32 +91,40 @@
     }
   }
 
-  ec2RunInstancesDialogCtrl.$inject = ['$scope', '$q', 'awsRegions', 'awsEC2', 'ec2Info', 'dialogInputs'];
+  ec2RunInstancesDialogCtrl.$inject = ['$scope', '$q', 'awsRegions', 'awsEC2', 'ec2Info'];
 
-  function ec2RunInstancesDialogCtrl($scope, $q, awsRegions, awsEC2, ec2Info, dialogInputs) {
+  function ec2RunInstancesDialogCtrl($scope, $q, awsRegions, awsEC2, ec2Info) {
+    var selected0 = (ec2Info.getSelectedInstances() || [])[0] || {};
+    var subnet;
+
+    (ec2Info.getVpcs() || []).some(function(v) {
+      if (v.VpcId === selected0.VpcId) {
+        (v.Subnets || []).some(function(s) {
+          if (s.SubnetId === selected0.SubnetId) {
+            subnet = s;
+            return true;
+          }
+        });
+        return true;
+      }
+    });
+
     ng.extend($scope, {
       awsRegions: awsRegions,
       ec2Info: ec2Info,
-      dialogInputs: dialogInputs,
       inputs: {
         securityGroups: [],
+        subnet: subnet
       },
-      getDisplayName: getDisplayName,
+      getDisplayName: ec2Info.getDisplayName,
       setSecurityGroup: setSecurityGroup,
+      openManageVpcSubnetDialog: openManageVpcSubnetDialog,
+      openManageSecurityGroupsDialog: openManageSecurityGroupsDialog,
       launch: launch,
     });
 
     $scope.$watch('inputs.subnet', _onSubnetChanged);
     $scope.$watch('inputs.securityGroups', _onSecurityGroupsChanged, true);
-
-    function getDisplayName(o, tagStr, idStr) {
-      if (!o) {
-        return '';
-      }
-      var name = (o[tagStr] || {}).Name;
-      var id = o[idStr];
-      return name ? name + '(' + id + ')' : id;
-    }
 
     function setSecurityGroup(group, idx) {
       $scope.inputs.securityGroups[idx] = group;
@@ -125,11 +137,54 @@
       }
     }
 
-    function _onSubnetChanged(subnet) {
-      if ($scope.inputs.ami && (!subnet || $scope.inputs.ami.region !== subnet.region)) {
-        $scope.inputs.ami = null;
-        $scope.inputs.securityGroups = null;
+    function _onSubnetChanged(subnet, oldSubnet) {
+      var inputs = $scope.inputs;
+
+      if (!subnet || subnet.region !== (oldSubnet || {}).region) {
+        var found;
+
+        if (inputs.ami) {
+          inputs.ami = null;
+        }
+        if (inputs.instanceType) {
+          found = ec2Info.getInstanceTypes(subnet.region).some(function(i) {
+            return i.types.some(function(t) {
+              return t.type === inputs.instanceType.type;
+            });
+          });
+
+          if (!found) {
+            inputs.instanceType = null;
+          }
+        }
       }
+      if (!subnet || subnet.VpcId !== (oldSubnet || {}).VpcId) {
+        inputs.securityGroups = [];
+      }
+    }
+
+    function openManageVpcSubnetDialog() {
+      var dlg = $scope.openDialog('ec2/manageVpcSubnetDialog', {
+        subnet: $scope.inputs.subnet
+      }, {
+        size: 'lg'
+      });
+      dlg.result.then(function(subnet) {
+        $scope.inputs.subnet = subnet;
+      });
+    }
+
+    function openManageSecurityGroupsDialog() {
+      var dlg = $scope.openDialog('ec2/manageSecurityGroupsDialog', {
+        subnet: $scope.inputs.subnet
+      }, {
+        size: 'lg'
+      });
+      dlg.result.then(function(group) {
+        if ($scope.inputs.securityGroups.indexOf(group) < 0) {
+          $scope.inputs.securityGroups.push(group);
+        }
+      });
     }
 
     function launch() {
@@ -207,6 +262,260 @@
       }
     }
 
+  }
+
+  ec2ManageVpcSubnetDialogCtrl.$inject = ['$scope', '$q', 'awsRegions', 'awsEC2', 'ec2Info', 'dialogInputs'];
+
+  function ec2ManageVpcSubnetDialogCtrl($scope, $q, awsRegions, awsEC2, ec2Info, dialogInputs) {
+    var subnet = (dialogInputs || {}).subnet;
+    var region = (subnet || {}).region;
+    var vpc = (ec2Info.getVpcs() || []).filter(function(v) {
+      return subnet && v.VpcId === subnet.VpcId;
+    })[0];
+
+    ng.extend($scope, {
+      awsRegions: awsRegions,
+      ec2Info: ec2Info,
+      inputs: {
+        region: region,
+        vpc: vpc,
+        subnet: subnet
+      },
+      cidrOrderBy: cidrOrderBy,
+      openCreateVpcDialog: openCreateVpcDialog,
+      openCreateSubnetDialog: openCreateSubnetDialog
+    });
+    $scope.$watch('inputs.region', function(r) {
+      if (r !== undefined && r !== region) {
+        $scope.inputs.vpc = null;
+        $scope.inputs.subnet = null;
+      }
+    });
+
+    function cidrOrderBy(v) {
+      var match = v.CidrBlock.match(/(\d+)\.(\d+)\.(\d+)\.(\d+)\/(\d+)/);
+      if (match) {
+        match.shift();
+        return match.map(function(n) {
+          return ('000' + n).substr(-3);
+        }).join('_');
+      }
+    }
+
+    function openCreateVpcDialog() {
+      var dlg = $scope.openDialog('ec2/createVpcDialog', {
+        region: $scope.inputs.region
+      });
+      dlg.result.then(function(vpc) {
+        $scope.inputs.vpc = vpc;
+      });
+    }
+
+    function openCreateSubnetDialog() {
+      var dlg = $scope.openDialog('ec2/createSubnetDialog', {
+        region: $scope.inputs.region,
+        vpc: $scope.inputs.vpc
+      });
+      dlg.result.then(function(subnet) {
+        $scope.inputs.subnet = subnet;
+      });
+    }
+  }
+
+  ec2CreateVpcDialogCtrl.$inject = ['$scope', '$q', 'awsRegions', 'awsEC2', 'ec2Info', 'appFocusOn', 'dialogInputs'];
+
+  function ec2CreateVpcDialogCtrl($scope, $q, awsRegions, awsEC2, ec2Info, appFocusOn, dialogInputs) {
+    ng.extend($scope, {
+      ec2Info: ec2Info,
+      inputs: {
+        region: dialogInputs.region
+      },
+      create: create
+    });
+
+    appFocusOn('cidrBlock');
+
+    function create() {
+      if ($scope.inputs.form.$invalid || $scope.processing) {
+        return;
+      }
+      $scope.processing = true;
+      _createVpc()
+        .then(_addNameTag)
+        .then(_done)
+        .catch(_fail);
+
+      function _createVpc() {
+        var defer = $q.defer();
+        var params = {
+          CidrBlock: $scope.inputs.cidrBlock
+        };
+        awsEC2($scope.inputs.region).createVpc(params, function(err, data) {
+          if (err) {
+            defer.reject(err);
+          } else {
+            defer.resolve(data);
+          }
+        });
+        return defer.promise;
+      }
+
+      function _addNameTag(data) {
+        var defer = $q.defer();
+        var params = {
+          Resources: [data.Vpc.VpcId],
+          Tags: [{
+            Key: 'Name',
+            Value: $scope.inputs.name || ''
+          }]
+        };
+        awsEC2($scope.inputs.region).createTags(params, function(err) {
+          if (err) {
+            defer.reject(err);
+          } else {
+            defer.resolve(data);
+          }
+        });
+        return defer.promise;
+      }
+
+      function _done(data) {
+        ec2Info.refresh($scope.inputs.region).then(function() {
+          var vpc;
+          (ec2Info.getVpcs() || []).some(function(v) {
+            if (v.VpcId === data.Vpc.VpcId) {
+              vpc = v;
+              return true;
+            }
+          });
+          $scope.$close(vpc);
+        });
+      }
+
+      function _fail(err) {
+        $scope.error = err;
+        $scope.processing = false;
+      }
+    }
+  }
+
+  ec2CreateSubnetDialogCtrl.$inject = ['$scope', '$q', 'awsRegions', 'awsEC2', 'ec2Info', 'appFocusOn', 'dialogInputs'];
+
+  function ec2CreateSubnetDialogCtrl($scope, $q, awsRegions, awsEC2, ec2Info, appFocusOn, dialogInputs) {
+    ng.extend($scope, {
+      ec2Info: ec2Info,
+      inputs: {
+        region: dialogInputs.region,
+        vpc: dialogInputs.vpc
+      },
+      create: create
+    });
+
+    appFocusOn('cidrBlock');
+
+    function create() {
+      if ($scope.inputs.form.$invalid || $scope.processing) {
+        return;
+      }
+      $scope.processing = true;
+      _createSubnet()
+        .then(_setMapPublicIpOnLaunch)
+        .then(_addNameTag)
+        .then(_done)
+        .catch(_fail);
+
+      function _createSubnet() {
+        var defer = $q.defer();
+        var params = {
+          CidrBlock: $scope.inputs.cidrBlock,
+          VpcId: $scope.inputs.vpc.VpcId,
+          AvailabilityZone: $scope.inputs.zone ? $scope.inputs.zone : ''
+        };
+        awsEC2($scope.inputs.region).createSubnet(params, function(err, data) {
+          if (err) {
+            defer.reject(err);
+          } else {
+            defer.resolve(data);
+          }
+        });
+        return defer.promise;
+      }
+
+      function _addNameTag(data) {
+        var defer = $q.defer();
+        var params = {
+          Resources: [data.Subnet.SubnetId],
+          Tags: [{
+            Key: 'Name',
+            Value: $scope.inputs.name || ''
+          }]
+        };
+        awsEC2($scope.inputs.region).createTags(params, function(err) {
+          if (err) {
+            defer.reject(err);
+          } else {
+            defer.resolve(data);
+          }
+        });
+        return defer.promise;
+      }
+
+      function _setMapPublicIpOnLaunch(data) {
+        if (!$scope.inputs.mapPublicIpOnLaunch) {
+          return $q.when(data);
+        }
+
+        var defer = $q.defer();
+        var params = {
+          SubnetId: data.Subnet.SubnetId,
+          MapPublicIpOnLaunch: {
+            Value: !!$scope.inputs.mapPublicIpOnLaunch
+          }
+        };
+        awsEC2($scope.inputs.region).modifySubnetAttribute(params, function(err) {
+          if (err) {
+            defer.reject(err);
+          } else {
+            defer.resolve(data);
+          }
+        });
+        return defer.promise;
+      }
+
+      function _done(data) {
+        ec2Info.refresh($scope.inputs.region).then(function() {
+          var subnet;
+          (ec2Info.getVpcs($scope.inputs.region) || []).some(function(v) {
+            if (v.VpcId === data.Subnet.VpcId) {
+              (v.Subnets || []).some(function(s) {
+                if (s.SubnetId === data.Subnet.SubnetId) {
+                  subnet = s;
+                  return true;
+                }
+              });
+            }
+          });
+          $scope.$close(subnet);
+        });
+      }
+
+      function _fail(err) {
+        $scope.error = err;
+        $scope.processing = false;
+      }
+
+    }
+  }
+
+  ec2ManageSecurityGroupsDialogCtrl.$inject = ['$scope', '$q', 'awsRegions', 'awsEC2', 'ec2Info', 'dialogInputs'];
+
+  function ec2ManageSecurityGroupsDialogCtrl($scope, $q, awsRegions, awsEC2, ec2Info, dialogInputs) {
+    ng.extend($scope, {
+      ec2Info: ec2Info,
+      inputs: {
+        region: (dialogInputs.subnet || {}).region
+      }
+    });
   }
 
   ec2SelectKeyPairDialogCtrl.$inject = ['$scope', '$q', 'awsEC2', 'ec2Info', 'dialogInputs'];
