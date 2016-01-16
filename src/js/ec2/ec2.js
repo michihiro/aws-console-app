@@ -436,6 +436,7 @@
           data.Images.some(function(a) {
             if (a.ImageId === ami.id) {
               a.name = ami.name;
+              a.icon = ami.icon;
               all.push(a);
               return true;
             }

@@ -1,86 +1,127 @@
 us-east-1:
   - id : ami-60b6c60a
     name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+    icon: aws
   - id: ami-2051294a
     name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
+    icon: redhat
   - id: ami-b7b4fedd
     name: SUSE Linux Enterprise Server 12 SP1 (HVM), SSD Volume Type
+    icon: suse
   - id: ami-d05e75b8
     name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
+    icon: ubuntu
 us-west-2:
   - id: ami-f0091d91
     name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+    icon: aws
   - id: ami-775e4f16
     name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
+    icon: redhat
   - id: ami-d2627db3
     name: SUSE Linux Enterprise Server 12 SP1 (HVM), SSD Volume Type
+    icon: suse
   - id: ami-5189a661
     name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
+    icon: ubuntu
 us-west-1:
   - id : ami-d5ea86b5
     name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+    icon: aws
   - id: ami-d1315fb1
     name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
+    icon: redhat
   - id: ami-6d701b0d
     name: SUSE Linux Enterprise Server 12 SP 1 (HVM), SSD Volume Type
+    icon: suse
   - id: ami-df6a8b9b
     name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
+    icon: ubuntu
 eu-west-1:
   - id : ami-bff32ccc
     name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+    icon: aws
   - id: ami-8b8c57f8
     name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
+    icon: redhat
   - id: ami-f4278487
     name: SUSE Linux Enterprise Server 12 SP1 (HVM), SSD Volume Type
+    icon: suse
   - id: ami-47a23a30
     name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
+    icon: ubuntu
 eu-central-1:
   - id : ami-bc5b48d0
     name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+    icon: aws
   - id: ami-875042eb
     name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
+    icon: redhat
   - id: ami-6bd2ce07
     name: SUSE Linux Enterprise Server 12 SP1 (HVM), SSD Volume Type
+    icon: suse
   - id: ami-accff2b1
     name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
+    icon: ubuntu
 ap-southeast-1:
   - id : ami-c9b572aa
     name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+    icon: aws
   - id: ami-3f03c55c
     name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
+    icon: redhat
   - id: ami-2a19da49
     name: SUSE Linux Enterprise Server 12 SP 1 (HVM), SSD Volume Type
+    icon: suse
   - id: ami-96f1c1c4
     name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
+    icon: ubuntu
 ap-northeast-1:
   - id : ami-383c1956
     name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+    icon: aws
   - id: ami-0dd8f963
     name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
+    icon: redhat
   - id: ami-f8220896
     name: SUSE Linux Enterprise Server 12 SP1 (HVM), SSD Volume Type
+    icon: suse
+  - id: ami-936d9d93
+    name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
+    icon: ubuntu
 ap-southeast-2:
   - id : ami-48d38c2b
     name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+    icon: aws
   - id : ami-e0c19f83
     name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
+    icon: redhat
   - id : ami-0f510a6c
     name: SUSE Linux Enterprise Server 12 SP 1 (HVM), SSD Volume Type
+    icon: suse
   - id : ami-69631053
     name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
+    icon: ubuntu
 ap-northeast-2:
   - id : ami-249b554a
     name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+    icon: aws
   - id: ami-fea46a90
     name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
+    icon: ubuntu
   - id: ami-e9985687
     name: SUSE Linux Enterprise Server 11 SP4
+    icon: suse
 sa-east-1:
   - id : ami-6817af04
     name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+    icon: aws
   - id: ami-27b3094b
     name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
+    icon: redhat
   - id: ami-4ede5922
     name: SUSE Linux Enterprise Server 12 SP 1 (HVM), SSD Volume Type
+    icon: suse
   - id: ami-4d883350
     name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
+    icon: ubuntu

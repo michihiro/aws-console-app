@@ -125,6 +125,7 @@ ec2:
   terminateInstancessMsg2: ""
   runInstances: インスタンスの作成
   manageVpcSubnet: VPC とサブネットの管理
+  manageSecurityGroups: セキュリティグループの管理
   createVpc: VPC の作成
   createSubnet: サブネットの作成
   selectKeyPair: キーペアの選択
@@ -141,7 +142,11 @@ ec2:
   instanceFamilyDescription:
     generalPurpose: 汎用
     computeOptimized: コンピューティングの最適化
+    gpuInstances: GPU インスタンス
+    memoryOptimized: メモリ最適化
+    storageOptimized: ストレージの最適化
   nameTag: ネームタグ
+  securityGroup: セキュリティグループ
   securityGroups: セキュリティグループ
   keyName: キーペア名
   keyFingerprint: Fingerprint

@@ -118,6 +118,24 @@
   100% { -webkit-filter: grayscale(95%); opacity: 1 }
 }
 
+.ec2-run-instances-dialog {
+  [dropdown] .btn > span {
+    display: inline-block;
+    line-height: 1;
+    vertical-align: middle;
+    max-width: 456px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ami-icon {
+    font-size: 1.2em;
+    line-height: 1;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+}
+
+
 .ec2-select-keypair-dialog {
   .modal-body-inner {
     position: relative;
@@ -147,12 +165,18 @@
     position: relative;
     display: block;
     padding: 10px 15px;
-    background: #555;
+    background: #333;
     color: #fff;
   }
   .nav-stacked > li:first-child > .btn {
     float: right;
     margin-top: -8px;
     margin-bottom: 0px;
+  }
+  .nav-pills > li.active > a,
+  .nav-pills > li.active > a:hover,
+  .nav-pills > li.active > a:focus {
+    background-color: rgba(#f90, 0.5);
+    color: inherit;
   }
 }

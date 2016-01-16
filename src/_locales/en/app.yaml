@@ -123,7 +123,8 @@ ec2:
    - Are you sure you want to terminate these instances?
   terminateInstancesMsg2: ""
   runInstances: Launch Instance
-  manageVpcSubnet: Manage VPC and Subnet
+  manageVpcSubnet: Manage VPC and Subnets
+  manageSecurityGroups: Manage Security Groups
   createVpc: Create VPC
   createSubnet: Create Subnet
   selectKeyPair: Select a key pair
@@ -140,7 +141,11 @@ ec2:
   instanceFamilyDescription:
     generalPurpose: General purpose
     computeOptimized: Compute optimized
+    gpuInstances: GPU Instances
+    memoryOptimized: Memory optimized
+    storageOptimized: Storage optimized
   nameTag: Name Tag
+  securityGroup: Security Group
   securityGroups: Security Groups
   keyName: Key pair Name
   keyFingerprint: Fingerprint

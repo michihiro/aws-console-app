@@ -20,6 +20,27 @@
              ng-bind="inputs.vpc.CidrBlock + ' - ' + ec2Info.getDisplayName(inputs.vpc, 'tags', 'VpcId')"></div>
       </div>
     </div>
+    <div class="form-group">
+      <label class="col-xs-2 control-label"
+             ng-bind="::'ec2.securityGroup'|i18next"></label>
+      <div class="col-xs-7">
+        <input name="securityGroup" type="hidden">
+        <div class="btn-group" dropdown>
+          <button class="btn" dropdown-toggle
+                  ng-disabled="processing || !inputs.vpc">
+            <span ng-if="inputs.securityGroup" 
+                  ng-bind="inputs.securityGroup.GroupName + ' (' + inputs.securityGroup.GroupId + ')'"></span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li ng-repeat="g in ec2Info.getSecurityGroups(inputs.vpc.region, inputs.vpc.VpcId)">
+              <a ng-click="inputs.securityGroup=g"
+                 ng-bind="g.GroupName + ' (' + g.GroupId + ')'"></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </form>
   <div class="cover" ng-if="processing"><div class="modal-loader"></div></div>
 </div>

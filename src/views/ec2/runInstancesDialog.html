@@ -2,7 +2,7 @@
   <button class="close" ng-click="$dismiss()">&times;</button>
   <h3 ng-bind="::'ec2.runInstances'|i18next"></h3>
 </div>
-<div class="modal-body run-instances-dialog">
+<div class="modal-body ec2-run-instances-dialog">
   <form name="inputs.form" class="form-horizontal">
 <!--
     <tabset>
@@ -32,7 +32,7 @@
             </li>
             <li ng-repeat-end
                 ng-repeat="s in v.Subnets">
-              <a ng-click="inputs.subnet=s"
+              <a ng-click="inputs.subnet=s;inputs.vpc=v"
                  ng-bind="s.CidrBlock + ' | ' + s.AvailabilityZone  + ' - ' + getDisplayName(s, 'tags', 'SubnetId')"></a>
             </li>
           </ul>
@@ -43,7 +43,8 @@
       </div>
       <div class="col-xs-3 text-right">
         <button class="btn btn-raised btn-info" style="margin-top:-2px"
-                ng-click="openManageVpcSubnetDialog()">Subnet/VPC<br>の作成</button>
+                ng-click="openManageVpcSubnetDialog()"
+                ng-bind="::'ec2.manageVpcSubnet'|i18next"></button>
       </div>
     </div>
     <div class="form-group">
@@ -54,14 +55,17 @@
         <div class="btn-group" dropdown>
           <button class="btn" dropdown-toggle
                   ng-disabled="processing || !inputs.subnet">
+            <i ng-if="inputs.ami.icon" class="ami-icon" ng-class="'icon-'+inputs.ami.icon"></i>
             <span ng-if="inputs.ami"
                   ng-bind="inputs.ami.name + ' (' + inputs.ami.ImageId + ')'"></span>
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
             <li ng-repeat="a in ec2Info.getAMIs(inputs.subnet.region)">
-              <a ng-click="inputs.ami=a"
-                 ng-bind="a.name + ' (' + a.ImageId +')'"></a>
+              <a ng-click="inputs.ami=a">
+                <i ng-if="a.icon" class="ami-icon" ng-class="'icon-'+a.icon"></i>
+                <span ng-bind="::a.name + ' (' + a.ImageId +')'"></span>
+              </a>
             </li>
           </ul>
         </div>
@@ -74,7 +78,7 @@
         <input name="instanceType" type="hidden" ng-model="inputs.instanceType" required>
         <div class="btn-group" dropdown>
           <button class="btn" dropdown-toggle
-                  ng-disabled="processing || !inputs.subnet">
+                  ng-disabled="processing || !inputs.subnet || !inputs.ami">
             <span ng-if="inputs.instanceType"
                   ng-bind="inputs.instanceType.type + ' (' + inputs.instanceType.vCpu + 'vCPU, ' + inputs.instanceType.memory + 'GB memory)'"></span>
             <span class="caret"></span>
@@ -86,8 +90,9 @@
                 ng-click="$event.stopPropagation()">
             </li>
             <li ng-repeat-end
-                ng-repeat="t in tg.types">
-              <a ng-click="inputs.instanceType=t"
+                ng-repeat="t in tg.types"
+                ng-class="{disabled: unavalableInstanceFamily(tg)}">
+              <a ng-click="unavalableInstanceFamily(tg) ? $event.stopPropagation() :  (inputs.instanceType=t)"
                  ng-bind="::t.type + ' (' + t.vCpu + 'vCPU, ' + t.memory + 'GB memory)'"></a>
             </li>
           </ul>
@@ -132,7 +137,9 @@
       </div>
       <div class="col-xs-3 text-right">
         <button class="btn btn-raised btn-info" style="margin-top:-2px"
-                ng-click="openManageSecurityGroupsDialog()">セキュリティグループ<br>の作成</button>
+                ng-disabled="!inputs.subnet"
+                ng-click="openManageSecurityGroupsDialog()"
+                ng-bind="::'ec2.manageSecurityGroups'|i18next"></button>
       </div>
     </div>
 <!--

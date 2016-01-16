@@ -253,6 +253,11 @@ body {
   transition: opacity 200ms ease;
 }
 
+.modal .dropdown-menu {
+  max-height: 360px;
+  overflow-y: auto;
+}
+
 /*
 form textarea.ng-invalid.ng-dirty,
 form input.ng-invalid.ng-dirty {

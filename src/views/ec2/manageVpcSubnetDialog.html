@@ -77,6 +77,6 @@
           ng-class="{'btn-success':inputs.subnet}"
           ng-disabled="!inputs.subnet"
           ng-bind="::'com.ok'|i18next"
-          ng-click="$close(inputs.subnet)"></button>
+          ng-click="$close({vpc:inputs.vpc,subnet:inputs.subnet})"></button>
   <div class="cover" ng-if="processing"></div>
 </div>

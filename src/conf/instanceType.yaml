@@ -1,5 +1,9 @@
 - family: T2
   familyDescription: generalPurpose
+  rootDeviceType:
+  - ebs
+  virtualizationType:
+  - hvm
   types:
   - type: t2.nano
     vCpu: 1
@@ -18,6 +22,10 @@
     memory: 8
 - family: M4
   familyDescription: generalPurpose
+  rootDeviceType:
+  - ebs
+  virtualizationType:
+  - hvm
   types:
   - type: m4.large
     vCpu: 2
@@ -36,6 +44,12 @@
     memory: 169
 - family: M3
   familyDescription: generalPurpose
+  rootDeviceType:
+  - ebs
+  - instance-store
+  virtualizationType:
+  - hvm
+  - paravirtual
   types:
   - type: m3.medium
     vCpu: 1
@@ -51,6 +65,10 @@
     memory: 30
 - family: C4
   familyDescription: computeOptimized
+  rootDeviceType:
+  - ebs
+  virtualizationType:
+  - hvm
   types:
   - type: c4.large
     vCpu: 2
@@ -69,6 +87,12 @@
     memory: 70
 - family: C3
   familyDescription: computeOptimized
+  rootDeviceType:
+  - ebs
+  - instance-store
+  virtualizationType:
+  - hvm
+  - paravirtual
   types:
   - type: c3.large
     vCpu: 2
@@ -85,3 +109,73 @@
   - type: c3.8xlarge
     vCpu: 32
     memory: 60
+- family: G2
+  familyDescription: gpuInstances
+  rootDeviceType:
+  - ebs
+  virtualizationType:
+  - hvm
+  types:
+  - type: g2.2xlarge
+    vCpu: 8
+    memory: 15
+  - type: g2.8xlarge
+    vCpu: 32
+    memory: 60
+- family: R3
+  familyDescription: memoryOptimized
+  rootDeviceType:
+  - ebs
+  - instance-store
+  virtualizationType:
+  - hvm
+  types:
+  - type: r3.xlarge
+    vCpu: 4
+    memory: 30.5
+  - type: r3.2xlarge
+    vCpu: 8
+    memory: 61
+  - type: r3.4xlarge
+    vCpu: 16
+    memory: 122
+  - type: r3.8xlarge
+    vCpu: 32
+    memory: 244
+- family: D2
+  familyDescription: storageOptimized
+  rootDeviceType:
+  - ebs
+  - instance-store
+  virtualizationType:
+  - hvm
+  types:
+  - type: d2.2xlarge
+    vCpu: 8
+    memory: 61
+  - type: d2.4xlarge
+    vCpu: 16
+    memory: 122
+  - type: d2.8xlarge
+    vCpu: 36
+    memory: 244
+- family: I2
+  familyDescription: storageOptimized
+  rootDeviceType:
+  - ebs
+  - instance-store
+  virtualizationType:
+  - hvm
+  types:
+  - type: i2.xlarge
+    vCpu: 4
+    memory: 30.5
+  - type: i2.2xlarge
+    vCpu: 8
+    memory: 61
+  - type: i2.4xlarge
+    vCpu: 16
+    memory: 122
+  - type: i2.8xlarge
+    vCpu: 32
+    memory: 244
