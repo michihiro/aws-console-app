@@ -85,9 +85,9 @@
     });
   }
 
-  appRun.$inject = ['$rootScope', '$filter', '$state', '$stateParams', '$modal', 'credentialsService'];
+  appRun.$inject = ['$rootScope', '$filter', '$state', '$stateParams', '$uibModal', 'credentialsService'];
 
-  function appRun($rootScope, $filter, $state, $stateParams, $modal, credentialsService) {
+  function appRun($rootScope, $filter, $state, $stateParams, $uibModal, credentialsService) {
 
     var storage = chrome.storage.local;
 
@@ -132,7 +132,7 @@
       var controllerName = dlgName.replace(/\/(.)/g, function(m, g1) {
         return g1.toUpperCase();
       });
-      return $modal.open({
+      return $uibModal.open({
         templateUrl: 'views/' + dlgName + '.html',
         backdrop: 'static',
         keyboard: false,

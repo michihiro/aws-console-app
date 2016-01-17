@@ -341,9 +341,9 @@
     }
   }
 
-  s3DownloadService.$inject = ['$timeout', '$q', '$modal', 's3ListService', 's3NotificationsService', 'awsS3'];
+  s3DownloadService.$inject = ['$timeout', '$q', '$uibModal', 's3ListService', 's3NotificationsService', 'awsS3'];
 
-  function s3DownloadService($timeout, $q, $modal, s3ListService, s3NotificationsService, awsS3) {
+  function s3DownloadService($timeout, $q, $uibModal, s3ListService, s3NotificationsService, awsS3) {
     var MAX_DOWNLOAD_NUM = 1000;
     var ERR_TOO_MAY_OBJECTS = 'errTooManyObjects';
     var sysWaiting;
@@ -371,7 +371,7 @@
     }
 
     function _alert() {
-      $modal.open({
+      $uibModal.open({
         templateUrl: 'views/com/alertDialog.html',
       });
     }

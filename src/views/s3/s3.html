@@ -96,8 +96,8 @@
   </div>
 </div>
 
-<div dropdown class="position-fixed" contextmenu-for="#s3-tree">
-  <ul class="dropdown-menu">
+<div uib-dropdown class="position-fixed" contextmenu-for="#s3-tree">
+  <ul class="uib-dropdown-menu">
     <li ng-repeat="m in s3Actions.tree"
         ng-class="{divider:!m.length, disabled:s3Actions.isDisabled(m)}">
       <a ng-if="m.length" ng-class="{withoutripple:s3Actions.isDisabled(m)}"
@@ -108,8 +108,8 @@
   </ul>
 </div>
 
-<div dropdown class="position-fixed" contextmenu-for="#s3-list">
-  <ul class="dropdown-menu">
+<div uib-dropdown class="position-fixed" contextmenu-for="#s3-list">
+  <ul class="uib-dropdown-menu">
     <li ng-repeat="m in s3Actions.list"
         ng-class="{divider:!m.length, disabled:s3Actions.isDisabled(m)}">
       <a ng-if="m.length" ng-class="{withoutripple:s3Actions.isDisabled(m)}"

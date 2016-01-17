@@ -6,6 +6,9 @@ body {
 [ng-cloak] {
   display: none !important;
 }
+a:focus {
+  outline: 0;
+}
 .no-animate {
   -webkit-transition: none !important;
   transition: none !important;
@@ -124,6 +127,9 @@ body {
   }
   > .btn-group {
     margin-top: 4px;
+  }
+  .btn-group.open > .dropdown-toggle.btn {
+    background-color: inherit;
   }
 }
 .navbar.navbar-fixed-bottom {

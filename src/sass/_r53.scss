@@ -64,3 +64,13 @@
   overflow:auto;
 }
 
+.r53-change-hosted-zone-dialog {
+  [uib-dropdown] .btn > span {
+    display: inline-block;
+    line-height: 1;
+    vertical-align: middle;
+    max-width: 340px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

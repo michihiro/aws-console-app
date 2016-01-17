@@ -119,7 +119,7 @@
 }
 
 .ec2-run-instances-dialog {
-  [dropdown] .btn > span {
+  [uib-dropdown] .btn > span {
     display: inline-block;
     line-height: 1;
     vertical-align: middle;

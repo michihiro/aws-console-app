@@ -15,15 +15,15 @@
       </label>
       <div class="col-xs-7">
         <input name="subnet" type="hidden" ng-model="inputs.subnet" required>
-        <div class="btn-group" dropdown>
-          <button class="btn" dropdown-toggle
+        <div class="btn-group" uib-dropdown>
+          <button class="btn btn-raised" uib-dropdown-toggle
                   ng-disabled="processing">
             <span ng-if="inputs.subnet"
                   ng-bind="inputs.subnet.CidrBlock + ' | ' + inputs.subnet.AvailabilityZone + ' - ' + getDisplayName(inputs.subnet, 'tags', 'SubnetId')">
             </span>
             <span class="caret"></span>
           </button>
-          <ul class="dropdown-menu">
+          <ul class="uib-dropdown-menu">
             <li class="dropdown-header"
                 ng-repeat-start="v in ec2Info.getVpcs()"
                 ng-bind="getDisplayName(v, 'tags', 'VpcId') + ' - ' + ('ec2.regionName.'+v.region|i18next)"
@@ -52,15 +52,15 @@
              ng-bind="::'ec2.AMI'|i18next"></label>
       <div class="col-xs-7">
         <input name="ami" type="hidden" ng-model="inputs.ami" required>
-        <div class="btn-group" dropdown>
-          <button class="btn" dropdown-toggle
+        <div class="btn-group" uib-dropdown>
+          <button class="btn btn-raised" uib-dropdown-toggle
                   ng-disabled="processing || !inputs.subnet">
             <i ng-if="inputs.ami.icon" class="ami-icon" ng-class="'icon-'+inputs.ami.icon"></i>
             <span ng-if="inputs.ami"
                   ng-bind="inputs.ami.name + ' (' + inputs.ami.ImageId + ')'"></span>
             <span class="caret"></span>
           </button>
-          <ul class="dropdown-menu">
+          <ul class="uib-dropdown-menu">
             <li ng-repeat="a in ec2Info.getAMIs(inputs.subnet.region)">
               <a ng-click="inputs.ami=a">
                 <i ng-if="a.icon" class="ami-icon" ng-class="'icon-'+a.icon"></i>
@@ -76,14 +76,14 @@
              ng-bind="::'ec2.instanceType'|i18next"></label>
       <div class="col-xs-10">
         <input name="instanceType" type="hidden" ng-model="inputs.instanceType" required>
-        <div class="btn-group" dropdown>
-          <button class="btn" dropdown-toggle
+        <div class="btn-group" uib-dropdown>
+          <button class="btn btn-raised" uib-dropdown-toggle
                   ng-disabled="processing || !inputs.subnet || !inputs.ami">
             <span ng-if="inputs.instanceType"
                   ng-bind="inputs.instanceType.type + ' (' + inputs.instanceType.vCpu + 'vCPU, ' + inputs.instanceType.memory + 'GB memory)'"></span>
             <span class="caret"></span>
           </button>
-          <ul class="dropdown-menu">
+          <ul class="uib-dropdown-menu">
             <li class="dropdown-header"
                 ng-repeat-start="tg in ec2Info.getInstanceTypes(inputs.subnet.region)"
                 ng-bind="::('ec2.instanceFamilyDescription.' + tg.familyDescription|i18next) + ' (' + tg.family + ')'"
@@ -112,14 +112,14 @@
       <div class="col-xs-7">
         <input name="securityGroups" type="hidden" ng-model="inputs.securityGroups[0].GroupId" required>
         <div ng-repeat="(idx, group) in inputs.securityGroups">
-        <div class="btn-group" dropdown>
-          <button class="btn" dropdown-toggle
+        <div class="btn-group" uib-dropdown>
+          <button class="btn btn-raised" uib-dropdown-toggle
                   ng-disabled="processing || !inputs.subnet">
             <span ng-if="inputs.securityGroups[idx]"
                   ng-bind="inputs.securityGroups[idx].GroupName + ' (' + inputs.securityGroups[idx].GroupId + ')'"></span>
             <span class="caret"></span>
           </button>
-          <ul class="dropdown-menu">
+          <ul class="uib-dropdown-menu">
             <li ng-repeat="g in ec2Info.getSecurityGroups(inputs.subnet.region, inputs.subnet.VpcId)"
                 ng-class="{disabled:inputs.securityGroups.indexOf(g) >= 0}">
               <a ng-click="(inputs.securityGroups.indexOf(g)<0) && setSecurityGroup(g, idx)"

@@ -1,13 +1,13 @@
 <div class="func-view">
-  <accordion close-others="false">
+  <uib-accordion close-others="false">
     <div class="no-instances"
          ng-if="ec2Info.getVpcs() && !ec2Info.getVpcs().length"
          ng-bind="'ec2.noInstances'|i18next"></div>
-    <accordion-group class="panel-default ec2-vpc-panel"
+    <uib-accordion-group class="panel-default ec2-vpc-panel"
                      ng-repeat="v in ec2Info.getVpcs() | orderBy:['regionIdx','tags.Name','VpcId']"
                      is-open="v.isOpen"
                      ng-if="v.Subnets">
-      <accordion-heading>
+      <uib-accordion-heading>
         <div class="vpc-region" ng-if="ec2Info.getCurrentRegion()=='all'"
              ng-bind="'ec2.regionName.'+v.region|i18next">
         </div>
@@ -21,7 +21,7 @@
         <span class="badge"
               ng-bind="ec2Info.getNumOfRunningInstances(v.region, v.VpcId)">
         </span>
-      </accordion-heading>
+      </uib-accordion-heading>
       <div class="subnet"
            ng-repeat="s in v.Subnets | orderBy:['tags.Name', 'SubnetId']">
         <div class="subnet-title">
@@ -55,12 +55,12 @@
 
       </div>
 
-    </accordion-group>
-  </accordion>
+    </uib-accordion-group>
+  </uib-accordion>
 </div>
 
-<div dropdown class="position-fixed" contextmenu-for=".subnet-body">
-  <ul class="dropdown-menu">
+<div uib-dropdown class="position-fixed" contextmenu-for=".subnet-body">
+  <ul class="uib-dropdown-menu">
     <li ng-repeat="m in ec2Actions.all"
         ng-class="{divider:!m.length, disabled:ec2Actions.isDisabled(m)}">
       <a ng-if="m.length" ng-class="{withoutripple:ec2Actions.isDisabled(m)}"

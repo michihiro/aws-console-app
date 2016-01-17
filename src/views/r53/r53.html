@@ -88,8 +88,8 @@
   </div>
 </div>
 
-<div dropdown class="position-fixed" contextmenu-for="#r53-left">
-  <ul class="dropdown-menu">
+<div uib-dropdown class="position-fixed" contextmenu-for="#r53-left">
+  <ul class="uib-dropdown-menu">
     <li ng-repeat="m in r53Actions.zone"
         ng-class="{disabled:r53Actions.isDisabled(m)}">
       <a ng-class="{withoutripple:r53Actions.isDisabled(m)}"
@@ -99,8 +99,8 @@
     </li>
   </ul>
 </div>
-<div dropdown class="position-fixed" contextmenu-for="#r53-right">
-  <ul class="dropdown-menu">
+<div uib-dropdown class="position-fixed" contextmenu-for="#r53-right">
+  <ul class="uib-dropdown-menu">
     <li ng-repeat="m in r53Actions.rrset"
         ng-class="{disabled:r53Actions.isDisabled(m)}">
       <a ng-class="{withoutripple:r53Actions.isDisabled(m)}"

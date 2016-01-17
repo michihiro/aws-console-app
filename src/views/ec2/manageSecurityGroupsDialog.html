@@ -25,8 +25,8 @@
              ng-bind="::'ec2.securityGroup'|i18next"></label>
       <div class="col-xs-7">
         <input name="securityGroup" type="hidden">
-        <div class="btn-group" dropdown>
-          <button class="btn" dropdown-toggle
+        <div class="btn-group" uib-dropdown>
+          <button class="btn btn-raised" uib-dropdown-toggle
                   ng-disabled="processing || !inputs.vpc">
             <span ng-if="inputs.securityGroup" 
                   ng-bind="inputs.securityGroup.GroupName + ' (' + inputs.securityGroup.GroupId + ')'"></span>

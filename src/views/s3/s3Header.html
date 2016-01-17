@@ -1,10 +1,10 @@
 <div class="s3-header">
-  <div class="btn-group" dropdown is-open="s3Actions.isMenuOpened">
-    <button class="btn" dropdown-toggle>
+  <div class="btn-group" uib-dropdown is-open="s3Actions.isMenuOpened">
+    <button class="btn" uib-dropdown-toggle>
       <span ng-bind="::'com.action'|i18next"></span>
       <span class="caret"></span>
     </button>
-    <ul class="dropdown-menu">
+    <ul class="uib-dropdown-menu">
       <li ng-repeat="m in s3Actions.all track by $index"
           ng-class="{divider:!m.length, disabled:s3Actions.isDisabled(m)}">
         <a ng-if="m.length" ng-click="s3Actions.onClick($event, m);"

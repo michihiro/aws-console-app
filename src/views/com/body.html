@@ -10,11 +10,11 @@
   </div>
 
   <div class="navbar navbar-fixed-top">
-    <div class="btn-group navbar-right" dropdown is-open="topDropdown.isopen">
-      <button class="btn btn-info" dropdown-toggle>
+    <div class="btn-group navbar-right" uib-dropdown is-open="topDropdown.isopen">
+      <button class="btn" uib-dropdown-toggle>
         <i class="fa fa-key"></i>
       </button>
-      <ul class="dropdown-menu">
+      <ul class="uib-dropdown-menu">
         <li>
           <a ng-click="openDialog('com/credentialsDialog'); topDropdown.isopen=false;"
              ng-bind="'com.setupAwsAccessKey'|i18next">

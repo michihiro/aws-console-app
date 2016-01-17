@@ -28,14 +28,13 @@
       <label class="col-xs-3 control-label"
              ng-bind="'r53.rrsetType'|i18next"></label>
       <div class="col-xs-9">
-        <div class="btn-group" dropdown is-open="isOpen.types">
-          <button class="btn btn-success" dropdown-toggle
-                  data-toggle="dropdown"
+        <div class="btn-group" uib-dropdown is-open="isOpen.types">
+          <button class="btn btn-raised" uib-dropdown-toggle
                   ng-disabled="processing || isZoneRRSet">
             <span ng-bind="inputs.type"></span>
             <span class="caret" ng-if="!isZoneRRSet"></span>
           </button>
-          <ul class="dropdown-menu">
+          <ul class="uib-dropdown-menu">
             <li ng-repeat="t in types"
                 ng-class="{disabled: t == 'SOA'}"
                 ng-click="(t != 'SOA') || $event.stopPropagation()">

@@ -9,8 +9,8 @@
              ng-bind="::'ec2.region'|i18next"></label>
       <div class="col-xs-10">
         <input type="hidden" name="region" ng-model="inputs.region" required>
-        <div class="btn-group" dropdown>
-          <button class="btn" dropdown-toggle
+        <div class="btn-group" uib-dropdown>
+          <button class="btn btn-raised" uib-dropdown-toggle
                   ng-class="{'btn-info':!inputs.region,'btn-raised':!inputs.region}"
                   ng-disabled="processing">
             <span ng-if="inputs.region"

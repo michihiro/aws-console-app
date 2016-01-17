@@ -1,10 +1,10 @@
 <div class="ec2-header">
-  <div class="btn-group" dropdown>
-    <button class="btn" dropdown-toggle>
+  <div class="btn-group" uib-dropdown>
+    <button class="btn" uib-dropdown-toggle>
       <span ng-bind="::'com.action'|i18next"></span>
       <span class="caret"></span>
     </button>
-    <ul class="dropdown-menu">
+    <ul class="uib-dropdown-menu">
       <li ng-repeat="m in ec2Actions.all"
           ng-class="{divider:!m.length, disabled:ec2Actions.isDisabled(m)}">
         <a ng-if="m.length" ng-click="ec2Actions.onClick($event, m);"
@@ -13,12 +13,12 @@
       </li>
     </ul>
   </div>
-  <div class="btn-group pull-right" dropdown>
-    <button class="btn" dropdown-toggle ng-disabled="processing">
+  <div class="btn-group pull-right" uib-dropdown>
+    <button class="btn" uib-dropdown-toggle ng-disabled="processing">
       <span ng-bind="'ec2.regionName.'+ec2Info.getCurrentRegion()|i18next"></span>
       <span class="caret"></span>
     </button>
-    <ul class="dropdown-menu">
+    <ul class="uib-dropdown-menu">
       <li ng-if="r !== 'all'">
         <a ng-click="ec2Info.setCurrentRegion('all')"
            ng-bind="::'ec2.regionName.all'|i18next">
