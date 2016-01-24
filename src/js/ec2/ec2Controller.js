@@ -12,6 +12,7 @@
     .controller('ec2CreateVpcDialogCtrl', ec2CreateVpcDialogCtrl)
     .controller('ec2CreateSubnetDialogCtrl', ec2CreateSubnetDialogCtrl)
     .controller('ec2ManageSecurityGroupsDialogCtrl', ec2ManageSecurityGroupsDialogCtrl)
+    .controller('ec2CreateSecurityGroupDialogCtrl', ec2CreateSecurityGroupDialogCtrl)
     .controller('ec2SelectKeyPairDialogCtrl', ec2SelectKeyPairDialogCtrl);
 
   ec2HeaderCtrl.$inject = ['$scope', 'awsRegions', 'ec2Info', 'ec2Actions'];
@@ -94,27 +95,13 @@
   ec2RunInstancesDialogCtrl.$inject = ['$scope', '$q', 'awsRegions', 'awsEC2', 'ec2Info'];
 
   function ec2RunInstancesDialogCtrl($scope, $q, awsRegions, awsEC2, ec2Info) {
-    var selected0 = (ec2Info.getSelectedInstances() || [])[0] || {};
-    var subnet;
-
-    (ec2Info.getVpcs() || []).some(function(v) {
-      if (v.VpcId === selected0.VpcId) {
-        (v.Subnets || []).some(function(s) {
-          if (s.SubnetId === selected0.SubnetId) {
-            subnet = s;
-            return true;
-          }
-        });
-        return true;
-      }
-    });
-
     ng.extend($scope, {
       awsRegions: awsRegions,
       ec2Info: ec2Info,
       inputs: {
         securityGroups: [],
-        subnet: subnet
+        vpc: ec2Info.getSelectedVpc(),
+        subnet: ec2Info.getSelectedSubnet()
       },
       getDisplayName: ec2Info.getDisplayName,
       setSecurityGroup: setSecurityGroup,
@@ -139,7 +126,8 @@
 
     function _onSecurityGroupsChanged() {
       var groups = $scope.inputs.securityGroups;
-      if (!groups.length || groups[groups.length - 1]) {
+      var groupsLen = groups.length;
+      if (!groupsLen || groups[groupsLen - 1]) {
         groups.push(undefined);
       }
     }
@@ -166,7 +154,7 @@
         }
       }
       if (!subnet || subnet.VpcId !== (oldSubnet || {}).VpcId) {
-        $scope.securityGroups = null;
+        $scope.inputs.securityGroups = [undefined];
       }
     }
 
@@ -210,7 +198,8 @@
     function openManageSecurityGroupsDialog() {
       var dlg = $scope.openDialog('ec2/manageSecurityGroupsDialog', {
         vpc: $scope.inputs.vpc,
-        subnet: $scope.inputs.subnet
+        subnet: $scope.inputs.subnet,
+        securityGroup: $scope.inputs.securityGroups[0]
       }, {
         size: 'lg'
       });
@@ -377,10 +366,14 @@
       inputs: {
         region: dialogInputs.region
       },
+      getCidrCandidate: getCidrCandidate,
       create: create
     });
 
     appFocusOn('cidrBlock');
+
+    function getCidrCandidate() {
+    }
 
     function create() {
       if ($scope.inputs.form.$invalid || $scope.processing) {
@@ -455,10 +448,14 @@
         region: dialogInputs.region,
         vpc: dialogInputs.vpc
       },
+      getCidrCandidate: getCidrCandidate,
       create: create
     });
 
     appFocusOn('cidrBlock');
+
+    function getCidrCandidate() {
+    }
 
     function create() {
       if ($scope.inputs.form.$invalid || $scope.processing) {
@@ -557,17 +554,107 @@
   ec2ManageSecurityGroupsDialogCtrl.$inject = ['$scope', '$q', 'awsRegions', 'awsEC2', 'ec2Info', 'dialogInputs'];
 
   function ec2ManageSecurityGroupsDialogCtrl($scope, $q, awsRegions, awsEC2, ec2Info, dialogInputs) {
-    var subnet = (dialogInputs || {}).subnet;
-    var region = (subnet || {}).region;
-    var vpc = (dialogInputs || {}).vpc;
+
+    var columns = [{
+      width: 250,
+      col: 'name',
+      name: 'ec2.ruleType',
+    }, {
+      width: 150,
+      col: 'protocolName',
+      name: 'ec2.ruleProtocol',
+    }, {
+      width: 150,
+      col: 'portRange',
+      name: 'ec2.rulePortRange',
+    }, {
+      width: 150,
+      col: 'ipRange',
+      name: {
+        inbound: 'ec2.ruleSource',
+        outbound: 'ec2.ruleDestination',
+      }
+    }];
 
     ng.extend($scope, {
       ec2Info: ec2Info,
       inputs: {
-        region: region,
-        vpc: vpc
-      }
+        region: (dialogInputs.subnet || {}).region,
+        vpc: dialogInputs.vpc,
+        securityGroup: dialogInputs.securityGroup
+      },
+      columns: columns,
+      openCreateSecurityGroupDialog: openCreateSecurityGroupDialog,
     });
+
+    function openCreateSecurityGroupDialog() {
+      var dlg = $scope.openDialog('ec2/createSecurityGroupDialog', {
+        region: $scope.inputs.region,
+        vpc: $scope.inputs.vpc
+      });
+      dlg.result.then(function(group) {
+        $scope.inputs.securityGroup = group;
+      });
+    }
+
+  }
+
+  ec2CreateSecurityGroupDialogCtrl.$inject = ['$scope', '$q', 'awsRegions', 'awsEC2', 'ec2Info', 'dialogInputs'];
+
+  function ec2CreateSecurityGroupDialogCtrl($scope, $q, awsRegions, awsEC2, ec2Info, dialogInputs) {
+    ng.extend($scope, {
+      ec2Info: ec2Info,
+      inputs: {
+        region: dialogInputs.region,
+        vpc: dialogInputs.vpc,
+      },
+      create: create,
+    });
+
+    function create() {
+      if ($scope.inputs.form.$invalid || $scope.processing) {
+        return;
+      }
+      $scope.processing = true;
+      _createSecurityGroup().then(_done, _fail);
+    }
+
+    function _createSecurityGroup() {
+      var defer = $q.defer();
+      var inputs = $scope.inputs;
+      var params = {
+        Description: inputs.groupDescription || '',
+        GroupName: inputs.groupName || '',
+        VpcId: inputs.vpc.VpcId,
+      };
+      awsEC2(inputs.region).createSecurityGroup(params, function(err, data) {
+        if (err) {
+          defer.reject(err);
+        } else {
+          defer.resolve(data);
+        }
+      });
+      return defer.promise;
+    }
+
+    function _done(data) {
+      var inputs = $scope.inputs;
+      ec2Info.reloadSecurityGroups($scope.inputs.region, inputs.vpc.VpcId).then(function(groups) {
+        var group;
+        (groups||[]).some(function(g) {
+          if (g.GroupId === data.GroupId) {
+            group = g;
+            return true;
+          }
+        });
+        $scope.$close(group);
+      });
+    }
+
+    function _fail(err) {
+      $scope.error = err;
+      $scope.processing = false;
+    }
   }
 
   ec2SelectKeyPairDialogCtrl.$inject = ['$scope', '$q', 'awsEC2', 'ec2Info', 'dialogInputs'];

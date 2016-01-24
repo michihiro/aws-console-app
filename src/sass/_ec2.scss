@@ -180,3 +180,11 @@
     color: inherit;
   }
 }
+
+.ec2-manage-security-groups-dialog {
+  .rules .tab-pane{
+    position: relative;
+    min-height: 300px;
+    margin: 4px;
+  }
+}

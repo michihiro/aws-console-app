@@ -147,6 +147,19 @@ ec2:
   nameTag: Name Tag
   securityGroup: Security Group
   securityGroups: Security Groups
+  inbound: Inbound
+  outbound: Outbound
+  ruleType: Type
+  ruleProtocol: Protocol
+  rulePortRange: Port Range
+  ruleSource: Source
+  ruleDestination: Destination
+  all: All
+  allTraffic: All traffic
+  allTCP: All TCP
+  allUDP: All UDP
+  allICMP: All ICMP
+  createSecurityGroup: Create Security Group
   keyName: Key pair Name
   keyFingerprint: Fingerprint
   error:

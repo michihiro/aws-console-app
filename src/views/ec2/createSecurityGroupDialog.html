@@ -1,0 +1,62 @@
+<div class="modal-header">
+  <button class="close" ng-click="$dismiss()">&times;</button>
+  <h3 ng-bind="::'ec2.createSecurityGroup'|i18next"></h3>
+</div>
+<div class="modal-body ec2-create-security-group-dialog">
+  <form name="inputs.form" class="form-horizontal">
+    <div class="form-group">
+      <label class="col-xs-4 control-label"
+             ng-bind="::'ec2.region'|i18next"></label>
+      <div class="col-xs-8">
+        <div class="form-control-static"
+             ng-bind="'ec2.regionName.'+inputs.region|i18next"></div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-xs-4 control-label"
+             ng-bind="::'ec2.vpc'|i18next"></label>
+      <div class="col-xs-8">
+        <div class="form-control-static"
+             ng-bind="inputs.vpc.CidrBlock + ' - ' + ec2Info.getDisplayName(inputs.vpc, 'tags', 'VpcId')"></div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-xs-4 control-label"
+             ng-bind="::'ec2.securityGroupName'|i18next"></label>
+      <div class="col-xs-8">
+        <input class="form-control" name="groupName" spellcheck="false"
+               ng-model="inputs.groupName"
+               ng-pattern="/^[\w\._\-:/()#,@\[\]+=&;{}!$\* ]+$/"
+               app-focus-on="groupName">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-xs-4 control-label"
+             ng-bind="::'ec2.securityGroupDescription'|i18next"></label>
+      <div class="col-xs-8">
+        <input class="form-control" name="groupDescription" spellcheck="false"
+               ng-model="inputs.groupDescription"
+               ng-pattern="/^[\w\._\-:/()#,@\[\]+=&;{}!$\* ]+$/"
+               app-focus-on="groupDescription">
+      </div>
+    </div>
+
+  </form>
+
+  <div class="modal-body-inner">
+  </div>
+
+  <div class="cover" ng-if="processing"><div class="modal-loader"></div></div>
+</div>
+<div class="modal-footer">
+  <div class="alert alert-danger" ng-show="error" ng-bind="error|errorMsg:'ec2'"></div>
+  <button class="btn btn-raised"
+          ng-bind="::'com.cancel'|i18next"
+          ng-click="$dismiss()"></button>
+  <button class="btn btn-raised"
+          ng-class="{'btn-success':!inputs.form.$invalid}"
+          ng-disabled="processing || inputs.form.$invalid"
+          ng-bind="::'com.create'|i18next"
+          ng-click="create()"></button>
+  <div class="cover" ng-if="processing"></div>
+</div>

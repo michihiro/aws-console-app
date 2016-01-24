@@ -314,3 +314,40 @@ textarea.form-control {
   }
 }
 
+.nav-tabs {
+  background: inherit;
+  > li {
+    > a, > a:hover {
+      color: #555 !important;
+      border: 1px solid transparent !important;
+      border-radius: 8px 8px 0 0;
+    }
+  }
+  > li.active {
+    > a {
+      color: #555 !important;
+      border: 1px solid #ddd !important;
+      border-bottom-color: #fff !important;
+    }
+  }
+  > li:not(.active) {
+    a:hover {
+      background-color: #eee !important;
+    }
+  }
+}
+
+.tab-content > .tab-pane {
+  transition: all .2s ease-in-out;
+
+  transform: none;
+  opacity: 1;
+}
+.tab-content > .tab-pane.active-add {
+  transform: translateX(20px);
+  opacity: 0;
+}
+.tab-content > .tab-pane.active-remove {
+  transform: translateX(20px);
+  opacity: 0;
+}

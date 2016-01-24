@@ -148,6 +148,19 @@ ec2:
   nameTag: ネームタグ
   securityGroup: セキュリティグループ
   securityGroups: セキュリティグループ
+  inbound: インバウンド
+  outbound: アウトバウンド
+  ruleType: タイプ
+  ruleProtocol: プロトコル
+  rulePortRange: ポート範囲
+  ruleSource: 送信元
+  ruleDestination: 送信先
+  all: 全て
+  allTraffic: 全てのトラフィック
+  allTCP: 全てのTCP
+  allUDP: 全てのUDP
+  allICMP: 全てのICMP
+  createSecurityGroup: セキュリティグループの作成
   keyName: キーペア名
   keyFingerprint: Fingerprint
   error:

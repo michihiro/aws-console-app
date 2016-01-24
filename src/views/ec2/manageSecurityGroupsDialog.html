@@ -2,7 +2,7 @@
   <button class="close" ng-click="$dismiss()">&times;</button>
   <h3 ng-bind="::'ec2.manageSecurityGroups'|i18next"></h3>
 </div>
-<div class="modal-body ec2-manage-vpc-subnet-dialog">
+<div class="modal-body ec2-manage-security-groups-dialog">
   <form name="inputs.form" class="form-horizontal">
     <div class="form-group">
       <label class="col-xs-2 control-label"
@@ -24,11 +24,11 @@
       <label class="col-xs-2 control-label"
              ng-bind="::'ec2.securityGroup'|i18next"></label>
       <div class="col-xs-7">
-        <input name="securityGroup" type="hidden">
+        <input name="securityGroup" ng-model="inputs.securityGroup" type="hidden">
         <div class="btn-group" uib-dropdown>
           <button class="btn btn-raised" uib-dropdown-toggle
                   ng-disabled="processing || !inputs.vpc">
-            <span ng-if="inputs.securityGroup" 
+            <span ng-if="inputs.securityGroup"
                   ng-bind="inputs.securityGroup.GroupName + ' (' + inputs.securityGroup.GroupId + ')'"></span>
             <span class="caret"></span>
           </button>
@@ -40,6 +40,59 @@
           </ul>
         </div>
       </div>
+      <div class="col-xs-3 text-right">
+        <button class="btn btn-raised btn-info"
+                ng-click="openCreateSecurityGroupDialog()"
+                ng-bind="::'ec2.createSecurityGroup'|i18next"></button>
+      </div>
+    </div>
+
+    <div class="rules" ng-if="inputs.securityGroup">
+      <uib-tabset>
+        <uib-tab ng-repeat="p in ['inbound', 'outbound']" heading="{{::'ec2.'+p|i18next}}">
+          <div class="table-outer">
+            <div class="table-header-spacer"></div>
+            <div class="table-container" app-bind-scroll-position="tableScroll">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th ng-repeat="col in columns"
+                        ng-style="{width:col.width+'px'}">
+                      <div class="th-inner"
+                           ng-style="{left:col.left,width:col.width+'px','-webkit-transform':'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
+                        <span ng-bind="::col.name[p] ? (col.name[p]|i18next) : col.name ? (col.name|i18next) : '&nbsp;'"></span>
+                        <div class="sort-mark" ng-click="setSort(col)">
+                          <i ng-if="sortCol==col.col && !sortReverse" class="fa fa-sort-up"></i>
+                          <i ng-if="sortCol==col.col && sortReverse" class="fa fa-sort-down"></i>
+                        </div>
+                        <div class="table-resize-handle"
+                             app-bind-width="col"></div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-if="!inputs.securityGroup[p].length">
+                    <td ng-attr-colspan="{{columns.length}}" style="text-align:center">
+                      <div class="td-inner" ng-bind="::'s3.noRules'|i18next"></div>
+                    </td>
+                  </tr>
+                  <tr ng-repeat="item in inputs.securityGroup[p]"
+                      ng-attr-row-id="{{ item.path }}">
+                    <td ng-repeat="col in columns" class="{{col.class}}"
+                        ng-style="{width:col.width+'px'}">
+                      <div class="td-inner" ng-style="{width: col.width+'px'}">
+                        <span ng-if="col.col && col.filterFn" ng-bind="::col.filterFn(item[col.col])"></span>
+                        <span ng-if="col.col && !col.filterFn" ng-bind="::item[col.col]"></span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </uib-tab>
+      </uib-tabset>
     </div>
   </form>
   <div class="cover" ng-if="processing"><div class="modal-loader"></div></div>
