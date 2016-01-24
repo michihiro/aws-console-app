@@ -10,19 +10,19 @@
   </div>
 
   <div class="navbar navbar-fixed-top">
-    <div class="btn-group navbar-right" uib-dropdown is-open="topDropdown.isopen">
+    <div class="btn-group navbar-right" uib-dropdown>
       <button class="btn" uib-dropdown-toggle>
         <i class="fa fa-key"></i>
       </button>
-      <ul class="uib-dropdown-menu">
+      <ul uib-dropdown-menu>
         <li>
           <a ng-click="openDialog('com/credentialsDialog'); topDropdown.isopen=false;"
-             ng-bind="'com.setupAwsAccessKey'|i18next">
+             ng-bind="::'com.setupAwsAccessKey'|i18next">
           </a>
         </li>
         <li>
           <a ng-click="openDialog('com/passwordDialog', {mode:'update'}); topDropdown.isopen=false;"
-             ng-bind="'com.updatePassword'|i18next">
+             ng-bind="::'com.updatePassword'|i18next">
           </a>
         </li>
       </ul>

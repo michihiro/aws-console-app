@@ -7,14 +7,14 @@
     <div class="form-group">
       <label class="col-xs-4 control-label" ng-bind="::'s3.region'|i18next"></label>
       <div class="col-xs-8">
-        <div class="btn-group" uib-dropdown is-open="selectRegion.isopen">
+        <div class="btn-group" uib-dropdown>
           <button class="btn btn-raised" uib-dropdown-toggle ng-disabled="processing">
             <span ng-bind="'s3.regionName.'+inputs.region|i18next"></span>
             <span class="caret"></span>
           </button>
-          <ul class="uib-dropdown-menu">
+          <ul uib-dropdown-menu>
             <li ng-repeat="r in awsRegions.s3" ng-if="r !== inputs.region">
-              <a ng-click="inputs.region=r;selectRegion.isopen=false"
+              <a ng-click="inputs.region=r"
                  ng-bind="::('s3.regionName.'+r|i18next) + ' - ' +r">
               </a>
             </li>

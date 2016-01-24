@@ -52,7 +52,7 @@
           url : '/' + service,
           views: {
             title: {
-              template: '{{state.current.name + \'.serviceName\'|i18next}}'
+              template: '<span ng-bind="::state.current.name + \'.serviceName\'|i18next"></span>'
             },
             header: {
               templateUrl: 'views/' + service + '/' + service + 'Header.html',

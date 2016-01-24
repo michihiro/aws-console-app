@@ -1,12 +1,12 @@
 <div class="modal-header">
   <button class="close" ng-click="$dismiss()">&times;</button>
-  <h3 ng-bind="'r53.'+mode|i18next"></h3>
+  <h3 ng-bind="::'r53.'+mode|i18next"></h3>
 </div>
 <div class="modal-body">
   <form name="inputs.form" class="form-horizontal" ng-if="mode!='deleteRRSet'">
     <div class="form-group">
       <label class="col-xs-3 control-label"
-             ng-bind="'r53.domainName'|i18next"></label>
+             ng-bind="::'r53.domainName'|i18next"></label>
       <div class="col-xs-4"
            ng-if="!isZoneRRSet">
         <input class="form-control" name="subDomain"
@@ -26,15 +26,18 @@
     </div>
     <div class="form-group has-success">
       <label class="col-xs-3 control-label"
-             ng-bind="'r53.rrsetType'|i18next"></label>
+             ng-bind="::'r53.rrsetType'|i18next"></label>
       <div class="col-xs-9">
-        <div class="btn-group" uib-dropdown is-open="isOpen.types">
+        <div class="form-control-static"
+             ng-if="isZoneRRSet"
+             ng-bind="inputs.type"></div>
+        <div class="btn-group" uib-dropdown ng-if="!isZoneRRSet">
           <button class="btn btn-raised" uib-dropdown-toggle
-                  ng-disabled="processing || isZoneRRSet">
+                  ng-disabled="processing">
             <span ng-bind="inputs.type"></span>
             <span class="caret" ng-if="!isZoneRRSet"></span>
           </button>
-          <ul class="uib-dropdown-menu">
+          <ul uib-dropdown-menu>
             <li ng-repeat="t in types"
                 ng-class="{disabled: t == 'SOA'}"
                 ng-click="(t != 'SOA') || $event.stopPropagation()">
@@ -47,7 +50,7 @@
     </div>
     <div class="form-group">
       <label class="col-xs-3 control-label"
-             ng-bind="'r53.ttl'|i18next"></label>
+             ng-bind="::'r53.ttl'|i18next"></label>
       <div class="col-xs-2">
         <input class="form-control" name="ttl"
                spellcheck="false"
@@ -69,7 +72,7 @@
     </div>
     <div class="form-group">
       <label class="col-xs-3 control-label"
-             ng-bind="'r53.value'|i18next"></label>
+             ng-bind="::'r53.value'|i18next"></label>
       <div class="col-xs-9">
         <textarea app-elastic-textarea="{max:160}"
                   spellcheck="false"
@@ -86,16 +89,16 @@
   <form name="form" class="form-horizontal" ng-if="mode=='deleteRRSet'">
     <div class="form-group">
       <div class="col-xs-12"
-           ng-bind="'r53.deleteRRSetMsg.'+(rrsets.length>1 ? 1 : 0)|i18next"></div>
+           ng-bind="::'r53.deleteRRSetMsg.'+(rrsets.length>1 ? 1 : 0)|i18next"></div>
     </div>
     <div class="form-group">
       <label class="col-xs-4 control-label"
-             ng-bind="('r53.domainName'|i18next)+ ' - ' + ('r53.rrsetType'|i18next)"></label>
+             ng-bind="::('r53.domainName'|i18next)+ ' - ' + ('r53.rrsetType'|i18next)"></label>
       <div class="col-xs-8">
         <div class="delete-rrsets">
           <div class="form-control-static"
                ng-repeat="r in rrsets"
-               ng-bind="r.Name + '-' +r.Type"></div>
+               ng-bind="::r.Name + '-' +r.Type"></div>
         </div>
       </div>
     </div>
@@ -106,7 +109,7 @@
   <div class="alert alert-warning" ng-show="error"
        ng-bind="error|errorMsg:'r53'"></div>
   <button class="btn btn-raised btn-default"
-          ng-bind="'com.cancel'|i18next"
+          ng-bind="::'com.cancel'|i18next"
           ng-click="$dismiss()">
   </button>
 

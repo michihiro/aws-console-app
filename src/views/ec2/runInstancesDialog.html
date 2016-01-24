@@ -23,9 +23,9 @@
             </span>
             <span class="caret"></span>
           </button>
-          <ul class="uib-dropdown-menu">
+          <ul uib-dropdown-menu>
             <li class="dropdown-header"
-                ng-repeat-start="v in ec2Info.getVpcs()"
+                ng-repeat-start="v in ec2Info.getVpcs()|orderBy:['regionIdx','tags.Name','VpcId']"
                 ng-bind="getDisplayName(v, 'tags', 'VpcId') + ' - ' + ('ec2.regionName.'+v.region|i18next)"
                 ng-if="v.Subnets.length"
                 ng-click="$event.stopPropagation()">
@@ -60,7 +60,7 @@
                   ng-bind="inputs.ami.name + ' (' + inputs.ami.ImageId + ')'"></span>
             <span class="caret"></span>
           </button>
-          <ul class="uib-dropdown-menu">
+          <ul uib-dropdown-menu>
             <li ng-repeat="a in ec2Info.getAMIs(inputs.subnet.region)">
               <a ng-click="inputs.ami=a">
                 <i ng-if="a.icon" class="ami-icon" ng-class="'icon-'+a.icon"></i>
@@ -83,7 +83,7 @@
                   ng-bind="inputs.instanceType.type + ' (' + inputs.instanceType.vCpu + 'vCPU, ' + inputs.instanceType.memory + 'GB memory)'"></span>
             <span class="caret"></span>
           </button>
-          <ul class="uib-dropdown-menu">
+          <ul uib-dropdown-menu>
             <li class="dropdown-header"
                 ng-repeat-start="tg in ec2Info.getInstanceTypes(inputs.subnet.region)"
                 ng-bind="::('ec2.instanceFamilyDescription.' + tg.familyDescription|i18next) + ' (' + tg.family + ')'"
@@ -119,7 +119,7 @@
                   ng-bind="inputs.securityGroups[idx].GroupName + ' (' + inputs.securityGroups[idx].GroupId + ')'"></span>
             <span class="caret"></span>
           </button>
-          <ul class="uib-dropdown-menu">
+          <ul uib-dropdown-menu>
             <li ng-repeat="g in ec2Info.getSecurityGroups(inputs.subnet.region, inputs.subnet.VpcId)"
                 ng-class="{disabled:inputs.securityGroups.indexOf(g) >= 0}">
               <a ng-click="(inputs.securityGroups.indexOf(g)<0) && setSecurityGroup(g, idx)"

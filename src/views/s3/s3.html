@@ -1,6 +1,6 @@
 <div class="func-view" ng-class="{'wait-cursor':getSysWaiting()}">
   <div class="s3-left" ng-style="{width:treeWidth}">
-    <div class="s3-tree-header" ng-bind="'s3.buckets'|i18next"></div>
+    <div class="s3-tree-header" ng-bind="::'s3.buckets'|i18next"></div>
     <div ng-controller="s3TreeCtrl">
       <div id="s3-tree" class="s3-tree">
         <s3-tree data="getBuckets()"></s3-tree>
@@ -45,14 +45,14 @@
             </tr>
             <tr ng-if="s3Actions.creatingFolder">
              <td colspan="{{columns.length}}" ng-controller="s3CreateFolderCtrl">
-              <input placeholder="{{'s3.folderName'|i18next}}"
+              <input placeholder="{{::'s3.folderName'|i18next}}"
                      app-focus-on="folderName" ng-model="folderName" ng-trim="true"
                      ng-keyup="onKeyup($event)" ng-blur="onInputDone()">
              </td>
             </tr>
             <tr ng-if="getCurrent().list.length === 0 && !s3Actions.creatingFolder">
              <td colspan="{{columns.length}}" style="text-align:center">
-               <div class="td-inner" ng-bind="'s3.noObject'|i18next"></div>
+               <div class="td-inner" ng-bind="::'s3.noObject'|i18next"></div>
              </td>
             </tr>
             <tr ng-repeat="item in getCurrent().list | orderBy:sortExp:sortReverse"
@@ -97,24 +97,24 @@
 </div>
 
 <div uib-dropdown class="position-fixed" contextmenu-for="#s3-tree">
-  <ul class="uib-dropdown-menu">
+  <ul uib-dropdown-menu>
     <li ng-repeat="m in s3Actions.tree"
         ng-class="{divider:!m.length, disabled:s3Actions.isDisabled(m)}">
       <a ng-if="m.length" ng-class="{withoutripple:s3Actions.isDisabled(m)}"
          ng-click="s3Actions.onClick($event, m);"
-         ng-bind="'s3.'+m|i18next">
+         ng-bind="::'s3.'+m|i18next">
       </a>
     </li>
   </ul>
 </div>
 
 <div uib-dropdown class="position-fixed" contextmenu-for="#s3-list">
-  <ul class="uib-dropdown-menu">
+  <ul uib-dropdown-menu>
     <li ng-repeat="m in s3Actions.list"
         ng-class="{divider:!m.length, disabled:s3Actions.isDisabled(m)}">
       <a ng-if="m.length" ng-class="{withoutripple:s3Actions.isDisabled(m)}"
          ng-click="s3Actions.onClick($event, m);"
-         ng-bind="'s3.'+m|i18next">
+         ng-bind="::'s3.'+m|i18next">
       </a>
     </li>
   </ul>

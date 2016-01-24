@@ -1,10 +1,10 @@
 <div class="r53-header">
-  <div class="btn-group" uib-dropdown is-open="r53Actions.isOpenHeaderMenu">
+  <div class="btn-group" uib-dropdown>
     <button class="btn btn-info" uib-dropdown-toggle>
       <span ng-bind="::'com.action'|i18next"></span>
       <span class="caret"></span>
     </button>
-    <ul class="uib-dropdown-menu">
+    <ul uib-dropdown-menu>
       <li ng-repeat="m in r53Actions.all"
           ng-class="{divider:!m.length, disabled:r53Actions.isDisabled(m)}">
         <a ng-if="m.length" ng-click="r53Actions.onClick($event, m);"

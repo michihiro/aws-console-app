@@ -1,6 +1,6 @@
 <div class="func-view">
   <div id="r53-left" class="r53-left" ng-style="{width:treeWidth}">
-    <div class="r53-left-header" ng-bind="'r53.zones'|i18next"></div>
+    <div class="r53-left-header" ng-bind="::'r53.zones'|i18next"></div>
     <ul class="nav nav-pills nav-stacked">
       <li ng-if="$root.getCredentials() && r53Info.getHostedZones()==undefined">
         <div>
@@ -11,7 +11,7 @@
         </div>
       </li>
       <li ng-if="r53Info.getHostedZones().length == 0">
-        <div ng-bind="'r53.noHostedZone'|i18next"></div>
+        <div ng-bind="::'r53.noHostedZone'|i18next"></div>
       </li>
       <li ng-repeat="z in r53Info.getHostedZones() track by $index"
           ng-class="{active:r53Info.getCurrent().Id=== z.Id}">
@@ -62,7 +62,7 @@
             </tr>
             <tr ng-if="r53Info.getCurrent().list.length === 0">
              <td colspan="{{columns.length}}" style="text-align:center"
-                 ng-bind="'r53.noRecords'|i18next">
+                 ng-bind="::'r53.noRecords'|i18next">
              </td>
             </tr>
             <tr ng-repeat="item in r53Info.getCurrent().list | orderBy:sortExp:sortReverse"
@@ -89,23 +89,23 @@
 </div>
 
 <div uib-dropdown class="position-fixed" contextmenu-for="#r53-left">
-  <ul class="uib-dropdown-menu">
+  <ul uib-dropdown-menu>
     <li ng-repeat="m in r53Actions.zone"
         ng-class="{disabled:r53Actions.isDisabled(m)}">
       <a ng-class="{withoutripple:r53Actions.isDisabled(m)}"
          ng-click="r53Actions.onClick($event, m);"
-         ng-bind="'r53.'+m|i18next">
+         ng-bind="::'r53.'+m|i18next">
       </a>
     </li>
   </ul>
 </div>
 <div uib-dropdown class="position-fixed" contextmenu-for="#r53-right">
-  <ul class="uib-dropdown-menu">
+  <ul uib-dropdown-menu>
     <li ng-repeat="m in r53Actions.rrset"
         ng-class="{disabled:r53Actions.isDisabled(m)}">
       <a ng-class="{withoutripple:r53Actions.isDisabled(m)}"
          ng-click="r53Actions.onClick($event, m);"
-         ng-bind="'r53.'+m|i18next">
+         ng-bind="::'r53.'+m|i18next">
       </a>
     </li>
   </ul>

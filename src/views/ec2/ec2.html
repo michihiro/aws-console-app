@@ -2,7 +2,7 @@
   <uib-accordion close-others="false">
     <div class="no-instances"
          ng-if="ec2Info.getVpcs() && !ec2Info.getVpcs().length"
-         ng-bind="'ec2.noInstances'|i18next"></div>
+         ng-bind="::'ec2.noInstances'|i18next"></div>
     <uib-accordion-group class="panel-default ec2-vpc-panel"
                      ng-repeat="v in ec2Info.getVpcs() | orderBy:['regionIdx','tags.Name','VpcId']"
                      is-open="v.isOpen"
@@ -39,7 +39,7 @@
           <div ng-repeat="i in ec2Info.getInstances(v.region, v.VpcId, s.SubnetId) | orderBy:['tags.Name','InstanceId']">
             <div class="instance"
                  ng-class="{selected: ec2Info.isSelectedInstance(i)}"
-                 ng-click="ec2Info.selectInstances([i])">
+                 ng-click="ec2Info.selectInstances([i], s, v);">
               <img src="images/Instance.svg" ng-class="'state-' + i.State.Name">
               <div class="instance-name">
                 <div ng-bind="i.tags.Name ? i.tags.Name : i.InstanceId"
@@ -60,12 +60,12 @@
 </div>
 
 <div uib-dropdown class="position-fixed" contextmenu-for=".subnet-body">
-  <ul class="uib-dropdown-menu">
+  <ul uib-dropdown-menu>
     <li ng-repeat="m in ec2Actions.all"
         ng-class="{divider:!m.length, disabled:ec2Actions.isDisabled(m)}">
       <a ng-if="m.length" ng-class="{withoutripple:ec2Actions.isDisabled(m)}"
          ng-click="ec2Actions.onClick($event, m);"
-         ng-bind="'ec2.'+m|i18next">
+         ng-bind="::'ec2.'+m|i18next">
       </a>
     </li>
   </ul>

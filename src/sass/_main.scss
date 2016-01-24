@@ -247,11 +247,11 @@ a:focus {
   background-color: #777;
 }
 
+.dropdown-menu[uib-typeahead-popup],
 .open > .dropdown-menu {
   opacity: 1;
   visibility: visible;
 }
-
 .dropdown-menu {
   display: block;
   opacity: 0;
@@ -314,16 +314,3 @@ textarea.form-control {
   }
 }
 
-/*
-.nav-tabs {
-  background: transparent;
-  
-  > li.active > a,
-  > li.active > a:hover,
-  > li.active > a:focus {
-    color: #555 !important;
-    border: 1px solid #ddd !important;
-    border-bottom-color: #fff !important;
-  }
-}
-*/

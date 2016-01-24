@@ -48,7 +48,6 @@
       if (isDisabled(key)) {
         return;
       }
-      scope.isOpenHeaderMenu = false;
       if (actions.rrset.indexOf(key) >= 0) {
         $rootScope.openDialog('r53/changeRRSetDialog', {
           mode: key
