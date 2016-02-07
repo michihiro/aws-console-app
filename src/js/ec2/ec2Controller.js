@@ -13,6 +13,7 @@
     .controller('ec2CreateSubnetDialogCtrl', ec2CreateSubnetDialogCtrl)
     .controller('ec2ManageSecurityGroupsDialogCtrl', ec2ManageSecurityGroupsDialogCtrl)
     .controller('ec2CreateSecurityGroupDialogCtrl', ec2CreateSecurityGroupDialogCtrl)
+    .controller('ec2SelectSnapshotDialogCtrl', ec2SelectSnapshotDialogCtrl)
     .controller('ec2SelectKeyPairDialogCtrl', ec2SelectKeyPairDialogCtrl);
 
   ec2HeaderCtrl.$inject = ['$scope', 'awsRegions', 'ec2Info', 'ec2Actions'];
@@ -92,28 +93,209 @@
     }
   }
 
-  ec2RunInstancesDialogCtrl.$inject = ['$scope', '$q', 'awsRegions', 'awsEC2', 'ec2Info'];
+  ec2RunInstancesDialogCtrl.$inject = ['$scope', '$q', '$filter', 'awsRegions', 'awsEC2', 'ec2Info'];
 
-  function ec2RunInstancesDialogCtrl($scope, $q, awsRegions, awsEC2, ec2Info) {
+  function ec2RunInstancesDialogCtrl($scope, $q, $filter, awsRegions, awsEC2, ec2Info) {
+    var i18next = $filter('i18next');
+    var volumeTypes = [];
+    var deviceNames = 'bcdefghijklmnopqrstuvwxyz'.split('').map(function(a) {
+      return '/dev/sd' + a;
+    });
+    var ebsVolumeTypes = [{
+      value: 'gp2',
+      name: i18next('ec2.ebsType.gp2'),
+    }, {
+      value: 'io1',
+      name: i18next('ec2.ebsType.io1'),
+    }, {
+      value: 'standard',
+      name: i18next('ec2.ebsType.standard'),
+    }];
+
+    var attibuteTags = [{
+      col: 'ebsSnapshotId',
+      label: function(v) {
+        return i18next('ec2.snapshot') + (v ? ':' + v : '');
+      },
+      editable: function(v, idx) {
+        return !!idx;
+      },
+      select: function(item) {
+        var dlg = $scope.openDialog('ec2/selectSnapshotDialog', {
+          region: $scope.inputs.subnet.region
+        });
+        dlg.result.then(function(snapshot) {
+          item.ebsSnapshotId = snapshot.SnapshotId;
+        });
+      },
+    }, {
+      col: 'ebsEncrypted',
+      label: function() {
+        return i18next('ec2.encrypted');
+      },
+      editable: function(v, idx) {
+        return !!idx;
+      },
+      select: function(item) {
+        item.ebsEncrypted = true;
+      },
+    }, {
+      col: 'ebsDeleteOnTermination',
+      label: function() {
+        return i18next('ec2.deleteOnTermination');
+      },
+      editable: function() {
+        return true;
+      },
+      select: function(item) {
+        item.ebsDeleteOnTermination = true;
+      },
+    }];
+
+    var storageColumns = [{
+      width: 105,
+      col: 'volumeType',
+      name: 'ec2.volumeType',
+      filterFn: function(v, idx) {
+        return idx ? v : 'Root';
+      },
+      editable: function(v, idx) {
+        return !!idx;
+      },
+      dropdown: function() {
+        var blockDeviceMappings = $scope.inputs.blockDeviceMappings;
+        return volumeTypes.filter(function(v) {
+          return v === 'EBS' || !blockDeviceMappings.some(function(b) {
+            return b.volumeType === v;
+          });
+        });
+      }
+    }, {
+      width: 80,
+      col: 'deviceName',
+      name: 'ec2.deviceName',
+      editable: function(v, idx) {
+        return !!idx;
+      },
+      dropdown: function() {
+        var blockDeviceMappings = $scope.inputs.blockDeviceMappings;
+        return deviceNames.filter(function(d) {
+          return !blockDeviceMappings.some(function(b) {
+            return b.deviceName === d;
+          });
+        });
+      }
+    }, {
+      width: 90,
+      col: 'size',
+      name: 'ec2.sizeGiB',
+      class: 'text-right',
+      filterFn: function(v, idx) {
+        var item = $scope.inputs.blockDeviceMappings[idx];
+        return item.volumeType === 'EBS' ? v :
+          (($scope.inputs.instanceType || {}).instanceStoreSize || 0);
+      },
+      editable: function(v) {
+        return v.volumeType === 'EBS';
+      },
+      isValid: function(v, item) {
+        v = +v;
+        if (Number.isNaN(v) || v <= 0) {
+          return false;
+        }
+        if (item.ebsVolumeType === 'standard' && v > 1024) {
+          return false;
+        }
+        if (item.ebsVolumeType === 'io1' && v < 4) {
+          return false;
+        }
+        return true;
+      }
+    }, {
+      width: 220,
+      col: 'ebsVolumeType',
+      name: 'ec2.ebsVolumeType',
+      filterFn: function(v, idx) {
+        var item = $scope.inputs.blockDeviceMappings[idx];
+        var key, s;
+        if (item.volumeType !== 'EBS') {
+          return i18next('ec2.notAvailable');
+        }
+        key = 'ec2.ebsType.' + v;
+        s = i18next(key);
+        return s !== key ? s : v.toUpperCase();
+      },
+      editable: function(v) {
+        return v.volumeType === 'EBS';
+      },
+      dropdown: function() {
+        return ebsVolumeTypes;
+      }
+    }, {
+      width: 75,
+      col: 'ebsIops',
+      name: 'ec2.iops',
+      class: 'text-right',
+      filterFn: function(v, idx) {
+        var item = $scope.inputs.blockDeviceMappings[idx];
+
+        if (item.volumeType !== 'EBS') {
+          return i18next('ec2.notAvailable');
+        }
+        if (item.ebsVolumeType === 'gp2') {
+          return Math.min(+(item.size) * 3, 10000);
+        }
+        return i18next('ec2.notAvailable');
+      },
+      editable: function(v) {
+        return v.volumeType === 'EBS' && v.ebsVolumeType === 'io1';
+      },
+      isValid: function(v, item) {
+        v = +v;
+        if (Number.isNaN(v) || v <= 0) {
+          return false;
+        }
+        if (item.ebsVolumeType === 'io1' && v > 20000) {
+          return false;
+        }
+        return true;
+      }
+    }, {
+      width: 245,
+      name: 'ec2.attributes',
+      tags: attibuteTags,
+      editable: function(v, idx) {
+        return v.volumeType === 'EBS' && attibuteTags.some(function(t) {
+          return !v[t.col] && t.editable(v, idx);
+        });
+      }
+    }];
+
     ng.extend($scope, {
       awsRegions: awsRegions,
       ec2Info: ec2Info,
+      storageColumns: storageColumns,
       inputs: {
         securityGroups: [],
         vpc: ec2Info.getSelectedVpc(),
-        subnet: ec2Info.getSelectedSubnet()
+        subnet: ec2Info.getSelectedSubnet(),
+        blockDeviceMappings: undefined,
       },
       getDisplayName: ec2Info.getDisplayName,
       setSecurityGroup: setSecurityGroup,
       unavalableInstanceFamily: unavalableInstanceFamily,
       openManageVpcSubnetDialog: openManageVpcSubnetDialog,
       openManageSecurityGroupsDialog: openManageSecurityGroupsDialog,
+      addVolume: addVolume,
+      removeVolume: removeVolume,
       launch: launch,
     });
 
     $scope.$watch('inputs.subnet', _onSubnetChanged);
     $scope.$watch('inputs.ami', _onAMIChanged);
+    $scope.$watch('inputs.instanceType', _onInstanceTypeChanged);
     $scope.$watch('inputs.securityGroups', _onSecurityGroupsChanged, true);
+    $scope.$watch('inputs.blockDeviceMappings', _onBlockDeviceMappingsChanged, true);
 
     function setSecurityGroup(group, idx) {
       $scope.inputs.securityGroups[idx] = group;
@@ -161,25 +343,102 @@
     function _onAMIChanged(ami, oldAmi) {
       var inputs = $scope.inputs;
       var subnet = inputs.subnet;
-      if (!subnet || !ami || !inputs.instanceType) {
+      if (!subnet || !ami) {
         inputs.instanceType = null;
+        inputs.blockDeviceMappings = null;
         return;
       }
-      if (ami.VirtualizationType === (oldAmi || {}).VirtualizationType &&
-        ami.rootDeviceType === (oldAmi || {}).rootDeviceType) {
-        return;
+      if (inputs.instanceType &&
+        (ami.VirtualizationType !== (oldAmi || {}).VirtualizationType ||
+          ami.rootDeviceType !== (oldAmi || {}).rootDeviceType)) {
+
+        ec2Info.getInstanceTypes(subnet.region).some(function(i) {
+          return i.types.some(function(t) {
+            if (t.type === inputs.instanceType.type) {
+              if (unavalableInstanceFamily(i)) {
+                inputs.instanceType = null;
+              }
+              return true;
+            }
+          });
+        });
       }
 
-      ec2Info.getInstanceTypes(subnet.region).some(function(i) {
-        return i.types.some(function(t) {
-          if (t.type === inputs.instanceType.type) {
-            if (unavalableInstanceFamily(i)) {
-              inputs.instanceType = null;
-            }
-            return true;
+      _initBlockDeviceMappings();
+    }
+
+    function _onInstanceTypeChanged(instanceType) {
+      var i, l;
+      if (instanceType) {
+        volumeTypes = ['EBS'];
+        for (i = 0, l = instanceType.instanceStoreNum; i < l; i++) {
+          volumeTypes.push('ephemeral' + i);
+        }
+      }
+
+      _initBlockDeviceMappings();
+    }
+
+    function _onBlockDeviceMappingsChanged(bdm, oldBdm) {
+
+      (bdm || []).forEach(function(val, idx) {
+        var oldVal = (oldBdm || [])[idx] || {};
+        var size;
+        if (val.volumeType !== oldVal.volumeType) {
+          size = bdm[0].size;
+          if (val.volumeType === 'EBS') {
+            val.ebsVolumeType = 'gp2';
+            val.size = size;
           }
-        });
+        }
+        if (val.ebsVolumeType !== oldVal.ebsVolumeType) {
+          if (val.ebsVolumeType === 'io1') {
+            val.size = Math.max(val.size, 4);
+            val.ebsIops = Math.min(Math.min(+(val.size) * 3, 10000) * 10, 20000);
+          }
+          if (val.ebsVolumeType === 'standard') {
+            val.size = Math.min(val.size, 1024);
+          }
+        }
       });
+    }
+
+    function _initBlockDeviceMappings() {
+      var inputs = $scope.inputs;
+      if (!inputs.instanceType || !inputs.ami) {
+        inputs.blockDeviceMappings = null;
+        return;
+      }
+      var instanceStoreNum = inputs.instanceType.instanceStoreNum || 0;
+      var _blockDeviceMappings = inputs.ami.BlockDeviceMappings.reduce(function(all, devMap) {
+        var ebs = devMap.Ebs;
+        if (ebs) {
+          all.push({
+            volumeType: 'EBS',
+            deviceName: devMap.DeviceName,
+            ebsSnapshotId: ebs.SnapshotId,
+            size: ebs.VolumeSize,
+            ebsVolumeType: ebs.VolumeType,
+            ebsIops: null,
+            ebsDeleteOnTermination: ebs.DeleteOnTermination,
+            ebsDencrypted: ebs.Encrypted,
+          });
+        } else {
+          var na = i18next('ec2.notAvailable');
+          if (instanceStoreNum-- > 0) {
+            all.push({
+              volumeType: devMap.VirtualName,
+              deviceName: devMap.DeviceName,
+              size: na,
+              ebsVolumeType: null,
+              ebsIops: null,
+            });
+          }
+        }
+        return all;
+      }, []);
+
+      inputs.blockDeviceMappings = _blockDeviceMappings;
     }
 
     function openManageVpcSubnetDialog() {
@@ -204,10 +463,44 @@
         size: 'lg'
       });
       dlg.result.then(function(group) {
-        if ($scope.inputs.securityGroups.indexOf(group) < 0) {
-          $scope.inputs.securityGroups.push(group);
+        var securityGroups = $scope.inputs.securityGroups || [];
+        var securityGroupsLen = securityGroups.length;
+        if (securityGroups.indexOf(group) < 0) {
+          if (securityGroupsLen && !securityGroups[securityGroupsLen - 1]) {
+            securityGroups[securityGroupsLen - 1] = group;
+          } else {
+            securityGroups.push(group);
+          }
         }
       });
+    }
+
+    function addVolume() {
+      var bdm = $scope.inputs.blockDeviceMappings;
+      var deviceName;
+      deviceNames.some(function(d) {
+        var found = bdm.some(function(b) {
+          if (b.deviceName === d) {
+            return true;
+          }
+        });
+        if (!found) {
+          deviceName = d;
+          return true;
+        }
+      });
+
+      bdm.push({
+        volumeType: 'EBS',
+        deviceName: deviceName,
+        size: 8,
+        ebsVolumeType: 'gp2',
+        ebsIops: null,
+      });
+    }
+
+    function removeVolume(idx) {
+      $scope.inputs.blockDeviceMappings.splice(idx, 1);
     }
 
     function launch() {
@@ -226,6 +519,24 @@
           }
           return all;
         }, []),
+        BlockDeviceMappings: $scope.inputs.blockDeviceMappings.map(function(d) {
+          var ebs;
+          if (d.volumeType === 'EBS') {
+            ebs = {
+              VolumeType: d.ebsVolumeType,
+              VolumeSize: d.size,
+              DeleteOnTermination: d.deleteOnTermination,
+              Encrypted: d.ebsEncrypted,
+              SnapshotId: d.ebsSnapshotId,
+              Iops: d.ebsVolumeType === 'io1' ? d.ebsIops : undefined,
+            };
+          }
+          return {
+            DeviceName: d.deviceName,
+            Ebs: ebs,
+            VirtualName: d.volumeType !== 'EBS' ? d.volumeType : undefined,
+          };
+        }),
       };
 
       $scope.processing = true;
@@ -373,6 +684,13 @@
     appFocusOn('cidrBlock');
 
     function getCidrCandidate() {
+      var cidr = $scope.inputs.cidrBlock || '';
+      var cidrArr = cidr.split(/[\.\/]/);
+      var candidate = ec2Info.getCidrCandidate(cidrArr);
+
+      return (candidate || []).filter(function(s) {
+        return s.indexOf(cidr) === 0;
+      });
     }
 
     function create() {
@@ -442,12 +760,14 @@
   ec2CreateSubnetDialogCtrl.$inject = ['$scope', '$q', 'awsRegions', 'awsEC2', 'ec2Info', 'appFocusOn', 'dialogInputs'];
 
   function ec2CreateSubnetDialogCtrl($scope, $q, awsRegions, awsEC2, ec2Info, appFocusOn, dialogInputs) {
+    var vpcCidrBlock = dialogInputs.vpc.CidrBlock;
     ng.extend($scope, {
       ec2Info: ec2Info,
       inputs: {
         region: dialogInputs.region,
         vpc: dialogInputs.vpc
       },
+      vpcCidrMask: +(vpcCidrBlock.replace(/.*\//, '')),
       getCidrCandidate: getCidrCandidate,
       create: create
     });
@@ -455,6 +775,16 @@
     appFocusOn('cidrBlock');
 
     function getCidrCandidate() {
+      var cidr = $scope.inputs.cidrBlock || '';
+      var cidrArr = cidr.split(/[\.\/]/);
+      var vpcCidrArr = vpcCidrBlock.split(/[\.\/]/).slice(0, 2);
+      var vpcCidr = vpcCidrArr.join('.');
+      vpcCidrArr.push('');
+      var candidate = ec2Info.getCidrCandidate(cidrArr.length > 2 ? cidrArr : vpcCidrArr);
+
+      return (candidate || []).filter(function(s) {
+        return s.indexOf(cidr) === 0 && s.indexOf(vpcCidr) === 0;
+      });
     }
 
     function create() {
@@ -599,9 +929,9 @@
 
   }
 
-  ec2CreateSecurityGroupDialogCtrl.$inject = ['$scope', '$q', 'awsRegions', 'awsEC2', 'ec2Info', 'dialogInputs'];
+  ec2CreateSecurityGroupDialogCtrl.$inject = ['$scope', '$q', 'awsRegions', 'awsEC2', 'ec2Info', 'appFocusOn', 'dialogInputs'];
 
-  function ec2CreateSecurityGroupDialogCtrl($scope, $q, awsRegions, awsEC2, ec2Info, dialogInputs) {
+  function ec2CreateSecurityGroupDialogCtrl($scope, $q, awsRegions, awsEC2, ec2Info, appFocusOn, dialogInputs) {
     ng.extend($scope, {
       ec2Info: ec2Info,
       inputs: {
@@ -610,6 +940,8 @@
       },
       create: create,
     });
+
+    appFocusOn('groupName');
 
     function create() {
       if ($scope.inputs.form.$invalid || $scope.processing) {
@@ -641,7 +973,7 @@
       var inputs = $scope.inputs;
       ec2Info.reloadSecurityGroups($scope.inputs.region, inputs.vpc.VpcId).then(function(groups) {
         var group;
-        (groups||[]).some(function(g) {
+        (groups || []).some(function(g) {
           if (g.GroupId === data.GroupId) {
             group = g;
             return true;
@@ -654,6 +986,72 @@
     function _fail(err) {
       $scope.error = err;
       $scope.processing = false;
+    }
+  }
+
+  ec2SelectSnapshotDialogCtrl.$inject = ['$scope', 'awsEC2', 'dialogInputs'];
+
+  function ec2SelectSnapshotDialogCtrl($scope, awsEC2, dialogInputs) {
+    var snapshotsAll = [];
+    var columns = [{
+      width: 410,
+      col: 'Description',
+      name: 'ec2.snapshotDescription',
+    }, {
+      width: 140,
+      col: 'SnapshotId',
+      name: 'ec2.snapshotId',
+    }];
+
+    ng.extend($scope, {
+      columns: columns,
+      snapshotsAll: [],
+      inputs: {},
+      select: select
+    });
+
+    $scope.$watch('inputs.snapshotId', mkSnapshots);
+
+    _describeSnapshots();
+
+    function _describeSnapshots(nextToken) {
+      var params = {
+        MaxResults: 500,
+        NextToken: nextToken,
+        Filters: [{
+          Name: 'status',
+          Values: ['completed']
+        }]
+      };
+
+      awsEC2(dialogInputs.region).describeSnapshots(params, function(err, data) {
+        if (data) {
+          $scope.$apply(function() {
+            snapshotsAll = snapshotsAll.concat(data.Snapshots);
+            mkSnapshots();
+          });
+          if (data.NextToken) {
+            _describeSnapshots(data.NextToken);
+          }
+        }
+      });
+    }
+
+    function mkSnapshots() {
+      var SnapshotId = $scope.inputs.snapshotId;
+      $scope.snapshots = snapshotsAll.reduce(function(all, v) {
+        if (all.length < 100 && (!SnapshotId || v.SnapshotId.indexOf(SnapshotId) === 0)) {
+          if (v.SnapshotId === SnapshotId) {
+            $scope.inputs.snapshot = v;
+          }
+          all.push(v);
+        }
+        return all;
+      }, []);
+    }
+
+    function select() {
+      $scope.$close($scope.inputs.snapshot);
     }
   }
 

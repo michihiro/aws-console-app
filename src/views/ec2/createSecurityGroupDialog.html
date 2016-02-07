@@ -27,6 +27,7 @@
         <input class="form-control" name="groupName" spellcheck="false"
                ng-model="inputs.groupName"
                ng-pattern="/^[\w\._\-:/()#,@\[\]+=&;{}!$\* ]+$/"
+               required
                app-focus-on="groupName">
       </div>
     </div>
@@ -37,6 +38,7 @@
         <input class="form-control" name="groupDescription" spellcheck="false"
                ng-model="inputs.groupDescription"
                ng-pattern="/^[\w\._\-:/()#,@\[\]+=&;{}!$\* ]+$/"
+               required
                app-focus-on="groupDescription">
       </div>
     </div>

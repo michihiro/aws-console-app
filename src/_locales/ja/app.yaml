@@ -145,6 +145,22 @@ ec2:
     gpuInstances: GPU インスタンス
     memoryOptimized: メモリ最適化
     storageOptimized: ストレージの最適化
+  storage: ストレージ
+  deviceName: デバイス
+  snapshot: スナップショット
+  volumeType: 種別
+  sizeGiB: サイズ(GiB)
+  ebsVolumeType: EBS種別
+  ebsType:
+    gp2: 汎用 SSD (GP2)
+    io1: プロビジョンド IOPS SSD (IO1)
+    standard: マグネティック
+  iops: IOPS
+  notAvailable: 利用不可
+  attributes: 属性
+  deleteOnTermination: 合わせて削除
+  encrypted: 暗号化
+  addNewVolume: 新規ボリューム追加
   nameTag: ネームタグ
   securityGroup: セキュリティグループ
   securityGroups: セキュリティグループ
@@ -160,7 +176,15 @@ ec2:
   allTCP: 全てのTCP
   allUDP: 全てのUDP
   allICMP: 全てのICMP
+  customTCP: カスタムTCPルール
+  customUDP: カスタムUDPルール
+  customICMP: カスタムICMPルール
+  noRules:
+   inbound: このセキュリティグループにはインバウンドルールがありません
+   outbound: このセキュリティグループにはアウトバウンドルールがありません
   createSecurityGroup: セキュリティグループの作成
+  securityGroupName: セキュリティグループ名
+  securityGroupDescription: 概要
   keyName: キーペア名
   keyFingerprint: Fingerprint
   error:

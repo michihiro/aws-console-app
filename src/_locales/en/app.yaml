@@ -144,6 +144,22 @@ ec2:
     gpuInstances: GPU Instances
     memoryOptimized: Memory optimized
     storageOptimized: Storage optimized
+  storage: Storage
+  deviceName: Device
+  snapshot: Snapshot
+  volumeType: Type
+  sizeGiB: Size(GiB)
+  ebsVolumeType: EBS Volume Type
+  ebsType:
+    gp2: General Purpose SSD (GP2)
+    io1: Provisioned IOPS SSD (IO1)
+    standard: Magnetic
+  iops: IOPS
+  notAvailable: N/A
+  attributes: Attributes
+  deleteOnTermination: Delete On Termination
+  encrypted: Encrypted
+  addNewVolume: Add New Volume
   nameTag: Name Tag
   securityGroup: Security Group
   securityGroups: Security Groups
@@ -159,7 +175,15 @@ ec2:
   allTCP: All TCP
   allUDP: All UDP
   allICMP: All ICMP
+  customTCP: Custom TCP Rule
+  customUDP: Custom UDP Rule
+  customICMP: Custom ICMP Rule
+  noRules:
+   inbound: This security group has no inbound rules
+   outbound: This security group has no outbound rules
   createSecurityGroup: Create Security Group
+  securityGroupName: Security Group Name
+  securityGroupDescription: Description
   keyName: Key pair Name
   keyFingerprint: Fingerprint
   error:

@@ -54,15 +54,23 @@
   - type: m3.medium
     vCpu: 1
     memory: 3.75
+    instanceStoreNum: 1
+    instanceStoreSize: 4
   - type: m3.large
     vCpu: 2
     memory: 7.5
+    instanceStoreNum: 1
+    instanceStoreSize: 32
   - type: m3.xlarge
     vCpu: 4
     memory: 15
+    instanceStoreNum: 2
+    instanceStoreSize: 40
   - type: m3.2xlarge
     vCpu: 8
     memory: 30
+    instanceStoreNum: 2
+    instanceStoreSize: 80
 - family: C4
   familyDescription: computeOptimized
   rootDeviceType:
@@ -97,18 +105,28 @@
   - type: c3.large
     vCpu: 2
     memory: 3.75
+    instanceStoreNum: 2
+    instanceStoreSize: 16
   - type: c3.xlarge
     vCpu: 4
     memory: 7.5
+    instanceStoreNum: 2
+    instanceStoreSize: 40
   - type: c3.2xlarge
     vCpu: 8
     memory: 15
+    instanceStoreNum: 2
+    instanceStoreSize: 80
   - type: c3.4xlarge
     vCpu: 16
     memory: 30
+    instanceStoreNum: 2
+    instanceStoreSize: 160
   - type: c3.8xlarge
     vCpu: 32
     memory: 60
+    instanceStoreNum: 2
+    instanceStoreSize: 320
 - family: G2
   familyDescription: gpuInstances
   rootDeviceType:
@@ -119,9 +137,13 @@
   - type: g2.2xlarge
     vCpu: 8
     memory: 15
+    instanceStoreNum: 1
+    instanceStoreSize: 60
   - type: g2.8xlarge
     vCpu: 32
     memory: 60
+    instanceStoreNum: 2
+    instanceStoreSize: 120
 - family: R3
   familyDescription: memoryOptimized
   rootDeviceType:
@@ -130,18 +152,31 @@
   virtualizationType:
   - hvm
   types:
+  - type: r3.large
+    vCpu: 2
+    memory: 15
+    instanceStoreNum: 1
+    instanceStoreSize: 32
   - type: r3.xlarge
     vCpu: 4
     memory: 30.5
+    instanceStoreNum: 1
+    instanceStoreSize: 80
   - type: r3.2xlarge
     vCpu: 8
     memory: 61
+    instanceStoreNum: 1
+    instanceStoreSize: 160
   - type: r3.4xlarge
     vCpu: 16
     memory: 122
+    instanceStoreNum: 1
+    instanceStoreSize: 320
   - type: r3.8xlarge
     vCpu: 32
     memory: 244
+    instanceStoreNum: 2
+    instanceStoreSize: 320
 - family: D2
   familyDescription: storageOptimized
   rootDeviceType:
@@ -150,15 +185,26 @@
   virtualizationType:
   - hvm
   types:
+  - type: d2.xlarge
+    vCpu: 4
+    memory: 30.5
+    instanceStoreNum: 3
+    instanceStoreSize: 2048
   - type: d2.2xlarge
     vCpu: 8
     memory: 61
+    instanceStoreNum: 6
+    instanceStoreSize: 2048
   - type: d2.4xlarge
     vCpu: 16
     memory: 122
+    instanceStoreNum: 12
+    instanceStoreSize: 2048
   - type: d2.8xlarge
     vCpu: 36
     memory: 244
+    instanceStoreNum: 24
+    instanceStoreSize: 2048
 - family: I2
   familyDescription: storageOptimized
   rootDeviceType:
@@ -170,12 +216,20 @@
   - type: i2.xlarge
     vCpu: 4
     memory: 30.5
+    instanceStoreNum: 1
+    instanceStoreSize: 800
   - type: i2.2xlarge
     vCpu: 8
     memory: 61
+    instanceStoreNum: 2
+    instanceStoreSize: 800
   - type: i2.4xlarge
     vCpu: 16
     memory: 122
+    instanceStoreNum: 4
+    instanceStoreSize: 800
   - type: i2.8xlarge
     vCpu: 32
     memory: 244
+    instanceStoreNum: 8
+    instanceStoreSize: 800

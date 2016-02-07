@@ -142,6 +142,108 @@
                 ng-bind="::'ec2.manageSecurityGroups'|i18next"></button>
       </div>
     </div>
+    <div class="form-group">
+      <label class="col-xs-2 control-label"
+             ng-bind="::'ec2.storage'|i18next"></label>
+      <input type="hidden" name="blockDeviceMappings"
+             ng-model="inputs.blockDeviceMappings" required>
+    </div>
+    <div class="clearfix">
+      <div class="col-xs-12" style="padding:0" ng-if="inputs.blockDeviceMappings">
+        <div class="table-header-spacer"></div>
+        <div class="table-container" app-bind-scroll-position="tableScroll">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>
+                  <div class="col-delete"></div>
+                </th>
+                <th ng-repeat="col in storageColumns"
+                    ng-style="{width:col.width+'px'}">
+                  <div class="th-inner"
+                       ng-style="{left:col.left,width:col.width+'px','-webkit-transform':'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
+                    <span ng-bind="::col.name[p] ? (col.name[p]|i18next) : col.name ? (col.name|i18next) : '&nbsp;'"></span>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="(itemIdx, item) in inputs.blockDeviceMappings">
+                <td>
+                  <div class="col-delete">
+                  <a ng-if="itemIdx" class="btn del-volume" ng-click="removeVolume(itemIdx)">&times;</a>
+                  </div>
+                </td>
+                <td ng-repeat="col in storageColumns" ng-class="col.class"
+                    ng-style="{width:col.width+'px'}">
+                  <div class="td-inner"
+                       ng-if="!col.tags && !col.editable(item, itemIdx)"
+                       ng-style="{left:col.left,width:col.width+'px','-webkit-transform':'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
+                      <span ng-if="col.filterFn" ng-bind-html="col.filterFn(item[col.col], itemIdx)"></span>
+                      <span ng-if="!col.filterFn" ng-bind="item[col.col]"></span>
+                  </div>
+                  <div class="td-inner form-group-input"
+                       ng-if="!col.tags && col.editable(item, itemIdx) && !col.dropdown"
+                       ng-style="{left:col.left,width:col.width+'px','-webkit-transform':'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
+                    <div class="form-group">
+                      <input class="form-control"
+                             inputmode="verbatim"
+                             name="bDM{{itemIdx}}{{col.col}}"
+                             ng-model="item[col.col]"
+                             required
+                             ui-validate="'col.isValid($value, item)'">
+                    </div>
+                  </div>
+                  <div class="td-inner"
+                       ng-if="!col.tags && col.editable(item, itemIdx) && col.dropdown"
+                       uib-dropdown dropdown-append-to="'.modal-content'"
+                       ng-style="{left:col.left,width:col.width+'px','-webkit-transform':'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
+                    <a class="btn" uib-dropdown-toggle>
+                      <span ng-if="col.filterFn" ng-bind-html="col.filterFn(item[col.col], itemIdx)"></span>
+                      <span ng-if="!col.filterFn" ng-bind="item[col.col]"></span>
+                      <span class="caret"></span>
+                    </a>
+                    <ul uib-dropdown-menu>
+                      <li ng-repeat="item2 in col.dropdown()">
+                        <a ng-click="item[col.col]=item2.value||item2"
+                           ng-bind="item2.name ? item2.name : item2"></a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="td-inner"
+                       ng-if="col.tags"
+                       ng-style="{left:col.left,width:col.width+'px','-webkit-transform':'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
+                    <div class="add-attribute" uib-dropdown
+                         dropdown-append-to="'.modal-content'">
+                      <a class="badge" ng-if="col.editable(item, itemIdx)"
+                         uib-dropdown-toggle>&plus;</a>
+                      <ul uib-dropdown-menu>
+                        <li ng-repeat="t in col.tags" ng-if="!item[t.col] && t.editable(item, itemIdx)">
+                          <a ng-bind="t.label(item[t.col])" ng-click="t.select(item)"></a>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="attribute-group">
+                      <div class="attribute" ng-repeat="t in col.tags" ng-if="item[t.col]">
+                        <a class="badge" ng-if="t.editable(v, itemIdx)" ng-click="item[t.col]=undefined;">&times</a>
+                        <span ng-bind="t.label(item[t.col])"></span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td ng-attr-colspan="{{::storageColumns.length}}">
+                  <a class="btn btn-raised btn-sm add-volume" ng-click="addVolume()" 
+                     ng-bind="::'ec2.addNewVolume'|i18next"></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
 <!--
       </tab>
     </tabset>

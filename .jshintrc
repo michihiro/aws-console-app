@@ -28,6 +28,7 @@
         "CryptoJS": true,
         "Hammer": true,
         "moment": true,
+        "sprintf": true,
         "zxcvbn": true
     }
 }

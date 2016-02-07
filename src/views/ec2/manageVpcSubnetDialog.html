@@ -35,7 +35,7 @@
             <button class="btn btn-raised"
                     ng-disabled="!inputs.region"
                     ng-class="{'btn-info':inputs.region && !ec2Info.getVpcs(inputs.region).length}"
-                    ng-bind="'add'"
+                    ng-bind="::'ec2.createVpc'|i18next"
                     ng-click="openCreateVpcDialog()"></button>
           </li>
           <li ng-repeat="v in ec2Info.getVpcs(inputs.region)|orderBy:cidrOrderBy"
@@ -53,7 +53,7 @@
             <button class="btn btn-raised"
                     ng-disabled="!inputs.region || !inputs.vpc"
                     ng-class="{'btn-info':inputs.region && inputs.vpc.Subnet.length}"
-                    ng-bind="'add'"
+                    ng-bind="::'ec2.createSubnet'|i18next"
                     ng-click="openCreateSubnetDialog()"></button>
           </li>
           <li ng-repeat="s in inputs.vpc.Subnets|orderBy:cidrOrderBy"

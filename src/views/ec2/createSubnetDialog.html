@@ -25,10 +25,12 @@
              ng-bind="::'ec2.cidrBlock'|i18next"></label>
       <div class="col-xs-9">
         <input class="form-control" name="cidrBlock" spellcheck="false"
+               inputmode="verbatim"
                ng-model="inputs.cidrBlock"
                uib-typeahead="c for c in getCidrCandidate()"
+               typeahead-wait-ms="1"
                typeahead-focus-first="false"
-               ui-validate="'ec2Info.isValidCidrBlock($value, 16, 28, inputs.vpc.CidrBlock)'"
+               ui-validate="'ec2Info.isValidCidrBlock($value, vpcCidrMask, 28, inputs.vpc.CidrBlock)'"
                app-focus-on="cidrBlock">
       </div>
     </div>

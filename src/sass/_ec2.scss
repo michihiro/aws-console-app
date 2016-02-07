@@ -133,6 +133,51 @@
     vertical-align: middle;
     margin-right: 8px;
   }
+  .table-header-spacer {
+    height: calc(1.6em + 1px);
+  }
+  .table {
+    .th-inner {
+      font-size: 12px;
+    }
+    input.form-control {
+      font-size: 14px;
+      height: 1.8em;
+    }
+    .del-volume {
+      padding: 1px 0;
+      margin: 2px 0;
+      width: 22px;
+      height: 22px;
+      background: #777;
+      color: #fff;
+    }
+    .del-volume:hover {
+      background: #333;
+    }
+    
+    .col-delete {
+      width:28px;
+    }
+    .add-attribute {
+      display:inline-block;width:22px;vertical-align:top;
+    }
+    .attribute-group {
+      display:inline-block;width:calc(100% - 26px);margin-left:4px;
+    }
+    .attribute {
+      padding: 0 4px;
+      border-radius: 8px;
+      border: 1px solid #999;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    .badge {
+      margin-top: 4px;
+      float:right;
+    }
+
+  }
 }
 
 

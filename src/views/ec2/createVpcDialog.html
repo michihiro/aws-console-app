@@ -22,9 +22,6 @@
                uib-typeahead="c for c in getCidrCandidate()"
                typeahead-wait-ms="1"
                typeahead-focus-first="false"
-typeahead-refresh="xx"
-typeahead-on-select="onTypeaheadSelected($item, $model, $label, $event)"
-
                ui-validate="'ec2Info.isValidCidrBlock($value, 16, 28)'"
                app-focus-on="cidrBlock">
       </div>

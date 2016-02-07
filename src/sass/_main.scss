@@ -252,17 +252,23 @@ a:focus {
   opacity: 1;
   visibility: visible;
 }
+.dropdown-menu[uib-typeahead-popup] {
+  display: block;
+}
+/*
 .dropdown-menu {
   display: block;
   opacity: 0;
   visibility: hidden;
   transition: opacity 200ms ease;
 }
+*/
 
 .modal .dropdown-menu {
   max-height: 360px;
   overflow-y: auto;
 }
+
 
 /*
 form textarea.ng-invalid.ng-dirty,

@@ -156,6 +156,7 @@
       getInstanceTypes: getInstanceTypes,
       isValidCidrBlock: isValidCidrBlock,
       protocolTypes: protocolTypes,
+      getCidrCandidate: getCidrCandidate,
     };
 
     function getInstanceTypes(region) {
@@ -590,12 +591,54 @@
       var ar0 = range.split(/[\.\/]/);
       var ar1 = parentRange.split(/[\.\/]/);
 
-      var num0 = ((+ar0[0]) * 256*256*256) + ((+ar0[1]) * 256*256) + ((+ar0[2]) * 256) + (+ar0[3]);
-      var num1 = ((+ar1[0]) * 256*256*256) + ((+ar1[1]) * 256*256) + ((+ar1[2]) * 256) + (+ar1[3]);
-      var min0 = num0 - (num0 % Math.pow(2, 32 - (+ar0[4])));
-      var max0 = min0 + Math.pow(2, 32 - (+ar0[4])) - 1;
-      return (+ar0[4]) <= (+ar1[4]) &&
-        min0 <= num1 && num1 <= max0;
+      var num0 = ((+ar0[0]) * 16777216) + ((+ar0[1]) * 65536) + ((+ar0[2]) * 256) + (+ar0[3]);
+      var num1 = ((+ar1[0]) * 16777216) + ((+ar1[1]) * 65536) + ((+ar1[2]) * 256) + (+ar1[3]);
+      var min1 = num1 - (num1 % Math.pow(2, 32 - (+ar1[4])));
+      var max1 = min1 + Math.pow(2, 32 - (+ar1[4])) - 1;
+      return (+ar0[4]) >= (+ar1[4]) &&
+        min1 <= num0 && num0 <= max1;
+    }
+
+    function getCidrCandidate(cidrArr) {
+      var candidateRoot = [
+        [
+          [10, 0],
+          [10, 256]
+        ],
+        [
+          [172, 16],
+          [172, 31]
+        ],
+        [
+          [192, 168],
+          [192, 168]
+        ]
+      ];
+
+      return candidateRoot.reduce(function(ar, v) {
+        var cidrArrLen = cidrArr.length;
+        var i0 = v[0][0];
+        if (cidrArrLen > 1 && i0 !== (+cidrArr[0])) {
+          return ar;
+        }
+        var i1 = v[0][1];
+        var j1 = v[1][1];
+        var inc = cidrArrLen <= 1 ? (j1 - i1) || 1 : 1;
+
+        for (; i1 <= j1; i1 += inc) {
+          if (cidrArrLen > 2 && i1 !== (+cidrArr[1])) {
+            continue;
+          }
+          var n, m, i2;
+          for (n = 16, m = (cidrArrLen > 3) ? 24 : (cidrArrLen > 2) ? 22 : 16; n <= m; n++) {
+            for (i2 = 0; i2 < 65536; i2 += Math.pow(2, 32 - n)) {
+              ar.push([i0, i1, (i2 / 256) | 0, i2 % 256].join('.') + '/' + n);
+            }
+          }
+        }
+
+        return ar;
+      }, []);
     }
 
   }

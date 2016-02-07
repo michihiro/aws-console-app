@@ -100,3 +100,26 @@
   color: #aaa;
   cursor: pointer;
 }
+
+.table {
+  [uib-dropdown] .btn {
+    margin: 0;
+    padding: 0 2px;
+    width: 100%;
+    text-align: left;
+  }
+  .td-inner.form-group-input {
+    padding: 0;
+  }
+  .form-group {
+    margin: 0;
+    padding-bottom: 0;
+  }
+  input.form-control {
+    margin: 0;
+    height: 1.6em;
+    text-align: right;
+    padding-right: 8px;
+  }
+}
+

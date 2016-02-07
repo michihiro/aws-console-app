@@ -74,7 +74,7 @@
                 <tbody>
                   <tr ng-if="!inputs.securityGroup[p].length">
                     <td ng-attr-colspan="{{columns.length}}" style="text-align:center">
-                      <div class="td-inner" ng-bind="::'s3.noRules'|i18next"></div>
+                      <div class="td-inner" ng-bind="::'ec2.noRules.'+p|i18next"></div>
                     </td>
                   </tr>
                   <tr ng-repeat="item in inputs.securityGroup[p]"
@@ -103,9 +103,9 @@
           ng-bind="::'com.cancel'|i18next"
           ng-click="$dismiss()"></button>
   <button class="btn btn-raised"
-          ng-class="{'btn-success':inputs.subnet}"
-          ng-disabled="!inputs.subnet"
+          ng-class="{'btn-success':inputs.securityGroup}"
+          ng-disabled="!inputs.securityGroup"
           ng-bind="::'com.ok'|i18next"
-          ng-click="$close(inputs.group)"></button>
+          ng-click="$close(inputs.securityGroup)"></button>
   <div class="cover" ng-if="processing"></div>
 </div>
