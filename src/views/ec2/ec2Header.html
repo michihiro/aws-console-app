@@ -5,7 +5,7 @@
       <span class="caret"></span>
     </button>
     <ul uib-dropdown-menu>
-      <li ng-repeat="m in ec2Actions.all"
+      <li ng-repeat="m in ec2Actions.all track by $index"
           ng-class="{divider:!m.length, disabled:ec2Actions.isDisabled(m)}">
         <a ng-if="m.length" ng-click="ec2Actions.onClick($event, m);"
            ng-bind="::'ec2.'+m|i18next">

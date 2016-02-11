@@ -128,7 +128,6 @@ ec2:
   manageSecurityGroups: セキュリティグループの管理
   createVpc: VPC の作成
   createSubnet: サブネットの作成
-  selectKeyPair: キーペアの選択
   region: リージョン
   availabilityZone: ゾーン
   noPreference: 指定しない
@@ -185,8 +184,23 @@ ec2:
   createSecurityGroup: セキュリティグループの作成
   securityGroupName: セキュリティグループ名
   securityGroupDescription: 概要
+  selectSnapshot: スナップショットの選択
+  snapshotId: スナップショットID
+  snapshotDescription: 概要
+  selectKeyPair: キーペアの選択
   keyName: キーペア名
   keyFingerprint: Fingerprint
+  createKeyPair: 新規キーペアの作成
+  downloadKeyFile: プライベートキーのダウンロード
+  retrieveWindowsPassword: デフォルトの Windows 管理者パスワードの取得
+  passwordNotAvailableYet: パスワードはまだ利用できません。
+  retrieveWindowsPasswordMsg: パスワードを取得するためにはこのインスタンスのキーペアが必要です。
+  privateKey: プライベートキー
+  specifyPrivateKeyPath: ファイルのパスを指定する
+  pastPrivateKeyContents: またはプライベートキーの内容をここに貼り付けます
+  passwordDecrypted: パスワードの復号に成功しました。
+  passwordDecryptionError: パスワードの復号に失敗しました。プライベートキーを確認してください。
+  password: パスワード
   error:
     VpcLimitExceeded: VPC の上限数を超えました。
 r53:

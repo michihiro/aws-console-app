@@ -27,6 +27,7 @@
         "AWS": true,
         "CryptoJS": true,
         "Hammer": true,
+        "JSEncrypt": true,
         "moment": true,
         "sprintf": true,
         "zxcvbn": true

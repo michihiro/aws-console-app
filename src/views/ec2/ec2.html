@@ -61,7 +61,7 @@
 
 <div uib-dropdown class="position-fixed" contextmenu-for=".subnet-body">
   <ul uib-dropdown-menu>
-    <li ng-repeat="m in ec2Actions.all"
+    <li ng-repeat="m in ec2Actions.all track by $index"
         ng-class="{divider:!m.length, disabled:ec2Actions.isDisabled(m)}">
       <a ng-if="m.length" ng-class="{withoutripple:ec2Actions.isDisabled(m)}"
          ng-click="ec2Actions.onClick($event, m);"

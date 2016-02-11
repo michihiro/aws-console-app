@@ -11,12 +11,15 @@
   - type: t2.micro
     vCpu: 1
     memory: 1
+    i386Support: true
   - type: t2.small
     vCpu: 1
     memory: 2
+    i386Support: true
   - type: t2.medium
     vCpu: 2
     memory: 4
+    i386Support: true
   - type: t2.large
     vCpu: 2
     memory: 8
@@ -107,6 +110,7 @@
     memory: 3.75
     instanceStoreNum: 2
     instanceStoreSize: 16
+    i386Support: true
   - type: c3.xlarge
     vCpu: 4
     memory: 7.5

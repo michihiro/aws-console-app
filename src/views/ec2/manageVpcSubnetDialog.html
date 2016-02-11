@@ -11,7 +11,6 @@
         <input type="hidden" name="region" ng-model="inputs.region" required>
         <div class="btn-group" uib-dropdown>
           <button class="btn btn-raised" uib-dropdown-toggle
-                  ng-class="{'btn-info':!inputs.region,'btn-raised':!inputs.region}"
                   ng-disabled="processing">
             <span ng-if="inputs.region"
                   ng-bind="'ec2.regionName.'+inputs.region|i18next">
@@ -52,7 +51,7 @@
             <span ng-bind="::'ec2.subnet'|i18next"></span>
             <button class="btn btn-raised"
                     ng-disabled="!inputs.region || !inputs.vpc"
-                    ng-class="{'btn-info':inputs.region && inputs.vpc.Subnet.length}"
+                    ng-class="{'btn-info':inputs.region && !inputs.vpc.Subnets.length}"
                     ng-bind="::'ec2.createSubnet'|i18next"
                     ng-click="openCreateSubnetDialog()"></button>
           </li>

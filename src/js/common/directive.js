@@ -583,7 +583,7 @@
     }
 
     function _init(scope, elem) {
-      var formName = elem.parent('form').attr('name');
+      var formName = elem.parents('form').attr('name');
       var child = elem.find('input, textarea').toArray();
       var watchNames = child.reduce(_reduceFn, []);
 
@@ -591,8 +591,10 @@
 
       function _onVaidityChange(val) {
         var invalid = val.some(function(v) { return v; });
-        elem.toggleClass('has-success', !invalid);
-        elem.toggleClass('has-warning', invalid);
+        if (!elem.hasClass('has-none')) {
+          elem.toggleClass('has-success', !invalid);
+          elem.toggleClass('has-warning', invalid);
+        }
       }
 
       function _reduceFn(all, el) {

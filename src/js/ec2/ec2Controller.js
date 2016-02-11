@@ -14,7 +14,8 @@
     .controller('ec2ManageSecurityGroupsDialogCtrl', ec2ManageSecurityGroupsDialogCtrl)
     .controller('ec2CreateSecurityGroupDialogCtrl', ec2CreateSecurityGroupDialogCtrl)
     .controller('ec2SelectSnapshotDialogCtrl', ec2SelectSnapshotDialogCtrl)
-    .controller('ec2SelectKeyPairDialogCtrl', ec2SelectKeyPairDialogCtrl);
+    .controller('ec2SelectKeyPairDialogCtrl', ec2SelectKeyPairDialogCtrl)
+    .controller('ec2GetPasswordDialogCtrl', ec2GetPasswordDialogCtrl);
 
   ec2HeaderCtrl.$inject = ['$scope', 'awsRegions', 'ec2Info', 'ec2Actions'];
 
@@ -98,9 +99,15 @@
   function ec2RunInstancesDialogCtrl($scope, $q, $filter, awsRegions, awsEC2, ec2Info) {
     var i18next = $filter('i18next');
     var volumeTypes = [];
-    var deviceNames = 'bcdefghijklmnopqrstuvwxyz'.split('').map(function(a) {
-      return '/dev/sd' + a;
-    });
+    var b2z = 'bcdefghijklmnopqrstuvwxyz';
+    var deviceNames = [
+      b2z.split('').map(function(a) {
+        return '/dev/sd' + a;
+      }),
+      b2z.split('').map(function(a) {
+        return 'xvd' + a;
+      })
+    ];
     var ebsVolumeTypes = [{
       value: 'gp2',
       name: i18next('ec2.ebsType.gp2'),
@@ -178,8 +185,10 @@
         return !!idx;
       },
       dropdown: function() {
-        var blockDeviceMappings = $scope.inputs.blockDeviceMappings;
-        return deviceNames.filter(function(d) {
+        var inputs = $scope.inputs;
+        var blockDeviceMappings = inputs.blockDeviceMappings;
+        var deviceNamesIdx = inputs.ami.Platform === 'windows' ? 1 : 0;
+        return deviceNames[deviceNamesIdx].filter(function(d) {
           return !blockDeviceMappings.some(function(b) {
             return b.deviceName === d;
           });
@@ -198,9 +207,12 @@
       editable: function(v) {
         return v.volumeType === 'EBS';
       },
-      isValid: function(v, item) {
+      isValid: function(v, item, idx) {
         v = +v;
         if (Number.isNaN(v) || v <= 0) {
+          return false;
+        }
+        if (idx === 0 && v < $scope.inputs.ami.BlockDeviceMappings[0].Ebs.VolumeSize) {
           return false;
         }
         if (item.ebsVolumeType === 'standard' && v > 1024) {
@@ -261,7 +273,7 @@
         return true;
       }
     }, {
-      width: 245,
+      width: 250,
       name: 'ec2.attributes',
       tags: attibuteTags,
       editable: function(v, idx) {
@@ -283,7 +295,7 @@
       },
       getDisplayName: ec2Info.getDisplayName,
       setSecurityGroup: setSecurityGroup,
-      unavalableInstanceFamily: unavalableInstanceFamily,
+      unavalableInstanceType: unavalableInstanceType,
       openManageVpcSubnetDialog: openManageVpcSubnetDialog,
       openManageSecurityGroupsDialog: openManageSecurityGroupsDialog,
       addVolume: addVolume,
@@ -301,9 +313,10 @@
       $scope.inputs.securityGroups[idx] = group;
     }
 
-    function unavalableInstanceFamily(family) {
+    function unavalableInstanceType(family, type) {
       var ami = ($scope.inputs.ami || {});
-      return family.virtualizationType.indexOf(ami.VirtualizationType) < 0;
+      return family.virtualizationType.indexOf(ami.VirtualizationType) < 0 ||
+        ami.Architecture === 'i386' && !type.i386Support;
     }
 
     function _onSecurityGroupsChanged() {
@@ -350,12 +363,13 @@
       }
       if (inputs.instanceType &&
         (ami.VirtualizationType !== (oldAmi || {}).VirtualizationType ||
-          ami.rootDeviceType !== (oldAmi || {}).rootDeviceType)) {
+          ami.rootDeviceType !== (oldAmi || {}).rootDeviceType ||
+          ami.Architecture !== (oldAmi || {}).Architecture)) {
 
         ec2Info.getInstanceTypes(subnet.region).some(function(i) {
           return i.types.some(function(t) {
             if (t.type === inputs.instanceType.type) {
-              if (unavalableInstanceFamily(i)) {
+              if (unavalableInstanceType(i, t)) {
                 inputs.instanceType = null;
               }
               return true;
@@ -383,12 +397,10 @@
 
       (bdm || []).forEach(function(val, idx) {
         var oldVal = (oldBdm || [])[idx] || {};
-        var size;
         if (val.volumeType !== oldVal.volumeType) {
-          size = bdm[0].size;
-          if (val.volumeType === 'EBS') {
+          if (oldVal.volumeType && val.volumeType === 'EBS') {
             val.ebsVolumeType = 'gp2';
-            val.size = size;
+            val.size = 8;
           }
         }
         if (val.ebsVolumeType !== oldVal.ebsVolumeType) {
@@ -413,7 +425,7 @@
       var _blockDeviceMappings = inputs.ami.BlockDeviceMappings.reduce(function(all, devMap) {
         var ebs = devMap.Ebs;
         if (ebs) {
-          all.push({
+          all.unshift({
             volumeType: 'EBS',
             deviceName: devMap.DeviceName,
             ebsSnapshotId: ebs.SnapshotId,
@@ -424,12 +436,11 @@
             ebsDencrypted: ebs.Encrypted,
           });
         } else {
-          var na = i18next('ec2.notAvailable');
           if (instanceStoreNum-- > 0) {
             all.push({
               volumeType: devMap.VirtualName,
               deviceName: devMap.DeviceName,
-              size: na,
+              size: null,
               ebsVolumeType: null,
               ebsIops: null,
             });
@@ -476,9 +487,11 @@
     }
 
     function addVolume() {
-      var bdm = $scope.inputs.blockDeviceMappings;
+      var inputs = $scope.inputs;
+      var bdm = inputs.blockDeviceMappings;
+      var deviceNamesIdx = inputs.ami.Platform === 'windows' ? 1 : 0;
       var deviceName;
-      deviceNames.some(function(d) {
+      deviceNames[deviceNamesIdx].some(function(d) {
         var found = bdm.some(function(b) {
           if (b.deviceName === d) {
             return true;
@@ -989,9 +1002,9 @@
     }
   }
 
-  ec2SelectSnapshotDialogCtrl.$inject = ['$scope', 'awsEC2', 'dialogInputs'];
+  ec2SelectSnapshotDialogCtrl.$inject = ['$scope', 'awsEC2', 'appFocusOn', 'dialogInputs'];
 
-  function ec2SelectSnapshotDialogCtrl($scope, awsEC2, dialogInputs) {
+  function ec2SelectSnapshotDialogCtrl($scope, awsEC2, appFocusOn, dialogInputs) {
     var snapshotsAll = [];
     var columns = [{
       width: 410,
@@ -1012,6 +1025,7 @@
 
     $scope.$watch('inputs.snapshotId', mkSnapshots);
 
+    appFocusOn('snapshotId');
     _describeSnapshots();
 
     function _describeSnapshots(nextToken) {
@@ -1059,34 +1073,174 @@
 
   function ec2SelectKeyPairDialogCtrl($scope, $q, awsEC2, ec2Info, dialogInputs) {
     var columns = [{
-      width: 150,
+      width: 140,
       col: 'KeyName',
       name: 'ec2.keyName',
     }, {
-      width: 420,
+      width: 410,
       col: 'KeyFingerprint',
       name: 'ec2.keyFingerprint',
     }];
     ng.extend($scope, {
       columns: columns,
       inputs: {},
+      createKeyPair: createKeyPair,
       select: select,
     });
 
     _describeKeyPairs();
 
     function _describeKeyPairs() {
+      var defer = $q.defer();
       awsEC2(dialogInputs.region).describeKeyPairs({}, function(err, data) {
         if (!err) {
           $scope.$apply(function() {
             $scope.keypairs = data.KeyPairs;
           });
+          defer.resolve();
+        } else {
+          defer.reject(err);
         }
       });
+      return defer.promise;
+    }
+
+    function createKeyPair() {
+      var inputs = $scope.inputs;
+      var keyName = inputs.keyName;
+      if (!inputs.form.keyName.$valid || $scope.processing) {
+        return;
+      }
+      $scope.processing = true;
+      $scope.error = null;
+
+      _createKeyPair(keyName)
+        .then(_saveData)
+        .then(_describeKeyPairs)
+        .then(_done, _fail);
+
+      function _createKeyPair(keyName) {
+        var defer = $q.defer();
+        awsEC2(dialogInputs.region).createKeyPair({
+          KeyName: keyName
+        }, function(err, data) {
+          if (err) {
+            defer.reject(err);
+          } else {
+            defer.resolve(data.KeyMaterial);
+          }
+        });
+        return defer.promise;
+      }
+
+      function _saveData(keyMaterial) {
+        var defer = $q.defer();
+        var suggestedName = keyName + '.pem';
+        var opt = {
+          type: 'saveFile',
+          suggestedName: suggestedName
+        };
+        chrome.fileSystem.chooseEntry(opt, function(entry) {
+          if (!entry) {
+            console.log('chrome.fileSystem.chooseEntry', chrome.runtime.lastError.message);
+            return defer.reject();
+          }
+          entry.createWriter(function(writer) {
+            writer.onwriteend = defer.resolve;
+            writer.onerror = defer.reject;
+            writer.write(new Blob([keyMaterial], {
+              type: 'text/plain'
+            }));
+          }, defer.reject);
+        });
+        return defer.promise;
+      }
+
+      function _done() {
+        $scope.keypairs.some(function(k) {
+          if (k.KeyName === keyName) {
+            inputs.keypair = k;
+            return true;
+          }
+        });
+        inputs.keyName = null;
+        $scope.processing = false;
+      }
+
+      function _fail(err) {
+        $scope.error = err;
+        $scope.processing = false;
+      }
+
     }
 
     function select() {
       $scope.$close($scope.inputs.keypair.KeyName);
+    }
+  }
+
+  ec2GetPasswordDialogCtrl.$inject = ['$scope', 'awsEC2', 'ec2Info'];
+
+  function ec2GetPasswordDialogCtrl($scope, awsEC2, ec2Info) {
+
+    ng.extend($scope, {
+      instance: ec2Info.getSelectedInstances()[0],
+      inputs: {},
+      passwordData: undefined,
+      getDisplayName: ec2Info.getDisplayName,
+      loadKeyFile: loadKeyFile,
+    });
+
+    $scope.$watch('inputs.rsaKeyText', _decrypt);
+
+    _getPasswordData();
+
+    function loadKeyFile() {
+      var opt = {
+        type: 'openFile',
+        accepts: [{
+          extensions: ['pem']
+        }]
+      };
+      chrome.fileSystem.chooseEntry(opt, function(entry) {
+        if (!entry) {
+          console.log('chrome.fileSystem.chooseEntry', chrome.runtime.lastError.message);
+          return;
+        }
+        entry.file(function(file) {
+          var reader = new FileReader();
+          reader.onloadend = function() {
+            _decrypt(reader.result);
+            $scope.$digest();
+          };
+          reader.readAsText(file);
+        });
+      });
+    }
+
+    function _getPasswordData() {
+      $scope.processing = true;
+      awsEC2($scope.instance.region).getPasswordData({
+        InstanceId: $scope.instance.InstanceId
+      }, function(err, data) {
+        $scope.$apply(function() {
+          if (err) {
+            $scope.error = err;
+          } else {
+            $scope.passwordData = data.PasswordData;
+          }
+          $scope.processing = false;
+        });
+      });
+    }
+
+    function _decrypt(rsaKeyText) {
+      if (!rsaKeyText) {
+        return;
+      }
+      var decrypt = new JSEncrypt();
+      decrypt.setPrivateKey(rsaKeyText);
+      $scope.password = decrypt.decrypt($scope.passwordData);
     }
   }
 

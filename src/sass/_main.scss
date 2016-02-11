@@ -157,6 +157,11 @@ a:focus {
   text-transform: none;
   padding: 8px 12px;
 }
+.btn.btn-in-form {
+  margin: 2px 0;
+  vertical-align: top;
+  outline: 0;
+}
 
 .alert {
   text-align: left;
@@ -213,7 +218,7 @@ a:focus {
 .btn-group {
   margin: 1px;
 }
-[dropdown].position-fixed {
+[uib-dropdown].position-fixed {
   z-index: 10;
 }
 .position-fixed .dropdown-menu {
@@ -356,4 +361,8 @@ textarea.form-control {
 .tab-content > .tab-pane.active-remove {
   transform: translateX(20px);
   opacity: 0;
+}
+
+.no-animate {
+  transition: none !important;
 }

@@ -26,7 +26,7 @@
     var scope = $rootScope.$new();
 
     ng.extend(scope, {
-      //all: ['startInstances', 'rebootInstances', 'stopInstances', 'terminateInstances' , '', 'runInstances' ],
+      //all: ['getPassword', '', 'startInstances', 'rebootInstances', 'stopInstances', 'terminateInstances' , '', 'runInstances' ],
       all: ['startInstances', 'rebootInstances', 'stopInstances'],
       onClick: onClick,
       isDisabled: isDisabled,
@@ -39,7 +39,9 @@
         return;
       }
 
-      if (key === 'runInstances') {
+      if (key === 'getPassword') {
+        $rootScope.openDialog('ec2/getPasswordDialog', {}, {});
+      } else if (key === 'runInstances') {
         $rootScope.openDialog('ec2/runInstancesDialog', {}, {
           size: 'lg'
         });
@@ -66,6 +68,9 @@
       var isStartOrStop = (key === 'startInstances' || key === 'stopInstances');
       var selected = ec2Info.getSelectedInstances();
       var enable = enableStates[key];
+      if (key === 'getPassword') {
+        return selected.length !== 1 || selected[0].Platform !== 'windows';
+      }
       return !(selected || []).some(function(i) {
         if (isStartOrStop &&
           (i.RootDeviceType !== 'ebs' || i.InstanceLifecycle === 'spot')) {
@@ -442,7 +447,6 @@
         }],
       }, function(err, obj) {
         var subnetsBack = vpc.Subnets || [];
-
         if (obj) {
           vpc.Subnets = obj.Subnets.map(function(s) {
             subnetsBack.some(function(sb, idx) {
@@ -603,7 +607,7 @@
       var candidateRoot = [
         [
           [10, 0],
-          [10, 256]
+          [10, 255]
         ],
         [
           [172, 16],

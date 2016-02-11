@@ -127,7 +127,6 @@ ec2:
   manageSecurityGroups: Manage Security Groups
   createVpc: Create VPC
   createSubnet: Create Subnet
-  selectKeyPair: Select a key pair
   region: Region
   availabilityZone: Zone
   noPreference: No preference
@@ -184,8 +183,23 @@ ec2:
   createSecurityGroup: Create Security Group
   securityGroupName: Security Group Name
   securityGroupDescription: Description
-  keyName: Key pair Name
+  selectSnapshot: Select Snapshot
+  snapshotId: Snapshot ID
+  snapshotDescription: Description
+  selectKeyPair: Select a key pair
+  keyName: Key pair name
   keyFingerprint: Fingerprint
+  createKeyPair: Create a new key pair
+  downloadKeyFile: Download a private key file
+  retrieveWindowsPassword: Retrieve Default Windows Administrator Password
+  passwordNotAvailableYet: Password not available yet.
+  retrieveWindowsPasswordMsg: "In order to retrieve your password you will need your key pair for this instance."
+  privateKey: Private key
+  specifyPrivateKeyPath: Specify the private key path
+  pastPrivateKeyContents: or Paste contents of private key file here.
+  passwordDecrypted: The password successfully decrypted.
+  passwordDecryptionError: Password Decryption failed. Please ensure your private key.
+  password: Password
   error:
     VpcLimitExceeded: The maximum number of VPCs has been reached.
 r53:
