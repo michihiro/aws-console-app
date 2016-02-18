@@ -67,9 +67,11 @@
       };
       var isStartOrStop = (key === 'startInstances' || key === 'stopInstances');
       var selected = ec2Info.getSelectedInstances();
+      var selected0 = selected[0] || {};
       var enable = enableStates[key];
       if (key === 'getPassword') {
-        return selected.length !== 1 || selected[0].Platform !== 'windows';
+        return selected.length !== 1 || selected0.Platform !== 'windows' ||
+          selected0.State.Name === 'pending';
       }
       return !(selected || []).some(function(i) {
         if (isStartOrStop &&
@@ -82,9 +84,9 @@
 
   }
 
-  ec2InfoFactory.$inject = ['$rootScope', '$q', '$resource', '$filter', 'awsRegions', 'awsEC2'];
+  ec2InfoFactory.$inject = ['$rootScope', '$q', '$resource', 'awsRegions', 'awsEC2'];
 
-  function ec2InfoFactory($rootScope, $q, $resource, $filter, awsRegions, awsEC2) {
+  function ec2InfoFactory($rootScope, $q, $resource, awsRegions, awsEC2) {
     var currentRegion = 'all';
     var availabilityZones = {};
     var instances = {};
@@ -97,38 +99,6 @@
     var amis = {};
     var instanceTypeResource = $resource('conf/instanceType.json').query();
     var unavailableInstanceFamilyResource = $resource('conf/unavailableInstanceFamily.json').get();
-    var i18next = $filter('i18next');
-    var protocolTypes = [
-      [i18next('ec2.allTCP'), 'TCP'],
-      [i18next('ec2.allUDP'), 'UDP'],
-      ['SSH', 'TCP', '22'],
-      ['SMTP', 'TCP', '25'],
-      ['DNS(UDP)', 'UDP', '53'],
-      ['DNS(TCP)', 'TCP', '53'],
-      ['HTTP', 'TCP', '80'],
-      ['POP3', 'TCP', '110'],
-      ['IMAP', 'TCP', '143'],
-      ['LDAP', 'TCP', '389'],
-      ['HTTPS', 'TCP', '443'],
-      ['SMTPS', 'TCP', '465'],
-      ['IMAPS', 'TCP', '993'],
-      ['POP3S', 'TCP', '995'],
-      ['MYSQL', 'TCP', '1433'],
-      ['MYSQL/Aurora', 'TCP', '3306'],
-      ['RDP', 'TCP', '3389'],
-      ['Redshift', 'TCP', '5439'],
-      ['PostgreSQL', 'TCP', '5432'],
-      ['Oracle-RDS', 'TCP', '1521'],
-    ];
-    var protocolNames = protocolTypes.reduce(function(all, type) {
-      if (type[2]) {
-        all[type[1]]['' + type[2]] = type[0];
-      }
-      return all;
-    }, {
-      TCP: {},
-      UDP: {}
-    });
 
     $rootScope.$watch('credentialsId', function() {
       currentRegion = undefined;
@@ -160,7 +130,7 @@
       getAMIs: getAMIs,
       getInstanceTypes: getInstanceTypes,
       isValidCidrBlock: isValidCidrBlock,
-      protocolTypes: protocolTypes,
+      isValidPortRange: isValidPortRange,
       getCidrCandidate: getCidrCandidate,
     };
 
@@ -320,66 +290,20 @@
           securityGroups[region][vpcId] = undefined;
           return defer.reject(err);
         }
-
+        var oldSG = securityGroups[region][vpcId] || [];
         securityGroups[region][vpcId] = (data.SecurityGroups || []).map(function(g) {
-          g.inbound = _getRules(g.IpPermissions);
-          g.outbound = _getRules(g.IpPermissionsEgress);
+          oldSG.some(function(oldG, idx) {
+            if (oldG.GroupId === g.GroupId) {
+              g = ng.extend(oldG, g);
+              oldSG.splice(idx, 1);
+              return true;
+            }
+          });
           return g;
-        }, []);
+        });
         defer.resolve(securityGroups[region][vpcId]);
       });
       return defer.promise;
-    }
-
-    function _getRules(ipPermissions) {
-      return (ipPermissions || []).reduce(function(all, perm) {
-        var protocol = perm.IpProtocol.toUpperCase();
-        var name, protocolName;
-        var portRange;
-
-        if (protocol === '-1') {
-          name = i18next('ec2.allTraffic');
-          protocolName = i18next('ec2.all');
-          portRange = i18next('ec2.all');
-        } else if (protocol === 'TCP' || protocol === 'UDP') {
-          protocolName = protocol;
-
-          if (perm.FromPort === 0 && perm.ToPort === 65535) {
-            name = i18next('ec2.all' + protocol);
-            portRange = i18next('ec2.all');
-
-          } else {
-            if (perm.FromPort === perm.ToPort) {
-              name = protocolNames[protocol][perm.FromPort] ||
-                i18next('ec2.custo' + protocol);
-              portRange = perm.FromPort;
-            } else {
-              name = i18next('ec2.custom' + protocol);
-              portRange = '' + perm.FromPort + '-' + perm.ToPort;
-            }
-          }
-        } else if (protocol === 'ICMP') {
-          protocolName = protocol;
-          if (perm.FromPort === -1) {
-            name = i18next('ec2.all' + protocol);
-            portRange = i18next('ec2.all');
-          } else {
-            //...
-          }
-        }
-
-        (perm.IpRanges || []).forEach(function(range) {
-          all.push({
-            name: name,
-            protocol: protocol,
-            protocolName: protocolName,
-            portRange: portRange,
-            ipRange: range.CidrIp
-          });
-        });
-
-        return all;
-      }, []);
     }
 
     function listInstances(region) {
@@ -583,6 +507,18 @@
         (!parentRange || _isCidrBlockInCidrBlock(v, parentRange));
     }
 
+    function isValidPortRange(v) {
+      var ar = ('' + v).split('-');
+      if (ar.length === 1) {
+        return _isNumeric(ar[0]) && _isInRange(ar[0], 0, 65535);
+      }
+      if (ar.length === 2) {
+        return _isNumeric(ar[0]) && _isInRange(ar[0], 0, 65535) &&
+          _isNumeric(ar[1]) && _isInRange(ar[1], (+ar[0]) + 1, 65535);
+      }
+      return false;
+    }
+
     function _isNumeric(v) {
       return ('' + (+v)) === v;
     }
@@ -644,7 +580,5 @@
         return ar;
       }, []);
     }
-
   }
-
 })(angular);

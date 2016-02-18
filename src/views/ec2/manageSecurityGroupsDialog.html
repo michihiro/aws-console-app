@@ -2,7 +2,7 @@
   <button class="close" ng-click="$dismiss()">&times;</button>
   <h3 ng-bind="::'ec2.manageSecurityGroups'|i18next"></h3>
 </div>
-<div class="modal-body ec2-manage-security-groups-dialog">
+<div class="modal-body">
   <form name="inputs.form" class="form-horizontal">
     <div class="form-group">
       <label class="col-xs-2 control-label"
@@ -27,7 +27,7 @@
         <input name="securityGroup" ng-model="inputs.securityGroup" type="hidden">
         <div class="btn-group" uib-dropdown>
           <button class="btn btn-raised" uib-dropdown-toggle
-                  ng-disabled="processing || !inputs.vpc">
+                  ng-disabled="processing || !inputs.vpc || inputs.rules.inbound.modified || inputs.rules.outbound.modified">
             <span ng-if="inputs.securityGroup"
                   ng-bind="inputs.securityGroup.GroupName + ' (' + inputs.securityGroup.GroupId + ')'"></span>
             <span class="caret"></span>
@@ -40,56 +40,125 @@
           </ul>
         </div>
       </div>
+
       <div class="col-xs-3 text-right">
-        <button class="btn btn-raised btn-info"
+        <button class="btn btn-raised btn-in-form btn-info"
                 ng-click="openCreateSecurityGroupDialog()"
+                ng-disabled="processing || inputs.rules.inbound.modified || inputs.rules.outbound.modified"
                 ng-bind="::'ec2.createSecurityGroup'|i18next"></button>
       </div>
+
     </div>
 
-    <div class="rules" ng-if="inputs.securityGroup">
+    <div class="clearfix" ng-if="inputs.securityGroup">
+      <div class="btn-edit"
+           ng-if="inputs.rules.inbound.modified || inputs.rules.outbound.modified"
+           style="float: right;">
+        <button class="btn btn-raised btn-in-form"
+                ng-bind="'ec2.discardChanges'|i18next"
+                ng-disabled="processing"
+                ng-click="loadRules()"></button>
+        <button class="btn btn-info btn-raised btn-in-form"
+                ng-bind="'ec2.saveChanges'|i18next"
+                ng-disabled="processing || inputs.form.$invalid"
+                ng-click="saveRules()"></button>
+      </div>
+
       <uib-tabset>
         <uib-tab ng-repeat="p in ['inbound', 'outbound']" heading="{{::'ec2.'+p|i18next}}">
-          <div class="table-outer">
-            <div class="table-header-spacer"></div>
-            <div class="table-container" app-bind-scroll-position="tableScroll">
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th ng-repeat="col in columns"
-                        ng-style="{width:col.width+'px'}">
-                      <div class="th-inner"
-                           ng-style="{left:col.left,width:col.width+'px','-webkit-transform':'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
-                        <span ng-bind="::col.name[p] ? (col.name[p]|i18next) : col.name ? (col.name|i18next) : '&nbsp;'"></span>
-                        <div class="sort-mark" ng-click="setSort(col)">
-                          <i ng-if="sortCol==col.col && !sortReverse" class="fa fa-sort-up"></i>
-                          <i ng-if="sortCol==col.col && sortReverse" class="fa fa-sort-down"></i>
-                        </div>
-                        <div class="table-resize-handle"
-                             app-bind-width="col"></div>
+          <div class="table-header-spacer"></div>
+          <div class="table-container" app-bind-scroll-position="tableScroll">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>
+                    <div class="col-delete">
+                    </div>
+                  </th>
+                  <th ng-repeat="col in columns"
+                      ng-style="{width:col.width+'px'}">
+                    <div class="th-inner"
+                         ng-style="{width:col.width+'px','-webkit-transform':'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
+                      <span ng-bind="::col.name[p] ? (col.name[p]|i18next) : col.name ? (col.name|i18next) : '&nbsp;'"></span>
+                      <div class="sort-mark" ng-click="setSort(col)">
+                        <i ng-if="sortCol==col.col && !sortReverse" class="fa fa-sort-up"></i>
+                        <i ng-if="sortCol==col.col && sortReverse" class="fa fa-sort-down"></i>
                       </div>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr ng-if="!inputs.securityGroup[p].length">
-                    <td ng-attr-colspan="{{columns.length}}" style="text-align:center">
-                      <div class="td-inner" ng-bind="::'ec2.noRules.'+p|i18next"></div>
-                    </td>
-                  </tr>
-                  <tr ng-repeat="item in inputs.securityGroup[p]"
-                      ng-attr-row-id="{{ item.path }}">
-                    <td ng-repeat="col in columns" class="{{col.class}}"
-                        ng-style="{width:col.width+'px'}">
-                      <div class="td-inner" ng-style="{width: col.width+'px'}">
-                        <span ng-if="col.col && col.filterFn" ng-bind="::col.filterFn(item[col.col])"></span>
-                        <span ng-if="col.col && !col.filterFn" ng-bind="::item[col.col]"></span>
+<!--
+                      <div class="table-resize-handle"
+                           app-bind-width="col"></div>
+-->
+                    </div>
+
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-if="!inputs.rules[p].length">
+                  <td ng-attr-colspan="{{columns.length}}" style="text-align:center">
+                    <div class="td-inner" ng-bind="::'ec2.noRules.'+p|i18next"></div>
+                  </td>
+                </tr>
+                <tr ng-repeat="(itemIdx, item) in inputs.rules[p]"
+                    ng-class="{info:item.modified,deleted:item.deleted}"
+                    ng-attr-row-id="{{ item.path }}">
+                  <td>
+                    <div class="col-delete">
+                      <a class="btn del-rule" ng-click="removeRule(p, itemIdx)">&times;</a>
+                    </div>
+                  </td>
+                  <td ng-repeat="col in columns" class="{{col.class}}"
+                      ng-style="{width:col.width+'px'}">
+                    <div class="td-inner"
+                         ng-if="!col.tags && !col.editable(item, itemIdx)"
+                         ng-style="{width:col.width+'px',transform:'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
+                      <span ng-if="col.col && col.filterFn" ng-bind="col.filterFn(item[col.col], item)"></span>
+                      <span ng-if="col.col && !col.filterFn" ng-bind="item[col.col]"></span>
+                    </div>
+
+                    <div class="td-inner form-group-input"
+                         ng-if="!col.tags && col.editable(item, itemIdx) && !col.dropdown(item)"
+                         ng-style="{left:col.left,width:col.width+'px',transform:'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
+                      <div class="form-group">
+                        <input class="form-control"
+                               inputmode="verbatim"
+                               name="rule_{{itemIdx}}_{{col.col}}"
+                               ng-model="item[col.col]"
+                               ng-disabled="item.deleted"
+                               required
+                               ui-validate="'col.isValid($value, item, itemIdx)'">
                       </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+                    </div>
+
+                    <div class="td-inner form-group-input"
+                         ng-if="!col.tags && col.editable(item, itemIdx) && col.dropdown(item)"
+                         ng-style="{left:col.left,width:col.width+'px',transform:'translateX(' + (-tableScroll.scrollLeft) + 'px)'}">
+                      <div class="form-group">
+                      <select class="form-control"
+                              ng-model="item[col.col]"
+ng-options="(item2.value||item2) as (col.filterFn ? col.filterFn(item2) : (item2.name||item2)) for item2 in col.dropdown(item)"
+                       ng-disabled="item.deleted"
+                       name="rule_{{itemIdx}}_{{col.col}}"
+                       required="required">
+                      </select>
+                      </div>
+                    </div>
+
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="col-delete">
+                    </div>
+                  </td>
+                  <td ng-attr-colspan="{{columns.length}}">
+                    <div class="td-inner">
+                      <a class="btn btn-in-form" ng-click="addRule(p)">&plus; addRule</a>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </uib-tab>
       </uib-tabset>
@@ -100,11 +169,12 @@
 <div class="modal-footer">
   <div class="alert alert-danger" ng-show="error" ng-bind="error|errorMsg:'ec2'"></div>
   <button class="btn btn-raised"
+          ng-disabled="inputs.rules.inbound.modified || inputs.rules.outbound.modified"
           ng-bind="::'com.cancel'|i18next"
           ng-click="$dismiss()"></button>
   <button class="btn btn-raised"
           ng-class="{'btn-success':inputs.securityGroup}"
-          ng-disabled="!inputs.securityGroup"
+          ng-disabled="!inputs.securityGroup || inputs.rules.inbound.modified || inputs.rules.outbound.modified"
           ng-bind="::'com.ok'|i18next"
           ng-click="$close(inputs.securityGroup)"></button>
   <div class="cover" ng-if="processing"></div>

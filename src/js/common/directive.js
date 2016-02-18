@@ -584,7 +584,7 @@
 
     function _init(scope, elem) {
       var formName = elem.parents('form').attr('name');
-      var child = elem.find('input, textarea').toArray();
+      var child = elem.find('input, textarea, select').toArray();
       var watchNames = child.reduce(_reduceFn, []);
 
       scope.$watchGroup(watchNames, _onVaidityChange);

@@ -9,7 +9,7 @@
                      ng-if="v.Subnets">
       <uib-accordion-heading>
         <div class="vpc-region" ng-if="ec2Info.getCurrentRegion()=='all'"
-             ng-bind="'ec2.regionName.'+v.region|i18next">
+             ng-bind="::'ec2.regionName.'+v.region|i18next">
         </div>
         <i class="fa fa-chevron-right" ng-class="{'fa-rotate-90': v.isOpen}"></i>
 
@@ -28,7 +28,7 @@
           <div ng-if="!s.SubnetId">EC2 Classic</div>
           <div ng-if="s.SubnetId"
                ng-bind="s.SubnetId +' - ' + s.CidrBlock"></div>
-          <div ng-bind="s.AvailabilityZone"></div>
+          <div ng-bind="::s.AvailabilityZone"></div>
         </div>
         <div class="subnet-body">
           <!--

@@ -167,20 +167,82 @@ ec2:
   outbound: アウトバウンド
   ruleType: タイプ
   ruleProtocol: プロトコル
-  rulePortRange: ポート範囲
+  rulePortRange: ポート範囲 ( / ICMP タイプ-コード)
   ruleSource: 送信元
   ruleDestination: 送信先
-  all: 全て
-  allTraffic: 全てのトラフィック
-  allTCP: 全てのTCP
-  allUDP: 全てのUDP
-  allICMP: 全てのICMP
-  customTCP: カスタムTCPルール
-  customUDP: カスタムUDPルール
-  customICMP: カスタムICMPルール
   noRules:
    inbound: このセキュリティグループにはインバウンドルールがありません
    outbound: このセキュリティグループにはアウトバウンドルールがありません
+  all: 全て
+  protocol:
+    allTraffic: 全てのトラフィック
+    allTCP: 全てのTCP
+    allUDP: 全てのUDP
+    allICMP: 全てのICMP
+    customTCP: カスタムTCPルール
+    customUDP: カスタムUDPルール
+    customICMP: カスタムICMPルール
+    dnsUDP: DNS(UDP)
+    dnsTCP: DNS(TCP)
+    mysql: MYSQL
+    mysqlAurora: MYSQL/Aurora
+    redshift: Redshift
+    postgreSQL: PostgreSQL
+    oracleRDS: Oracle-RDS
+  icmpProtocol:
+    all: All
+    echoReply: Echo reply
+    destinationUnreachable: Destination unreachable
+    destinationNetworkUnreachable: Destination network unreachable
+    destinationHostUnreachable: Destination host unreachable
+    destinationProtocolUnreachable: Destination protocol unreachable
+    destinationPortUnreachable: Destination port unreachable
+    fragmentationRequiredAndDfFlagSet: Fragmentation required, and DF flag set
+    sourceRouteFailed: Source route failed
+    destinationNetworkUnknown: Destination network unknown
+    destinationHostUnknown: Destination host unknown
+    sourceHostIsolated: Source host isolated
+    networkAdministrativelyProhibited: Network administratively prohibited
+    hostAdministrativelyProhibited: Host administratively prohibited
+    networkUnreachableForTos: Network unreachable for TOS
+    hostUnreachableForTos: Host unreachable for TOS
+    communicationAdministrativelyProhibited: Communication administratively prohibited
+    hostPrecedenceViolation: Host precedence violation
+    precedenceCutoffInEffect: Precedence cutoff in effect
+    sourceQuench: Sourcei quench
+    redirectDatagram: Redirect Datagram
+    redirectDatagramForTheNetwork: Redirect Datagram for the network
+    redirectDatagramForTheHost: redirect datagram for the host
+    redirectDatagramForTheTosAndNetwork: redirect datagram for the TOS & network
+    redirectDatagramForTheTosAndHost: redirect datagram for the TOS & host
+    alternateHostAddress: Alternate host address
+    echoRequest: Echo request
+    routerAdvertisement: Router advertisement
+    routerSolicitation: Router solicitation
+    timeExceeded: Time exceeded
+    ttlExpiredTransit: TTL expired transit
+    fragmentationReasemblyTimeExceeded: Fragmentation reasembly time exceeded
+    parameterProblem: Parameter problem
+    pointerIndicatesTheError: Pointer indicates the error
+    missingARequiredOption: Missing a required option
+    badLength: Bad length
+    timestamp: Timestamp
+    timestampReply: Timestamp reply
+    informationRequest: Information request
+    informationReply: Information reply
+    addressMaskRequest: Address mask request
+    addressMaskReply: Address mask reply
+    traceroute: Traceroute
+    datagramConversionError: Datagram conversion error
+    mobileHostRedirect: Mobile host redirect
+    whereAreYou: Where-Are-You
+    hereIAm: Here-I-Am
+    mobileRegistrationRequest: Mobile registration request
+    mobileRegistrationReply: Mobile registration reply
+    domainNameRequest: Domain name request
+    domainNameReply: Domain name reply
+    skipAlgorithmDiscoveryProtocol: SKIP Algorithm Discovery Protocol
+    photurisSecurityFailures: Photuris, Security Failures
   createSecurityGroup: セキュリティグループの作成
   securityGroupName: セキュリティグループ名
   securityGroupDescription: 概要

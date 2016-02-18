@@ -280,7 +280,7 @@
         return v.volumeType === 'EBS' && attibuteTags.some(function(t) {
           return !v[t.col] && t.editable(v, idx);
         });
-      }
+      },
     }];
 
     ng.extend($scope, {
@@ -894,41 +894,336 @@
     }
   }
 
-  ec2ManageSecurityGroupsDialogCtrl.$inject = ['$scope', '$q', 'awsRegions', 'awsEC2', 'ec2Info', 'dialogInputs'];
+  ec2ManageSecurityGroupsDialogCtrl.$inject = ['$scope', '$resource', '$q', '$filter', 'awsRegions', 'awsEC2', 'ec2Info', 'dialogInputs'];
 
-  function ec2ManageSecurityGroupsDialogCtrl($scope, $q, awsRegions, awsEC2, ec2Info, dialogInputs) {
-
+  function ec2ManageSecurityGroupsDialogCtrl($scope, $resource, $q, $filter, awsRegions, awsEC2, ec2Info, dialogInputs) {
+    var ruleTypeResource = $resource('conf/ruleType.json').get();
+    var i18next = $filter('i18next');
     var columns = [{
-      width: 250,
-      col: 'name',
+      width: 180,
+      col: 'type',
       name: 'ec2.ruleType',
+      filterFn: function(v) {
+        var key = 'ec2.protocol.' + v.id;
+        var name = i18next(key);
+        return name === key ? v.id.toUpperCase() : name;
+      },
+      editable: function() {
+        return true;
+      },
+      isValid: function(v) {
+        return !!v;
+      },
+      dropdown: function() {
+        return ruleTypeResource.ruleType;
+      }
     }, {
-      width: 150,
-      col: 'protocolName',
+      width: 95,
+      col: 'protocol',
       name: 'ec2.ruleProtocol',
+      filterFn: function(v) {
+        return v !== '-1' ? v : i18next('ec2.all');
+      },
     }, {
-      width: 150,
+      width: 400,
       col: 'portRange',
       name: 'ec2.rulePortRange',
+      editable: function(v) {
+        return (v.type && v.type.id.match(/^custom/)) && !v.deleted;
+      },
+      isValid: ec2Info.isValidPortRange,
+      filterFn: function(v, item) {
+        if (typeof v === 'object') {
+          return (v.from < 0 ? '' : [v.from, v.to < 0 ? '*' : v.to].join('-')) +
+            ' ' + i18next('ec2.icmpProtocol.' + v.id);
+        }
+        if (!item || !item.type) {
+          return '';
+        }
+        if (item.type.id.match(/^all/)) {
+          return i18next('ec2.all');
+        }
+        return v;
+      },
+      dropdown: function(v) {
+        if (typeof v.portRange !== 'object') {
+          return undefined;
+        }
+        return ruleTypeResource.icmpRuleType;
+      }
     }, {
       width: 150,
       col: 'ipRange',
       name: {
         inbound: 'ec2.ruleSource',
         outbound: 'ec2.ruleDestination',
+      },
+      editable: function(v) {
+        return !v.deleted;
+      },
+      isValid: function(v) {
+        return ec2Info.isValidCidrBlock(v, 0, 32);
       }
     }];
+    var rulesOrg = {};
 
     ng.extend($scope, {
       ec2Info: ec2Info,
       inputs: {
         region: (dialogInputs.subnet || {}).region,
         vpc: dialogInputs.vpc,
-        securityGroup: dialogInputs.securityGroup
+        securityGroup: dialogInputs.securityGroup,
+        rules: {
+          inbound: [],
+          outbound: []
+        },
       },
       columns: columns,
+      loadRules: loadRules,
+      addRule: addRule,
+      removeRule: removeRule,
+      saveRules: saveRules,
       openCreateSecurityGroupDialog: openCreateSecurityGroupDialog,
     });
+
+    $scope.$watch('inputs.securityGroup', loadRules);
+    $scope.$watch('inputs.rules.inbound', _updateRules.bind(null, 'inbound'), true);
+    $scope.$watch('inputs.rules.outbound', _updateRules.bind(null, 'outbound'), true);
+
+    function loadRules() {
+      var sg = $scope.inputs.securityGroup || {};
+      var rules = $scope.inputs.rules;
+      var keyName = {
+        inbound: 'IpPermissions',
+        outbound: 'IpPermissionsEgress',
+      };
+
+      Object.keys(keyName).forEach(function(k) {
+        rulesOrg[k] = _getRules(sg[keyName[k]] || []);
+        rules[k] = rulesOrg[k].map(function(v) {
+          return ng.extend({}, v);
+        });
+        rules[k].initial = true;
+      });
+      $scope.error = null;
+    }
+
+    function _getRules(ipPermissions) {
+      return (ipPermissions || []).reduce(function(all, perm) {
+        var protocol = perm.IpProtocol.toUpperCase();
+        var type, customType;
+
+        ruleTypeResource.ruleType.some(function(rule) {
+          if (rule.protocol !== protocol) {
+            return false;
+          }
+          if (rule.id.match(/custom(.*)/)) {
+            customType = rule;
+            return false;
+          }
+          if (protocol === '-1' ||
+            rule.from === perm.FromPort && rule.to === perm.ToPort) {
+            type = rule;
+            return true;
+          }
+        });
+        if (!type) {
+          type = customType;
+        }
+
+        (perm.IpRanges || []).forEach(function(range) {
+          var rule = {
+            type: type,
+            protocol: protocol,
+            from: perm.FromPort,
+            to: perm.ToPort,
+            ipRange: range.CidrIp
+          };
+          rule.portRange = _getPortRange(rule);
+          all.push(rule);
+        });
+
+        return all;
+      }, []);
+    }
+
+    function addRule(kind) {
+      var rules = $scope.inputs.rules[kind];
+      rules.push({
+        modified: true,
+        added: true
+      });
+      rules.modified = true;
+    }
+
+    function removeRule(kind, idx) {
+      var rules = $scope.inputs.rules[kind];
+      if (rules[idx].added) {
+        rules.splice(idx, 1);
+      } else {
+        rules[idx].deleted = !rules[idx].deleted;
+      }
+    }
+
+    function _updateRules(kind, newRules, oldRules) {
+      if (newRules.initial) {
+        newRules.initial = false;
+        return;
+      }
+
+      newRules.forEach(function(rule, idx) {
+        var type = rule.type || {};
+        var oldRule = oldRules[idx] || {};
+        var oldType = oldRule.type || {};
+        var orgRule = (rulesOrg[kind] || [])[idx] || {};
+
+        if (type.id !== oldType.id) {
+          rule.protocol = type.protocol;
+          if (type.id === 'customICMP') {
+            rule.from = -1;
+            rule.to = -1;
+          } else if (type.id === 'customTCP' || type.id === 'customUDP') {
+            rule.from = rule.from > 0 ? rule.from : 0;
+            rule.to = rule.to > 0 ? rule.to : 0;
+          } else {
+            rule.from = type.from;
+            rule.to = type.to;
+          }
+
+          rule.portRange = _getPortRange(rule);
+        } else if (typeof rule.portRange === 'string' &&
+          rule.portRange !== oldRule.portRange) {
+          if (rule.portRange.match(/([0-9]+)(?:(?:-)([0-9]+))?$/)) {
+            rule.from = +RegExp.$1;
+            rule.to = RegExp.$2 ? +RegExp.$2 : +RegExp.$1;
+          }
+        }
+
+        rule.modified = rule.deleted || rule.added ||
+          _idOf(rule.type) !== _idOf(orgRule.type) ||
+          _idOf(rule.portRange) !== _idOf(orgRule.portRange) ||
+          rule.ipRange !== orgRule.ipRange;
+      });
+
+      newRules.modified = newRules.some(function(rule) {
+        return rule.modified || rule.added;
+      });
+
+      function _idOf(v) {
+        if (typeof v === 'object' && v !== null) {
+          return v.id;
+        }
+        return '' + v;
+      }
+
+    }
+
+    function _getPortRange(rule) {
+      var portRange;
+      var type = rule.type;
+      if (type.protocol === 'ICMP') {
+        ruleTypeResource.icmpRuleType.some(function(icmp) {
+          if (icmp.from === rule.from && icmp.to === rule.to) {
+            portRange = icmp;
+            return true;
+          }
+        });
+      }
+      if (!portRange) {
+        portRange = rule.from === rule.to ?
+          rule.from : [rule.from, rule.to].join('-');
+      }
+      return portRange;
+    }
+
+    function saveRules() {
+      var sg = $scope.inputs.securityGroup || {};
+      var methodName = {
+        inbound: ['authorizeSecurityGroupIngress', 'revokeSecurityGroupIngress'],
+        outbound: ['authorizeSecurityGroupEgress', 'revokeSecurityGroupEgress']
+      };
+      var promise = $q.when();
+
+      ['inbound', 'outbound'].forEach(function(kind) {
+        var addRule, delRule;
+
+        $scope.inputs.rules[kind].forEach(function(rule, idx) {
+          var ruleDel, key;
+          if (!rule.modified) {
+            return;
+          }
+          if (!rule.added) {
+            ruleDel = rulesOrg[kind][idx];
+            key = [ruleDel.protocol, ruleDel.from, ruleDel.to].join('-');
+            delRule = delRule || {};
+            delRule[key] = delRule[key] || {
+              IpProtocol: ruleDel.protocol,
+              FromPort: ruleDel.from,
+              ToPort: ruleDel.to,
+              IpRanges: [],
+            };
+            delRule[key].IpRanges.push({
+              CidrIp: ruleDel.ipRange
+            });
+          }
+          if (!rule.deleted) {
+            key = [rule.protocol, rule.from, rule.to].join('-');
+            addRule = addRule || {};
+            addRule[key] = addRule[key] || {
+              IpProtocol: rule.protocol,
+              FromPort: rule.from,
+              ToPort: rule.to,
+              IpRanges: [],
+            };
+            addRule[key].IpRanges.push({
+              CidrIp: rule.ipRange
+            });
+          }
+        });
+        if (addRule) {
+          addRule = Object.keys(addRule).map(function(k) {
+            return addRule[k];
+          });
+          promise = promise.then(
+            _modifyRules.bind(null, kind, methodName[kind][0], addRule));
+        }
+        if (delRule) {
+          delRule = Object.keys(delRule).map(function(k) {
+            return delRule[k];
+          });
+          promise = promise.then(
+            _modifyRules.bind(null, kind, methodName[kind][1], delRule));
+        }
+        promise.then(_done, _fail);
+      });
+
+      function _done() {
+        var inputs = $scope.inputs;
+        ec2Info.reloadSecurityGroups(inputs.region, inputs.vpc.VpcId)
+          .then(loadRules);
+      }
+
+      function _fail(err) {
+        $scope.error = err;
+      }
+
+      function _modifyRules(kind, method, perm) {
+        var inputs = $scope.inputs;
+        var defer = $q.defer();
+        var params = {
+          GroupId: sg.GroupId,
+          IpPermissions: perm
+        };
+        awsEC2(inputs.region)[method](params, function(err, data) {
+          if (err) {
+            defer.reject(err);
+          } else {
+            defer.resolve(data);
+          }
+        });
+        return defer.promise;
+      }
+    }
 
     function openCreateSecurityGroupDialog() {
       var dlg = $scope.openDialog('ec2/createSecurityGroupDialog', {
@@ -1179,9 +1474,9 @@
     }
   }
 
-  ec2GetPasswordDialogCtrl.$inject = ['$scope', 'awsEC2', 'ec2Info'];
+  ec2GetPasswordDialogCtrl.$inject = ['$scope', 'awsEC2', 'ec2Info', 'appFocusOn'];
 
-  function ec2GetPasswordDialogCtrl($scope, awsEC2, ec2Info) {
+  function ec2GetPasswordDialogCtrl($scope, awsEC2, ec2Info, appFocusOn) {
 
     ng.extend($scope, {
       instance: ec2Info.getSelectedInstances()[0],
@@ -1228,6 +1523,7 @@
             $scope.error = err;
           } else {
             $scope.passwordData = data.PasswordData;
+            appFocusOn('loadKeyFile');
           }
           $scope.processing = false;
         });
@@ -1241,6 +1537,9 @@
       var decrypt = new JSEncrypt();
       decrypt.setPrivateKey(rsaKeyText);
       $scope.password = decrypt.decrypt($scope.passwordData);
+      if ($scope.password) {
+        appFocusOn('password');
+      }
     }
   }
 

@@ -113,13 +113,28 @@
   }
   .form-group {
     margin: 0;
-    padding-bottom: 0;
+    padding: 0;
   }
   input.form-control {
-    margin: 0;
-    height: 1.6em;
+    font-size: 14px;
+    margin: 2px 4px 2px 6px;
+    padding: 0 6px 2px 0;
+    height: 24px;
+  }
+  .has-warning input,
+  .has-warning select:not(:focus) {
+    background-color: rgba(#ff5722, .5);
+  }
+  .text-right input.form-control {
     text-align: right;
-    padding-right: 8px;
+  }
+
+  select.form-control {
+    font-size: 14px;
+    padding: 0 0 2px;
+    margin: 2px 4px;
+    margin: 2px 4px 2px 0;
+    height: 24px;
   }
 }
 

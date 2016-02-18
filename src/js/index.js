@@ -132,8 +132,12 @@
       var controllerName = dlgName.replace(/\/(.)/g, function(m, g1) {
         return g1.toUpperCase();
       });
+      var windowClass = controllerName.replace(/([A-Z])/g, function(m, g1) {
+        return '-' + g1.toLowerCase();
+      });
       return $uibModal.open({
         templateUrl: 'views/' + dlgName + '.html',
+        windowClass: windowClass,
         backdrop: 'static',
         keyboard: false,
         controller: controllerName + 'Ctrl',

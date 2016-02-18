@@ -1,0 +1,253 @@
+ruleType:
+  - id: allTraffic
+    protocol: '-1'
+  - id: allTCP
+    protocol: TCP
+    from: 0
+    to: 65535
+  - id: allUDP
+    protocol: UDP
+    from: 0
+    to: 65535
+  - id: allICMP
+    protocol: ICMP
+    from: -1
+    to: -1
+  - id: customTCP
+    protocol: TCP
+  - id: customUDP
+    protocol: UDP
+  - id: customICMP
+    protocol: ICMP
+  - id: ssh
+    protocol: TCP
+    from: 22
+    to: 22
+  - id: smtp
+    protocol: TCP
+    from: 25
+    to: 25
+  - id: dnsTCP
+    protocol: TCP
+    from: 53
+    to: 53
+  - id: dnsUDP
+    protocol: UDP
+    from: 53
+    to: 53
+  - id: http
+    protocol: TCP
+    from: 80
+    to: 80
+  - id: pop3
+    protocol: TCP
+    from: 110
+    to: 110
+  - id: imap
+    protocol: TCP
+    from: 143
+    to: 143
+  - id: ldap
+    protocol: TCP
+    from: 389
+    to: 389
+  - id: https
+    protocol: TCP
+    from: 443
+    to: 443
+  - id: smtps
+    protocol: TCP
+    from: 465
+    to: 465
+  - id: imaps
+    protocol: TCP
+    from: 993
+    to: 993
+  - id: pop3s
+    protocol: TCP
+    from: 995
+    to: 995
+  - id: mysql
+    protocol: TCP
+    from: 1433
+    to: 1433
+  - id: mysqlAurora
+    protocol: TCP
+    from: 3306
+    to: 3306
+  - id: rdp
+    protocol: TCP
+    from: 3389
+    to: 3389
+  - id: redshift
+    protocol: TCP
+    from: 5439
+    to: 5439
+  - id: postgreSQL
+    protocol: TCP
+    from: 5432
+    to: 5432
+  - id: oracleRDS
+    protocol: TCP
+    from: 1521
+    to: 1521
+icmpRuleType:
+  - id: all
+    from: -1
+    to: -1
+  - id: echoReply
+    from: 0
+    to: -1
+  - id: destinationUnreachable
+    from: 3
+    to: -1
+  - id: destinationNetworkUnreachable
+    from: 3
+    to: 0
+  - id: destinationHostUnreachable
+    from: 3
+    to: 1
+  - id: destinationProtocolUnreachable
+    from: 3
+    to: 2
+  - id: destinationPortUnreachable
+    from: 3
+    to: 3
+  - id: fragmentationRequiredAndDfFlagSet
+    from: 3
+    to: 4
+  - id: sourceRouteFailed
+    from: 3
+    to: 5
+  - id: destinationNetworkUnknown
+    from: 3
+    to: 6
+  - id: destinationHostUnknown
+    from: 3
+    to: 7
+  - id: sourceHostIsolated
+    from: 3
+    to: 8
+  - id: networkAdministrativelyProhibited
+    from: 3
+    to: 9
+  - id: hostAdministrativelyProhibited
+    from: 3
+    to: 10
+  - id: networkUnreachableForTos
+    from: 3
+    to: 11
+  - id: hostUnreachableForTos
+    from: 3
+    to: 12
+  - id: communicationAdministrativelyProhibited
+    from: 3
+    to: 13
+  - id: hostPrecedenceViolation
+    from: 3
+    to: 14
+  - id: precedenceCutoffInEffect
+    from: 3
+    to: 15
+  - id: sourceQuench
+    from: 4
+    to: -1
+  - id: redirectDatagram
+    from: 5
+    to: -1
+  - id: redirectDatagramForTheNetwork
+    from: 5
+    to: 0
+  - id: redirectDatagramForTheHost
+    from: 5
+    to: 1
+  - id: redirectDatagramForTheTosAndNetwork
+    from: 5
+    to: 2
+  - id: redirectDatagramForTheTosAndHost
+    from: 5
+    to: 3
+  - id: alternateHostAddress
+    from: 6
+    to: -1
+  - id: echoRequest
+    from: 8
+    to: -1
+  - id: routerAdvertisement
+    from: 9
+    to: -1
+  - id: routerSolicitation
+    from: 10
+    to: -1
+  - id: timeExceeded
+    from: 11
+    to: -1
+  - id: ttlExpiredTransit
+    from: 11
+    to: 0
+  - id: fragmentationReasemblyTimeExceeded
+    from: 11
+    to: 1
+  - id: parameterProblem
+    from: 12
+    to: -1
+  - id: pointerIndicatesTheError
+    from: 12
+    to: 0
+  - id: missingARequiredOption
+    from: 12
+    to: 1
+  - id: badLength
+    from: 12
+    to: 2
+  - id: timestamp
+    from: 13
+    to: -1
+  - id: timestampReply
+    from: 14
+    to: -1
+  - id: informationRequest
+    from: 15
+    to: -1
+  - id: informationReply
+    from: 16
+    to: -1
+  - id: addressMaskRequest
+    from: 17
+    to: -1
+  - id: addressMaskReply
+    from: 18
+    to: -1
+  - id: traceroute
+    from: 30
+    to: -1
+  - id: datagramConversionError
+    from: 31
+    to: -1
+  - id: mobileHostRedirect
+    from: 32
+    to: -1
+  - id: whereAreYou
+    from: 33
+    to: -1
+  - id: whereAreYou
+    from: 34
+    to: -1
+  - id: mobileRegistrationRequest
+    from: 35
+    to: -1
+  - id: mobileRegistrationReply
+    from: 36
+    to: -1
+  - id: domainNameRequest
+    from: 37
+    to: -1
+  - id: domainNameReply
+    from: 38
+    to: -1
+  - id: skipAlgorithmDiscoveryProtocol
+    from: 39
+    to: -1
+  - id: photurisSecurityFailures
+    from: 40
+    to: -1
