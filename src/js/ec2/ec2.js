@@ -7,6 +7,7 @@
   ng.module('aws-console')
     .factory('awsEC2', awsEC2Factory)
     .factory('ec2Info', ec2InfoFactory)
+    .factory('ec2Conf', ec2ConfFactory)
     .factory('ec2Actions', ec2ActionsFactory);
 
   awsEC2Factory.$inject = ['$rootScope'];
@@ -26,7 +27,7 @@
     var scope = $rootScope.$new();
 
     ng.extend(scope, {
-      //all: ['getPassword', '', 'startInstances', 'rebootInstances', 'stopInstances', 'terminateInstances' , '', 'runInstances' ],
+      //all: ['getWindowsPassword', '', 'startInstances', 'rebootInstances', 'stopInstances', 'terminateInstances', '', 'runInstances'],
       all: ['startInstances', 'rebootInstances', 'stopInstances'],
       onClick: onClick,
       isDisabled: isDisabled,
@@ -36,10 +37,11 @@
 
     function onClick(ev, key) {
       if (isDisabled(key)) {
+        ev.stopPropagation();
         return;
       }
 
-      if (key === 'getPassword') {
+      if (key === 'getWindowsPassword') {
         $rootScope.openDialog('ec2/getPasswordDialog', {}, {});
       } else if (key === 'runInstances') {
         $rootScope.openDialog('ec2/runInstancesDialog', {}, {
@@ -69,7 +71,7 @@
       var selected = ec2Info.getSelectedInstances();
       var selected0 = selected[0] || {};
       var enable = enableStates[key];
-      if (key === 'getPassword') {
+      if (key === 'getWindowsPassword') {
         return selected.length !== 1 || selected0.Platform !== 'windows' ||
           selected0.State.Name === 'pending';
       }
@@ -99,6 +101,7 @@
     var amis = {};
     var instanceTypeResource = $resource('conf/instanceType.json').query();
     var unavailableInstanceFamilyResource = $resource('conf/unavailableInstanceFamily.json').get();
+    var ruleTypeResource = $resource('conf/ruleType.json').get();
 
     $rootScope.$watch('credentialsId', function() {
       currentRegion = undefined;
@@ -132,6 +135,7 @@
       isValidCidrBlock: isValidCidrBlock,
       isValidPortRange: isValidPortRange,
       getCidrCandidate: getCidrCandidate,
+      ruleType: ruleTypeResource,
     };
 
     function getInstanceTypes(region) {
@@ -581,4 +585,25 @@
       }, []);
     }
   }
+
+  ec2ConfFactory.$inject = ['$rootScope'];
+
+  function ec2ConfFactory($rootScope) {
+    var scope = $rootScope.$new();
+
+    scope.params = {};
+
+    chrome.storage.local.get('ec2Conf', function(obj) {
+      ng.extend(scope.params, obj.ec2Conf);
+    });
+
+    scope.$watch('params', function(newVal) {
+      chrome.storage.local.set({
+        ec2Conf: newVal
+      });
+    });
+
+    return scope.params;
+  }
+
 })(angular);

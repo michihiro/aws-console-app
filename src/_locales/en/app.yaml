@@ -169,6 +169,9 @@ ec2:
   rulePortRange: Port Range ( / ICMP Type-Code )
   ruleSource: Source
   ruleDestination: Destination
+  saveChanges: Save changes
+  discardChanges: Discard changes
+  addRule: Add new rule
   noRules:
     inbound: This security group has no inbound rules
     outbound: This security group has no outbound rules
@@ -253,6 +256,7 @@ ec2:
   keyFingerprint: Fingerprint
   createKeyPair: Create a new key pair
   downloadKeyFile: Download a private key file
+  getWindowsPassword: Get Windows password
   retrieveWindowsPassword: Retrieve Default Windows Administrator Password
   passwordNotAvailableYet: Password not available yet.
   retrieveWindowsPasswordMsg: "In order to retrieve your password you will need your key pair for this instance."

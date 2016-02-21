@@ -469,6 +469,7 @@
       var dlg = $scope.openDialog('ec2/manageSecurityGroupsDialog', {
         vpc: $scope.inputs.vpc,
         subnet: $scope.inputs.subnet,
+        ami: $scope.inputs.ami,
         securityGroup: $scope.inputs.securityGroups[0]
       }, {
         size: 'lg'
@@ -894,10 +895,9 @@
     }
   }
 
-  ec2ManageSecurityGroupsDialogCtrl.$inject = ['$scope', '$resource', '$q', '$filter', 'awsRegions', 'awsEC2', 'ec2Info', 'dialogInputs'];
+  ec2ManageSecurityGroupsDialogCtrl.$inject = ['$scope', '$resource', '$q', '$filter', '$timeout', 'awsRegions', 'awsEC2', 'ec2Info', 'dialogInputs'];
 
-  function ec2ManageSecurityGroupsDialogCtrl($scope, $resource, $q, $filter, awsRegions, awsEC2, ec2Info, dialogInputs) {
-    var ruleTypeResource = $resource('conf/ruleType.json').get();
+  function ec2ManageSecurityGroupsDialogCtrl($scope, $resource, $q, $filter, $timeout, awsRegions, awsEC2, ec2Info, dialogInputs) {
     var i18next = $filter('i18next');
     var columns = [{
       width: 180,
@@ -915,7 +915,7 @@
         return !!v;
       },
       dropdown: function() {
-        return ruleTypeResource.ruleType;
+        return ec2Info.ruleType.ruleType;
       }
     }, {
       width: 95,
@@ -949,7 +949,7 @@
         if (typeof v.portRange !== 'object') {
           return undefined;
         }
-        return ruleTypeResource.icmpRuleType;
+        return ec2Info.ruleType.icmpRuleType;
       }
     }, {
       width: 150,
@@ -1011,25 +1011,7 @@
     function _getRules(ipPermissions) {
       return (ipPermissions || []).reduce(function(all, perm) {
         var protocol = perm.IpProtocol.toUpperCase();
-        var type, customType;
-
-        ruleTypeResource.ruleType.some(function(rule) {
-          if (rule.protocol !== protocol) {
-            return false;
-          }
-          if (rule.id.match(/custom(.*)/)) {
-            customType = rule;
-            return false;
-          }
-          if (protocol === '-1' ||
-            rule.from === perm.FromPort && rule.to === perm.ToPort) {
-            type = rule;
-            return true;
-          }
-        });
-        if (!type) {
-          type = customType;
-        }
+        var type = _getRuleType(perm);
 
         (perm.IpRanges || []).forEach(function(range) {
           var rule = {
@@ -1045,6 +1027,29 @@
 
         return all;
       }, []);
+    }
+
+    function _getRuleType(perm) {
+      var protocol = perm.IpProtocol.toUpperCase();
+      var type, customType;
+      ec2Info.ruleType.ruleType.some(function(rule) {
+        if (rule.protocol !== protocol) {
+          return false;
+        }
+        if (rule.id.match(/custom(.*)/)) {
+          customType = rule;
+          return false;
+        }
+        if (protocol === '-1' ||
+          rule.from === perm.FromPort && rule.to === perm.ToPort) {
+          type = rule;
+          return true;
+        }
+      });
+      if (!type) {
+        type = customType;
+      }
+      return type;
     }
 
     function addRule(kind) {
@@ -1122,7 +1127,7 @@
       var portRange;
       var type = rule.type;
       if (type.protocol === 'ICMP') {
-        ruleTypeResource.icmpRuleType.some(function(icmp) {
+        ec2Info.ruleType.icmpRuleType.some(function(icmp) {
           if (icmp.from === rule.from && icmp.to === rule.to) {
             portRange = icmp;
             return true;
@@ -1232,6 +1237,28 @@
       });
       dlg.result.then(function(group) {
         $scope.inputs.securityGroup = group;
+        if (!dialogInputs.ami) {
+          return;
+        }
+        $timeout(function() {
+          var port = dialogInputs.ami.Platform === 'windows' ? 3389 : 22;
+          var type = _getRuleType({
+            IpProtocol: 'TCP',
+            FromPort: port,
+            ToPort: port
+          });
+          var inbound = $scope.inputs.rules.inbound;
+          inbound.push({
+            type: type,
+            protocol: 'TCP',
+            from: port,
+            to: port,
+            ipRange: '0.0.0.0/0',
+            modified: true,
+            added: true
+          });
+          inbound.modified = true;
+        });
       });
     }
 
@@ -1249,7 +1276,28 @@
       create: create,
     });
 
+    _getName();
     appFocusOn('groupName');
+
+    function _getName() {
+      var namePref = 'launch-wizard-';
+      var reg = new RegExp('^' + namePref + '([0-9]+)$');
+      var no = 1;
+      var inputs = $scope.inputs;
+      awsEC2(inputs.region).describeSecurityGroups({}, function(err, data) {
+        if (!err) {
+          data.SecurityGroups.forEach(function(sg) {
+            if (sg.GroupName.match(reg)) {
+              no = Math.max(+RegExp.$1 + 1, no);
+            }
+          });
+          inputs.groupName = namePref + no;
+          inputs.groupDescription = inputs.groupName + ' created ' +
+            new moment().format('YYYY-MM-DDTHH:mm:ss.SSSZZ');
+          $scope.$digest();
+        }
+      });
+    }
 
     function create() {
       if ($scope.inputs.form.$invalid || $scope.processing) {

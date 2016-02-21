@@ -153,7 +153,10 @@ ng-options="(item2.value||item2) as (col.filterFn ? col.filterFn(item2) : (item2
                   </td>
                   <td ng-attr-colspan="{{columns.length}}">
                     <div class="td-inner">
-                      <a class="btn btn-in-form" ng-click="addRule(p)">&plus; addRule</a>
+                      <a class="btn btn-in-form" ng-click="addRule(p)">
+                       <i class="fa fa-plus-circle"></i>
+                       <span ng-bind="::'ec2.addRule'|i18next"></span>
+                      </a>
                     </div>
                   </td>
                 </tr>

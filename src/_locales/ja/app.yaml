@@ -170,6 +170,9 @@ ec2:
   rulePortRange: ポート範囲 ( / ICMP タイプ-コード)
   ruleSource: 送信元
   ruleDestination: 送信先
+  saveChanges: 編集を保存
+  discardChanges: 編集を破棄
+  addRule: 新しいルールの追加
   noRules:
    inbound: このセキュリティグループにはインバウンドルールがありません
    outbound: このセキュリティグループにはアウトバウンドルールがありません
@@ -254,6 +257,7 @@ ec2:
   keyFingerprint: Fingerprint
   createKeyPair: 新規キーペアの作成
   downloadKeyFile: プライベートキーのダウンロード
+  getWindowsPassword: Windowsパスワードの取得
   retrieveWindowsPassword: デフォルトの Windows 管理者パスワードの取得
   passwordNotAvailableYet: パスワードはまだ利用できません。
   retrieveWindowsPasswordMsg: パスワードを取得するためにはこのインスタンスのキーペアが必要です。
