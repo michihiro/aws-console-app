@@ -137,6 +137,8 @@ ec2:
   publicIp: パブリック IP
   mapPublicIpOnLaunch: 自動割り当てパブリック IP を有効化
   AMI: AMI
+  history: ヒストリ
+  quickStart: クイックスタート
   instanceType: インスタンスタイプ
   instanceFamilyDescription:
     generalPurpose: 汎用

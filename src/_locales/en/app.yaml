@@ -136,6 +136,8 @@ ec2:
   publicIp: Public IP
   mapPublicIpOnLaunch: Enable auto-assign Public IP
   AMI: AMI
+  history: History
+  quickStart: Quick start
   instanceType: Instance Type
   instanceFamilyDescription:
     generalPurpose: General purpose

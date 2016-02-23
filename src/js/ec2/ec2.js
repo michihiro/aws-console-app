@@ -27,8 +27,7 @@
     var scope = $rootScope.$new();
 
     ng.extend(scope, {
-      //all: ['getWindowsPassword', '', 'startInstances', 'rebootInstances', 'stopInstances', 'terminateInstances', '', 'runInstances'],
-      all: ['startInstances', 'rebootInstances', 'stopInstances'],
+      all: ['getWindowsPassword', '', 'startInstances', 'rebootInstances', 'stopInstances', 'terminateInstances', '', 'runInstances'],
       onClick: onClick,
       isDisabled: isDisabled,
     });
@@ -86,10 +85,10 @@
 
   }
 
-  ec2InfoFactory.$inject = ['$rootScope', '$q', '$resource', 'awsRegions', 'awsEC2'];
+  ec2InfoFactory.$inject = ['$rootScope', '$q', '$resource', 'awsRegions', 'awsEC2', 'ec2Conf'];
 
-  function ec2InfoFactory($rootScope, $q, $resource, awsRegions, awsEC2) {
-    var currentRegion = 'all';
+  function ec2InfoFactory($rootScope, $q, $resource, awsRegions, awsEC2, ec2Conf) {
+    var currentRegion;
     var availabilityZones = {};
     var instances = {};
     var vpcs = {};
@@ -98,7 +97,8 @@
     var selected = [];
     var selectedVpc, selectedSubnet;
     var amiResource = $resource('conf/ami.json').get();
-    var amis = {};
+    var awsAmis = {};
+    var historyAmis = {};
     var instanceTypeResource = $resource('conf/instanceType.json').query();
     var unavailableInstanceFamilyResource = $resource('conf/unavailableInstanceFamily.json').get();
     var ruleTypeResource = $resource('conf/ruleType.json').get();
@@ -109,7 +109,7 @@
       vpcs = {};
       ec2Classic = {};
       selected = [];
-      setCurrentRegion('all');
+      setCurrentRegion(ec2Conf.currentRegion || 'all');
     });
 
     return {
@@ -130,7 +130,8 @@
       isSelectedInstance: isSelectedInstance,
       refresh: refresh,
       setRebooting: setRebooting,
-      getAMIs: getAMIs,
+      getAwsAMIs: getAwsAMIs,
+      getHistoryAMIs: getHistoryAMIs,
       getInstanceTypes: getInstanceTypes,
       isValidCidrBlock: isValidCidrBlock,
       isValidPortRange: isValidPortRange,
@@ -199,6 +200,7 @@
 
     function setCurrentRegion(region) {
       currentRegion = region;
+      ec2Conf.currentRegion = region;
       refresh();
     }
 
@@ -226,7 +228,8 @@
 
     function getInstances(region, vpcId, subnetId) {
       return (instances[region] || []).filter(function(i) {
-        return i.VpcId === vpcId && (subnetId === undefined || i.SubnetId === subnetId);
+        return (vpcId === 'EC2CLASSIC' && i.VpcId === undefined || i.VpcId === vpcId) &&
+          (subnetId === undefined || i.SubnetId === subnetId);
       });
     }
 
@@ -332,6 +335,7 @@
           defer.resolve();
           return;
         }
+
         var vpcsBack = vpcs || {};
         var regionIdx = awsRegions.ec2.indexOf(region);
         var promises = [$q.when()];
@@ -402,7 +406,12 @@
       var defer = $q.defer();
       var tempStates = ['pending', 'shutting-down', 'stopping', 'rebooting'];
       awsEC2(region).describeInstances({}, function(err, data) {
+
+        ec2Conf.amiHistory = ec2Conf.amiHistory || {};
+        ec2Conf.amiHistory[region] = ec2Conf.amiHistory[region] || [];
+        var regionAmiHistory = ec2Conf.amiHistory[region];
         var needRefresh;
+
         if (err) {
           return defer.reject();
         }
@@ -432,7 +441,7 @@
             }, {});
             if (v.VpcId === undefined && v.State.Name !== 'terminated') {
               ec2Classic[region] = {
-                VpcId: undefined,
+                VpcId: 'EC2CLASSIC',
                 isClassic: true,
                 tags: {
                   Name: 'Ec2-Classic'
@@ -452,6 +461,26 @@
             }
             needRefresh = needRefresh || (tempStates.indexOf(v.State.Name) >= 0);
 
+            var found = regionAmiHistory.some(function(a) {
+              if (a.id === v.ImageId) {
+                a.mtime = now;
+                a.rtime = Math.max(a.rtime, +v.LaunchTime);
+                return true;
+              }
+            });
+
+            if (!found) {
+              regionAmiHistory.push({
+                id: v.ImageId,
+                mtime: now,
+                rtime: +v.LaunchTime,
+              });
+            }
+            regionAmiHistory._update = now;
+            regionAmiHistory.sort(function(a, b) {
+              return a.rtime < b.rtime ? 1 : -1;
+            });
+
             return v;
           });
 
@@ -466,19 +495,30 @@
       return defer.promise;
     }
 
-    function getAMIs(region) {
-      if (amis[region] === undefined && amiResource[region]) {
-        amis[region] = null;
-        _describeImages(region);
+    function getAwsAMIs(region) {
+      if (awsAmis[region] === undefined && amiResource[region]) {
+        awsAmis[region] = null;
+        _describeImages(region, amiResource[region], awsAmis);
       }
-      return amis[region];
+      return awsAmis[region];
     }
 
-    function _describeImages(region) {
+    function getHistoryAMIs(region) {
+      var now = Date.now();
+      if (historyAmis[region] === undefined ||
+        getHistoryAMIs._lastQuery < ec2Conf.amiHistory[region]._update) {
+        historyAmis[region] = null;
+        getHistoryAMIs._lastQuery = now;
+
+        _describeImages(region, ec2Conf.amiHistory[region], historyAmis);
+      }
+      return historyAmis[region];
+    }
+
+    function _describeImages(region, resource, amis) {
       var defer = $q.defer();
-      var regoinAMIs = amiResource[region] || [];
       var opt = {
-        ImageIds: regoinAMIs.map(function(ami) {
+        ImageIds: resource.map(function(ami) {
           return ami.id;
         })
       };
@@ -487,19 +527,38 @@
           amis[region] = undefined;
           return defer.reject(err);
         }
-        amis[region] = regoinAMIs.reduce(function(all, ami) {
+        amis[region] = resource.reduce(function(all, ami) {
           data.Images.some(function(a) {
             if (a.ImageId === ami.id) {
-              a.name = ami.name;
-              a.icon = ami.icon;
+              ng.extend(a, _getNameAndIcon(region, a));
               all.push(a);
               return true;
             }
           });
           return all;
         }, []);
-        defer.resolve();
+        defer.resolve(amis[region]);
       });
+
+      function _getNameAndIcon(region, ami) {
+        var icon, name;
+        (amiResource[region] || []).some(function(a) {
+          if (ami.ImageId === a.id) {
+            icon = a.icon;
+            name = a.name;
+            return true;
+          }
+        });
+        if (!icon) {
+          if (ami.Platform === 'windows') {
+            icon = 'fa fa-windows';
+          }
+        }
+        return {
+          name: name || ami.Description,
+          icon: icon || 'fa fa-question-circle'
+        };
+      }
     }
 
     function isValidCidrBlock(v, minMask, maxMask, parentRange) {
@@ -601,7 +660,7 @@
       chrome.storage.local.set({
         ec2Conf: newVal
       });
-    });
+    }, true);
 
     return scope.params;
   }

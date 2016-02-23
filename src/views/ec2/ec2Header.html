@@ -13,7 +13,8 @@
       </li>
     </ul>
   </div>
-  <div class="btn-group pull-right" uib-dropdown>
+  <div class="btn-group pull-right" uib-dropdown
+       ng-if="credentialsId">
     <button class="btn" uib-dropdown-toggle ng-disabled="processing">
       <span ng-bind="'ec2.regionName.'+ec2Info.getCurrentRegion()|i18next"></span>
       <span class="caret"></span>
