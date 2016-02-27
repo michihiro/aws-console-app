@@ -178,6 +178,8 @@
         .on('pancancel', _onPanend)
         .on('panmove', _onPanmove);
 
+      elem.on('contextmenu', _onContextMenu);
+
       elem.on('$destroy', _onDestroy);
 
       return;
@@ -214,7 +216,7 @@
       }
 
       function _onPanstart(ev) {
-        startPos = _getIndexFromPosition(ev);
+        startPos = _getIndexFromPosition(ev, true);
       }
 
       function _onPanend() {
@@ -241,11 +243,37 @@
         }
       }
 
-      function _getIndexFromPosition(ev) {
+      function _onContextMenu(ev) {
+        var tr = document.elementFromPoint(ev.pageX, ev.pageY);
+        var trScope, handler;
+        while (tr && tr.tagName !== 'TR' && tr.parentNode) {
+          tr = tr.parentNode;
+        }
+        if (!tr || tr.tagName !== 'TR') {
+          return;
+        }
+        trScope = $(tr).scope();
+        if (typeof trScope.$index !== 'number' ||
+          _selectedIdx.indexOf(trScope.$index) >= 0) {
+          return;
+        }
+        _selectedIdx = [trScope.$index];
+        handler = $parse(attr.appOnRowSelected);
+        handler(scope, {
+          $event: ev,
+          $indexes: _selectedIdx
+        });
+      }
+
+      function _getIndexFromPosition(ev, isStart) {
         var srcEvent = ev.srcEvent ? ev.srcEvent : ev;
         var offset = elem.offset();
-        var x = srcEvent.x - offset.left;
-        var y = srcEvent.y - offset.top;
+
+        var srcEventX = srcEvent.x - (isStart ? ev.deltaX : 0);
+        var srcEventY = srcEvent.y - (isStart ? ev.deltaY : 0);
+
+        var x = srcEventX - offset.left;
+        var y = srcEventY - offset.top;
         var h = elem.height();
         var w = elem.width();
         var trElems = elem.find('tbody tr');
@@ -256,7 +284,7 @@
         } else if (y > h) {
           tr = trElems[trElems.length - 1];
         } else {
-          tr = document.elementFromPoint(srcEvent.x, srcEvent.y);
+          tr = document.elementFromPoint(srcEventX, srcEventY);
           while (tr && tr.tagName !== 'TR' && tr.parentNode) {
             tr = tr.parentNode;
           }
@@ -288,6 +316,7 @@
         _mc.destroy();
         _mc = null;
         _selectRect.remove();
+        elem.off('contextmenu', _onContextMenu);
       }
     }
 
@@ -340,7 +369,7 @@
         _transXMax = $window.innerWidth - elem[0].offsetWidth - elem[0].offsetLeft;
         _transYMin = -elem[0].offsetTop;
         _transYMax = $window.innerHeight - elem[0].offsetHeight - elem[0].offsetTop;
-        if(_transYMax < _transYMin) {
+        if (_transYMax < _transYMin) {
           _transYMax = _transYMin;
         }
       }
@@ -662,6 +691,7 @@
       restrict: 'A',
       link: link
     };
+
     function link(scope, elem, attr) {
       if (attr.inputmode !== 'verbatim') {
         return;
@@ -681,6 +711,7 @@
       function _onFocus() {
         elem.attr('type', 'tel');
       }
+
       function _onBlur() {
         elem.attr('type', type);
       }
