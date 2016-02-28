@@ -31,6 +31,7 @@
     var HISTORY_MAX = 100;
     var history = [];
     var historyIdx = 0;
+    var showVersions;
 
     $rootScope.$watch('credentialsId', function() {
       buckets = undefined;
@@ -51,7 +52,9 @@
       updateFolder: updateFolder,
       selectObjects: selectObjects,
       getSelectedObjects: getSelectedObjects,
-      isSelectedObject: isSelectedObject
+      isSelectedObject: isSelectedObject,
+      getShowVersions: getShowVersions,
+      setShowVersions: setShowVersions,
     };
 
     function getBuckets() {
@@ -72,6 +75,7 @@
           history.shift();
         }
 
+        folder.withVersions = showVersions;
         _listFolder(folder);
         current = folder;
         selected = [];
@@ -86,6 +90,7 @@
       if (hasPrev()) {
         var folder = history[historyIdx - 2];
         historyIdx--;
+        folder.withVersions = showVersions;
         _listFolder(folder);
         current = folder;
         selected = [];
@@ -100,6 +105,7 @@
       if (hasNext()) {
         var folder = history[historyIdx];
         historyIdx++;
+        folder.withVersions = showVersions;
         _listFolder(folder);
         current = folder;
         selected = [];
@@ -120,6 +126,7 @@
     }
 
     function updateFolder() {
+      current.withVersions = showVersions;
       _listFolder(current);
     }
 
@@ -133,6 +140,19 @@
 
     function getSelectedObjects() {
       return selected;
+    }
+
+    function getShowVersions() {
+      return showVersions;
+    }
+
+    function setShowVersions(flg) {
+      showVersions = flg;
+      if (current) {
+        current.withVersions = showVersions;
+        _listFolder(current);
+        selected = [];
+      }
     }
 
     function _listBuckets() {
@@ -162,26 +182,25 @@
           newBuckets.push(bucket);
           if (!bucket.LocationConstraint) {
             s3.getBucketLocation({
-                Bucket: bucket.Name
-              },
-              function(err, data) {
-                if (data) {
-                  ng.extend(bucket, data);
+              Bucket: bucket.Name
+            }, function(err, data) {
+              if (data) {
+                ng.extend(bucket, data);
+                awsS3(data.LocationConstraint).getBucketVersioning({
+                  Bucket: bucket.Name
+                }, function(err, data) {
+                  if (data) {
+                    bucket.Versioning = data.Status;
+                    bucket.MFADelete = data.MFADelete;
+                  }
+                  bucket.withVersions = showVersions;
                   _listFolder(bucket);
-                }
-                if (!current && buckets) {
-                  setCurrent(buckets[0]);
-                }
-              });
-            s3.getBucketVersioning({
-                Bucket: bucket.Name
-              },
-              function(err, data) {
-                if (data) {
-                  bucket.Versioning = data.Status;
-                  bucket.MFADelete = data.MFADelete;
-                }
-              });
+                });
+              }
+              if (!current && buckets) {
+                setCurrent(buckets[0]);
+              }
+            });
           }
         });
         $timeout(function() {
@@ -202,17 +221,26 @@
       }
       _listFolderRequest[folderKey] = now;
 
+      var s3 = awsS3(folder.LocationConstraint);
+      var method;
       var params = {
         Bucket: folder.bucketName,
         Delimiter: '/',
         //EncodingType: 'url',
-        Marker: folder.nextMarker,
         //MaxKeys: 0,
         Prefix: folder.Prefix
       };
 
-      var s3 = awsS3(folder.LocationConstraint);
-      s3.listObjects(params, function(err, data) {
+      if (!folder.withVersions) {
+        params.Marker = folder.nextMarker;
+        method = 'listObjects';
+      } else {
+        params.KeyMarker = folder.nextMarker;
+        method = 'listObjectVersions';
+      }
+
+      folder.doneReq = false;
+      s3[method](params, function(err, data) {
         var folders = folder.folders = folder.folders || [];
         var contents = folder.contents = folder.contents || [];
         if (!folder.nextMarker) {
@@ -245,37 +273,21 @@
               Name: v.Prefix.replace(/(^.*\/)(.*\/)/, '$2'),
               LocationConstraint: folder.LocationConstraint,
               bucketName: folder.bucketName,
+              Versioning: folder.Versioning,
             });
             folders.push(v);
           });
 
-          data.Contents.forEach(function(v) {
-            if (v.Key.match(/\/$/)) {
-              return;
-            }
-            var old = {};
-            folder.oldContents.some(function(v2, idx) {
-              if (v.Key !== v2.Key) {
-                return false;
-              }
-              old = v2;
-              folder.oldFolders.splice(idx, 1);
-              return true;
-            });
-
-            v = ng.extend(old, v);
-            v = ng.extend(v, {
-              id: folder.bucketName + ':' + v.Key,
-              parent: folder,
-              Name: v.Key.replace(/(^.*\/)(.*)/, '$2'),
-              LocationConstraint: folder.LocationConstraint,
-              bucketName: folder.bucketName,
-            });
-            contents.push(v);
-          });
-
+          if (folder.withVersions) {
+            data.Versions.forEach(_setObject());
+            data.DeleteMarkers.forEach(_setObject(true));
+            folder.nextMarker = data.NextKeyMarker;
+          } else {
+            data.Contents.forEach(_setObject());
+            folder.nextMarker = data.NextMarker;
+          }
           folder.list = Array.prototype.concat.apply(folder.folders, folder.contents);
-          folder.nextMarker = data.NextMarker;
+
           if (folder.nextMarker) {
             _listFolder(folder);
           } else {
@@ -283,8 +295,42 @@
             delete _listFolderRequest[folderKey];
             folder.oldFolders.length = 0;
             folder.oldContents.length = 0;
+            folder.doneReq = true;
           }
+
+          function _setObject(isDeleteMarker) {
+            return function(v) {
+              if (v.Key.match(/\/$/)) {
+                return;
+              }
+              if (!folder.withVersions) {
+                v.IsLatest = true;
+              }
+              v.IsDeleteMarker = isDeleteMarker;
+              folder.oldContents.some(function(v2, idx) {
+                if (v.Key !== v2.Key || v.VersionId !== v2.VersionId) {
+                  return false;
+                }
+                v = ng.extend(v2, v);
+
+                folder.oldFolders.splice(idx, 1);
+                return true;
+              });
+
+              v = ng.extend(v, {
+                id: folder.bucketName + ':' + v.Key,
+                parent: folder,
+                Name: v.Key.replace(/(^.*\/)(.*)/, '$2'),
+                LocationConstraint: folder.LocationConstraint,
+                bucketName: folder.bucketName,
+              });
+              contents.push(v);
+            };
+          }
+
         });
+
+
       });
     }
   }
@@ -407,7 +453,9 @@
           }, null, function(progress) {
             notification.sizes[p._idx] = progress.size;
             notification.sizeProcessed = notification.sizes.reduce(_sum, 0);
-            notification.percent = (notification.sizeProcessed * 100 / notification.sizeTotal).toFixed(2);
+            notification.percent =
+              ((notification.sizeProcessed + notification.numProcessed) * 100 /
+              (notification.sizeTotal + notification.numTotal)).toFixed(2);
           });
         });
       }, function() {
@@ -578,6 +626,7 @@
       var params = {
         Bucket: bucketName,
         Key: obj.Key,
+        VersionId: obj.VersionId,
         Expires: 60
       };
       return s3.getSignedUrl('getObject', params);
@@ -616,7 +665,9 @@
 
     function createUploadList(entries) {
       var uploadList = [];
+      var uploadListWork = [];
       uploadList.total = 0;
+      uploadListWork.total = 0;
 
       return {
         promise: getUpload(),
@@ -641,9 +692,19 @@
                 }.bind(null, entry)
               }
             });
+
+            /*
             uploadList.push(item);
             uploadList.total += metadata.size;
-            defer.notify(uploadList);
+            */
+            uploadListWork.push(item);
+            uploadListWork.total += metadata.size;
+            if (uploadListWork.length >= 4) {
+              uploadList.push.apply(uploadList, uploadListWork);
+              uploadList.total += uploadListWork.total;
+              uploadListWork.length = 0;
+              uploadListWork.total = 0;
+            }
             defer.resolve(uploadList);
           }, function(err) {
             console.log(err);
@@ -651,22 +712,33 @@
           });
         } else if (entry.isDirectory) {
           var reader = entry.createReader();
-          reader.readEntries(function(result) {
-            Array.prototype.push.apply(entries, result);
-            defer.resolve(uploadList);
-          }, function(err) {
-            console.log(err);
-            defer.reject(err);
-          });
+          _readEntries(reader);
         }
 
         return defer.promise.then(function() {
           if (entries.length) {
             return getUpload();
           } else {
+            uploadList.push.apply(uploadList, uploadListWork);
+            uploadList.total += uploadListWork.total;
+            uploadListWork = null;
             return $q.when(uploadList);
           }
         });
+
+        function _readEntries(reader) {
+          reader.readEntries(function(result) {
+            if (!result || !result.length) {
+              defer.resolve(uploadList);
+            } else {
+              Array.prototype.push.apply(entries, result);
+              _readEntries(reader);
+            }
+          }, function(err) {
+            console.log(err);
+            defer.reject(err);
+          });
+        }
       }
     }
   }

@@ -6,9 +6,21 @@
   <div class="alert alert-warning">
     <p ng-if="keys.length == 1"
        ng-bind="'s3.deleteObjMsg1'|i18next|sprintf:keys[0].Key"></p>
-    <p ng-if="keys.length > 1"
+    <p ng-if="keys.length==0 || keys.length > 1"
        ng-bind="'s3.deleteObjMsg2'|i18next|sprintf:keys.length"></p>
   </div>
+<!--
+  <div ng-if="askLatestOrAll">
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" ng-model="inputs.deleteAllVersions"
+               ng-disabled="!isReady">
+        <span class="checkbox-material"><span class="check"></span></span>
+        <span ng-bind="::'s3.deleteAllVersions'|i18next"></span>
+      </label>
+    </div>
+  </div>
+-->
   <div class="cover" ng-if="processing"><div class="modal-loader"></div></div>
 </div>
 <div class="modal-footer">
@@ -21,7 +33,7 @@
   <button class="btn btn-raised" ng-class="{'btn-danger':isReady}" 
           ng-bind="::'s3.delete'|i18next"
           ng-click="drop()"
-          ng-disabled="processing || !isReady" >
+          ng-disabled="keys.length==0 || processing || !isReady" >
   </button>
   <div class="cover" ng-if="processing"></div>
 </div>

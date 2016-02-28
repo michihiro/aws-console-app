@@ -51,6 +51,8 @@ s3:
   folderName: フォルダ名
   region: リージョン
   noObject: オブジェクトがありません。
+  showVersions: バージョン表示
+  deleteMarker: 削除マーカー
   bucketName: バケット名
   create: 作成
   delete: 削除

@@ -42,6 +42,7 @@
 
     function onClick(ev, key) {
       if (isDisabled(key)) {
+        ev.stopPropagation();
         return;
       }
 
@@ -59,14 +60,23 @@
     function isDisabled(key) {
       var current = s3ListService.getCurrent();
       var selected = s3ListService.getSelectedObjects();
+      var dup, chkObj = {};
       if (key === 'createFolder') {
         return !current;
       }
       if (key === 'deleteBucket') {
         return !current || current.Prefix !== undefined;
       }
-      if (key === 'downloadObjects' || key === 'deleteObjects') {
+      if (key === 'deleteObjects') {
         return !selected || !selected.length;
+      }
+      if (key === 'downloadObjects') {
+        selected = (selected || []).filter(function(o) {
+          dup = dup || chkObj[o.Key];
+          chkObj[o.Key] = true;
+          return !o.IsDeleteMarker;
+        });
+        return !selected || !selected.length || dup;
       }
     }
   }
@@ -84,6 +94,9 @@
       goPrev: s3ListService.goPrev,
       hasNext: s3ListService.hasNext,
       goNext: s3ListService.goNext,
+      flags: {
+        showVersions: s3ListService.getShowVersions()
+      },
     });
 
     $scope.$watch(function() {
@@ -95,48 +108,63 @@
         for (folder = current.parent; folder; folder = folder.parent) {
           breadcrumb.unshift(folder);
         }
-        if (breadcrumb.length > 3) {
-          breadcrumb.splice(1, breadcrumb.length - 3, {});
+        if (breadcrumb.length > 2) {
+          breadcrumb.splice(1, breadcrumb.length - 2, {});
         }
         $scope.breadcrumb = breadcrumb;
       }
+    });
+
+    $scope.$watch('flags.showVersions', function(v) {
+      s3ListService.setShowVersions(v);
     });
   }
 
   s3Ctrl.$inject = ['$scope', '$state', '$stateParams', '$filter', '$timeout', '$window', 's3Actions', 's3DownloadService', 's3ListService', 'appFilterService'];
 
   function s3Ctrl($scope, $state, $stateParams, $filter, $timeout, $window, s3Actions, s3DownloadService, s3ListService, appFilterService) {
-
-    var columns = [
-      {
-        width: 250,
-        col: 'Name',
-        name: 's3.name',
-        iconFn: function(o) {
-          return !o ? '' : o.Prefix ? 'fa-folder-o' : 'fa-file-o';
+    var i18next = $filter('i18next');
+    var deleteMarkerStr = ' (' + i18next('s3.deleteMarker') + ')';
+    var columns = [{
+      width: 325,
+      col: 'Name',
+      name: 's3.name',
+      filterFn: function(v, item) {
+        if (item.IsDeleteMarker) {
+          return v + deleteMarkerStr;
         }
+        return v;
       },
-      {
-        width: 150,
-        col: 'StorageClass',
-        name: 's3.storageClass',
-        filterFn: appFilterService.s3StorageClass,
-      },
-      {
-        width: 80,
-        col: 'Size',
-        name: 's3.size',
-        class: 'text-right',
-        filterFn: appFilterService.byteFn,
-      },
-      {
-        width: 220,
-        col: 'LastModified',
-        name: 's3.lastModified',
-        class: 'text-right',
-        filterFn: appFilterService.momentFormatFn,
-      },
-    ];
+      iconFn: function(o) {
+        if (!o) {
+          return '';
+        } else if (s3ListService.getCurrent().Versioning && o.VersionId) {
+          if (o.IsDeleteMarker) {
+            return 'fa-close';
+          } else if (!o.IsLatest) {
+            return 'fa-copy';
+          }
+        }
+        return o.Prefix ? 'fa-folder-o' : 'fa-file-o';
+      }
+    }, {
+      width: 150,
+      col: 'StorageClass',
+      name: 's3.storageClass',
+      filterFn: appFilterService.s3StorageClass,
+    }, {
+      width: 85,
+      col: 'Size',
+      name: 's3.size',
+      class: 'text-right',
+      filterFn: appFilterService.byteFn,
+    }, {
+      width: 220,
+      col: 'LastModified',
+      name: 's3.lastModified',
+      class: 'text-right',
+      filterFn: appFilterService.momentFormatFn,
+    }];
 
     ng.extend($scope, {
       treeWidth: 190,
@@ -192,7 +220,13 @@
     }
 
     function sortExp(item) {
-      return item[$scope.sortCol];
+      var sortCol = $scope.sortCol;
+      if (sortCol === 'Name') {
+        var t = $scope.sortReverse ? +item.LastModified :
+          Number.MAX_SAFE_INTEGER - (+item.LastModified);
+        return [item.Name, t].join('\t');
+      }
+      return item[sortCol];
     }
 
     function onRowSelect(indexes) {
@@ -213,7 +247,7 @@
         }
         obj.opened = true;
         s3ListService.setCurrent(obj);
-      } else {
+      } else if (!obj.IsDeleteMarker) {
         s3DownloadService.download([obj]);
       }
     }
@@ -229,6 +263,7 @@
     ng.extend($scope, {
       getBuckets: s3ListService.getBuckets,
     });
+    s3ListService.updateBuckets();
   }
 
   s3NotificationsAreaCtrl.$inject = ['$scope', '$timeout', 's3NotificationsService'];
@@ -245,26 +280,22 @@
   s3UploadDialogCtrl.$inject = ['$scope', '$q', '$timeout', 'appFilterService', 's3ListService', 's3NotificationsService', 's3Mimetype', 'awsS3', 'dialogInputs'];
 
   function s3UploadDialogCtrl($scope, $q, $timeout, appFilterService, s3ListService, s3NotificationsService, s3Mimetype, awsS3, dialogInputs) {
-    var columns = [
-      {
-        checkbox: true,
-        width: 20,
-      },
-      {
-        col: 'path',
-        name: 's3.name',
-        sortable: true,
-        width: 400
-      },
-      {
-        col: 'size',
-        name: 's3.size',
-        sortable: true,
-        class: 'text-right',
-        filterFn: appFilterService.byteFn,
-        width: 130
-      }
-    ];
+    var columns = [{
+      checkbox: true,
+      width: 20,
+    }, {
+      col: 'path',
+      name: 's3.name',
+      sortable: true,
+      width: 400
+    }, {
+      col: 'size',
+      name: 's3.size',
+      sortable: true,
+      class: 'text-right',
+      filterFn: appFilterService.byteFn,
+      width: 130
+    }];
 
     ng.extend($scope, {
       uploadInfo: dialogInputs.uploadInfo,
@@ -273,7 +304,7 @@
       sortExp: sortExp,
       sortCol: 'path',
       sortReverse: false,
-      storageClasses: [ 'STANDARD', 'REDUCED_REDUNDANCY', 'STANDARD_IA' ],
+      storageClasses: ['STANDARD', 'REDUCED_REDUNDANCY', 'STANDARD_IA'],
       folder: dialogInputs.folder,
       inputs: {
         storageClass: 'STANDARD'
@@ -285,11 +316,14 @@
       $scope.uploadOverview = list.reduce(function(all, v) {
         if (v.check) {
           all.total += v.size;
-          all.num ++;
+          all.num++;
         }
         return all;
-      }, {total: 0, num: 0});
-      $scope.isReady = !!$scope.uploadOverview.num;
+      }, {
+        total: 0,
+        num: 0
+      });
+      $scope.hasUploads = !!$scope.uploadOverview.num;
     }, true);
 
     $scope.uploadInfo.promise.then(function() {
@@ -344,12 +378,16 @@
           if ($scope.folder === s3ListService.getCurrent()) {
             s3ListService.updateFolder($scope.folder);
           }
-          $scope.notification.numProcessed++;
+          var notif = $scope.notification;
+          notif.numProcessed++;
+          notif.percent = ((notif.sizeProcessed + notif.numProcessed) * 100 /
+            (notif.sizeTotal + notif.numProcessed)).toFixed(2);
         }, null, function(progress) {
           var notif = $scope.notification;
           notif.sizes[p._idx] = progress.loaded;
           notif.sizeProcessed = $scope.notification.sizes.reduce(_sum, 0);
-          notif.percent = (notif.sizeProcessed * 100 / notif.sizeTotal).toFixed(2);
+          notif.percent = ((notif.sizeProcessed + notif.numProcessed) * 100 /
+            (notif.sizeTotal + notif.numProcessed)).toFixed(2);
         });
       });
 
@@ -538,20 +576,25 @@
   s3DeleteObjectsDialogCtrl.$inject = ['$scope', '$q', '$timeout', 's3ListService', 'awsS3'];
 
   function s3DeleteObjectsDialogCtrl($scope, $q, $timeout, s3ListService, awsS3) {
+    var deleteVersions = s3ListService.getShowVersions() &&
+      s3ListService.getCurrent().Versioning === 'Enabled';
     ng.extend($scope, {
       isReady: false,
       keys: [],
       drop: drop
     });
 
-    init();
+    pickup();
 
     return;
 
-    function init() {
+    function pickup() {
+      $scope.isReady = false;
+      $scope.keys = null;
       var promises = s3ListService.getSelectedObjects().map(getKeys);
 
       $q.all(promises).then(function() {
+        $scope.keys = $scope.keys || [];
         $scope.isReady = true;
       });
     }
@@ -559,9 +602,11 @@
     function getKeys(obj) {
       var defer = $q.defer();
 
+      $scope.keys = $scope.keys || [];
       if (obj.Key !== undefined) {
         $scope.keys.push({
-          Key: obj.Key
+          Key: obj.Key,
+          VersionId: deleteVersions ? obj.VersionId : undefined
         });
         defer.resolve();
       } else {
@@ -572,32 +617,50 @@
 
     function list(obj, defer, nextMarker) {
       var s3 = awsS3(obj.LocationConstraint);
+      var method;
       var params = {
         Bucket: s3ListService.getCurrent().bucketName,
         //Delimiter: '/',
         //EncodingType: 'url',
-        Marker: nextMarker,
-        MaxKeys: 100,
+        //MaxKeys: 0,
         Prefix: obj.Prefix
       };
-      s3.listObjects(params, function(err, data) {
+      if (!deleteVersions) {
+        params.Marker = nextMarker;
+        method = 'listObjects';
+      } else {
+        params.KeyMarker = nextMarker;
+        method = 'listObjectVersions';
+      }
+
+      s3[method](params, function(err, data) {
         if (err) {
           defer.reject(err);
         } else {
           $timeout(function() {
-            data.Contents.forEach(function(o) {
-              $scope.keys.push({
-                Key: o.Key
-              });
-            });
-          });
+            if (deleteVersions) {
+              data.Versions.forEach(_setKeyObj);
+              data.DeleteMarkers.forEach(_setKeyObj);
+              nextMarker = data.NextKeyMarker;
+            } else {
+              data.Contents.forEach(_setKeyObj);
+              nextMarker = data.NextMarker;
+            }
 
-          var contents = data.Contents || [];
-          if (data.IsTruncated) {
-            list(obj, defer, contents[contents.length - 1].Key);
-          } else {
-            defer.resolve();
-          }
+            if (data.IsTruncated) {
+              list(obj, defer, nextMarker);
+            } else {
+              defer.resolve();
+            }
+
+            function _setKeyObj(o) {
+              $scope.keys = $scope.keys || [];
+              $scope.keys.push({
+                Key: o.Key,
+                VersionId: deleteVersions ? o.VersionId : undefined
+              });
+            }
+          });
         }
       });
     }
@@ -605,25 +668,42 @@
     function drop() {
       $scope.processing = true;
       var s3 = awsS3(s3ListService.getCurrent().LocationConstraint);
-      var params = {
-        Bucket: s3ListService.getCurrent().bucketName,
-        Delete: {
-          Objects: $scope.keys,
-          Quiet: true
-        },
-      };
-      s3.deleteObjects(params, function(err) {
-        $timeout(function() {
+      var keysAll = $scope.keys.concat();
+      var keysArr = [];
+
+      while (keysAll.length) {
+        keysArr.push(keysAll.splice(0, 1000));
+      }
+      $q.all(keysArr.map(_deleteObjects))
+        .then(function() {
+          s3ListService.updateFolder();
+          s3ListService.selectObjects([]);
+          $scope.$close();
+        }, function(err) {
+          $scope.error = err;
           $scope.processing = false;
+        });
+
+      function _deleteObjects(keys) {
+        var defer = $q.defer();
+        var params = {
+          Bucket: s3ListService.getCurrent().bucketName,
+          Delete: {
+            Objects: keys,
+            Quiet: true
+          },
+        };
+
+        s3.deleteObjects(params, function(err) {
           if (err) {
-            $scope.error = err;
+            defer.reject(err);
           } else {
-            s3ListService.updateFolder();
-            s3ListService.selectObjects([]);
-            $scope.$close();
+            defer.resolve();
           }
         });
-      });
+
+        return defer.promise;
+      }
     }
   }
 })(angular);

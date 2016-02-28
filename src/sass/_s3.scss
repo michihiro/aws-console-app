@@ -82,14 +82,24 @@
   position: relative;
   min-height: 200px;
 }
+
 .s3-right {
   position: absolute;
   right: 0;
   top: 0;
   bottom: 0;
-}
-.s3-right table i {
-  margin-right: .2em;
+
+  table {
+    i {
+      margin-right: .2em;
+    }
+    .backup {
+      color: #999;
+      i {
+        margin-left: 1em;
+      }
+    }
+  }
 }
 .s3-right tr.ng-enter {
   transition: all .2s ease-in-out;
@@ -166,31 +176,69 @@
   pointer-events: none;
 }
 
-.s3-header > * {
-  display: inline-block;
-}
-.s3-header .btn {
-  margin: 0;
-  padding: 8px 12px;
-}
-.s3-header > .breadcrumb {
-  margin: 0 0 0 8px;
-  padding: 2px 16px 2px 8px;
-  background: #444;
-  a {
-    color: hsla(175,99%,40%,1);
+.s3-header {
+  > * {
+    display: inline-block;
   }
-  a:hover, a:focus {
-    color: hsla(175,99%,45%,1);
+  .btn {
+    margin: 0;
   }
-}
-.s3-header li a:hover.disabled,
-.s3-header li a:focus.disabled {
-  text-decoration: none;
-}
-.s3-header img {
-  width: 28px;
-  height: 28px;
+  .breadcrumb {
+    margin: 0 0 0 8px;
+    padding: 2px 16px 2px 8px;
+    background: #444;
+    > li + li:before {
+      padding: 2px;
+    }
+    a {
+      color: hsla(175,99%,40%,1);
+    }
+    a:hover, a:focus {
+      color: hsla(175,99%,45%,1);
+    }
+    span {
+      max-width: 120px;
+      display: inline-block;
+      overflow: hidden;
+      vertical-align: middle;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
+  img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .togglebutton {
+    margin: 8px 4px;
+  }
+  .togglebutton label {
+    input[type=checkbox] {
+      & + .toggle {
+        vertical-align: text-top;
+        background-color: rgba(#999, .5);
+      }
+      & + .toggle:after {
+        background-color: #999;
+      }
+      ~ span {
+        color: #999;
+      }
+    }
+    input[type=checkbox]:checked {
+      & + .toggle {
+        background-color: rgba(#f90, .5);
+      }
+      & + .toggle:after {
+        background-color: #f90;
+      }
+      ~ span {
+        color: #f90;
+      }
+    }
+  }
 }
 .s3-upload-dialog .table-outer {
   border: 1px solid #ddd;

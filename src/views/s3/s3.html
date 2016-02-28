@@ -57,12 +57,12 @@
             </tr>
             <tr ng-repeat="item in getCurrent().list | orderBy:sortExp:sortReverse"
                 ng-dblclick="onDblClickList(item)"
-                ng-class="{selected: isSelectedObject(item)}" >
+                ng-class="{selected: isSelectedObject(item),backup:getCurrent().Versioning&&item.VersionId&&(!item.IsLatest||item.IsDeleteMarker)}" >
               <td ng-repeat="col in columns" ng-class="col.class"
                      ng-style="{width:col.width+'px'}">
                 <div class="td-inner" ng-style="{width: col.width+'px'}">
                   <i ng-if="col.iconFn" class="fa {{col.iconFn(item)}}"></i>
-                  <span ng-if="col.filterFn" ng-bind="col.filterFn(item[col.col])"></span>
+                  <span ng-if="col.filterFn" ng-bind="col.filterFn(item[col.col], item)"></span>
                   <span ng-if="!col.filterFn" ng-bind="item[col.col]"></span>
                 </div>
               </td>

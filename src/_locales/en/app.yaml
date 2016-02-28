@@ -29,6 +29,7 @@ com:
   error:
     invalidPassword: Invalid password.
     passwordsDoNotMatch: Passwords do not match.
+  errorTitle: Error
 s3:
   serviceName: S3
   buckets: Buckets
@@ -50,6 +51,8 @@ s3:
   folderName: Folder name
   region: Region
   noObject: No objects found.
+  showVersions: Show versions
+  deleteMarker: Delete Marker
   bucketName: Bucket Name
   create: Create
   delete: Delete

@@ -29,10 +29,18 @@
     <img ng-if="breadcrumb.length || getCurrent().list.length"
          src="images/S3BucketWithObjects.svg">
     <li ng-repeat="b in breadcrumb"  style="white-space:nowrap;">
-      <a ng-class="{disabled:!b.Name}" ng-click="b.Name && setCurrent(b)"
-         ng-bind="b.Name.replace('/','')||'...'">
+      <a ng-class="{disabled:!b.Name}" ng-click="b.Name && setCurrent(b)">
+        <span ng-bind="b.Name.replace('/','')||'...'"></span>
       </a>
     </li>
     <li><span ng-bind="getCurrent().Name"></span></li>
   </ol>
+  <div class="togglebutton pull-right"
+        ng-if="getCurrent().Versioning=='Enabled'">
+    <label>
+      <input type="checkbox" ng-model="flags.showVersions" ng-disabled="!getCurrent().doneReq">
+      <span class="toggle"></span>
+      <span ng-bind="::'s3.showVersions'|i18next"></span>
+    </label>
+  </div>
 </div>

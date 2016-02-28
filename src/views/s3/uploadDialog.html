@@ -80,7 +80,7 @@
           ng-class="{'btn-success':isReady}"
           ng-bind="::'s3.startUpload'|i18next"
           ng-click="upload()"
-          ng-disabled="processing || !isReady" >
+          ng-disabled="processing || !isReady || !hasUploads" >
   </button>
   <div class="cover" ng-if="processing"></div>
 </div>

@@ -12,7 +12,9 @@
     var template;
     var promise;
 
-    promise = $http.get('views/s3/tree.html', {cache:$templateCache}).then(function(response) {
+    promise = $http.get('views/s3/tree.html', {
+      cache: $templateCache
+    }).then(function(response) {
       template = response.data;
     });
 
@@ -106,17 +108,14 @@
           }
         }
 
-        uploadInfo = s3UploadService.createUploadList(entries);
-        uploadInfo.promise.then(onceOnDrop, onError).finally(_claer);
+        uploadInfo = s3UploadService.createUploadList(entries, []);
+        uploadInfo.promise.finally(_claer);
+        onceOnDrop();
 
         function onceOnDrop() {
           $parse(attr.s3UploadField)(scope, {
             $uploadInfo: uploadInfo,
           });
-        }
-
-        function onError() {
-          // TODO;
         }
 
         function _claer() {
