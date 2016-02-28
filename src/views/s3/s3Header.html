@@ -36,7 +36,7 @@
     <li><span ng-bind="getCurrent().Name"></span></li>
   </ol>
   <div class="togglebutton pull-right"
-        ng-if="getCurrent().Versioning=='Enabled'">
+        ng-if="getCurrent().Versioning">
     <label>
       <input type="checkbox" ng-model="flags.showVersions" ng-disabled="!getCurrent().doneReq">
       <span class="toggle"></span>

@@ -577,7 +577,7 @@
 
   function s3DeleteObjectsDialogCtrl($scope, $q, $timeout, s3ListService, awsS3) {
     var deleteVersions = s3ListService.getShowVersions() &&
-      s3ListService.getCurrent().Versioning === 'Enabled';
+      !!s3ListService.getCurrent().Versioning;
     ng.extend($scope, {
       isReady: false,
       keys: [],
