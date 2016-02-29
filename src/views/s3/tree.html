@@ -10,6 +10,7 @@
   <li ng-repeat="item in data" style="text-indent:{{(depth+1) * .3}}em"
       ng-class="isActive(item)">
     <a tab-index="-1" class="s3-item"
+       ng-class="{'s3-tree-bucket':!item.Prefix,'s3-tree-folder':item.Prefix}"
        ng-click="onClick($event, item)"
        ng-dblclick="item.opened = !item.opened;"
        app-right-click="onClick($event, item)"

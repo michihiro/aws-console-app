@@ -25,12 +25,17 @@
         'downloadObjects', 'deleteObjects', '',
         'uploadObjects', 'uploadFolder', 'createFolder'
       ],
-      tree: [
-        'createBucket', 'deleteBucket'
+      treeBucket: [
+        'createBucket', 'deleteBucket', '', 'uploadObjects', 'uploadFolder',
+        'createFolder'
+      ],
+      treeFolder: [
+        'createBucket', '', 'downloadObjects',
+        'uploadObjects', 'uploadFolder', 'createFolder', 'deleteObjects'
       ],
       list: [
-        'downloadObjects', 'deleteObjects', '',
-        'uploadObjects', 'uploadFolder', 'createFolder'
+        'downloadObjects', 'uploadObjects', 'uploadFolder', 'createFolder',
+        'deleteObjects'
       ],
     };
     ng.extend(scope, actions, {
@@ -40,24 +45,33 @@
 
     return scope;
 
-    function onClick(ev, key) {
-      if (isDisabled(key)) {
+    function onClick(ev, key, onTree) {
+      if (isDisabled(key, onTree)) {
         ev.stopPropagation();
         return;
       }
 
       if (key === 'downloadObjects') {
-        s3DownloadService.download(s3ListService.getSelectedObjects());
+        var current = s3ListService.getCurrent();
+        if (onTree) {
+          s3DownloadService.download([current], current.parent);
+        } else {
+          s3DownloadService.download(s3ListService.getSelectedObjects(), current);
+        }
       } else if (key.match(/^upload(.*)/)) {
         s3UploadService.uploadFiles(RegExp.$1 === 'Folder');
       } else if (key === 'createFolder') {
         scope.creatingFolder = true;
+      } else if (key === 'deleteObjects') {
+        scope.openDialog('s3/' + key + 'Dialog', {
+          target: onTree ? [s3ListService.getCurrent()] : s3ListService.getSelectedObjects()
+        });
       } else {
         scope.openDialog('s3/' + key + 'Dialog');
       }
     }
 
-    function isDisabled(key) {
+    function isDisabled(key, onTree) {
       var current = s3ListService.getCurrent();
       var selected = s3ListService.getSelectedObjects();
       var dup, chkObj = {};
@@ -67,13 +81,15 @@
       if (key === 'deleteBucket') {
         return !current || current.Prefix !== undefined;
       }
-      if (key === 'deleteObjects') {
+      if (key === 'deleteObjects' && !onTree) {
         return !selected || !selected.length;
       }
-      if (key === 'downloadObjects') {
+      if (key === 'downloadObjects' && !onTree) {
         selected = (selected || []).filter(function(o) {
-          dup = dup || chkObj[o.Key];
-          chkObj[o.Key] = true;
+          if (o.Key) {
+            dup = dup || chkObj[o.Key];
+            chkObj[o.Key] = true;
+          }
           return !o.IsDeleteMarker;
         });
         return !selected || !selected.length || dup;
@@ -573,9 +589,9 @@
     }
   }
 
-  s3DeleteObjectsDialogCtrl.$inject = ['$scope', '$q', '$timeout', 's3ListService', 'awsS3'];
+  s3DeleteObjectsDialogCtrl.$inject = ['$scope', '$q', '$timeout', 's3ListService', 'awsS3', 'dialogInputs'];
 
-  function s3DeleteObjectsDialogCtrl($scope, $q, $timeout, s3ListService, awsS3) {
+  function s3DeleteObjectsDialogCtrl($scope, $q, $timeout, s3ListService, awsS3, dialogInputs) {
     var deleteVersions = s3ListService.getShowVersions() &&
       !!s3ListService.getCurrent().Versioning;
     ng.extend($scope, {
@@ -591,7 +607,7 @@
     function pickup() {
       $scope.isReady = false;
       $scope.keys = null;
-      var promises = s3ListService.getSelectedObjects().map(getKeys);
+      var promises = dialogInputs.target.map(getKeys);
 
       $q.all(promises).then(function() {
         $scope.keys = $scope.keys || [];
@@ -647,7 +663,7 @@
               nextMarker = data.NextMarker;
             }
 
-            if (data.IsTruncated) {
+            if (data.IsTruncated && nextMarker) {
               list(obj, defer, nextMarker);
             } else {
               defer.resolve();

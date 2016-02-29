@@ -403,10 +403,10 @@
       return sysWaiting;
     }
 
-    function download(objs) {
+    function download(objs, rootObj) {
       sysWaiting = true;
       $timeout(function() {
-        _getUrls(objs)
+        _getUrls(objs, rootObj)
           .then(function(urlData) {
             _saveAllObjects(urlData);
             sysWaiting = false;
@@ -450,6 +450,9 @@
         promises.forEach(function(p) {
           p.then(function() {
             notification.numProcessed++;
+            notification.percent =
+              ((notification.sizeProcessed + notification.numProcessed) * 100 /
+              (notification.sizeTotal + notification.numTotal)).toFixed(2);
           }, null, function(progress) {
             notification.sizes[p._idx] = progress.size;
             notification.sizeProcessed = notification.sizes.reduce(_sum, 0);
@@ -556,10 +559,9 @@
       });
     }
 
-    function _getUrls(objs) {
-      var current = s3ListService.getCurrent();
-      var bucketName = current.bucketName;
-      var region = current.LocationConstraint;
+    function _getUrls(objs, rootObj) {
+      var bucketName = rootObj.bucketName;
+      var region = rootObj.LocationConstraint;
 
       var promises = objs.map(function(obj) {
         var defer = $q.defer();
@@ -577,7 +579,7 @@
               var downloadData = data.Contents.map(function(o) {
                 return {
                   url: _getObjectUrl(bucketName, region, o),
-                  name: o.Key.replace(current.Prefix, ''),
+                  name: o.Key.replace(rootObj.Prefix, ''),
                   size: o.Size
                 };
               });
@@ -587,7 +589,7 @@
         } else {
           defer.resolve([{
             url: _getObjectUrl(bucketName, region, obj),
-            name: obj.Key.replace(current.Prefix, ''),
+            name: obj.Key.replace(rootObj.Prefix, ''),
             size: obj.Size
           }]);
         }

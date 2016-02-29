@@ -96,12 +96,24 @@
   </div>
 </div>
 
-<div uib-dropdown class="position-fixed" contextmenu-for="#s3-tree">
+<div uib-dropdown class="position-fixed" contextmenu-for=".s3-tree-bucket">
   <ul uib-dropdown-menu>
-    <li ng-repeat="m in s3Actions.tree"
-        ng-class="{divider:!m.length, disabled:s3Actions.isDisabled(m)}">
-      <a ng-if="m.length" ng-class="{withoutripple:s3Actions.isDisabled(m)}"
-         ng-click="s3Actions.onClick($event, m);"
+    <li ng-repeat="m in s3Actions.treeBucket"
+        ng-class="{divider:!m.length, disabled:s3Actions.isDisabled(m, true)}">
+      <a ng-if="m.length" ng-class="{withoutripple:s3Actions.isDisabled(m, true)}"
+         ng-click="s3Actions.onClick($event, m, true);"
+         ng-bind="::'s3.'+m|i18next">
+      </a>
+    </li>
+  </ul>
+</div>
+
+<div uib-dropdown class="position-fixed" contextmenu-for=".s3-tree-folder">
+  <ul uib-dropdown-menu>
+    <li ng-repeat="m in s3Actions.treeFolder"
+        ng-class="{divider:!m.length, disabled:s3Actions.isDisabled(m, true)}">
+      <a ng-if="m.length" ng-class="{withoutripple:s3Actions.isDisabled(m, true)}"
+         ng-click="s3Actions.onClick($event, m, true);"
          ng-bind="::'s3.'+m|i18next">
       </a>
     </li>
