@@ -63,6 +63,24 @@ s3:
     STANDARD: Standard
     REDUCED_REDUNDANCY: Reduced Redundancy
     STANDARD_IA: Standard - Infrequent Access
+  changeBucketAcl: Bucket Permisssions
+  aclGrantee: Grentee
+  aclRead: List/DownLoad
+  aclWrite: Upload/Delete
+  aclReadAcp: View Permissions
+  aclWriteAcp: Edit Permissions
+  addGrantee: Add Permissions
+  grantee:
+    OWNER: Owner
+    ALL_USERS: Every one
+    AUTHENTICATED_USERS: Any Authenticated AWS User
+    LOG_DELIVERY: Log Delivery
+  changeBucketVersioning: Bucket Versioning
+  versioning: Versioning
+  versioningDisabled: Disabled
+  versioningEnabled: Enabled
+  versioningSuspended: Suspended
+  changeVersioningMsg: Once enabled, Versioning cannot be disabled, only suspended.
   regionName:
     us-east-1: US East (Northern Virginia)
     us-west-1: US West (Northern California)

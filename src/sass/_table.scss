@@ -68,6 +68,15 @@
     border-top-color: transparent;
   }
 }
+.td-inner.checkbox {
+  padding-top: 2px;
+  min-height: initial;
+  height: 2.2em;
+  label {
+    display: block;
+    text-align: center;
+  }
+}
 
 .table-resize-handle {
   position: absolute;

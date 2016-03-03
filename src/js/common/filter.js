@@ -2,10 +2,17 @@
   'use strict';
 
   ng.module('aws-console')
+    .filter('isArray', isArrayFilter)
     .filter('bytes', bytesFilter)
     .filter('momentFormat', momentFormatFilter)
     .filter('errorMsg', errorMsgFilter)
     .service('appFilterService', appFilterService);
+
+  function isArrayFilter() {
+    return function (input) {
+      return ng.isArray(input);
+    };
+  }
 
   errorMsgFilter.$inject = ['$filter'];
 

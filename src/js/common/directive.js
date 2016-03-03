@@ -646,6 +646,7 @@
 
     function link(scope, elem, attr) {
       var selector = attr.contextmenuFor;
+      var outerSelector = attr.contextmenuOuter || attr.contextmenuFor;
       if (!selector || !selector.length) {
         return;
       }
@@ -663,7 +664,7 @@
         var left = ev.clientX;
         var top = ev.clientY;
 
-        var target = $(ev.target).closest(selector);
+        var target = $(ev.target).closest(outerSelector);
         var targetPos = target.offset();
         var menu = elem.find('.dropdown-menu');
         var menuH = menu.height();

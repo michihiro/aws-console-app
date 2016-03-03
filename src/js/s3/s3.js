@@ -180,34 +180,45 @@
           }
           bucket.bucketName = bucket.Name;
           newBuckets.push(bucket);
-          if (!bucket.LocationConstraint) {
-            s3.getBucketLocation({
-              Bucket: bucket.Name
-            }, function(err, data) {
-              if (data) {
-                ng.extend(bucket, data);
-                awsS3(data.LocationConstraint).getBucketVersioning({
-                  Bucket: bucket.Name
-                }, function(err, data) {
-                  if (data) {
-                    bucket.Versioning = data.Status;
-                    bucket.MFADelete = data.MFADelete;
-                  }
-                  bucket.withVersions = showVersions;
-                  _listFolder(bucket);
-                });
-              }
-              if (!current && buckets) {
-                setCurrent(buckets[0]);
-              }
-            });
-          }
+
+          _getBucketLocationConstraint(bucket);
         });
+
         $timeout(function() {
           buckets = buckets || [];
           buckets.length = 0;
           Array.prototype.push.apply(buckets, newBuckets);
         });
+
+        function _getBucketLocationConstraint(bucket) {
+          if (bucket.LocationConstraint) {
+            return _getBucketVersioning(bucket);
+          }
+          s3.getBucketLocation({
+            Bucket: bucket.Name
+          }, function(err, data) {
+            if (data) {
+              ng.extend(bucket, data);
+              _getBucketVersioning(bucket);
+            }
+            if (!current && buckets) {
+              setCurrent(buckets[0]);
+            }
+          });
+        }
+
+        function _getBucketVersioning(bucket) {
+          awsS3(bucket.LocationConstraint).getBucketVersioning({
+            Bucket: bucket.Name
+          }, function(err, data) {
+            if (data) {
+              bucket.Versioning = data.Status;
+              bucket.MFADelete = data.MFADelete;
+            }
+            bucket.withVersions = showVersions;
+            _listFolder(bucket);
+          });
+        }
       });
     }
 

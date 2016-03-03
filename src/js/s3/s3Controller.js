@@ -9,6 +9,8 @@
     .controller('s3NotificationsAreaCtrl', s3NotificationsAreaCtrl)
     .controller('s3UploadDialogCtrl', s3UploadDialogCtrl)
     .controller('s3CreateBucketDialogCtrl', s3CreateBucketDialogCtrl)
+    .controller('s3ChangeBucketVersioningDialogCtrl', s3ChangeBucketVersioningDialogCtrl)
+    .controller('s3ChangeBucketAclDialogCtrl', s3ChangeBucketAclDialogCtrl)
     .controller('s3DeleteBucketDialogCtrl', s3DeleteBucketDialogCtrl)
     .controller('s3BucketPropertiesDialogCtrl', s3BucketPropertiesDialogCtrl)
     .controller('s3CreateFolderCtrl', s3CreateFolderCtrl)
@@ -21,12 +23,15 @@
 
     var actions = {
       all: [
-        'createBucket', 'deleteBucket', '',
-        'downloadObjects', 'deleteObjects', '',
-        'uploadObjects', 'uploadFolder', 'createFolder'
+        'createBucket', ['bucketProperties', ['changeBucketAcl', 'changeBucketVersioning']],
+        'deleteBucket', '',
+        'downloadObjects',
+        'uploadObjects', 'uploadFolder', 'createFolder',
+        'deleteObjects'
       ],
       treeBucket: [
-        'createBucket', 'deleteBucket', '', 'uploadObjects', 'uploadFolder',
+        'createBucket', ['bucketProperties', ['changeBucketAcl', 'changeBucketVersioning']],
+        'deleteBucket', '', 'uploadObjects', 'uploadFolder',
         'createFolder'
       ],
       treeFolder: [
@@ -67,7 +72,9 @@
           target: onTree ? [s3ListService.getCurrent()] : s3ListService.getSelectedObjects()
         });
       } else {
-        scope.openDialog('s3/' + key + 'Dialog');
+        scope.openDialog('s3/' + key + 'Dialog', {}, {
+          size: key === 'changeBucketAcl' ? 'lg800' : undefined
+        });
       }
     }
 
@@ -503,6 +510,279 @@
             $scope.error = err;
           } else {
             s3ListService.updateBuckets($scope.inputs.bucketName);
+            $scope.$close();
+          }
+        });
+      });
+    }
+  }
+
+  s3ChangeBucketAclDialogCtrl.$inject = ['$scope', '$timeout', 's3ListService', 'awsS3'];
+
+  function s3ChangeBucketAclDialogCtrl($scope, $timeout, s3ListService, awsS3) {
+    var granteeDropdown = [{
+      name: 'ALL_USERS',
+      Type: 'Group',
+      URI: 'http://acs.amazonaws.com/groups/global/AllUsers'
+    }, {
+      name: 'AUTHENTICATED_USERS',
+      Type: 'Group',
+      URI: 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers'
+    }, {
+      name: 'LOG_DELIVERY',
+      Type: 'Group',
+      URI: 'http://acs.amazonaws.com/groups/s3/LogDelivery'
+    }];
+
+    var current = s3ListService.getCurrent();
+    var columns = [{
+      width: 210,
+      col: 'grantee',
+      name: 's3.aclGrantee',
+      editable: function() {
+        return true;
+      },
+      dropdown: function() {
+        return granteeDropdown;
+      },
+    }, {
+      checkbox: true,
+      width: 130,
+      col: 'grantREAD',
+      name: 's3.aclRead',
+    }, {
+      checkbox: true,
+      width: 130,
+      col: 'grantWRITE',
+      name: 's3.aclWrite',
+    }, {
+      checkbox: true,
+      width: 130,
+      col: 'grantREAD_ACP',
+      name: 's3.aclReadAcp',
+    }, {
+      checkbox: true,
+      width: 130,
+      col: 'grantWRITE_ACP',
+      name: 's3.aclWriteAcp',
+    }];
+    var grantsOrg;
+    var owner;
+
+    ng.extend($scope, {
+      bucketName: current.bucketName,
+      columns: columns,
+      inputs: {},
+      addGrantee: addGrantee,
+      removeGrantee: removeGrantee,
+      save: save
+    });
+
+    _init();
+
+    $scope.$watch('inputs.grants', _onGrantsChanged, true);
+
+    function _init() {
+      $scope.processing = true;
+      var s3 = awsS3(current.LocationConstraint);
+      var params = {
+        Bucket: current.bucketName,
+      };
+      s3.getBucketAcl(params, function(err, data) {
+        $scope.$apply(function() {
+          $scope.processing = false;
+          if (err) {
+            $scope.error = err;
+            return;
+          }
+
+          owner = data.Owner;
+          granteeDropdown.unshift({
+            name: 'OWNER',
+            Type: 'CanonicalUser',
+            ID: owner.ID,
+            DisplayName: owner.DisplayName
+          });
+
+          grantsOrg = data.Grants.reduce(function(all, grant) {
+            var obj;
+            var granteeObj = grant.Grantee;
+            granteeDropdown.some(function(v) {
+              if (v.ID === grant.Grantee.ID) {
+                granteeObj = v;
+                return true;
+              }
+            });
+
+            var found = all.some(function(grantee) {
+              if (grantee.grantee === granteeObj) {
+                grantee['grant' + grant.Permission.replace(/ /, '_')] = true;
+                return true;
+              }
+            });
+            if (!found) {
+              obj = {
+                grantee: granteeObj,
+              };
+              obj['grant' + grant.Permission.replace(/ /, '_')] = true;
+              all.push(obj);
+            }
+            return all;
+          }, []);
+
+          $scope.inputs.grants = grantsOrg.map(function(v) {
+            /* jshint camelcase: false */
+            if (v.grantFULL_CONTROL) {
+              v.grantREAD = true;
+              v.grantWRITE = true;
+              v.grantREAD_ACP = true;
+              v.grantWRITE_ACP = true;
+              delete v.grantFULL_CONTROL;
+            }
+            return ng.extend({}, v);
+          });
+        });
+      });
+    }
+
+    function _onGrantsChanged(grants) {
+      if (!grants || !grants.length) {
+        return;
+      }
+      var modified;
+      grants.forEach(function(grant, idx) {
+        var grantOrg = grantsOrg[idx] || {};
+        grant.modified = Object.keys(grant).some(function(k) {
+          return k.match(/^grant/) && grant[k] !== grantOrg[k];
+        });
+        modified = modified || grant.modified;
+      });
+      grants.modified = modified;
+    }
+
+    function addGrantee() {
+      $scope.inputs.grants.push({
+        added: true,
+        modified: true,
+      });
+    }
+
+    function removeGrantee(idx) {
+      var grants = $scope.inputs.grants;
+      if (grants[idx].added) {
+        grants.splice(idx, 1);
+      } else {
+        grants[idx].deleted = !grants[idx].deleted;
+      }
+    }
+
+    function save() {
+      if ($scope.processing) {
+        return;
+      }
+      $scope.processing = true;
+
+      var grants = $scope.inputs.grants.reduce(function(all, v1) {
+        var grantee = v1.grantee;
+        var k = grantee.ID || grantee.URI;
+        var p = Object.keys(v1)
+          .filter(function(v2) {
+            return v1[v2] && v2.match(/^grant[A-Z]/);
+          })
+          .map(function(v2) {
+            return v2.replace(/^grant/, '');
+          });
+        all[k] = all[k] || {
+          grantee: {
+            Type: grantee.Type,
+            ID: grantee.ID,
+            URI: grantee.URI,
+          },
+          permissions: {}
+        };
+        p.forEach(function(v2) {
+          all[k].permissions[v2] = true;
+        });
+        if (all.indexOf(all[k]) < 0) {
+          all.push(all[k]);
+        }
+        return all;
+      }, []).reduce(function(all, v1) {
+        var permissions = v1.permissions;
+        if (permissions.READ && permissions.WRITE &&
+          permissions.READ_ACP && permissions.WRITE_ACP) {
+          all.push({
+            Grantee: v1.grantee,
+            Permission: 'FULL_CONTROL'
+          });
+        } else {
+          Object.keys(v1.permissions).forEach(function(v2) {
+            all.push({
+              Grantee: v1.grantee,
+              Permission: v2,
+            });
+          });
+        }
+        return all;
+      }, []);
+
+      var params = {
+        Bucket: current.bucketName,
+        AccessControlPolicy: {
+          Owner: owner,
+          Grants: grants
+        }
+      };
+      var s3 = awsS3(current.LocationConstraint);
+      s3.putBucketAcl(params, function(err) {
+        $scope.$apply(function() {
+          if (err) {
+            $scope.error = err;
+            return;
+          }
+          $scope.$close();
+          $scope.processing = false;
+        });
+      });
+
+    }
+  }
+
+  s3ChangeBucketVersioningDialogCtrl.$inject = ['$scope', '$timeout', 's3ListService', 'awsS3'];
+
+  function s3ChangeBucketVersioningDialogCtrl($scope, $timeout, s3ListService, awsS3) {
+    var current = s3ListService.getCurrent();
+    var currentVersioning = current.Versioning;
+    ng.extend($scope, {
+      bucketName: current.bucketName,
+      currentVersioning: currentVersioning,
+      inputs: {
+        versioning: currentVersioning
+      },
+      save: save
+    });
+
+    function save() {
+      if ($scope.processing) {
+        return;
+      }
+      $scope.processing = true;
+
+      var s3 = awsS3(current.LocationConstraint);
+      var params = {
+        Bucket: current.bucketName,
+        VersioningConfiguration: {
+          //MFADelete: 'Enabled | Disabled',
+          Status: $scope.inputs.versioning
+        }
+      };
+      s3.putBucketVersioning(params, function(err) {
+        $timeout(function() {
+          if (err) {
+            $scope.processing = false;
+            $scope.error = err;
+          } else {
+            s3ListService.updateBuckets();
             $scope.$close();
           }
         });

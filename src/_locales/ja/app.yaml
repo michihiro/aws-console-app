@@ -63,6 +63,24 @@ s3:
     STANDARD: 標準
     REDUCED_REDUNDANCY: 低冗長化
     STANDARD_IA: 標準 - 低頻度アクセス
+  changeBucketAcl: バケットのアクセス許可
+  aclGrantee: 対象
+  aclRead: 一覧/参照
+  aclWrite: アップロード/削除
+  aclReadAcp: アクセス権参照
+  aclWriteAcp: アクセス権編集
+  addGrantee: アクセス許可を追加
+  grantee:
+    OWNER: 所有者
+    ALL_USERS: 全員
+    AUTHENTICATED_USERS: 認証済みユーザー
+    LOG_DELIVERY: ログ配信
+  changeBucketVersioning: バケットのバージョン管理
+  versioning: バージョン管理
+  versioningDisabled: 無効
+  versioningEnabled: 有効
+  versioningSuspended: 停止
+  changeVersioningMsg: 有効にしたバージョニングを無効にすることはできません。停止のみ可能です。
   regionName:
     us-east-1: US 東海岸（北バージニア）
     us-west-1: US 西海岸（北カルフォルニア）

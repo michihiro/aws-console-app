@@ -136,7 +136,7 @@
                       <div class="form-group">
                       <select class="form-control"
                               ng-model="item[col.col]"
-ng-options="(item2.value||item2) as (col.filterFn ? col.filterFn(item2) : (item2.name||item2)) for item2 in col.dropdown(item)"
+                              ng-options="(item2.value||item2) as (col.filterFn ? col.filterFn(item2) : (item2.name||item2)) for item2 in col.dropdown(item)"
                        ng-disabled="item.deleted"
                        name="rule_{{itemIdx}}_{{col.col}}"
                        required="required">
