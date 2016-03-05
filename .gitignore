@@ -1,3 +1,7 @@
 .*.swp
-
-top/
+*.bak
+build/node_modules
+build/html
+*.tar.bz2
+*.tar.gz
+*.taz
