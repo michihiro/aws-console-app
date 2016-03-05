@@ -19,6 +19,10 @@
     <script>
       var langs = ['ja'];
       (function(l) {
+        if (location.pathname.match(/\/$/)) {
+          location.pathname += 'index.html';
+          return;
+        }
         l = l.split('-').shift();
         if (langs.indexOf(l) >= 0) {
           if (!location.pathname.match('-' + l + '.html')) {
