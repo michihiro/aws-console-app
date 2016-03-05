@@ -29,7 +29,7 @@ AWS Console App is a free.(Costs Separately for AWS.)
 
 All you have to do is install Google Chrome on your computer(Mac,Windows).Then download AWS Console App from Chrome WebStore and enjoy this application.
 
-you can check out the code on Github. (AWS Console App on GitHubだけでもいいかも)
+you can check out the code on Github.
 {{/section}}
 
 {{section}}
