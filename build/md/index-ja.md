@@ -12,7 +12,7 @@ Simple AWS console app は Amazon Web Services をシンプルに操作するこ
 
 (for Windows, Mac OS X, etc)
 
-![screen shot](img/screenshot1.png)
+![screen shot](img/screenshot1-ja.png)
 
 {{/section}}
 
