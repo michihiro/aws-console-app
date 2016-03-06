@@ -10,7 +10,7 @@
       <div class="col-xs-8">
         <input class="form-control" name="snapshotId"
                ng-model="inputs.snapshotId"
-               ui-keyup="{enter:'inputs.snapshot && select()'}"
+               ng-keyup="$event.keyCode==13 && inputs.snapshot && select()"
                app-focus-on="snapshotId">
       </div>
     </div>

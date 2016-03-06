@@ -19,7 +19,7 @@
       'ngAnimate',
       'ngResource',
       'ui.router',
-      'ui.utils',
+      'ui.validate',
       'ui.bootstrap',
       'jm.i18next',
       'sprintf'
