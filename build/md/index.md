@@ -33,7 +33,7 @@ you can check out the code on Github.
 {{/section}}
 
 {{section}}
-## High-performance
+## Quick-access
 
 Call AWS Service API directly from AWS Console App without relay server,therefore lightweight.
 
