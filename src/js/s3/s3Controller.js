@@ -211,7 +211,7 @@
       sortReverse: false,
       s3Actions: s3Actions,
       onDblClickList: onDblClickList,
-      downloadObjects: downloadObjects,
+      //downloadObjects: downloadObjects,
       getSysWaiting: s3DownloadService.getSysWaiting,
       onRowSelect: onRowSelect,
       isSelectedObject: s3ListService.isSelectedObject,
@@ -271,13 +271,15 @@
         obj.opened = true;
         s3ListService.setCurrent(obj);
       } else if (!obj.IsDeleteMarker) {
-        s3DownloadService.download([obj]);
+        s3DownloadService.download([obj], s3ListService.getCurrent());
       }
     }
 
+    /*
     function downloadObjects() {
       s3DownloadService.download(s3ListService.getSelectedObjects());
     }
+    */
   }
 
   s3TreeCtrl.$inect = ['s3ListService'];
