@@ -192,7 +192,7 @@
     var rrsets = r53Info.getSelectedObjects();
     var rrset = mode === 'updateRRSet' ? rrsets[0] : {};
     var subDomain = (rrset.Name || '').replace(reg, '');
-    var isZoneRRSet = rrset.Name === currentZone.Name && 
+    var isZoneRRSet = rrset.Name === currentZone.Name &&
       (rrset.Type === 'SOA' || rrset.Type === 'NS');
     var type = rrset.Type || 'A';
 
@@ -412,7 +412,7 @@
     ng.extend($scope, {
       mode: mode,
       btnLabel: btnLabels[mode],
-      btnClass: mode!=='deleteHostedZone' ? 'btn-success' : 'btn-danger',
+      btnClass: mode !== 'deleteHostedZone' ? 'btn-success' : 'btn-danger',
       inputs: inputs,
       isValidHostedZone: isValidHostedZone,
       isValidPrivateZone: isValidPrivateZone,
@@ -640,9 +640,9 @@
     }
   }
 
-  r53InfoFactory.$inject = ['$rootScope', '$q', 'awsR53'];
+  r53InfoFactory.$inject = ['$rootScope', '$q', 'awsR53', 'comValidator'];
 
-  function r53InfoFactory($rootScope, $q, awsR53) {
+  function r53InfoFactory($rootScope, $q, awsR53, comValidator) {
     var hostedZones;
     var hostedZonesWork;
     var hostedZonesOld;
@@ -671,19 +671,19 @@
       isSelectedObject: isSelectedObject,
       isValidValue: {
         A: isValidIPv4,
-        CNAME: isValidWildcardDomain,
+        CNAME: comValidator.isValidWildcardDomain,
         AAAA: isValidIPv6,
-        NS: isValidDomain,
+        NS: comValidator.isValidDomain,
         SOA: isValidSOA,
         MX: isValidMX,
         TXT: isValidTXT,
-        PTR: isValidWildcardDomain,
+        PTR: comValidator.isValidWildcardDomain,
         SRV: isValidSRV,
         SPF: isValidTXT // TODO
       },
-      isValidDomain: isValidDomain,
-      isValidLocalDomain: isValidLocalDomain,
-      isValidWildcardDomain: isValidWildcardDomain,
+      isValidDomain: comValidator.isValidDomain,
+      isValidLocalDomain: comValidator.isValidLocalDomain,
+      isValidWildcardDomain: comValidator.isValidWildcardDomain,
     };
 
     function getHostedZones() {
@@ -818,7 +818,7 @@
 
         var resourceRecordSets = (data.ResourceRecordSets || []).map(function(v) {
           zone.listOld.some(function(old, idx) {
-            if(old.Name === v.Name && old.Type === v.Type) {
+            if (old.Name === v.Name && old.Type === v.Type) {
               v = ng.extend(old, v);
               zone.listOld.splice(idx, 1);
               return true;
@@ -826,7 +826,7 @@
           });
 
           v.nameForSort = (v.Name.split('.').reverse().join('.')) +
-           (v.Type === 'SOA' ? '.__' : v.Type === 'NS' ? '._' : '.') + v.Type;
+            (v.Type === 'SOA' ? '.__' : v.Type === 'NS' ? '._' : '.') + v.Type;
           v.Values = v.ResourceRecords.map(function(rr) {
             return rr.Value;
           });
@@ -864,24 +864,12 @@
       return is.ipv6(v);
     }
 
-    function isValidDomain(v) {
-      return !!(v || '').match(/^([a-zA-Z0-9]\.|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]\.)+[a-zA-Z]{2,}\.?$/);
-    }
-
-    function isValidLocalDomain(v) {
-      return !!(v || '').match(/^([a-zA-Z0-9]\.|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]\.)+[a-zA-Z]+\.?$/);
-    }
-
-    function isValidWildcardDomain(v) {
-      return !!(v || '').match(/^([a-zA-Z0-9\*]\.|[a-zA-Z0-9\*][a-zA-Z0-9-\*]{0,61}[a-zA-Z0-9]\.)+[a-zA-Z]{2,}\.?$/);
-    }
-
     function isValidSOA(v) {
       var ar = (v || '').split(/[\s]+/);
       return ar.length === 7 &&
         !ar.some(function(col, idx) {
           if (idx <= 1) {
-            return !isValidDomain(col);
+            return !comValidator.isValidDomain(col);
           } else {
             return !_isNumeric(col);
           }
@@ -892,7 +880,7 @@
       var ar = (v || '').split(/[\s]+/);
       return ar.length === 2 &&
         _isNumeric(ar[0]) &&
-        isValidDomain(ar[1]);
+        comValidator.isValidDomain(ar[1]);
     }
 
     function isValidTXT(v) {
@@ -905,7 +893,7 @@
         _isNumeric(ar[0]) && _isInRange(ar[0], 0, 65535) &&
         _isNumeric(ar[1]) && _isInRange(ar[1], 0, 65535) &&
         _isNumeric(ar[2]) && _isInRange(ar[2], 0, 65535) &&
-        (isValidDomain(ar[3]) || ar[3] === '.');
+        (comValidator.isValidDomain(ar[3]) || ar[3] === '.');
     }
 
     function _isNumeric(v) {
