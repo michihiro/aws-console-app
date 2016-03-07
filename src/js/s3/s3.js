@@ -125,9 +125,10 @@
       _listBuckets();
     }
 
-    function updateFolder() {
-      current.withVersions = showVersions;
-      _listFolder(current);
+    function updateFolder(folder) {
+      folder = folder || current;
+      folder.withVersions = showVersions;
+      _listFolder(folder);
     }
 
     function selectObjects(sel) {

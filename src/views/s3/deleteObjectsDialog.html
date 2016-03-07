@@ -9,18 +9,18 @@
     <p ng-if="keys.length==0 || keys.length > 1"
        ng-bind="'s3.deleteObjMsg2'|i18next|sprintf:keys.length"></p>
   </div>
-<!--
-  <div ng-if="askLatestOrAll">
+
+  <div ng-if="askDeleteVersions">
     <div class="checkbox">
       <label>
         <input type="checkbox" ng-model="inputs.deleteAllVersions"
                ng-disabled="!isReady">
         <span class="checkbox-material"><span class="check"></span></span>
-        <span ng-bind="::'s3.deleteAllVersions'|i18next"></span>
+        <span ng-bind="::'s3.permanentlyDelete'|i18next"></span>
       </label>
     </div>
   </div>
--->
+
   <div class="cover" ng-if="processing"><div class="modal-loader"></div></div>
 </div>
 <div class="modal-footer">

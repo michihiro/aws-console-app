@@ -395,7 +395,7 @@
       promises.forEach(function(p) {
         p.then(function() {
           if ($scope.folder === s3ListService.getCurrent()) {
-            s3ListService.updateFolder($scope.folder);
+            s3ListService.updateFolder();
           }
           var notif = $scope.notification;
           notif.numProcessed++;
@@ -984,12 +984,21 @@
   s3DeleteObjectsDialogCtrl.$inject = ['$scope', '$q', '$timeout', 's3ListService', 'awsS3', 'dialogInputs'];
 
   function s3DeleteObjectsDialogCtrl($scope, $q, $timeout, s3ListService, awsS3, dialogInputs) {
-    var deleteVersions = s3ListService.getShowVersions() &&
-      !!s3ListService.getCurrent().Versioning;
+    var parentFolder = dialogInputs.target[0].parent;
+    var askDeleteVersions = s3ListService.getShowVersions() &&
+      !!parentFolder.Versioning;
+    var keys = [[], []];
+
     ng.extend($scope, {
       isReady: false,
+      askDeleteVersions: askDeleteVersions,
+      inputs: {},
       keys: [],
       drop: drop
+    });
+
+    $scope.$watch('inputs.deleteAllVersions', function(b) {
+      $scope.keys = keys[+b];
     });
 
     pickup();
@@ -1002,7 +1011,7 @@
       var promises = dialogInputs.target.map(getKeys);
 
       $q.all(promises).then(function() {
-        $scope.keys = $scope.keys || [];
+        $scope.keys = keys[0];
         $scope.isReady = true;
       });
     }
@@ -1012,10 +1021,17 @@
 
       $scope.keys = $scope.keys || [];
       if (obj.Key !== undefined) {
-        $scope.keys.push({
-          Key: obj.Key,
-          VersionId: deleteVersions ? obj.VersionId : undefined
-        });
+        if (!askDeleteVersions || obj.IsLatest && !obj.IsDeleteMarker) {
+          keys[0].push({
+            Key: obj.Key,
+          });
+        }
+        if (askDeleteVersions) {
+          keys[1].push({
+            Key: obj.Key,
+            VersionId: obj.VersionId
+          });
+        }
         defer.resolve();
       } else {
         list(obj, defer);
@@ -1027,13 +1043,13 @@
       var s3 = awsS3(obj.LocationConstraint);
       var method;
       var params = {
-        Bucket: s3ListService.getCurrent().bucketName,
+        Bucket: parentFolder.bucketName,
         //Delimiter: '/',
         //EncodingType: 'url',
         //MaxKeys: 0,
         Prefix: obj.Prefix
       };
-      if (!deleteVersions) {
+      if (!askDeleteVersions) {
         params.Marker = nextMarker;
         method = 'listObjects';
       } else {
@@ -1046,12 +1062,12 @@
           defer.reject(err);
         } else {
           $timeout(function() {
-            if (deleteVersions) {
-              data.Versions.forEach(_setKeyObj);
-              data.DeleteMarkers.forEach(_setKeyObj);
+            if (askDeleteVersions) {
+              data.Versions.forEach(_setKeyObj());
+              data.DeleteMarkers.forEach(_setKeyObj(true));
               nextMarker = data.NextKeyMarker;
             } else {
-              data.Contents.forEach(_setKeyObj);
+              data.Contents.forEach(_setKeyObj());
               nextMarker = data.NextMarker;
             }
 
@@ -1061,12 +1077,20 @@
               defer.resolve();
             }
 
-            function _setKeyObj(o) {
-              $scope.keys = $scope.keys || [];
-              $scope.keys.push({
-                Key: o.Key,
-                VersionId: deleteVersions ? o.VersionId : undefined
-              });
+            function _setKeyObj(isDeleteMarker) {
+              return function(o) {
+                if (!askDeleteVersions || o.IsLatest && !isDeleteMarker) {
+                  keys[0].push({
+                    Key: o.Key,
+                  });
+                }
+                if (askDeleteVersions) {
+                  keys[1].push({
+                    Key: o.Key,
+                    VersionId: o.VersionId
+                  });
+                }
+              };
             }
           });
         }
@@ -1075,7 +1099,7 @@
 
     function drop() {
       $scope.processing = true;
-      var s3 = awsS3(s3ListService.getCurrent().LocationConstraint);
+      var s3 = awsS3(parentFolder.LocationConstraint);
       var keysAll = $scope.keys.concat();
       var keysArr = [];
 
@@ -1084,6 +1108,7 @@
       }
       $q.all(keysArr.map(_deleteObjects))
         .then(function() {
+          s3ListService.updateFolder(parentFolder);
           s3ListService.updateFolder();
           s3ListService.selectObjects([]);
           $scope.$close();
@@ -1095,7 +1120,7 @@
       function _deleteObjects(keys) {
         var defer = $q.defer();
         var params = {
-          Bucket: s3ListService.getCurrent().bucketName,
+          Bucket: parentFolder.bucketName,
           Delete: {
             Objects: keys,
             Quiet: true

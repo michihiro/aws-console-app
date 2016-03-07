@@ -47,6 +47,7 @@ s3:
   deleteConfirmation: 削除の確認
   deleteObjMsg1: "%s を削除しますか？"
   deleteObjMsg2: "%d 個のオブジェクトを削除しますか？"
+  permanentlyDelete: 完全に削除する
   deleteBktMsg: バケット %s を削除しますか？
   folderName: フォルダ名
   region: リージョン

@@ -47,6 +47,7 @@ s3:
   deleteConfirmation: Delete Confirmation
   deleteObjMsg1: Are you sure you want to delete %s?
   deleteObjMsg2: Are you sure you want to delete %d files?
+  permanentlyDelete: Permanently delete
   deleteBktMsg: Are you sure you want to delete a bucket %s?
   folderName: Folder name
   region: Region
