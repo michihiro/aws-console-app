@@ -1,0 +1,91 @@
+<div class="modal-header">
+  <button class="close" ng-click="$dismiss()">&times;</button>
+  <h3 ng-bind="::'s3.changeBucketWebsite'|i18next"></h3>
+</div>
+<div class="modal-body">
+  <form name="inputs.form" class="form-horizontal">
+    <div class="form-group">
+      <label class="col-xs-4 control-label"
+             ng-bind="::'s3.bucketName'|i18next"></label>
+      <div class="col-xs-8">
+        <div class="form-control-static"
+             ng-bind="bucketName"></div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-xs-4 control-label"
+             ng-bind="::'s3.websiteHosting'|i18next"></label>
+      <div class="col-xs-8">
+        <div class="btn-group btn-group-raised">
+          <button class="btn"
+                  ng-class="{'btn-info':!inputs.websiteHosting}"
+                  ng-bind="::'s3.websiteDisabled'|i18next"
+                  ng-disabled="inputs.versioning"
+                  ng-model="inputs.websiteHosting"
+                  uib-btn-radio="undefined"></button>
+          <button class="btn"
+                  ng-bind="::'s3.websiteEnabled'|i18next"
+                  ng-class="{'btn-info':inputs.websiteHosting=='Enabled'}"
+                  ng-model="inputs.websiteHosting"
+                  uib-btn-radio="'Enabled'"></button>
+          <button class="btn"
+                  ng-bind="::'s3.websiteRedirect'|i18next"
+                  ng-class="{'btn-info':inputs.websiteHosting=='RedirectTo'}"
+                  ng-model="inputs.websiteHosting"
+                  uib-btn-radio="'RedirectTo'"></button>
+        </div>
+      </div>
+    </div>
+    <div class="form-group" ng-if="inputs.websiteHosting=='Enabled'">
+      <label class="col-xs-4 control-label"
+             ng-bind="::'s3.indexDocument'|i18next"></label>
+      <div class="col-xs-8">
+        <input type="text" class="form-control" name="indexDocument" 
+               spellcheck="false"
+               inputmode="verbatim"
+               ng-model="inputs.indexDocument"
+               required
+               ng-disabled="processing">
+      </div>
+    </div>
+    <div class="form-group" ng-if="inputs.websiteHosting=='Enabled'">
+      <label class="col-xs-4 control-label"
+             ng-bind="::'s3.errorDocument'|i18next"></label>
+      <div class="col-xs-8">
+        <input type="text" class="form-control" name="errorDocument" 
+               spellcheck="false"
+               inputmode="verbatim"
+               ng-model="inputs.errorDocument"
+               ng-disabled="processing">
+      </div>
+    </div>
+    <div class="form-group" ng-if="inputs.websiteHosting=='RedirectTo'">
+      <label class="col-xs-4 control-label"
+             ng-bind="::'s3.redirectHost'|i18next"></label>
+      <div class="col-xs-8">
+        <input type="text" class="form-control" name="redirectHost" 
+               spellcheck="false"
+               inputmode="verbatim"
+               ng-model="inputs.redirectHost"
+               required
+               ui-validate="'isValidRedirectURI($value)'"
+               ng-disabled="processing">
+      </div>
+    </div>
+  </form>
+  <div class="cover" ng-if="processing"><div class="modal-loader"></div></div>
+</div>
+<div class="modal-footer">
+  <div class="alert alert-warning" ng-show="error" ng-bind="error|errorMsg:'s3'"></div>
+  <button class="btn btn-raised btn-default"
+          ng-bind="::'com.cancel'|i18next"
+          ng-click="$dismiss()"
+          ng-disabled="processing" >
+  </button>
+  <button class="btn btn-raised btn-success"
+          ng-bind="::'com.save'|i18next"
+          ng-click="save()"
+          ng-disabled="inputs.form.$invalid || processing" >
+  </button>
+  <div class="cover" ng-if="processing"></div>
+</div>

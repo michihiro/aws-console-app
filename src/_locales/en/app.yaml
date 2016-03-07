@@ -81,6 +81,14 @@ s3:
   versioningEnabled: Enabled
   versioningSuspended: Suspended
   changeVersioningMsg: Once enabled, Versioning cannot be disabled, only suspended.
+  changeBucketWebsite: Bucket Static Website Hosting
+  websiteHosting: Website Hosting
+  websiteDisabled: Disabled
+  websiteEnabled: Enabled
+  websiteRedirect: Redirect all to another host
+  indexDocument: Index Document
+  errorDocument: Error Document
+  redirectHost: Redirect Destination Host
   regionName:
     us-east-1: US East (Northern Virginia)
     us-west-1: US West (Northern California)

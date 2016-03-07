@@ -81,6 +81,14 @@ s3:
   versioningEnabled: 有効
   versioningSuspended: 停止
   changeVersioningMsg: 有効にしたバージョニングを無効にすることはできません。停止のみ可能です。
+  changeBucketWebsite: バケットの静的WEBサイトホスティング
+  websiteHosting: WEBサイトホスティング
+  websiteDisabled: 無効
+  websiteEnabled: 有効
+  websiteRedirect: すべてをリダイレクト
+  indexDocument: Index ドキュメント
+  errorDocument: Error ドキュメント
+  redirectHost: リダイレクト先
   regionName:
     us-east-1: US 東海岸（北バージニア）
     us-west-1: US 西海岸（北カルフォルニア）

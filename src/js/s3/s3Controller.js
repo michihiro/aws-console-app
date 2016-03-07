@@ -11,6 +11,7 @@
     .controller('s3CreateBucketDialogCtrl', s3CreateBucketDialogCtrl)
     .controller('s3ChangeBucketVersioningDialogCtrl', s3ChangeBucketVersioningDialogCtrl)
     .controller('s3ChangeBucketAclDialogCtrl', s3ChangeBucketAclDialogCtrl)
+    .controller('s3ChangeBucketWebsiteDialogCtrl', s3ChangeBucketWebsiteDialogCtrl)
     .controller('s3DeleteBucketDialogCtrl', s3DeleteBucketDialogCtrl)
     .controller('s3BucketPropertiesDialogCtrl', s3BucketPropertiesDialogCtrl)
     .controller('s3CreateFolderCtrl', s3CreateFolderCtrl)
@@ -23,14 +24,14 @@
 
     var actions = {
       all: [
-        'createBucket', ['bucketProperties', ['changeBucketAcl', 'changeBucketVersioning']],
+        'createBucket', ['bucketProperties', ['changeBucketAcl', 'changeBucketVersioning', 'changeBucketWebsite']],
         'deleteBucket', '',
         'downloadObjects',
         'uploadObjects', 'uploadFolder', 'createFolder',
         'deleteObjects'
       ],
       treeBucket: [
-        'createBucket', ['bucketProperties', ['changeBucketAcl', 'changeBucketVersioning']],
+        'createBucket', ['bucketProperties', ['changeBucketAcl', 'changeBucketVersioning', 'changeBucketWebsite']],
         'deleteBucket', '', 'uploadObjects', 'uploadFolder',
         'createFolder'
       ],
@@ -211,7 +212,6 @@
       sortReverse: false,
       s3Actions: s3Actions,
       onDblClickList: onDblClickList,
-      //downloadObjects: downloadObjects,
       getSysWaiting: s3DownloadService.getSysWaiting,
       onRowSelect: onRowSelect,
       isSelectedObject: s3ListService.isSelectedObject,
@@ -274,12 +274,6 @@
         s3DownloadService.download([obj], s3ListService.getCurrent());
       }
     }
-
-    /*
-    function downloadObjects() {
-      s3DownloadService.download(s3ListService.getSelectedObjects());
-    }
-    */
   }
 
   s3TreeCtrl.$inect = ['s3ListService'];
@@ -779,6 +773,122 @@
         }
       };
       s3.putBucketVersioning(params, function(err) {
+        $timeout(function() {
+          if (err) {
+            $scope.processing = false;
+            $scope.error = err;
+          } else {
+            s3ListService.updateBuckets();
+            $scope.$close();
+          }
+        });
+      });
+    }
+  }
+
+  s3ChangeBucketWebsiteDialogCtrl.$inject = ['$scope', '$timeout', 's3ListService', 'awsS3', 'comValidator'];
+
+  function s3ChangeBucketWebsiteDialogCtrl($scope, $timeout, s3ListService, awsS3, comValidator) {
+    var current = s3ListService.getCurrent();
+    var routingRules;
+    ng.extend($scope, {
+      bucketName: current.bucketName,
+      inputs: {},
+      isValidRedirectURI: isValidRedirectURI,
+      save: save
+    });
+
+    $scope.$watch('inputs.websiteHosting', function(hosting) {
+      if (hosting === 'Enabled') {
+        $scope.inputs.indexDocument = $scope.inputs.indexDocument || 'index.html';
+      } else if (hosting === 'RedirectTo') {
+        $scope.inputs.redirectHost = $scope.inputs.redirectHost || 'example.com';
+      }
+    });
+
+    _init();
+
+    function isValidRedirectURI(val) {
+      var match = (val || '').match(/^(https?:\/\/)?([^\/]*)(\/.*)?$/);
+      return match && comValidator.isValidDomain(match[2]) &&
+        (match[3] || '').match(/^[\x21-\x7e]*$/);
+    }
+
+    function _init() {
+      var s3 = awsS3(current.LocationConstraint);
+      var params = {
+        Bucket: current.bucketName,
+      };
+      $scope.processing = true;
+      s3.getBucketWebsite(params, function(err, data) {
+        $scope.$apply(function() {
+          $scope.processing = false;
+          if (err) {
+            $scope.processing = false;
+            if (err.code !== 'NoSuchWebsiteConfiguration') {
+              $scope.error = err;
+            }
+            routingRules = [];
+            return;
+          }
+          var inputs = $scope.inputs;
+          var redirectTo = data.RedirectAllRequestsTo;
+          if (redirectTo) {
+            inputs.websiteHosting = 'RedirectTo';
+            inputs.redirectHost =
+              (redirectTo.Protocol ? redirectTo.Protocol + '://' : '') +
+              redirectTo.HostName;
+          } else {
+            inputs.websiteHosting = 'Enabled';
+            inputs.indexDocument = (data.IndexDocument || {}).Suffix;
+            inputs.errorDocument = (data.ErrorDocument || {}).Key;
+          }
+          routingRules = data.RoutingRules;
+        });
+      });
+    }
+
+
+    function save() {
+      if ($scope.processing) {
+        return;
+      }
+      $scope.processing = true;
+
+      var s3 = awsS3(current.LocationConstraint);
+      var inputs = $scope.inputs;
+      var method = inputs.websiteHosting ? 'putBucketWebsite' : 'deleteBucketWebsite';
+      var params = {
+        Bucket: current.bucketName
+      };
+      var config = {};
+      if (inputs.websiteHosting) {
+        if (inputs.websiteHosting === 'Enabled') {
+          config.IndexDocument = {
+            Suffix: inputs.indexDocument
+          };
+          if (inputs.errorDocument && inputs.errorDocument.length) {
+            config.ErrorDocument = {
+              Key: inputs.errorDocument
+            };
+          }
+        }
+        if (inputs.websiteHosting === 'RedirectTo') {
+          inputs.redirectHost.match(/^(?:(https?):\/\/)?(.*)/);
+          config.RedirectAllRequestsTo = {
+            Protocol: RegExp.$1 || undefined,
+            HostName: RegExp.$2
+          };
+        }
+        if (routingRules && routingRules.length) {
+          config.RoutingRules = routingRules;
+        }
+        ng.extend(params, {
+          WebsiteConfiguration: config
+        });
+      }
+
+      s3[method](params, function(err) {
         $timeout(function() {
           if (err) {
             $scope.processing = false;
