@@ -64,6 +64,9 @@ s3:
     STANDARD: 標準
     REDUCED_REDUNDANCY: 低冗長化
     STANDARD_IA: 標準 - 低頻度アクセス
+  serverSideEncryption: サーバー側暗号化
+  serverSideEncryptionNone: なし
+  serverSideEncryptionAES256: AES256
   changeBucketAcl: バケットのアクセス許可
   aclGrantee: 対象
   aclRead: 一覧/参照

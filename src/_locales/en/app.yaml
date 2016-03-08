@@ -64,6 +64,9 @@ s3:
     STANDARD: Standard
     REDUCED_REDUNDANCY: Reduced Redundancy
     STANDARD_IA: Standard - Infrequent Access
+  serverSideEncryption: Server Side Encryption
+  serverSideEncryptionNone: None
+  serverSideEncryptionAES256: AES256
   changeBucketAcl: Bucket Permisssions
   aclGrantee: Grentee
   aclRead: List/DownLoad

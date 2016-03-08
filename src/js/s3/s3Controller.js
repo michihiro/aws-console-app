@@ -418,6 +418,7 @@
     function _uploadOne(uploadFile, idx) {
       var defer = $q.defer();
       var storageClass = $scope.inputs.storageClass;
+      var serverSideEncryption = $scope.inputs.serverSideEncryption;
       uploadFile.entry.file(function(file) {
         var reader = new FileReader();
         reader.onerror = defer.reject;
@@ -428,6 +429,7 @@
             Bucket: folder.bucketName,
             Key: (folder.Prefix || '') + uploadFile.path,
             StorageClass: storageClass,
+            ServerSideEncryption: serverSideEncryption,
             ContentType: s3Mimetype(uploadFile.path.replace(/^.*\./, '')),
             Body: new Blob([reader.result]),
           };
