@@ -49,6 +49,10 @@ s3:
   deleteObjMsg2: Are you sure you want to delete %d files?
   permanentlyDelete: Permanently delete
   deleteBktMsg: Are you sure you want to delete a bucket %s?
+  objectProperties: Object Properties
+  changeObjectStorageClass: Change Storage Class
+  targetObjects: Target Objects
+  selectedObjects: "%d Objects"
   folderName: Folder name
   region: Region
   noObject: No objects found.

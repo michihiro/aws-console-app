@@ -110,7 +110,8 @@
          ng-disabled="true">
       </a>
       <ul uib-dropdown-menu ng-if="m|isArray">
-        <li ng-repeat="m2 in m[1]">
+        <li ng-repeat="m2 in m[1]"
+            ng-class="{disabled:s3Actions.isDisabled(m2, true)}">
           <a ng-click="s3Actions.onClick($event, m2, true);"
              ng-bind="::'s3.'+m2|i18next"></a>
         </li>
@@ -123,11 +124,22 @@
      contextmenu-for=".s3-tree-folder" contextmenu-outer="#s3-tree">
   <ul uib-dropdown-menu>
     <li ng-repeat="m in s3Actions.treeFolder"
-        ng-class="{divider:!m.length, disabled:s3Actions.isDisabled(m, true)}">
-      <a ng-if="m.length" ng-class="{withoutripple:s3Actions.isDisabled(m, true)}"
+        ng-class="{divider:!m.length, disabled:s3Actions.isDisabled(m, true),'dropdown-submenu':(m|isArray)}">
+      <a ng-if="!(m|isArray) && m.length" ng-class="{withoutripple:s3Actions.isDisabled(m, true)}"
          ng-click="s3Actions.onClick($event, m, true);"
          ng-bind="::'s3.'+m|i18next">
       </a>
+      <a uib-dropdown-toggle ng-if="m|isArray"
+         ng-bind="::'s3.'+m[0]|i18next"
+         ng-disabled="true">
+      </a>
+      <ul uib-dropdown-menu ng-if="m|isArray">
+        <li ng-repeat="m2 in m[1]"
+            ng-class="{disabled:s3Actions.isDisabled(m2, true)}">
+          <a ng-click="s3Actions.onClick($event, m2, true);"
+             ng-bind="::'s3.'+m2|i18next"></a>
+        </li>
+      </ul>
     </li>
   </ul>
 </div>
@@ -135,11 +147,22 @@
 <div uib-dropdown class="position-fixed" contextmenu-for="#s3-list">
   <ul uib-dropdown-menu>
     <li ng-repeat="m in s3Actions.list"
-        ng-class="{divider:!m.length, disabled:s3Actions.isDisabled(m)}">
-      <a ng-if="m.length" ng-class="{withoutripple:s3Actions.isDisabled(m)}"
+        ng-class="{divider:!m.length, disabled:s3Actions.isDisabled(m),'dropdown-submenu':(m|isArray)}">
+      <a ng-if="!(m|isArray) && m.length" ng-class="{withoutripple:s3Actions.isDisabled(m)}"
          ng-click="s3Actions.onClick($event, m);"
          ng-bind="::'s3.'+m|i18next">
       </a>
+      <a uib-dropdown-toggle ng-if="m|isArray"
+         ng-bind="::'s3.'+m[0]|i18next"
+         ng-disabled="true">
+      </a>
+      <ul uib-dropdown-menu ng-if="m|isArray">
+        <li ng-repeat="m2 in m[1]"
+            ng-class="{disabled:s3Actions.isDisabled(m2)}">
+          <a ng-click="s3Actions.onClick($event, m2);"
+             ng-bind="::'s3.'+m2|i18next"></a>
+        </li>
+      </ul>
     </li>
   </ul>
 </div>

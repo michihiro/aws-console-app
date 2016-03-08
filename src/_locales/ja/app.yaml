@@ -49,6 +49,10 @@ s3:
   deleteObjMsg2: "%d 個のオブジェクトを削除しますか？"
   permanentlyDelete: 完全に削除する
   deleteBktMsg: バケット %s を削除しますか？
+  objectProperties: オブジェクトのプロパティ
+  changeObjectStorageClass: ストレージクラスの変更
+  targetObjects: 対象オブジェクト
+  selectedObjects: "%d 個のオブジェクト"
   folderName: フォルダ名
   region: リージョン
   noObject: オブジェクトがありません。

@@ -16,8 +16,9 @@
            ng-disabled="true">
         </a>
         <ul uib-dropdown-menu ng-if="m|isArray">
-          <li ng-repeat="m2 in m[1]">
-            <a ng-click="s3Actions.onClick($event, m2, true);"
+          <li ng-repeat="m2 in m[1]"
+              ng-class="{disabled:s3Actions.isDisabled(m2)}">
+            <a ng-click="s3Actions.onClick($event, m2);"
                ng-bind="::'s3.'+m2|i18next"></a>
           </li>
         </ul>
