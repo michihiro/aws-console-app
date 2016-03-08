@@ -1207,7 +1207,7 @@
     });
 
     $scope.$watch('inputs.deleteAllVersions', function(b) {
-      $scope.keys = keys[+b];
+      $scope.keys = keys[+(!!b)];
     });
 
     pickup();
