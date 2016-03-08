@@ -416,6 +416,12 @@
     }
 
     function download(objs, rootObj) {
+      objs = objs.filter(function(o) {
+        return !o.IsDeleteMarker;
+      });
+      if (!objs.length) {
+        return;
+      }
       sysWaiting = true;
       $timeout(function() {
         _getUrls(objs, rootObj)
