@@ -94,10 +94,14 @@
       margin-right: .2em;
     }
     .backup {
-      color: #999;
-      i {
-        margin-left: 1em;
-      }
+      color: #777;
+      $bg1: rgba(#f7f7f7, .8);
+      $bg2: rgba(#f0f0f0, .8);
+      background-image: linear-gradient(
+        -90deg,
+        $bg1 25%, $bg2 25%, $bg2 50%, $bg1 50%, $bg1 75%, $bg2 75%, $bg2
+     );
+     background-size: 16px 16px;
     }
   }
 }

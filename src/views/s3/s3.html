@@ -57,7 +57,7 @@
             </tr>
             <tr ng-repeat="item in getCurrent().list | orderBy:sortExp:sortReverse"
                 ng-dblclick="onDblClickList(item)"
-                ng-class="{selected: isSelectedObject(item),backup:getCurrent().Versioning&&item.VersionId&&(!item.IsLatest||item.IsDeleteMarker)}" >
+                ng-class="{selected: isSelectedObject(item),backup:getCurrent().Versioning&&(item.VersionId||item.IsDeletedFolder)&&(!item.IsLatest||item.IsDeleteMarker)}" >
               <td ng-repeat="col in columns" ng-class="col.class"
                      ng-style="{width:col.width+'px'}">
                 <div class="td-inner" ng-style="{width: col.width+'px'}">

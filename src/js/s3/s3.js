@@ -6,7 +6,8 @@
     .factory('s3ListService', s3ListServiceFactory)
     .service('s3DownloadService', s3DownloadService)
     .service('s3UploadService', s3UploadService)
-    .factory('s3NotificationsService', s3NotificationsService);
+    .factory('s3NotificationsService', s3NotificationsService)
+    .factory('s3Conf', s3ConfFactory);
 
   awsS3Factory.$inject = ['$rootScope'];
 
@@ -288,6 +289,21 @@
               Versioning: folder.Versioning,
             });
             folders.push(v);
+
+            if (folder.withVersions) {
+              var params = {
+                Bucket: v.bucketName,
+                MaxKeys: 1,
+                Prefix: v.Prefix,
+              };
+              s3.listObjects(params, function(err2, data2) {
+                if (!err) {
+                  $timeout(function() {
+                    v.IsDeletedFolder = (data2.Contents.length === 0);
+                  });
+                }
+              });
+            }
           });
 
           if (folder.withVersions) {
@@ -761,5 +777,25 @@
         }
       }
     }
+  }
+
+  s3ConfFactory.$inject = ['$rootScope'];
+
+  function s3ConfFactory($rootScope) {
+    var scope = $rootScope.$new();
+
+    scope.params = {};
+
+    chrome.storage.local.get('s3Conf', function(obj) {
+      ng.extend(scope.params, obj.s3Conf);
+    });
+
+    scope.$watch('params', function(newVal) {
+      chrome.storage.local.set({
+        s3Conf: newVal
+      });
+    }, true);
+
+    return scope.params;
   }
 })(angular);

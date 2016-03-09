@@ -177,10 +177,11 @@
           if (o.IsDeleteMarker) {
             return 'fa-close';
           } else if (!o.IsLatest) {
-            return 'fa-copy';
+            return 'fa-file';
           }
         }
-        return o.Prefix ? 'fa-folder-o' : 'fa-file-o';
+        return o.IsDeletedFolder ? 'fa-folder' :
+          o.Prefix ? 'fa-folder-o' : 'fa-file-o';
       }
     }, {
       width: 150,
@@ -1012,7 +1013,7 @@
     return;
 
     function pickup() {
-      $scope.isReady = false;
+      $scope.processing = true;
       $scope.keys = null;
       var promises = dialogInputs.target.map(getKeys);
 
@@ -1022,7 +1023,7 @@
           $scope.storageClassOrg = storageClass[0];
           $scope.inputs.storageClass = storageClass[0];
         }
-        $scope.isReady = true;
+        $scope.processing = false;
       });
     }
 
