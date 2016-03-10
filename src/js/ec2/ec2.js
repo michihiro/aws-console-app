@@ -1,4 +1,4 @@
-(function(ng) {
+((ng) => {
   'use strict';
 
   var REFRESH_TIMEOUT = 15000;
@@ -13,12 +13,10 @@
   awsEC2Factory.$inject = ['$rootScope'];
 
   function awsEC2Factory($rootScope) {
-    return function(region) {
-      return new AWS.EC2({
-        credentials: $rootScope.getCredentials(),
-        region: region,
-      });
-    };
+    return (region) => new AWS.EC2({
+      credentials: $rootScope.getCredentials(),
+      region: region,
+    });
   }
 
   ec2ActionsFactory.$inject = ['$rootScope', 'ec2Info'];
@@ -74,7 +72,7 @@
         return selected.length !== 1 || selected0.Platform !== 'windows' ||
           selected0.State.Name === 'pending';
       }
-      return !(selected || []).some(function(i) {
+      return !(selected || []).some((i) => {
         if (isStartOrStop &&
           (i.RootDeviceType !== 'ebs' || i.InstanceLifecycle === 'spot')) {
           return false;
@@ -103,7 +101,7 @@
     var unavailableInstanceFamilyResource = $resource('conf/unavailableInstanceFamily.json').get();
     var ruleTypeResource = $resource('conf/ruleType.json').get();
 
-    $rootScope.$watch('credentialsId', function() {
+    $rootScope.$watch('credentialsId', () => {
       currentRegion = undefined;
       instances = {};
       vpcs = {};
@@ -141,9 +139,8 @@
 
     function getInstanceTypes(region) {
       var unavailableFamilies = unavailableInstanceFamilyResource[region] || [];
-      return instanceTypeResource.filter(function(type) {
-        return unavailableFamilies.indexOf(type.family) < 0;
-      });
+      return instanceTypeResource.filter((type) =>
+        unavailableFamilies.indexOf(type.family) < 0);
     }
 
     function setRebooting(region, instanceIds) {
@@ -153,12 +150,12 @@
       rebootingInstanceIds[region] = rebootingInstanceIds[region] || {};
       rebooting = rebootingInstanceIds[region];
 
-      Object.keys(rebooting).forEach(function(id) {
+      Object.keys(rebooting).forEach((id) => {
         if (rebooting[id] < now - 60000) {
           delete rebooting[id];
         }
       });
-      (instanceIds || []).forEach(function(id) {
+      (instanceIds || []).forEach((id) => {
         rebooting[id] = now;
       });
     }
@@ -207,11 +204,9 @@
     function getAvailabilityZones(region) {
       if (region && availabilityZones[region] === undefined) {
         availabilityZones[region] = null;
-        awsEC2(region).describeAvailabilityZones({}, function(err, data) {
+        awsEC2(region).describeAvailabilityZones({}, (err, data) => {
           availabilityZones[region] = err ? undefined :
-            data.AvailabilityZones.map(function(z) {
-              return z.ZoneName;
-            });
+            data.AvailabilityZones.map((z) => z.ZoneName);
         });
       }
       return availabilityZones[region];
@@ -227,16 +222,15 @@
     }
 
     function getInstances(region, vpcId, subnetId) {
-      return (instances[region] || []).filter(function(i) {
-        return (vpcId === 'EC2CLASSIC' && i.VpcId === undefined || i.VpcId === vpcId) &&
-          (subnetId === undefined || i.SubnetId === subnetId);
-      });
+      return (instances[region] || []).filter((i) => 
+        (vpcId === 'EC2CLASSIC' && i.VpcId === undefined || i.VpcId === vpcId) &&
+        (subnetId === undefined || i.SubnetId === subnetId));
     }
 
     function getNumOfRunningInstances(region, vpcId) {
-      return getInstances(region, vpcId).filter(function(i) {
-        return i.State.Name === 'running' || i.State.Name === 'rebooting';
-      }).length;
+      return getInstances(region, vpcId).filter((i) =>
+        i.State.Name === 'running' || i.State.Name === 'rebooting'
+      ).length;
     }
 
     function getVpcs(region) {
@@ -247,7 +241,7 @@
         if (!regions.length) {
           return undefined;
         }
-        vpcArr = regions.reduce(function(all, key) {
+        vpcArr = regions.reduce((all, key) => {
           if (vpcs[key] && vpcs[key].length) {
             all = all.concat(vpcs[key]);
           }
@@ -292,14 +286,14 @@
           Values: [vpcId]
         }]
       };
-      awsEC2(region).describeSecurityGroups(opt, function(err, data) {
+      awsEC2(region).describeSecurityGroups(opt, (err, data) => {
         if (err) {
           securityGroups[region][vpcId] = undefined;
           return defer.reject(err);
         }
         var oldSG = securityGroups[region][vpcId] || [];
-        securityGroups[region][vpcId] = (data.SecurityGroups || []).map(function(g) {
-          oldSG.some(function(oldG, idx) {
+        securityGroups[region][vpcId] = (data.SecurityGroups || []).map((g) => {
+          oldSG.some((oldG, idx) => {
             if (oldG.GroupId === g.GroupId) {
               g = ng.extend(oldG, g);
               oldSG.splice(idx, 1);
@@ -318,8 +312,8 @@
         _describeVpcs(region),
         _describeInstances(region)
       ]);
-      promise.then(function() {
-        getVpcs(getCurrentRegion()).forEach(function(v) {
+      promise.then(() => {
+        getVpcs(getCurrentRegion()).forEach((v) => {
           if (v.isOpen === undefined) {
             v.isOpen = getInstances(v.region, v.VpcId).length > 0;
           }
@@ -330,7 +324,7 @@
 
     function _describeVpcs(region) {
       var defer = $q.defer();
-      awsEC2(region).describeVpcs({}, function(err, data) {
+      awsEC2(region).describeVpcs({}, (err, data) => {
         if (!data || !data.Vpcs) {
           defer.resolve();
           return;
@@ -340,9 +334,9 @@
         var regionIdx = awsRegions.ec2.indexOf(region);
         var promises = [$q.when()];
 
-        vpcs[region] = data.Vpcs.map(function(v) {
+        vpcs[region] = data.Vpcs.map((v) => {
 
-          (vpcsBack[region] || []).some(function(v2, idx) {
+          (vpcsBack[region] || []).some((v2, idx) => {
             if (v2.VpcId === v2.VpcId) {
               v = ng.extend(v2, v);
               vpcsBack[region].splice(idx, 1);
@@ -351,7 +345,7 @@
           });
 
           v.region = region;
-          v.tags = v.Tags.reduce(function(all, v2) {
+          v.tags = v.Tags.reduce((all, v2) => {
             all[v2.Key] = v2.Value;
             return all;
           }, {});
@@ -363,7 +357,7 @@
 
           return v;
         });
-        $q.all(promises).then(function() {
+        $q.all(promises).then(() => {
           defer.resolve();
         });
       });
@@ -377,18 +371,18 @@
           Name: 'vpc-id',
           Values: [vpc.VpcId]
         }],
-      }, function(err, obj) {
+      }, (err, obj) => {
         var subnetsBack = vpc.Subnets || [];
         if (obj) {
-          vpc.Subnets = obj.Subnets.map(function(s) {
-            subnetsBack.some(function(sb, idx) {
+          vpc.Subnets = obj.Subnets.map((s) => {
+            subnetsBack.some((sb, idx) => {
               if (sb.SubnetId === s.SubnetId) {
                 s = ng.extend(sb, s);
                 subnetsBack.splice(idx, 1);
                 return true;
               }
             });
-            s.tags = s.Tags.reduce(function(all, s2) {
+            s.tags = s.Tags.reduce((all, s2) => {
               all[s2.Key] = s2.Value;
               return all;
             }, {});
@@ -405,7 +399,7 @@
     function _describeInstances(region) {
       var defer = $q.defer();
       var tempStates = ['pending', 'shutting-down', 'stopping', 'rebooting'];
-      awsEC2(region).describeInstances({}, function(err, data) {
+      awsEC2(region).describeInstances({}, (err, data) => {
 
         ec2Conf.amiHistory = ec2Conf.amiHistory || {};
         ec2Conf.amiHistory[region] = ec2Conf.amiHistory[region] || [];
@@ -422,9 +416,9 @@
 
         var now = Date.now();
         var oldInstances = instances[region];
-        instances[region] = data.Reservations.reduce(function(all, resv) {
-          var ins = resv.Instances.map(function(v) {
-            (oldInstances || []).some(function(v2, idx) {
+        instances[region] = data.Reservations.reduce((all, resv) => {
+          var ins = resv.Instances.map((v) => {
+            (oldInstances || []).some((v2, idx) => {
               if (v.InstanceId === v2.InstanceId) {
                 delete v2.VpcId;
                 delete v2.SubnetId;
@@ -435,7 +429,7 @@
             });
 
             v.region = region;
-            v.tags = v.Tags.reduce(function(all, v2) {
+            v.tags = v.Tags.reduce((all, v2) => {
               all[v2.Key] = v2.Value;
               return all;
             }, {});
@@ -461,7 +455,7 @@
             }
             needRefresh = needRefresh || (tempStates.indexOf(v.State.Name) >= 0);
 
-            var found = regionAmiHistory.some(function(a) {
+            var found = regionAmiHistory.some((a) => {
               if (a.id === v.ImageId) {
                 a.mtime = now;
                 a.rtime = Math.max(a.rtime, +v.LaunchTime);
@@ -477,9 +471,7 @@
               });
             }
             regionAmiHistory._update = now;
-            regionAmiHistory.sort(function(a, b) {
-              return a.rtime < b.rtime ? 1 : -1;
-            });
+            regionAmiHistory.sort((a, b) => a.rtime < b.rtime ? 1 : -1);
 
             return v;
           });
@@ -518,16 +510,14 @@
     function _describeImages(region, resource, amis) {
       var defer = $q.defer();
       var opt = {
-        ImageIds: resource.map(function(ami) {
-          return ami.id;
-        })
+        ImageIds: resource.map((ami) => ami.id)
       };
-      awsEC2(region).describeImages(opt, function(err, data) {
+      awsEC2(region).describeImages(opt, (err, data) => {
         if (err) {
           amis[region] = undefined;
           return defer.reject(err);
         }
-        amis[region] = resource.reduce(function(all, ami) {
+        amis[region] = resource.reduce((all, ami) => {
           data.Images.some(function(a) {
             if (a.ImageId === ami.id) {
               ng.extend(a, _getNameAndIcon(region, a));
@@ -542,7 +532,7 @@
 
       function _getNameAndIcon(region, ami) {
         var icon, name;
-        (amiResource[region] || []).some(function(a) {
+        (amiResource[region] || []).some((a) => {
           if (ami.ImageId === a.id) {
             icon = a.icon;
             name = a.name;
@@ -618,7 +608,7 @@
         ]
       ];
 
-      return candidateRoot.reduce(function(ar, v) {
+      return candidateRoot.reduce((ar, v) => {
         var cidrArrLen = cidrArr.length;
         var i0 = v[0][0];
         if (cidrArrLen > 1 && i0 !== (+cidrArr[0])) {
@@ -652,11 +642,10 @@
 
     scope.params = {};
 
-    chrome.storage.local.get('ec2Conf', function(obj) {
-      ng.extend(scope.params, obj.ec2Conf);
-    });
+    chrome.storage.local.get('ec2Conf', (obj) =>
+      ng.extend(scope.params, obj.ec2Conf));
 
-    scope.$watch('params', function(newVal) {
+    scope.$watch('params', (newVal) => {
       chrome.storage.local.set({
         ec2Conf: newVal
       });
