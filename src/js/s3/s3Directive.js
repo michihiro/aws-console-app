@@ -1,4 +1,4 @@
-(function(ng) {
+((ng) => {
   'use strict';
 
   ng.module('aws-console')
@@ -6,17 +6,15 @@
     .directive('s3UploadField', s3UploadFieldDirective)
     .directive('s3Tree', s3TreeDirective);
 
-  s3TreeDirective.$inject = ['$compile', '$http', '$templateCache', '$q', 's3ListService'];
+  s3TreeDirective.$inject = ['$compile', '$http', '$templateCache', '$q', 's3List'];
 
-  function s3TreeDirective($compile, $http, $templateCache, $q, s3ListService) {
+  function s3TreeDirective($compile, $http, $templateCache, $q, s3List) {
     var template;
     var promise;
 
     promise = $http.get('views/s3/tree.html', {
       cache: $templateCache
-    }).then(function(response) {
-      template = response.data;
-    });
+    }).then((response) => template = response.data);
 
     return {
       restrict: 'E',
@@ -28,17 +26,13 @@
     };
 
     function link(scope, elem) {
-      scope.depth = parseInt(scope.depth || 0, 10);
+      ng.extend(scope, {
+        depth: parseInt(scope.depth || 0, 10),
+        isActive: (item) => s3List.getCurrent() === item ? 'active' : '',
+        onClick: (ev, item) => s3List.setCurrent(item)
+      });
 
-      scope.isActive = function(item) {
-        return s3ListService.getCurrent() === item ? 'active' : '';
-      };
-
-      scope.onClick = function(ev, item) {
-        s3ListService.setCurrent(item);
-      };
-
-      promise.then(function() {
+      promise.then(() => {
         var newElem = ng.element(template);
         $compile(newElem)(scope);
         elem.replaceWith(newElem);
@@ -46,12 +40,12 @@
     }
   }
 
-  s3UploadFieldDirective.$inject = ['$parse', '$q', 's3UploadService'];
+  s3UploadFieldDirective.$inject = ['$parse', '$q', 's3Upload'];
 
-  function s3UploadFieldDirective($parse, $q, s3UploadService) {
+  function s3UploadFieldDirective($parse, $q, s3Upload) {
 
     ng.element(document).on({
-      dragover: function(ev) {
+      dragover: (ev) => {
         ev.stopPropagation();
         ev.preventDefault();
         ev.originalEvent.dataTransfer.dropEffect = 'none';
@@ -108,7 +102,7 @@
           }
         }
 
-        uploadInfo = s3UploadService.createUploadList(entries, []);
+        uploadInfo = s3Upload.createUploadList(entries, []);
         uploadInfo.promise.finally(_claer);
         onceOnDrop();
 
@@ -136,15 +130,13 @@
     var mime = {};
     $http.get('conf/mimetype.txt').then(_extractMimeTypeString);
 
-    return function(ext) {
-      return mime[ext];
-    };
+    return (ext) => mime[ext];
 
     function _extractMimeTypeString(res) {
       if (typeof res.data !== 'string') {
         return;
       }
-      mime = res.data.split('\n').reduce(function(all, v) {
+      mime = res.data.split('\n').reduce((all, v) => {
         var match = v.match(/^([^#][^\s]*)(?:(?:[\s]+)([^\s]+))/);
         var type;
         if (match) {

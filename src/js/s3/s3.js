@@ -1,30 +1,28 @@
-(function(ng) {
+((ng) => {
   'use strict';
 
   ng.module('aws-console')
     .factory('awsS3', awsS3Factory)
-    .factory('s3ListService', s3ListServiceFactory)
-    .service('s3DownloadService', s3DownloadService)
-    .service('s3UploadService', s3UploadService)
-    .factory('s3NotificationsService', s3NotificationsService)
+    .factory('s3List', s3ListFactory)
+    .service('s3Download', s3DownloadService)
+    .service('s3Upload', s3UploadService)
+    .factory('s3Notifications', s3NotificationsService)
     .factory('s3Conf', s3ConfFactory);
 
   awsS3Factory.$inject = ['$rootScope'];
 
   function awsS3Factory($rootScope) {
-    return function(region) {
-      return new AWS.S3({
-        s3ForcePathStyle: true,
-        signatureVersion: 'v4',
-        credentials: $rootScope.getCredentials(),
-        region: region,
-      });
-    };
+    return (region) => new AWS.S3({
+      s3ForcePathStyle: true,
+      signatureVersion: 'v4',
+      credentials: $rootScope.getCredentials(),
+      region: region,
+    });
   }
 
-  s3ListServiceFactory.$inject = ['$rootScope', '$timeout', 'awsS3'];
+  s3ListFactory.$inject = ['$rootScope', '$timeout', 'awsS3'];
 
-  function s3ListServiceFactory($rootScope, $timeout, awsS3) {
+  function s3ListFactory($rootScope, $timeout, awsS3) {
     var buckets;
     var current;
     var selected = [];
@@ -34,7 +32,7 @@
     var historyIdx = 0;
     var showVersions;
 
-    $rootScope.$watch('credentialsId', function() {
+    $rootScope.$watch('credentialsId', () => {
       buckets = undefined;
       current = undefined;
       selected = [];
@@ -164,18 +162,16 @@
       }
 
       var s3 = awsS3();
-      s3.listBuckets(function(err, result) {
+      s3.listBuckets((err, result) => {
         if (err) {
           buckets = [];
           return;
         }
 
-        var bucketNames = (buckets || []).map(function(v) {
-          return v.Name;
-        });
+        var bucketNames = (buckets || []).map(v => v.Name);
 
         var newBuckets = [];
-        result.Buckets.forEach(function(bucket) {
+        result.Buckets.forEach((bucket) => {
           var idx = bucketNames.indexOf(bucket.Name);
           if (idx >= 0) {
             bucket = ng.extend(buckets[idx], bucket);
@@ -186,7 +182,7 @@
           _getBucketLocationConstraint(bucket);
         });
 
-        $timeout(function() {
+        $timeout(() => {
           buckets = buckets || [];
           buckets.length = 0;
           Array.prototype.push.apply(buckets, newBuckets);
@@ -198,7 +194,7 @@
           }
           s3.getBucketLocation({
             Bucket: bucket.Name
-          }, function(err, data) {
+          }, (err, data) => {
             if (data) {
               ng.extend(bucket, data);
               _getBucketVersioning(bucket);
@@ -212,7 +208,7 @@
         function _getBucketVersioning(bucket) {
           awsS3(bucket.LocationConstraint).getBucketVersioning({
             Bucket: bucket.Name
-          }, function(err, data) {
+          }, (err, data) => {
             if (data) {
               bucket.Versioning = data.Status;
               bucket.MFADelete = data.MFADelete;
@@ -253,7 +249,7 @@
       }
 
       folder.doneReq = false;
-      s3[method](params, function(err, data) {
+      s3[method](params, (err, data) => {
         var folders = folder.folders = folder.folders || [];
         var contents = folder.contents = folder.contents || [];
         if (!folder.nextMarker) {
@@ -267,10 +263,10 @@
           folder.oldContents.length = 0;
           return;
         }
-        $timeout(function() {
-          data.CommonPrefixes.forEach(function(v) {
+        $timeout(() => {
+          data.CommonPrefixes.forEach((v) => {
             var old = {};
-            folder.oldFolders.some(function(v2, idx) {
+            folder.oldFolders.some((v2, idx) => {
               if (v.Prefix !== v2.Prefix) {
                 return false;
               }
@@ -296,9 +292,9 @@
                 MaxKeys: 1,
                 Prefix: v.Prefix,
               };
-              s3.listObjects(params, function(err2, data2) {
+              s3.listObjects(params, (err2, data2) => {
                 if (!err) {
-                  $timeout(function() {
+                  $timeout(() => {
                     v.IsDeletedFolder = (data2.Contents.length === 0);
                   });
                 }
@@ -327,7 +323,7 @@
           }
 
           function _setObject(isDeleteMarker) {
-            return function(v) {
+            return (v) => {
               if (v.Key.match(/\/$/)) {
                 return;
               }
@@ -335,7 +331,7 @@
                 v.IsLatest = true;
               }
               v.IsDeleteMarker = isDeleteMarker;
-              folder.oldContents.some(function(v2, idx) {
+              folder.oldContents.some((v2, idx) => {
                 if (v.Key !== v2.Key || v.VersionId !== v2.VersionId) {
                   return false;
                 }
@@ -386,7 +382,7 @@
     }
 
     function end(notif) {
-      $timeout(function() {
+      $timeout(() => {
         if (notificationsToDel === null) {
           _del(notif);
         } else {
@@ -415,9 +411,9 @@
     }
   }
 
-  s3DownloadService.$inject = ['$timeout', '$q', '$uibModal', 's3ListService', 's3NotificationsService', 'awsS3'];
+  s3DownloadService.$inject = ['$timeout', '$q', '$uibModal', 's3List', 's3Notifications', 'awsS3'];
 
-  function s3DownloadService($timeout, $q, $uibModal, s3ListService, s3NotificationsService, awsS3) {
+  function s3DownloadService($timeout, $q, $uibModal, s3List, s3Notifications, awsS3) {
     var MAX_DOWNLOAD_NUM = 1000;
     var ERR_TOO_MAY_OBJECTS = 'errTooManyObjects';
     var sysWaiting;
@@ -432,19 +428,17 @@
     }
 
     function download(objs, rootObj) {
-      objs = objs.filter(function(o) {
-        return !o.IsDeleteMarker;
-      });
+      objs = objs.filter(o => !o.IsDeleteMarker);
       if (!objs.length) {
         return;
       }
       sysWaiting = true;
-      $timeout(function() {
+      $timeout(() => {
         _getUrls(objs, rootObj)
-          .then(function(urlData) {
-            _saveAllObjects(urlData);
+          .then(_saveAllObjects)
+          .then(() => {
             sysWaiting = false;
-          }, function() {
+          }, () => {
             _alert();
           });
       });
@@ -457,8 +451,8 @@
     }
 
     function _saveAllObjects(urlData) {
-      _chooseDirEntry().then(function(dirEntry) {
-        var promises = urlData.map(function(obj, idx) {
+      _chooseDirEntry().then((dirEntry) => {
+        var promises = urlData.map((obj, idx) => {
           if (obj.name[obj.name.length - 1] === '/') {
             return _saveFolder(obj, dirEntry, idx);
           } else {
@@ -472,36 +466,30 @@
           numProcessed: 0,
           sizes: [],
           sizeProcessed: 0,
-          sizeTotal: urlData.map(function(v) {
-            return v.size;
-          }).reduce(_sum, 0),
+          sizeTotal: urlData.map(v => v.size)
+            .reduce((total, size) => total + size, 0),
         };
 
-        s3NotificationsService.add(notification);
-        $q.all(promises).then(function() {
-          s3NotificationsService.end(notification);
-        });
-        promises.forEach(function(p) {
-          p.then(function() {
+        s3Notifications.add(notification);
+        $q.all(promises)
+          .then(s3Notifications.end.bind(null, notification));
+        promises.forEach((p) => {
+          p.then(() => {
             notification.numProcessed++;
             notification.percent =
               ((notification.sizeProcessed + notification.numProcessed) * 100 /
               (notification.sizeTotal + notification.numTotal)).toFixed(2);
-          }, null, function(progress) {
+          }, null, (progress) => {
             notification.sizes[p._idx] = progress.size;
-            notification.sizeProcessed = notification.sizes.reduce(_sum, 0);
+            notification.sizeProcessed = notification.sizes
+              .reduce((total, size) => total + size, 0);
             notification.percent =
               ((notification.sizeProcessed + notification.numProcessed) * 100 /
               (notification.sizeTotal + notification.numTotal)).toFixed(2);
           });
         });
-      }, function() {
-        // canceled
-      });
+      }, () => {}); // canceled
 
-      function _sum(total, size) {
-        return total + size;
-      }
     }
 
     function _saveFolder(obj, dirEntry, idx) {
@@ -509,7 +497,7 @@
       var dirs = obj.name.split('/');
       dirs.pop();
 
-      _createDir(dirEntry, dirs, function() {
+      _createDir(dirEntry, dirs, () => {
         defer.resolve();
       });
       defer.promise._idx = idx;
@@ -523,7 +511,7 @@
       xhr.open('GET', obj.url, true);
       xhr.responseType = 'blob';
       xhr.onerror = defer.reject;
-      xhr.onreadystatechange = function() {
+      xhr.onreadystatechange = () => {
         if (xhr.readyState !== 4) {
           return;
         }
@@ -534,9 +522,9 @@
           defer.notify({
             size: (xhr.response || {}).size || 0,
           });
-          xhr.writerPromise.then(function(writer) {
+          xhr.writerPromise.then((writer) => {
             writer.onerror = defer.reject;
-            writer.onwriteend = function() {
+            writer.onwriteend = () => {
               if (writer.length !== 0 || xhr.response.size === 0) {
                 defer.resolve();
               } else {
@@ -560,7 +548,7 @@
       dirs.pop();
 
       if (dirs.length > 0) {
-        _createDir(dirEntry, dirs, function() {
+        _createDir(dirEntry, dirs, () => {
           _save();
         });
       } else {
@@ -572,11 +560,9 @@
           create: true,
           exclusive: false
         };
-        dirEntry.getFile(obj.name, opt, function(file) {
-          file.createWriter(defer.resolve, defer.reject);
-        }, function(err) {
-          defer.reject(err);
-        });
+        dirEntry.getFile(obj.name, opt,
+          (file) => file.createWriter(defer.resolve, defer.reject),
+          (err) => defer.reject(err));
       }
       return defer.promise;
     }
@@ -584,7 +570,7 @@
     function _createDir(dirEntry, dirNames, callback) {
       dirEntry.getDirectory(dirNames[0], {
         create: true
-      }, function(childDirEntry) {
+      }, (childDirEntry) => {
         if (dirNames.length > 1) {
           _createDir(childDirEntry, dirNames.slice(1), callback);
         } else {
@@ -597,7 +583,7 @@
       var bucketName = rootObj.bucketName;
       var region = rootObj.LocationConstraint;
 
-      var promises = objs.map(function(obj) {
+      var promises = objs.map((obj) => {
         var defer = $q.defer();
         if (obj.Prefix) {
           var s3 = awsS3(region);
@@ -605,12 +591,12 @@
             Bucket: bucketName,
             Prefix: obj.Prefix
           };
-          s3.listObjects(params, function(err, data) {
+          s3.listObjects(params, (err, data) => {
             if (err) {
               console.log(err);
               defer.reject(err);
             } else {
-              var downloadData = data.Contents.map(function(o) {
+              var downloadData = data.Contents.map((o) => {
                 return {
                   url: _getObjectUrl(bucketName, region, o),
                   name: o.Key.replace(rootObj.Prefix, ''),
@@ -629,8 +615,8 @@
         }
         return defer.promise;
       });
-      return $q.all(promises).then(function(data) {
-        data = data.reduce(function(all, d) {
+      return $q.all(promises).then((data) => {
+        data = data.reduce((all, d) => {
           Array.prototype.push.apply(all, d);
           return all;
         }, []);
@@ -646,7 +632,7 @@
       var defer = $q.defer();
       chrome.fileSystem.chooseEntry({
         type: 'openDirectory',
-      }, function(dirEntry) {
+      }, (dirEntry) => {
         if (dirEntry) {
           defer.resolve(dirEntry);
         } else {
@@ -669,9 +655,9 @@
     }
   }
 
-  s3UploadService.$inject = ['$rootScope', '$q', 's3ListService'];
+  s3UploadService.$inject = ['$rootScope', '$q', 's3List'];
 
-  function s3UploadService($rootScope, $q, s3ListService) {
+  function s3UploadService($rootScope, $q, s3List) {
     return {
       createUploadList: createUploadList,
       uploadFiles: uploadFiles
@@ -684,7 +670,7 @@
         type: 'openFile',
         acceptsMultiple: true
       };
-      chrome.fileSystem.chooseEntry(opt, function(entries) {
+      chrome.fileSystem.chooseEntry(opt, (entries) => {
         if (!entries) {
           console.log('chrome.fileSystem.chooseEntry', chrome.runtime.lastError.message);
           return;
@@ -694,7 +680,7 @@
         }
         $rootScope.openDialog('s3/uploadDialog', {
           uploadInfo: createUploadList(entries),
-          folder: s3ListService.getCurrent()
+          folder: s3List.getCurrent()
         });
       });
     }
@@ -714,7 +700,7 @@
         var defer = $q.defer();
         var entry = entries.shift();
         if (entry.isFile) {
-          entry.getMetadata(function(metadata) {
+          entry.getMetadata((metadata) => {
             var item = {
               check: true,
               path: entry.fullPath.replace(/^\//, ''),
@@ -742,7 +728,7 @@
               uploadListWork.total = 0;
             }
             defer.resolve(uploadList);
-          }, function(err) {
+          }, (err) => {
             console.log(err);
             defer.reject(err);
           });
@@ -751,7 +737,7 @@
           _readEntries(reader);
         }
 
-        return defer.promise.then(function() {
+        return defer.promise.then(() => {
           if (entries.length) {
             return getUpload();
           } else {
@@ -763,14 +749,14 @@
         });
 
         function _readEntries(reader) {
-          reader.readEntries(function(result) {
+          reader.readEntries((result) => {
             if (!result || !result.length) {
               defer.resolve(uploadList);
             } else {
               Array.prototype.push.apply(entries, result);
               _readEntries(reader);
             }
-          }, function(err) {
+          }, (err) => {
             console.log(err);
             defer.reject(err);
           });
@@ -786,15 +772,12 @@
 
     scope.params = {};
 
-    chrome.storage.local.get('s3Conf', function(obj) {
-      ng.extend(scope.params, obj.s3Conf);
-    });
+    chrome.storage.local.get('s3Conf',
+      (obj) => ng.extend(scope.params, obj.s3Conf));
 
-    scope.$watch('params', function(newVal) {
-      chrome.storage.local.set({
-        s3Conf: newVal
-      });
-    }, true);
+    scope.$watch('params', (newVal) => chrome.storage.local.set({
+      s3Conf: newVal
+    }), true);
 
     return scope.params;
   }
