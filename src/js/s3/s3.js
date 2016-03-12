@@ -299,6 +299,8 @@
                   });
                 }
               });
+            } else {
+              v.IsDeletedFolder = false;
             }
           });
 
