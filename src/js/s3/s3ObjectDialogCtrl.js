@@ -3,6 +3,7 @@
 
   ng.module('aws-console')
     .controller('s3UploadDialogCtrl', s3UploadDialogCtrl)
+    .factory('s3ObjectProp', s3ObjectPropFactory)
     .controller('s3ChangeObjectStorageClassDialogCtrl', s3ChangeObjectStorageClassDialogCtrl)
     .controller('s3DeleteObjectsDialogCtrl', s3DeleteObjectsDialogCtrl);
 
@@ -158,12 +159,205 @@
     }
   }
 
-  s3ChangeObjectStorageClassDialogCtrl.$inject = ['$scope', '$q', '$timeout', 's3List', 'awsS3', 'dialogInputs'];
+  s3ObjectPropFactory.$inject = ['$q', 'awsS3'];
 
-  function s3ChangeObjectStorageClassDialogCtrl($scope, $q, $timeout, s3List, awsS3, dialogInputs) {
+  function s3ObjectPropFactory($q, awsS3) {
+    return {
+      getObjectProperty: getObjectProperty,
+      changeObjectProperty: changeObjectProperty,
+    };
+
+    function getObjectProperty(keys, noVersioing) {
+      return _operateObjects(keys, noVersioing, (item) => {
+        return $q.when(item)
+          .then(_headObject)
+          .then(_getObjectAcl);
+      });
+    }
+
+    function changeObjectProperty(keys, noVersioing, prop) {
+      return _operateObjects(keys, noVersioing, (item) => {
+        return $q.when(item)
+          .then(_headObject)
+          .then(_getObjectAcl)
+          .then(_copyObject(prop))
+          .then(_putObjectAcl);
+      });
+    }
+
+    function _operateObjects(keys, noVersioing, fn) {
+      var defer = $q.defer();
+
+      $q.all(keys.map(_getItems.bind(null, noVersioing))).then((items) => {
+        var results = [];
+        var cnt = 0;
+
+        Array.prototype.concat.apply([], items).forEach((item) => {
+          cnt++;
+          $q.when(item)
+            .then(fn)
+            .then((item) => {
+              results.push(item);
+              if (!(--cnt)) {
+                defer.resolve(results);
+              } else {
+                defer.notify(results);
+              }
+            }, (err) => {
+              defer.reject(err);
+            });
+        });
+        if (cnt === 0) {
+          defer.resolve(results);
+        }
+      });
+      return defer.promise;
+    }
+
+    function _getItems(noVersioing, item) {
+      var defer = $q.defer();
+      if (item.Key) {
+        if (!noVersioing || item.IsLatest && !item.IsDeleteMarker) {
+          defer.resolve([{
+            LocationConstraint: item.LocationConstraint,
+            bucketName: item.bucketName,
+            Key: item.Key,
+            IsLatest: item.IsLatest,
+            IsDeleteMarker: item.IsDeleteMarker
+          }]);
+        } else {
+          defer.resolve([]);
+        }
+      } else {
+        if (!noVersioing || !item.IsDeletedFolder) {
+          _listObjects(item).then(defer.resolve, defer.reject);
+        } else {
+          defer.resolve([]);
+        }
+      }
+      return defer.promise;
+    }
+
+    function _listObjects(item, nextMarker) {
+      var defer = $q.defer();
+      var s3 = awsS3(item.LocationConstraint);
+      var params = {
+        Bucket: item.bucketName,
+        Prefix: item.Prefix,
+        Marker: nextMarker
+      };
+
+      s3.listObjects(params, (err, data) => {
+        if (err) {
+          return defer.reject(err);
+        }
+        var items = data.Contents.map((v) => {
+          return {
+            LocationConstraint: item.LocationConstraint,
+            bucketName: item.bucketName,
+            Key: v.Key
+          };
+        });
+        if (data.IsTruncated && data.NextMarker) {
+          _listObjects(item, data.NextMarker).then((items2) => {
+            defer.resolve(items.concat(items2));
+          });
+        } else {
+          defer.resolve(items);
+        }
+      });
+      return defer.promise;
+    }
+
+    function _headObject(item) {
+      var defer = $q.defer();
+      var s3 = awsS3(item.LocationConstraint);
+      var params = {
+        Bucket: item.bucketName,
+        Key: item.Key,
+      };
+      s3.headObject(params, (err, data) => {
+        if (err) {
+          defer.reject(err);
+        } else {
+          data.StorageClass = data.StorageClass || 'STANDARD';
+          ng.extend(item, data);
+          defer.resolve(item);
+        }
+      });
+      return defer.promise;
+    }
+
+    function _getObjectAcl(item) {
+      var defer = $q.defer();
+      var s3 = awsS3(item.LocationConstraint);
+      var params = {
+        Bucket: item.bucketName,
+        Key: item.Key,
+      };
+      s3.getObjectAcl(params, (err, data) => {
+        if (err) {
+          defer.reject(err);
+        } else {
+          item.Owner = data.Owner;
+          item.Grants = data.Grants;
+          defer.resolve(item);
+        }
+      });
+      return defer.promise;
+    }
+
+    function _copyObject(paramsExt) {
+      return (item) => {
+        var defer = $q.defer();
+        var s3 = awsS3(item.LocationConstraint);
+        var params = {
+          Bucket: item.bucketName,
+          CopySource: item.bucketName + '/' + encodeURIComponent(item.Key),
+          Key: item.Key,
+          MetadataDirective: 'COPY',
+          /*
+          CacheControl:
+          ContentDisposition:
+          ContentEncoding:
+          ContentLanguage:
+          ContentType:
+          Expires:
+          WebsiteRedirectLocation:
+          Metadata:
+          */
+          StorageClass: item.storageClass,
+          ServerSideEncryption: item.ServerSideEncryption,
+        };
+        params = ng.extend(params, paramsExt);
+        s3.copyObject(params, (err) =>
+          err ? defer.reject(err) : defer.resolve(item));
+        return defer.promise;
+      };
+    }
+
+    function _putObjectAcl(item) {
+      var defer = $q.defer();
+      var s3 = awsS3(item.LocationConstraint);
+      var params = {
+        Bucket: item.bucketName,
+        Key: item.Key,
+        AccessControlPolicy: {
+          Owner: item.Owner,
+          Grants: item.Grants
+        }
+      };
+      s3.putObjectAcl(params, (err) =>
+        err ? defer.reject(err) : defer.resolve(item));
+      return defer.promise;
+    }
+  }
+
+  s3ChangeObjectStorageClassDialogCtrl.$inject = ['$scope', '$q', '$timeout', 's3List', 's3ObjectProp', 'awsS3', 'dialogInputs'];
+
+  function s3ChangeObjectStorageClassDialogCtrl($scope, $q, $timeout, s3List, s3ObjectProp, awsS3, dialogInputs) {
     var parentFolder = dialogInputs.target[0].parent;
 
-    var storageClassCheck = {};
     ng.extend($scope, {
       bucketName: parentFolder.bucketName,
       storageClasses: ['STANDARD', 'REDUCED_REDUNDANCY', 'STANDARD_IA'],
@@ -178,68 +372,25 @@
     function pickup() {
       $scope.processing = true;
       $scope.keys = null;
-      var promises = dialogInputs.target.map(getKeys);
 
-      $q.all(promises).then(() => {
-        var storageClass = Object.keys(storageClassCheck);
-        if (storageClass.length === 1) {
-          $scope.storageClassOrg = storageClass[0];
-          $scope.inputs.storageClass = storageClass[0];
-        }
-        $scope.processing = false;
-      });
-    }
-
-    function getKeys(obj) {
-      var defer = $q.defer();
-
-      $scope.keys = $scope.keys || [];
-      if (obj.Key !== undefined) {
-        if (obj.IsLatest && !obj.IsDeleteMarker) {
-          $scope.keys.push({
-            Key: obj.Key,
+      s3ObjectProp.getObjectProperty(dialogInputs.target, true)
+        .then((results) => {
+          var storageClassOrg;
+          $scope.keys = results;
+          results.some((v) => {
+            if (storageClassOrg !== undefined &&
+              storageClassOrg !== v.StorageClass) {
+              storageClassOrg = undefined;
+              return true;
+            }
+            storageClassOrg = v.StorageClass;
           });
-          storageClassCheck[obj.StorageClass] = true;
-        }
-        defer.resolve();
-      } else {
-        list(obj, defer);
-      }
-      return defer.promise;
-    }
-
-    function list(obj, defer, nextMarker) {
-      var s3 = awsS3(obj.LocationConstraint);
-      var params = {
-        Bucket: parentFolder.bucketName,
-        Prefix: obj.Prefix,
-        Marker: nextMarker
-      };
-
-      s3.listObjects(params, (err, data) => {
-        if (err) {
-          return defer.reject(err);
-        }
-        $timeout(() => {
-          data.Contents.forEach(_setKeyObj());
-          nextMarker = data.NextMarker;
-
-          if (data.IsTruncated && nextMarker) {
-            list(obj, defer, nextMarker);
-          } else {
-            defer.resolve();
-          }
-
-          function _setKeyObj() {
-            return (o) => {
-              $scope.keys.push({
-                Key: o.Key,
-              });
-              storageClassCheck[o.StorageClass] = true;
-            };
-          }
+          $scope.storageClassOrg = storageClassOrg;
+          $scope.inputs.storageClass = storageClassOrg;
+          $scope.processing = false;
+        }, null, (results) => {
+          $scope.keys = results;
         });
-      });
     }
 
     function save() {
@@ -247,110 +398,16 @@
         return;
       }
       $scope.processing = true;
-      var s3 = awsS3(parentFolder.LocationConstraint);
-      $q.all($scope.keys.map(_setMeta))
-        .then(() => {
-          s3List.updateFolder(parentFolder);
-          s3List.updateFolder();
-          $scope.$close();
-        }, (err) => {
-          $scope.error = err;
-          $scope.processing = false;
-        });
-
-      function _setMeta(key) {
-        return _headObject(key)
-          .then(_getObjectAcl)
-          .then(_copyObject)
-          .then(_putObjectAcl);
-      }
-
-      function _headObject(item) {
-        var defer = $q.defer();
-        var params = {
-          Bucket: parentFolder.bucketName,
-          Key: item.Key,
-        };
-        s3.headObject(params, (err, data) => {
-          if (err) {
-            defer.reject(err);
-          } else {
-            data.Key = item.Key;
-            defer.resolve(data);
-          }
-        });
-        return defer.promise;
-      }
-
-      function _getObjectAcl(item) {
-        var defer = $q.defer();
-        var params = {
-          Bucket: parentFolder.bucketName,
-          Key: item.Key,
-        };
-        s3.getObjectAcl(params, (err, data) => {
-          if (err) {
-            defer.reject(err);
-          } else {
-            item.Owner = data.Owner;
-            item.Grants = data.Grants;
-            defer.resolve(item);
-          }
-        });
-        return defer.promise;
-      }
-
-      function _copyObject(item) {
-        var defer = $q.defer();
-
-        var params = {
-          Bucket: parentFolder.bucketName,
-          CopySource: parentFolder.bucketName + '/' + encodeURIComponent(item.Key),
-          Key: item.Key,
-          MetadataDirective: 'COPY',
-          /*
-          CacheControl:
-          ContentDisposition:
-          ContentEncoding:
-          ContentLanguage:
-          ContentType:
-          Expires:
-          WebsiteRedirectLocation:
-          Metadata:
-          */
-          StorageClass: $scope.inputs.storageClass,
-          ServerSideEncryption: item.ServerSideEncryption,
-        };
-        s3.copyObject(params, (err) => {
-          if (err) {
-            defer.reject(err);
-          } else {
-            defer.resolve(item);
-          }
-        });
-        return defer.promise;
-      }
-
-      function _putObjectAcl(item) {
-        var defer = $q.defer();
-
-        var params = {
-          Bucket: parentFolder.bucketName,
-          Key: item.Key,
-          AccessControlPolicy: {
-            Owner: item.Owner,
-            Grants: item.Grants
-          }
-        };
-        s3.putObjectAcl(params, (err) => {
-          if (err) {
-            defer.reject(err);
-          } else {
-            defer.resolve();
-          }
-        });
-        return defer.promise;
-      }
+      s3ObjectProp.changeObjectProperty($scope.keys, true, {
+        StorageClass: $scope.inputs.storageClass
+      }).then(() => {
+        s3List.updateFolder(parentFolder);
+        s3List.updateFolder();
+        $scope.$close();
+      }, (err) => {
+        $scope.error = err;
+        $scope.processing = false;
+      });
     }
   }
 

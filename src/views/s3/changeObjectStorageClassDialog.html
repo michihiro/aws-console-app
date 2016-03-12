@@ -35,38 +35,6 @@
                 ng-model="inputs.storageClass" uib-btn-radio="s"></button>
       </div>
     </div>
-<!--
-    <div class="form-group">
-      <label class="col-xs-4 control-label"
-             ng-bind="::'s3.versioning'|i18next"></label>
-      <div class="col-xs-8">
-        <div class="btn-group btn-group-raised">
-          <button class="btn"
-                  ng-class="{'btn-warning':!inputs.versioning}"
-                  ng-bind="::'s3.versioningDisabled'|i18next"
-                  ng-disabled="inputs.versioning"
-                  ng-model="inputs.versioning"
-                  uib-btn-radio="undefined"></button>
-          <button class="btn"
-                  ng-bind="::'s3.versioningEnabled'|i18next"
-                  ng-class="{'btn-info':inputs.versioning=='Enabled'}"
-                  ng-model="inputs.versioning"
-                  uib-btn-radio="'Enabled'"></button>
-          <button class="btn"
-                  ng-bind="::'s3.versioningSuspended'|i18next"
-                  ng-class="{'btn-warning':inputs.versioning=='Suspended'}"
-                  ng-model="inputs.versioning"
-                  uib-btn-radio="'Suspended'"></button>
-        </div>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-xs-offset-4 col-xs-8">
-         <p class="alert alert-info"
-         ng-bind="::'s3.changeVersioningMsg'|i18next"></p>
-      </div>
-    </div>
--->
   </form>
   <div class="cover" ng-if="processing"><div class="modal-loader"></div></div>
 </div>
