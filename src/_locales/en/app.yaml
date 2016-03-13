@@ -51,6 +51,7 @@ s3:
   deleteBktMsg: Are you sure you want to delete a bucket %s?
   objectProperties: Object Properties
   changeObjectStorageClass: Change Storage Class
+  changeObjectServerSideEncryption: Change ServerSide Encryption
   targetObjects: Target Objects
   selectedObjects: "%d Objects"
   folderName: Folder name

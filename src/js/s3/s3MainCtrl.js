@@ -20,7 +20,7 @@
         'deleteBucket', '',
         'downloadObjects',
         'uploadObjects', 'uploadFolder', 'createFolder', [
-          'objectProperties', ['changeObjectStorageClass']
+          'objectProperties', ['changeObjectStorageClass', 'changeObjectServerSideEncryption']
         ], 'deleteObjects'
       ],
       treeBucket: [
@@ -31,12 +31,12 @@
       treeFolder: [
         'createBucket', '', 'downloadObjects',
         'uploadObjects', 'uploadFolder', 'createFolder', [
-          'objectProperties', ['changeObjectStorageClass']
+          'objectProperties', ['changeObjectStorageClass', 'changeObjectServerSideEncryption']
         ], 'deleteObjects'
       ],
       list: [
         'downloadObjects', 'uploadObjects', 'uploadFolder', 'createFolder', [
-          'objectProperties', ['changeObjectStorageClass']
+          'objectProperties', ['changeObjectStorageClass', 'changeObjectServerSideEncryption']
         ], 'deleteObjects'
       ],
     };
@@ -64,7 +64,7 @@
         s3Upload.uploadFiles(RegExp.$1 === 'Folder');
       } else if (key === 'createFolder') {
         scope.creatingFolder = true;
-      } else if (key === 'deleteObjects' || key === 'changeObjectStorageClass') {
+      } else if (key === 'deleteObjects' || key === 'changeObjectStorageClass' || key === 'changeObjectServerSideEncryption') {
         scope.openDialog('s3/' + key + 'Dialog', {
           target: onTree ? [s3List.getCurrent()] : s3List.getSelectedObjects()
         });
@@ -88,9 +88,9 @@
       if (key === 'deleteObjects' && !onTree) {
         return !selected || !selected.length;
       }
-      if ((key === 'changeObjectStorageClass' || key === 'xxxx') && !onTree) {
+      if ((key === 'changeObjectStorageClass' || key === 'changeObjectServerSideEncryption') && !onTree) {
         selected = (selected || []).filter(o =>
-          o.Prefix || o.IsLatest && !o.IsDeleteMarker);
+          o.Prefix && !o.IsDeletedFolder || o.IsLatest && !o.IsDeleteMarker);
         return !selected || !selected.length;
       }
       if (key === 'downloadObjects' && !onTree) {

@@ -5,6 +5,7 @@
     .controller('s3UploadDialogCtrl', s3UploadDialogCtrl)
     .factory('s3ObjectProp', s3ObjectPropFactory)
     .controller('s3ChangeObjectStorageClassDialogCtrl', s3ChangeObjectStorageClassDialogCtrl)
+    .controller('s3ChangeObjectServerSideEncryptionDialogCtrl', s3ChangeObjectServerSideEncryptionDialogCtrl)
     .controller('s3DeleteObjectsDialogCtrl', s3DeleteObjectsDialogCtrl);
 
   s3UploadDialogCtrl.$inject = ['$scope', '$q', '$timeout', 'appFilterService', 's3List', 's3Notifications', 's3Mimetype', 'awsS3', 'dialogInputs'];
@@ -222,8 +223,6 @@
             LocationConstraint: item.LocationConstraint,
             bucketName: item.bucketName,
             Key: item.Key,
-            IsLatest: item.IsLatest,
-            IsDeleteMarker: item.IsDeleteMarker
           }]);
         } else {
           defer.resolve([]);
@@ -326,7 +325,7 @@
           WebsiteRedirectLocation:
           Metadata:
           */
-          StorageClass: item.storageClass,
+          StorageClass: item.StorageClass,
           ServerSideEncryption: item.ServerSideEncryption,
         };
         params = ng.extend(params, paramsExt);
@@ -398,11 +397,70 @@
         return;
       }
       $scope.processing = true;
-      s3ObjectProp.changeObjectProperty($scope.keys, true, {
+      s3ObjectProp.changeObjectProperty(dialogInputs.target, true, {
         StorageClass: $scope.inputs.storageClass
       }).then(() => {
         s3List.updateFolder(parentFolder);
         s3List.updateFolder();
+        s3List.selectObjects([]);
+        $scope.$close();
+      }, (err) => {
+        $scope.error = err;
+        $scope.processing = false;
+      });
+    }
+  }
+
+  s3ChangeObjectServerSideEncryptionDialogCtrl.$inject = ['$scope', '$q', '$timeout', 's3List', 's3ObjectProp', 'awsS3', 'dialogInputs'];
+
+  function s3ChangeObjectServerSideEncryptionDialogCtrl($scope, $q, $timeout, s3List, s3ObjectProp, awsS3, dialogInputs) {
+    var parentFolder = dialogInputs.target[0].parent;
+
+    ng.extend($scope, {
+      bucketName: parentFolder.bucketName,
+      inputs: {},
+      save: save
+    });
+
+    pickup();
+
+    return;
+
+    function pickup() {
+      $scope.processing = true;
+      $scope.keys = null;
+
+      s3ObjectProp.getObjectProperty(dialogInputs.target, true)
+        .then((results) => {
+          var serverSideEncryptionOrg = null;
+          $scope.keys = results;
+          results.some((v) => {
+            if (serverSideEncryptionOrg !== null &&
+              serverSideEncryptionOrg !== v.ServerSideEncryption) {
+              serverSideEncryptionOrg = null;
+              return true;
+            }
+            serverSideEncryptionOrg = v.ServerSideEncryption;
+          });
+          $scope.serverSideEncryptionOrg = serverSideEncryptionOrg;
+          $scope.inputs.serverSideEncryption = serverSideEncryptionOrg;
+          $scope.processing = false;
+        }, null, (results) => {
+          $scope.keys = results;
+        });
+    }
+
+    function save() {
+      if ($scope.processing) {
+        return;
+      }
+      $scope.processing = true;
+      s3ObjectProp.changeObjectProperty(dialogInputs.target, true, {
+        ServerSideEncryption: $scope.inputs.serverSideEncryption
+      }).then(() => {
+        s3List.updateFolder(parentFolder);
+        s3List.updateFolder();
+        s3List.selectObjects([]);
         $scope.$close();
       }, (err) => {
         $scope.error = err;

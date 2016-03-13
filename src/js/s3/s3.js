@@ -562,9 +562,9 @@
           create: true,
           exclusive: false
         };
-        dirEntry.getFile(obj.name, opt,
-          (file) => file.createWriter(defer.resolve, defer.reject),
-          (err) => defer.reject(err));
+        dirEntry.getFile(obj.name, opt, (file) =>
+          file.createWriter(defer.resolve, defer.reject), (err) =>
+          defer.reject(err));
       }
       return defer.promise;
     }
@@ -774,8 +774,8 @@
 
     scope.params = {};
 
-    chrome.storage.local.get('s3Conf',
-      (obj) => ng.extend(scope.params, obj.s3Conf));
+    chrome.storage.local.get('s3Conf', (obj) =>
+      ng.extend(scope.params, obj.s3Conf));
 
     scope.$watch('params', (newVal) => chrome.storage.local.set({
       s3Conf: newVal

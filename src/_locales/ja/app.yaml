@@ -51,6 +51,7 @@ s3:
   deleteBktMsg: バケット %s を削除しますか？
   objectProperties: オブジェクトのプロパティ
   changeObjectStorageClass: ストレージクラスの変更
+  changeObjectServerSideEncryption: サーバー側暗号化の変更
   targetObjects: 対象オブジェクト
   selectedObjects: "%d 個のオブジェクト"
   folderName: フォルダ名
