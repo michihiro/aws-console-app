@@ -15,7 +15,7 @@
                app-focus-on="domainName"
                ng-model="inputs.subDomain"
                ui-validate="'isValidSubDomain($value)'"
-               ng-disabled="processing">
+               ng-disabled="processing || isAliasRRSet">
       </div>
       <div class="form-control-static"
            ng-if="!isZoneRRSet"
@@ -29,13 +29,13 @@
              ng-bind="::'r53.rrsetType'|i18next"></label>
       <div class="col-xs-9">
         <div class="form-control-static"
-             ng-if="isZoneRRSet"
+             ng-if="isZoneRRSet || isAliasRRSet"
              ng-bind="inputs.type"></div>
-        <div class="btn-group" uib-dropdown ng-if="!isZoneRRSet">
+        <div class="btn-group" uib-dropdown ng-if="!isZoneRRSet && !isAliasRRSet">
           <button class="btn btn-raised" uib-dropdown-toggle
                   ng-disabled="processing">
             <span ng-bind="inputs.type"></span>
-            <span class="caret" ng-if="!isZoneRRSet"></span>
+            <span class="caret"></span>
           </button>
           <ul uib-dropdown-menu>
             <li ng-repeat="t in types"
@@ -58,9 +58,9 @@
                app-focus-on="ttl"
                ng-model="inputs.ttl"
                ng-pattern="/^[1-9]([0-9])*$/"
-               ng-disabled="processing">
+               ng-disabled="processing || isAliasRRSet">
       </div>
-      <div class="col-xs-7">
+      <div class="col-xs-7" ng-if="!isAliasRRSet">
         <div class="btns">
           <button class="btn btn-raised btn-default"
                   ng-repeat="b in ttlBtns"
@@ -80,9 +80,9 @@
                   class="form-control" name="value"
                   app-focus-on="value"
                   ng-model="inputs.values"
-                  ui-validate="'isValidValues($value)'"
+                  ui-validate="'isValidValues($value) || isAliasRRSet'"
                   ui-validate-watch="'inputs.type'"
-                  ng-disabled="processing"></textarea>
+                  ng-disabled="processing || isAliasRRSet"></textarea>
       </div>
     </div>
   </form>
@@ -117,7 +117,7 @@
           ng-bind="::btnLabel|i18next"
           ng-class="inputs.form.$invalid?'':btnClass"
           ng-click="command()"
-          ng-disabled="inputs.form.$invalid || processing">
+          ng-disabled="inputs.form.$invalid || processing || isAliasRRSet">
   </button>
   <div class="cover" ng-if="processing"></div>
 </div>

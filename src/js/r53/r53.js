@@ -45,6 +45,8 @@
       if (actions.rrset.indexOf(key) >= 0) {
         $rootScope.openDialog('r53/changeRRSetDialog', {
           mode: key
+        }, {
+          size: 'lg700'
         });
       } else {
         $rootScope.openDialog('r53/changeHostedZoneDialog', {
@@ -67,9 +69,9 @@
         if (selected.length < 1) {
           return true;
         }
-        return selected.some((r) => 
+        return selected.some((r) =>
           r && r.Name.replace(/\.$/, '') === currentZone.Name.replace(/\.$/, '') &&
-          (r.Type === 'SOA' || r.Type === 'NS'));
+          (r.Type === 'SOA' || r.Type === 'NS') || r.AliasTarget);
       }
     }
   }
@@ -253,7 +255,11 @@
 
           v.nameForSort = (v.Name.split('.').reverse().join('.')) +
             (v.Type === 'SOA' ? '.__' : v.Type === 'NS' ? '._' : '.') + v.Type;
-          v.Values = v.ResourceRecords.map((rr) => rr.Value);
+          if (v.AliasTarget) {
+            v.Values = ['ALIAS ' + v.AliasTarget.DNSName];
+          } else {
+            v.Values = v.ResourceRecords.map((rr) => rr.Value);
+          }
           return v;
         });
         Array.prototype.push.apply(zone.listWork, resourceRecordSets);
@@ -291,7 +297,7 @@
     function isValidSOA(v) {
       var ar = (v || '').split(/[\s]+/);
       return ar.length === 7 &&
-        !ar.some((col, idx) => 
+        !ar.some((col, idx) =>
           idx <= 1 ? !comValidator.isValidDomain(col) : !_isNumeric(col));
     }
 

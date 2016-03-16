@@ -32,11 +32,10 @@
       col: 'Type',
       name: 'r53.type',
     }, {
-      width: 300,
+      width: 360,
       col: 'Values',
       name: 'r53.value',
       isArray: true,
-      filterFn: (v) => v.join('<br>')
     }];
 
     ng.extend($scope, {
@@ -96,6 +95,8 @@
     function onDblClickList() {
       $scope.openDialog('r53/changeRRSetDialog', {
         mode: 'updateRRSet'
+      }, {
+        size: 'lg700'
       });
     }
   }
@@ -180,7 +181,7 @@
       $q.all(promises).then(() => {
         if (mode !== 'createHostedZone') {
           associatedVpcsOrg = (currentZone.VPCs || []).map((v) =>
-            (vpcs[v.VPCRegion] || []).filter((vpc) => 
+            (vpcs[v.VPCRegion] || []).filter((vpc) =>
               vpc.VpcId === v.VPCId)[0]);
           inputs.associatedVpcs = associatedVpcsOrg.concat();
         }
@@ -356,6 +357,7 @@
     var subDomain = (rrset.Name || '').replace(reg, '');
     var isZoneRRSet = rrset.Name === currentZone.Name &&
       (rrset.Type === 'SOA' || rrset.Type === 'NS');
+    var isAliasRRSet = !!rrset.AliasTarget;
     var type = rrset.Type || 'A';
 
     ng.extend($scope, {
@@ -370,6 +372,7 @@
         values: (rrset.Values || []).join('\n'),
       },
       isZoneRRSet: isZoneRRSet,
+      isAliasRRSet: isAliasRRSet,
       rrsets: rrsets,
       delrrsets: {},
       types: [
@@ -417,7 +420,7 @@
     function isValidValues(value) {
       var vals = _getValues(value, $scope.inputs.type);
 
-      return vals.length && !vals.some((v) => 
+      return vals.length && !vals.some((v) =>
         !r53Info.isValidValue[$scope.inputs.type](v));
     }
 
@@ -522,7 +525,7 @@
 
     function _exec(params) {
       var defer = $q.defer();
-      awsR53().changeResourceRecordSets(params, (err, data) => 
+      awsR53().changeResourceRecordSets(params, (err, data) =>
         err ? defer.reject(err) : defer.resolve(data));
 
       return defer.promise;
