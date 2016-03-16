@@ -31,9 +31,9 @@
     .config(appConfig)
     .run(appRun);
 
-  appConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$i18nextProvider', 'awsRegions'];
+  appConfig.$inject = ['$provide', '$stateProvider', '$urlRouterProvider', '$i18nextProvider', 'awsRegions'];
 
-  function appConfig($stateProvider, $urlRouterProvider, $i18nextProvider, awsRegions) {
+  function appConfig($provide, $stateProvider, $urlRouterProvider, $i18nextProvider, awsRegions) {
 
     $urlRouterProvider.otherwise('/s3');
 
@@ -82,6 +82,11 @@
       if (ev.which === 13) {
         ev.preventDefault();
       }
+    });
+
+    $provide.decorator('$window', function($delegate) {
+      Object.defineProperty($delegate, 'history', {get: () => null});
+      return $delegate;
     });
   }
 
