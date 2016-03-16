@@ -1,4 +1,4 @@
-(function(ng) {
+((ng) => {
   'use strict';
 
   ng.module('aws-console')
@@ -10,7 +10,7 @@
     .directive('appFocusOn', appFocusOnDirective)
     .factory('appFocusOn', appFocusOnFactory)
     .directive('appHammer', appHammerDirective)
-    .directive('tabHeadingsScroller', tabHeadingsScroller)
+    //.directive('tabHeadingsScroller', tabHeadingsScroller)
     .directive('modalDialog', modalDialogDirective)
     .directive('formGroup', formGroupDirective)
     .directive('appElasticTextarea', appElasticTextareaDirective)
@@ -20,10 +20,10 @@
   appRightClick.$inject = ['$parse'];
 
   function appRightClick($parse) {
-    return function(scope, elem, attrs) {
+    return (scope, elem, attrs) => {
       var fn = $parse(attrs.appRightClick);
-      elem.bind('contextmenu', function(ev) {
-        scope.$apply(function() {
+      elem.bind('contextmenu', (ev) => {
+        scope.$apply(() => {
           ev.preventDefault();
           fn(scope, {
             $event: event
@@ -42,9 +42,9 @@
     };
 
     function link(scope, elem, attr) {
-      scope.$on('appFocusOn', function(e, name) {
+      scope.$on('appFocusOn', (e, name) => {
         if (name === attr.appFocusOn) {
-          $timeout(function() {
+          $timeout(() => {
             ng.element(elem[0]).focus().select();
           });
         }
@@ -55,11 +55,7 @@
   appFocusOnFactory.$inject = ['$rootScope', '$timeout'];
 
   function appFocusOnFactory($rootScope, $timeout) {
-    return function(name) {
-      return $timeout(function() {
-        return $rootScope.$broadcast('appFocusOn', name);
-      });
-    };
+    return (name) => $timeout(() => $rootScope.$broadcast('appFocusOn', name));
   }
 
   appHammerDirective.$inject = [];
@@ -73,8 +69,8 @@
       Swipe: 'swipe swipeleft swiperight swipeup swipedown'.split(' '),
       Tap: 'tap'.split(' '),
     };
-    var RECOGNIZERS = Object.keys(EVENTS).reduce(function(all, key) {
-      EVENTS[key].forEach(function(evName) {
+    var RECOGNIZERS = Object.keys(EVENTS).reduce((all, key) => {
+      EVENTS[key].forEach((evName) => {
         all[evName] = Hammer[key];
       });
       return all;
@@ -88,7 +84,7 @@
     function link(scope, elem, attr) {
       var _opt = scope.$eval(attr.appHammer) || {};
       var _evNames = Object.keys(_opt);
-      var recognizers = _evNames.reduce(function(all, evName) {
+      var recognizers = _evNames.reduce((all, evName) => {
         var recg = RECOGNIZERS[evName];
         if (recg && all.indexOf(recg) < 0) {
           all.push([recg]);
@@ -98,16 +94,14 @@
       var _hm = new Hammer.Manager(elem[0], {
         recognizers: recognizers
       });
-      _evNames.forEach(function(evName) {
-        _hm.on(evName, _onEvent);
-      });
+      _evNames.forEach((evName) => _hm.on(evName, _onEvent));
       elem.on('$destroy', _onDestroy);
 
       return;
 
       function _onEvent(ev) {
         var fn = _opt[ev.type];
-        scope.$apply(function() {
+        scope.$apply(() => {
           if (typeof fn === 'function') {
             fn(ev);
           } else {
@@ -133,7 +127,7 @@
     };
 
     function link(scope, elem) {
-      elem.on('scroll', function() {
+      elem.on('scroll', () => {
         elem.find('.table-container').css({
           minWidth: elem[0].offsetWidth + elem[0].scrollLeft
         });
@@ -154,7 +148,10 @@
       var _selectedIdx = [];
       var startPos, endPos;
       var opt = {
-        recognizers: [[Hammer.Pan], [Hammer.Tap]]
+        recognizers: [
+          [Hammer.Pan],
+          [Hammer.Tap]
+        ]
       };
       var _selectRectParent = $('<div></div>')
         .insertBefore(elem)
@@ -189,7 +186,7 @@
         if (!pos) {
           return;
         }
-        scope.$apply(function() {
+        scope.$apply(() => {
           var handler = $parse(attr.appOnRowSelected);
           var idx;
 
@@ -228,11 +225,15 @@
 
       function _onPanmove(ev) {
         var handler = $parse(attr.appOnRowSelected);
-        _selectRect.css({display: 'none'});
+        _selectRect.css({
+          display: 'none'
+        });
         endPos = _getIndexFromPosition(ev);
         if (startPos && endPos) {
-          _selectRect.css({display: 'block'});
-          scope.$apply(function() {
+          _selectRect.css({
+            display: 'block'
+          });
+          scope.$apply(() => {
             _selectedIdx = _getSequence(startPos.idx, endPos.idx);
             handler(scope, {
               $event: ev.originalEvent,
@@ -322,9 +323,8 @@
 
     function _getSequence(s, e) {
       var step = s < e ? 1 : -1;
-      return new Array(Math.abs(e - s) + 1).join(',').split(',').map(function(e, i) {
-        return s + step * i;
-      });
+      return new Array(Math.abs(e - s) + 1)
+        .join(',').split(',').map((e, i) => s + step * i);
     }
   }
 
@@ -344,7 +344,9 @@
       var _transYMin, _transYMax;
       var header = elem.find('.modal-header');
       var opt = {
-        recognizers: [[Hammer.Pan]]
+        recognizers: [
+          [Hammer.Pan]
+        ]
       };
       header.css({
         cursor: 'move'
@@ -423,7 +425,9 @@
       var container = elem.parents('.table-container');
       var containerScrollLeft;
       var opt = {
-        recognizers: [[Hammer.Pan]]
+        recognizers: [
+          [Hammer.Pan]
+        ]
       };
       scope._hm = new Hammer.Manager(elem[0], opt)
         .on('panstart', _onPanstart)
@@ -451,7 +455,7 @@
           return;
         }
         var w = scope._width + ev.deltaX;
-        scope.$apply(function() {
+        scope.$apply(() => {
           scope.opt.width = w > 50 ? w : 50;
           _setLeft();
         });
@@ -459,8 +463,8 @@
 
       function _setLeft() {
         var left = 0;
-        elem.parents('thead').find('[app-bind-width]').each(function() {
-          var thScope = ng.element(this).scope();
+        elem.parents('thead').find('[app-bind-width]').each((idx, e) => {
+          var thScope = ng.element(e).scope();
           thScope[scope.optName].left = left;
           left += thScope[scope.optName].width;
         });
@@ -496,7 +500,7 @@
     }
   }
   */
-
+  /*
   tabHeadingsScroller.$inject = ['$timeout'];
 
   function tabHeadingsScroller($timeout) {
@@ -575,6 +579,7 @@
       }
     }
   }
+  */
 
   appElasticTextareaDirective.$inject = ['$timeout', '$parse'];
 
@@ -583,6 +588,7 @@
       restrict: 'A',
       link: link
     };
+
     function link(scope, elem, attrs) {
       var opt = $parse(attrs.appElasticTextarea)(scope);
 
@@ -619,7 +625,7 @@
       scope.$watchGroup(watchNames, _onVaidityChange);
 
       function _onVaidityChange(val) {
-        var invalid = val.some(function(v) { return v; });
+        var invalid = val.some((v) => v);
         if (!elem.hasClass('has-none')) {
           elem.toggleClass('has-success', !invalid);
           elem.toggleClass('has-warning', invalid);
@@ -655,7 +661,7 @@
       }
 
       $document.on('contextmenu', selector, _onContextMenu);
-      scope.$on('$destroy', function() {
+      scope.$on('$destroy', () => {
         $document.off('contextmenu', selector, _onContextMenu);
       });
 
@@ -676,9 +682,12 @@
           posTop > menuH && posTop + menuH > target.height());
         menu.toggleClass('dropdown-menu-right',
           posLeft > menuW && posLeft + menuW > target.width());
-        elem.css({left: left, top: top});
+        elem.css({
+          left: left,
+          top: top
+        });
 
-        scope.$apply(function() {
+        scope.$apply(() => {
           $parse(attr.isOpen).assign(scope, true);
         });
       }
@@ -705,7 +714,7 @@
       };
 
       elem.on(handlers);
-      elem.on('$destroy', function() {
+      elem.on('$destroy', () => {
         elem.on(handlers);
       });
 
