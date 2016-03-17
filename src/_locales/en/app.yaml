@@ -98,6 +98,12 @@ s3:
   indexDocument: Index Document
   errorDocument: Error Document
   redirectHost: Redirect Destination Host
+  changeObjectMetadata: Modify object metadata
+  metadataKey: Key
+  metadataValue: Value
+  addMetadata: Add metadata
+  withoutChange: (without change)
+  deleteMetadata: (delete)
   regionName:
     us-east-1: US East (Northern Virginia)
     us-west-1: US West (Northern California)

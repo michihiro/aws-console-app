@@ -683,7 +683,10 @@
     var parentFolder = dialogInputs.target[0].parent;
     var askDeleteVersions = s3List.getShowVersions() &&
       !!parentFolder.Versioning;
-    var keys = [ [], [] ];
+    var keys = [
+      [],
+      []
+    ];
 
     ng.extend($scope, {
       isReady: false,

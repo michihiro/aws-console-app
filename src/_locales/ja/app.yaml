@@ -98,6 +98,12 @@ s3:
   indexDocument: Index ドキュメント
   errorDocument: Error ドキュメント
   redirectHost: リダイレクト先
+  changeObjectMetadata: メタデータの変更
+  metadataKey: キー
+  metadataValue: 値
+  addMetadata: メタデータの追加
+  withoutChange: (変更しない)
+  deleteMetadata: (削除)
   regionName:
     us-east-1: US 東海岸（北バージニア）
     us-west-1: US 西海岸（北カルフォルニア）

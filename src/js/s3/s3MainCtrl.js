@@ -16,16 +16,18 @@
 
     var actions = {
       all: [
-        'createBucket', ['bucketProperties', ['changeBucketAcl', 'changeBucketVersioning', 'changeBucketWebsite']],
-        'deleteBucket', '',
+        'createBucket', [
+          'bucketProperties', ['changeBucketAcl', 'changeBucketVersioning', 'changeBucketWebsite']
+        ], 'deleteBucket', '',
         'downloadObjects',
         'uploadObjects', 'uploadFolder', 'createFolder', [
           'objectProperties', ['changeObjectStorageClass', 'changeObjectServerSideEncryption']
         ], 'deleteObjects'
       ],
       treeBucket: [
-        'createBucket', ['bucketProperties', ['changeBucketAcl', 'changeBucketVersioning', 'changeBucketWebsite']],
-        'deleteBucket', '', 'uploadObjects', 'uploadFolder',
+        'createBucket', [
+          'bucketProperties', ['changeBucketAcl', 'changeBucketVersioning', 'changeBucketWebsite']
+        ], 'deleteBucket', '', 'uploadObjects', 'uploadFolder',
         'createFolder'
       ],
       treeFolder: [
@@ -36,7 +38,7 @@
       ],
       list: [
         'downloadObjects', 'uploadObjects', 'uploadFolder', 'createFolder', [
-          'objectProperties', ['changeObjectStorageClass', 'changeObjectServerSideEncryption']
+          'objectProperties', ['changeObjectStorageClass', 'changeObjectServerSideEncryption', 'changeObjectMetadata']
         ], 'deleteObjects'
       ],
     };
@@ -64,7 +66,7 @@
         s3Upload.uploadFiles(RegExp.$1 === 'Folder');
       } else if (key === 'createFolder') {
         scope.creatingFolder = true;
-      } else if (key === 'deleteObjects' || key === 'changeObjectStorageClass' || key === 'changeObjectServerSideEncryption') {
+      } else if (key === 'deleteObjects' || key === 'changeObjectStorageClass' || key === 'changeObjectServerSideEncryption' || key === 'changeObjectMetadata') {
         scope.openDialog('s3/' + key + 'Dialog', {
           target: onTree ? [s3List.getCurrent()] : s3List.getSelectedObjects()
         });
@@ -88,7 +90,7 @@
       if (key === 'deleteObjects' && !onTree) {
         return !selected || !selected.length;
       }
-      if ((key === 'changeObjectStorageClass' || key === 'changeObjectServerSideEncryption') && !onTree) {
+      if ((key === 'changeObjectStorageClass' || key === 'changeObjectServerSideEncryption' || key === 'changeObjectMetadata') && !onTree) {
         selected = (selected || []).filter(o =>
           o.Prefix && !o.IsDeletedFolder || o.IsLatest && !o.IsDeleteMarker);
         return !selected || !selected.length;
