@@ -321,7 +321,7 @@
           ContentEncoding: item.ContentEncoding,
           ContentLanguage: item.ContentLanguage,
           ContentType: item.ContentType,
-          Expires: item.Expires,
+          Expires: new Date(item.Expires),
           WebsiteRedirectLocation: item.WebsiteRedirectLocation,
           Metadata: item.Metadata,
           StorageClass: item.StorageClass,
@@ -515,7 +515,17 @@
       editable: () => true,
       typeahead: (v, item) =>
         valueTypehead[(item.key || '').toLowerCase()] || [],
-      isValid: (v, item) => (item.added && item.key && item.key.length) ? (v && v.length) : true,
+      isValid: (v, item) => {
+        if (!v || !v.length) {
+          return !item.added;
+        }
+        if(item.key.toLowerCase() === 'expires') {
+          var mo = new moment(v.replace(/ GMT$/, ' +00:00'), 
+            'ddd, DD MMM YYYY HH:mm:ss ZZ', 'en', true);
+          return mo.isValid();
+        }
+        return (v && v.length);
+      },
       validateWith: 'item.key',
       placeholder: (v, item) =>
         item.added ? '' : item.deleted ? i18next('s3.deleteMetadata') : i18next('s3.withoutChange'),
@@ -665,7 +675,7 @@
           } else if (key.match(/^x-amz-meta-(.*)/)) {
             delete params.Metadata[RegExp.$1];
           }
-        } else if (meta.value !== null) {
+        } else if (meta.value && meta.value.length) {
           if (sysKeys.indexOf(keyCamel) >= 0) {
             params[keyCamel] = keyCamel === 'Expires' ?
               new Date(meta.value) : meta.value;
