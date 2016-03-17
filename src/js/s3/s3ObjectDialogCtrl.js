@@ -329,8 +329,16 @@
           ServerSideEncryption: item.ServerSideEncryption,
         };
         params = ng.extend(params, paramsExt);
+        /* sdk bug ?
         s3.copyObject(params, (err) =>
           err ? defer.reject(err) : defer.resolve(item));
+        */
+        var req = s3.copyObject(params);
+        req.on('build', () => {
+          req.httpRequest.headers['Content-Type'] = params.ContentType;
+        });
+        req.send((err) => err ? defer.reject(err) : defer.resolve(item));
+
         return defer.promise;
       };
     }
