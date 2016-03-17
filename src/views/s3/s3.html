@@ -62,8 +62,8 @@
                      ng-style="{width:col.width+'px'}">
                 <div class="td-inner" ng-style="{width: col.width+'px'}">
                   <i ng-if="col.iconFn" class="fa {{col.iconFn(item)}}"></i>
-                  <span ng-if="col.filterFn" ng-bind="col.filterFn(item[col.col], item)"></span>
-                  <span ng-if="!col.filterFn" ng-bind="item[col.col]"></span>
+                  <span app-selectable-text ng-if="col.filterFn" ng-bind="col.filterFn(item[col.col], item)"></span>
+                  <span app-selectable-text ng-if="!col.filterFn" ng-bind="item[col.col]"></span>
                 </div>
               </td>
             </tr>

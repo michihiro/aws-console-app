@@ -15,7 +15,8 @@
     .directive('formGroup', formGroupDirective)
     .directive('appElasticTextarea', appElasticTextareaDirective)
     .directive('contextmenuFor', contextmenuForDirective)
-    .directive('inputmode', inputmodeDirective);
+    .directive('inputmode', inputmodeDirective)
+    .directive('appSelectableText', appSelectableTextDirective);
 
   appRightClick.$inject = ['$parse'];
 
@@ -724,6 +725,41 @@
 
       function _onBlur() {
         elem.attr('type', type);
+      }
+    }
+  }
+
+  function appSelectableTextDirective() {
+    return {
+      restrict: 'A',
+      link: link
+    };
+
+    function link(scope, elem) {
+      $(document).on('mousedown', unselectText);
+      elem.on('mouseup', selectText);
+      elem.on('$destroy', _onDestroy);
+
+      return;
+
+      function selectText() {
+        var sel, range;
+
+        elem.css('user-select', 'text');
+        sel = window.getSelection();
+        range = document.createRange();
+        range.selectNodeContents(elem[0]);
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
+
+      function unselectText() {
+        elem.css('user-select', 'none');
+      }
+
+      function _onDestroy() {
+        $(document).off('mousedown', unselectText);
+        elem.off('mouseup', selectText);
       }
     }
   }
