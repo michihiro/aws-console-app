@@ -67,9 +67,10 @@
 
       function dragOver(ev) {
         var items = ev.originalEvent.dataTransfer.items;
-        if (!items.length) {
+        if (!items.length || items[0].kind !== 'file') {
           return;
         }
+
         ev.stopPropagation();
         ev.preventDefault();
         ev.originalEvent.dataTransfer.dropEffect = 'copy';
@@ -102,9 +103,13 @@
           }
         }
 
-        uploadInfo = s3Upload.createUploadList(entries, []);
-        uploadInfo.promise.finally(_claer);
-        onceOnDrop();
+        if (entries.length) {
+          uploadInfo = s3Upload.createUploadList(entries, []);
+          uploadInfo.promise.finally(_claer);
+          onceOnDrop();
+        } else {
+          _claer();
+        }
 
         function onceOnDrop() {
           $parse(attr.s3UploadField)(scope, {
