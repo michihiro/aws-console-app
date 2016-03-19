@@ -321,7 +321,7 @@
           ContentEncoding: item.ContentEncoding,
           ContentLanguage: item.ContentLanguage,
           ContentType: item.ContentType,
-          Expires: new Date(item.Expires),
+          Expires: item.Expires ? new Date(item.Expires) : undefined,
           WebsiteRedirectLocation: item.WebsiteRedirectLocation,
           Metadata: item.Metadata,
           StorageClass: item.StorageClass,
