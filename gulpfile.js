@@ -12,12 +12,14 @@ if (!global.Promise) {
 // remove app,dist directory.
 gulp.task('clean', function(callback) {
   var del = require('del');
-  del(['app','dist'], callback);
+  del(['app', 'dist'], callback);
 });
 
 // copy static files
 gulp.task('copy', function() {
-  return gulp.src(['src/images/*','src/conf/*.txt'], { base:'src' })
+  return gulp.src(['src/images/*', 'src/conf/*.txt'], {
+      base: 'src'
+    })
     .pipe(newer('app'))
     .pipe(using())
     .pipe(gulp.dest('app'));
@@ -32,7 +34,7 @@ gulp.task('manifest', function() {
     //.pipe(newer({dest:'app', ext:'.json'}))
     .pipe(using())
     .pipe(yaml())
-    .pipe(es.map(function(file, cb){
+    .pipe(es.map(function(file, cb) {
       var data = JSON.parse(file.contents);
       data.version = pkg.version;
       file.contents = new Buffer(JSON.stringify(data));
@@ -56,7 +58,9 @@ gulp.task('views', function() {
   return gulp.src(['src/views/**/*html'])
     .pipe(newer('app/views'))
     .pipe(using())
-    .pipe(htmlhint({ 'doctype-first': false }))
+    .pipe(htmlhint({
+      'doctype-first': false
+    }))
     .pipe(htmlhint.reporter())
     .pipe(gulp.dest('app/views'));
 });
@@ -74,7 +78,7 @@ gulp.task('views-js', ['views'], function() {
     .pipe(ngTemplates({
       filename: 'template-cache.js',
       module: 'app.templateCache',
-      path: function (path, base) {
+      path: function(path, base) {
         return path.replace(base, 'views/');
       }
     }))
@@ -85,7 +89,10 @@ gulp.task('_locale', function() {
   var yaml = require('gulp-yaml');
   return gulp.src('src/_locales/**/*.yaml')
     .pipe(plumber())
-    .pipe(newer({dest:'app/_locales', ext:'.json'}))
+    .pipe(newer({
+      dest: 'app/_locales',
+      ext: '.json'
+    }))
     .pipe(using())
     .pipe(yaml())
     .pipe(gulp.dest('app/_locales'));
@@ -95,7 +102,10 @@ gulp.task('conf', function() {
   var yaml = require('gulp-yaml');
   return gulp.src('src/conf/*.yaml')
     .pipe(plumber())
-    .pipe(newer({dest:'app/conf', ext:'.json'}))
+    .pipe(newer({
+      dest: 'app/conf',
+      ext: '.json'
+    }))
     .pipe(using())
     .pipe(yaml())
     .pipe(gulp.dest('app/conf'));
@@ -105,11 +115,17 @@ gulp.task('conf', function() {
 gulp.task('js', function() {
   var jshint = require('gulp-jshint');
   var stylish = require('jshint-stylish');
+  var babel = require('gulp-babel');
+
   return gulp.src(['src/js/**/*js', '!src/js/vendor/**js'])
     .pipe(newer('app/js'))
     .pipe(using())
     .pipe(jshint())
     .pipe(jshint.reporter(stylish))
+    // uglifyjs is not support es6 yet.
+    .pipe(babel({
+      plugins: ['transform-es2015-arrow-functions']
+    }))
     .pipe(gulp.dest('app/js'));
 });
 
@@ -165,20 +181,27 @@ gulp.task('copy-dist', ['default'], function() {
   });
 
   tasks.push(
-    gulp.src(files, { base: 'app' })
-      .pipe(gulp.dest('dist'))
+    gulp.src(files, {
+      base: 'app'
+    })
+    .pipe(gulp.dest('dist'))
   );
   tasks.push(
     gulp.src(['app/bower_components/**/*.woff'])
-      .pipe(rename(function(path) {
-        path.dirname = '';
-      }))
-      .pipe(gulp.dest('dist/fonts'))
+    .pipe(rename(function(path) {
+      path.dirname = '';
+    }))
+    .pipe(gulp.dest('dist/fonts'))
   );
   tasks.push(
-    gulp.src(['app/js/main.js'], { base: 'app' })
-      .pipe(uglify({compress: false,mangle: false}))
-      .pipe(gulp.dest('dist'))
+    gulp.src(['app/js/main.js'], {
+      base: 'app'
+    })
+    .pipe(uglify({
+      compress: false,
+      mangle: false
+    }))
+    .pipe(gulp.dest('dist'))
   );
   return es.concat.apply(null, tasks);
 });
@@ -193,10 +216,14 @@ gulp.task('usemin', ['default'], function() {
   return gulp.src('app/index.html')
     .pipe(plumber())
     .pipe(usemin({
-      css: [cssnano({
-      }), 'concat'],
-      css2: [cssnano({
-      }), 'concat'],
+      css: [
+        cssnano(),
+        'concat'
+      ],
+      css2: [
+        cssnano(),
+        'concat'
+      ],
       html: [htmlmin({
         removeComments: true,
         removeAttributeQuotes: true,
@@ -204,11 +231,17 @@ gulp.task('usemin', ['default'], function() {
       })],
       js: [
         footer(';/*EOF*/;'), 'concat',
-        uglify({compress:{}, mangle: false})
+        uglify({
+          compress: {},
+          mangle: false
+        })
       ],
       js2: [
         footer(fs.readFileSync('app/js/etc.js')),
-        uglify({compress:{}, mangle: false})
+        uglify({
+          compress: {},
+          mangle: false
+        })
       ]
     }))
     .pipe(gulp.dest('dist'));
@@ -231,7 +264,7 @@ gulp.task('default', [
   'html',
   'views',
   'views-js',
-//  'bower',
+  //'bower',
   '_locale',
   'conf',
   'js',
@@ -248,7 +281,5 @@ gulp.task('watch', ['default'], function() {
   gulp.watch(['src/js/**/*js', '!src/js/vendor/**js'], ['js']);
   gulp.watch('src/js/vendor/**/*js', ['js-vendor']);
   gulp.watch('src/sass/**/*.scss', ['sass']);
-  gulp.watch(['src/images/*','src/conf/*.txt'], ['copy']);
+  gulp.watch(['src/images/*', 'src/conf/*.txt'], ['copy']);
 });
-
-
