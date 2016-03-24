@@ -120,6 +120,7 @@ gulp.task('js', function() {
   return gulp.src(['src/js/**/*js', '!src/js/vendor/**js'])
     .pipe(newer('app/js'))
     .pipe(using())
+    .pipe(plumber())
     .pipe(jshint())
     .pipe(jshint.reporter(stylish))
     // uglifyjs is not support es6 yet.
