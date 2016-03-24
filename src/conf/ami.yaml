@@ -1,6 +1,6 @@
 us-east-1:
-  - id : ami-60b6c60a
-    name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+  - id : ami-08111162
+    name: Amazon Linux AMI 2016.03.0 (HVM), SSD Volume Type
     icon: icon-aws
   - id: ami-2051294a
     name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
@@ -8,60 +8,60 @@ us-east-1:
   - id: ami-b7b4fedd
     name: SUSE Linux Enterprise Server 12 SP1 (HVM), SSD Volume Type
     icon: icon-suse
-  - id: ami-d05e75b8
+  - id: ami-fce3c696
     name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
     icon: icon-ubuntu
-  - id: ami-9a0558f0
+  - id: ami-3d787d57
     name: Microsoft Windows Server 2012 R2 Base
     icon: fa fa-windows
-  - id: ami-a3005dc9
+  - id: ami-ff0f0a95
     name: Microsoft Windows Server 2012 R2 with SQL Server Express
     icon: fa fa-windows
-  - id: ami-c83964a2
+  - id: ami-c70b0ead
     name: Microsoft Windows Server 2012 R2 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-273d604d
+  - id: ami-861316ec
     name: Microsoft Windows Server 2012 R2 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-b0005dda
+  - id: ami-8d0005e7
     name: Microsoft Windows Server 2012 Base
     icon: fa fa-windows
-  - id: ami-825e03e8
+  - id: ami-b82025d2
     name: Microsoft Windows Server 2012 with SQL Server Express
     icon: fa fa-windows
-  - id: ami-cb3b66a1
+  - id: ami-cc2227a6
     name: Microsoft Windows Server 2012 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-2a3a6740
+  - id: ami-8d2a2fe7
     name: Microsoft Windows Server 2012 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-44015c2e
+  - id: ami-0501046f
     name: Microsoft Windows Server 2008 R2 Base
     icon: fa fa-windows
-  - id: ami-633d6009
+  - id: ami-ea191c80
     name: Microsoft Windows Server 2008 R2 with SQL Server Express and IIS
     icon: fa fa-windows
-  - id: ami-b43865de
+  - id: ami-bb2421d1
     name: Microsoft Windows Server 2008 R2 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-be3b66d4
+  - id: ami-3123265b
     name: Microsoft Windows Server 2008 R2 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-b9005dd3
+  - id: ami-0c0d0866
     name: Microsoft Windows Server 2008 Base (64-bit)
     icon: fa fa-windows
-  - id: ami-1e3e6374
+  - id: ami-587e7b32
     name: Microsoft Windows Server 2008 Base (32-bit)
     icon: fa fa-windows
-  - id: ami-e2eab888
+  - id: ami-5c5a5f36
     name: Microsoft Windows Server 2003 R2 Base (64-bit)
     icon: fa fa-windows
-  - id: ami-65e4b60f
+  - id: ami-8e6560e4
     name: Microsoft Windows Server 2003 R2 Base (32-bit)
     icon: fa fa-windows
 us-west-2:
-  - id: ami-f0091d91
-    name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+  - id: ami-c229c0a2
+    name: Amazon Linux AMI 2016.03.0 (HVM), SSD Volume Type
     icon: icon-aws
   - id: ami-775e4f16
     name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
@@ -69,60 +69,60 @@ us-west-2:
   - id: ami-d2627db3
     name: SUSE Linux Enterprise Server 12 SP1 (HVM), SSD Volume Type
     icon: icon-suse
-  - id: ami-5189a661
+  - id: ami-9abea4fb
     name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
     icon: icon-ubuntu
-  - id: ami-83a5bce2
+  - id: ami-1719f677
     name: Microsoft Windows Server 2012 R2 Base
     icon: fa fa-windows
-  - id: ami-33a2bb52
+  - id: ami-6d12fd0d
     name: Microsoft Windows Server 2012 R2 with SQL Server Express
     icon: fa fa-windows
-  - id: ami-12a7be73
+  - id: ami-0f15fa6f
     name: Microsoft Windows Server 2012 R2 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-e5a5bc84
+  - id: ami-1815fa78
     name: Microsoft Windows Server 2012 R2 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-8ca6bfed
+  - id: ami-6414fb04
     name: Microsoft Windows Server 2012 Base
     icon: fa fa-windows
-  - id: ami-8f574fee
+  - id: ami-0b6e816b
     name: Microsoft Windows Server 2012 with SQL Server Express
     icon: fa fa-windows
-  - id: ami-7a58401b
+  - id: ami-5711fe37
     name: Microsoft Windows Server 2012 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-9a5e46fb
+  - id: ami-7e6b841e
     name: Microsoft Windows Server 2012 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-c5a7bea4
+  - id: ami-7d15fa1d
     name: Microsoft Windows Server 2008 R2 Base
     icon: fa fa-windows
-  - id: ami-45a5bc24
+  - id: ami-8516f9e5
     name: Microsoft Windows Server 2008 R2 with SQL Server Express and IIS
     icon: fa fa-windows
-  - id: ami-6ea7be0f
+  - id: ami-1f11fe7f
     name: Microsoft Windows Server 2008 R2 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-565a4237
+  - id: ami-1411fe74
     name: Microsoft Windows Server 2008 R2 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-18a6bf79
+  - id: ami-4814fb28
     name: Microsoft Windows Server 2008 Base (64-bit)
     icon: fa fa-windows
-  - id: ami-965840f7
+  - id: ami-d21af5b2
     name: Microsoft Windows Server 2008 Base (32-bit)
     icon: fa fa-windows
-  - id: ami-72a8b113
+  - id: ami-eb32dd8b
     name: Microsoft Windows Server 2003 R2 Base (64-bit)
     icon: fa fa-windows
-  - id: ami-dca9b0bd
+  - id: ami-2e31de4e
     name: Microsoft Windows Server 2003 R2 Base (32-bit)
     icon: fa fa-windows
 us-west-1:
-  - id : ami-d5ea86b5
-    name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+  - id : ami-1b0f7d7b
+    name: Amazon Linux AMI 2016.03.1 (HVM), SSD Volume Type
     icon: icon-aws
   - id: ami-d1315fb1
     name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
@@ -130,60 +130,60 @@ us-west-1:
   - id: ami-6d701b0d
     name: SUSE Linux Enterprise Server 12 SP 1 (HVM), SSD Volume Type
     icon: icon-suse
-  - id: ami-df6a8b9b
+  - id: ami-06116566
     name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
     icon: icon-ubuntu
-  - id: ami-e7e78d87
+  - id: ami-df4437bf
     name: Microsoft Windows Server 2012 R2 Base
     icon: fa fa-windows
-  - id: ami-bbe68cdb
+  - id: ami-f9493a99
     name: Microsoft Windows Server 2012 R2 with SQL Server Express
     icon: fa fa-windows
-  - id: ami-39e68c59
+  - id: ami-65483b05
     name: Microsoft Windows Server 2012 R2 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-40e78d20
+  - id: ami-f64e3d96
     name: Microsoft Windows Server 2012 R2 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-56e18b36
+  - id: ami-134b3873
     name: Microsoft Windows Server 2012 Base
     icon: fa fa-windows
-  - id: ami-f2ff9592
+  - id: ami-1e483b7e
     name: Microsoft Windows Server 2012 with SQL Server Express
     icon: fa fa-windows
-  - id: ami-a7e58fc7
+  - id: ami-cc4e3dac
     name: Microsoft Windows Server 2012 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-8efa90ee
+  - id: ami-7a4f3c1a
     name: Microsoft Windows Server 2012 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-abe68ccb
+  - id: ami-8c4536ec
     name: Microsoft Windows Server 2008 R2 Base
     icon: fa fa-windows
-  - id: ami-b1e68cd1
+  - id: ami-374f3c57
     name: Microsoft Windows Server 2008 R2 with SQL Server Express and IIS
     icon: fa fa-windows
-  - id: ami-25e78d45
+  - id: ami-80493ae0
     name: Microsoft Windows Server 2008 R2 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-8ae48eea
+  - id: ami-15483b75
     name: Microsoft Windows Server 2008 R2 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-61e68c01
+  - id: ami-1c44377c
     name: Microsoft Windows Server 2008 Base (64-bit)
     icon: fa fa-windows
-  - id: ami-d7e78db7
+  - id: ami-5c4a393c
     name: Microsoft Windows Server 2008 Base (32-bit)
     icon: fa fa-windows
-  - id: ami-27ed8747
+  - id: ami-545d2e34
     name: Microsoft Windows Server 2003 R2 Base (64-bit)
     icon: fa fa-windows
-  - id: ami-ffe3899f
+  - id: ami-105c2f70
     name: Microsoft Windows Server 2003 R2 Base (32-bit)
     icon: fa fa-windows
 eu-west-1:
-  - id : ami-bff32ccc
-    name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+  - id : ami-31328842
+    name: Amazon Linux AMI 2016.03.0 (HVM), SSD Volume Type
     icon: icon-aws
   - id: ami-8b8c57f8
     name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
@@ -191,60 +191,60 @@ eu-west-1:
   - id: ami-f4278487
     name: SUSE Linux Enterprise Server 12 SP1 (HVM), SSD Volume Type
     icon: icon-suse
-  - id: ami-47a23a30
+  - id: ami-f95ef58a
     name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
     icon: icon-ubuntu
-  - id: ami-7943ec0a
+  - id: ami-c6972fb5
     name: Microsoft Windows Server 2012 R2 Base
     icon: fa fa-windows
-  - id: ami-5a43ec29
+  - id: ami-fa823a89
     name: Microsoft Windows Server 2012 R2 with SQL Server Express
     icon: fa fa-windows
-  - id: ami-1843ec6b
+  - id: ami-59843c2a
     name: Microsoft Windows Server 2012 R2 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-9a40efe9
+  - id: ami-a57bc3d6
     name: Microsoft Windows Server 2012 R2 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-c343ecb0
+  - id: ami-79853d0a
     name: Microsoft Windows Server 2012 Base
     icon: fa fa-windows
-  - id: ami-2f2c835c
+  - id: ami-c27bc3b1
     name: Microsoft Windows Server 2012 with SQL Server Express
     icon: fa fa-windows
-  - id: ami-8240eff1
+  - id: ami-3172ca42
     name: Microsoft Windows Server 2012 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-4a5ff039
+  - id: ami-a170c8d2
     name: Microsoft Windows Server 2012 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-8642edf5
+  - id: ami-ab8f37d8
     name: Microsoft Windows Server 2008 R2 Base
     icon: fa fa-windows
-  - id: ami-f540ef86
+  - id: ami-2c7dc55f
     name: Microsoft Windows Server 2008 R2 with SQL Server Express and IIS
     icon: fa fa-windows
-  - id: ami-6d40ef1e
+  - id: ami-c27ac2b1
     name: Microsoft Windows Server 2008 R2 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-a440efd7
+  - id: ami-717ac202
     name: Microsoft Windows Server 2008 R2 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-4244eb31
+  - id: ami-3f853d4c
     name: Microsoft Windows Server 2008 Base (64-bit)
     icon: fa fa-windows
-  - id: ami-0e43ec7d
+  - id: ami-ff88308c
     name: Microsoft Windows Server 2008 Base (32-bit)
     icon: fa fa-windows
-  - id: ami-6e49e61d
+  - id: ami-bba31bc8
     name: Microsoft Windows Server 2003 R2 Base (64-bit)
     icon: fa fa-windows
-  - id: ami-774ae504
+  - id: ami-699c241a
     name: Microsoft Windows Server 2003 R2 Base (32-bit)
     icon: fa fa-windows
 eu-central-1:
-  - id : ami-bc5b48d0
-    name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+  - id : ami-e2df388d
+    name: Amazon Linux AMI 2016.03.0 (HVM), SSD Volume Type
     icon: icon-aws
   - id: ami-875042eb
     name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
@@ -252,60 +252,60 @@ eu-central-1:
   - id: ami-6bd2ce07
     name: SUSE Linux Enterprise Server 12 SP1 (HVM), SSD Volume Type
     icon: icon-suse
-  - id: ami-accff2b1
+  - id: ami-87564feb
     name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
     icon: icon-ubuntu
-  - id: ami-8a918ee6
+  - id: ami-1135d17e
     name: Microsoft Windows Server 2012 R2 Base
     icon: fa fa-windows
-  - id: ami-2a8f9046
+  - id: ami-2736d248
     name: Microsoft Windows Server 2012 R2 with SQL Server Express
     icon: fa fa-windows
-  - id: ami-06908f6a
+  - id: ami-0337d36c
     name: Microsoft Windows Server 2012 R2 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-508f903c
+  - id: ami-0b31d564
     name: Microsoft Windows Server 2012 R2 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-44918e28
+  - id: ami-2837d347
     name: Microsoft Windows Server 2012 Base
     icon: fa fa-windows
-  - id: ami-25829d49
+  - id: ami-6f33d700
     name: Microsoft Windows Server 2012 with SQL Server Express
     icon: fa fa-windows
-  - id: ami-fd8f9091
+  - id: ami-6a33d705
     name: Microsoft Windows Server 2012 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-78918e14
+  - id: ami-5032d63f
     name: Microsoft Windows Server 2012 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-58918e34
+  - id: ami-e135d18e
     name: Microsoft Windows Server 2008 R2 Base
     icon: fa fa-windows
-  - id: ami-e78e918b
+  - id: ami-0331d56c
     name: Microsoft Windows Server 2008 R2 with SQL Server Express and IIS
     icon: fa fa-windows
-  - id: ami-44908f28
+  - id: ami-4232d62d
     name: Microsoft Windows Server 2008 R2 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-ac908fc0
+  - id: ami-5633d739
     name: Microsoft Windows Server 2008 R2 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-e6918e8a
+  - id: ami-ec30d483
     name: Microsoft Windows Server 2008 Base (64-bit)
     icon: fa fa-windows
-  - id: ami-05908f69
+  - id: ami-922acefd
     name: Microsoft Windows Server 2008 Base (32-bit)
     icon: fa fa-windows
-  - id: ami-60928d0c
+  - id: ami-3e22c651
     name: Microsoft Windows Server 2003 R2 Base (64-bit)
     icon: fa fa-windows
-  - id: ami-7d938c11
+  - id: ami-28db3f47
     name: Microsoft Windows Server 2003 R2 Base (32-bit)
     icon: fa fa-windows
 ap-southeast-1:
-  - id : ami-c9b572aa
-    name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+  - id : ami-e90dc68a
+    name: Amazon Linux AMI 2016.03.0 (HVM), SSD Volume Type
     icon: icon-aws
   - id: ami-3f03c55c
     name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
@@ -313,60 +313,60 @@ ap-southeast-1:
   - id: ami-2a19da49
     name: SUSE Linux Enterprise Server 12 SP 1 (HVM), SSD Volume Type
     icon: icon-suse
-  - id: ami-96f1c1c4
+  - id: ami-25c00c46
     name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
     icon: icon-ubuntu
-  - id: ami-5869ab3b
+  - id: ami-f8478f9b
     name: Microsoft Windows Server 2012 R2 Base
     icon: fa fa-windows
-  - id: ami-7169ab12
+  - id: ami-285a924b
     name: Microsoft Windows Server 2012 R2 with SQL Server Express
     icon: fa fa-windows
-  - id: ami-266eac45
+  - id: ami-885991eb
     name: Microsoft Windows Server 2012 R2 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-7d6fad1e
+  - id: ami-825991e1
     name: Microsoft Windows Server 2012 R2 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-746fad17
+  - id: ami-bf5890dc
     name: Microsoft Windows Server 2012 Base
     icon: fa fa-windows
-  - id: ami-057ab866
+  - id: ami-ee5b938d
     name: Microsoft Windows Server 2012 with SQL Server Express
     icon: fa fa-windows
-  - id: ami-e66fad85
+  - id: ami-1b5d9578
     name: Microsoft Windows Server 2012 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-3c6fad5f
+  - id: ami-6c5c940f
     name: Microsoft Windows Server 2012 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-3e69ab5d
+  - id: ami-83478fe0
     name: Microsoft Windows Server 2008 R2 Base
     icon: fa fa-windows
-  - id: ami-3e6eac5d
+  - id: ami-675d9504
     name: Microsoft Windows Server 2008 R2 with SQL Server Express and IIS
     icon: fa fa-windows
-  - id: ami-6c6eac0f
+  - id: ami-d75b93b4
     name: Microsoft Windows Server 2008 R2 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-046fad67
+  - id: ami-5c5d953f
     name: Microsoft Windows Server 2008 R2 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-776fad14
+  - id: ami-165a9275
     name: Microsoft Windows Server 2008 Base (64-bit)
     icon: fa fa-windows
-  - id: ami-c769aba4
+  - id: ami-08478f6b
     name: Microsoft Windows Server 2008 Base (32-bit)
     icon: fa fa-windows
-  - id: ami-0d65a76e
+  - id: ami-f0428a93
     name: Microsoft Windows Server 2003 R2 Base (64-bit)
     icon: fa fa-windows
-  - id: ami-a56aa8c6
+  - id: ami-fb438b98
     name: Microsoft Windows Server 2003 R2 Base (32-bit)
     icon: fa fa-windows
 ap-northeast-1:
-  - id : ami-383c1956
-    name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+  - id : ami-f80e0596
+    name: Amazon Linux AMI 2016.03.0 (HVM), SSD Volume Type
     icon: icon-aws
   - id: ami-0dd8f963
     name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
@@ -374,60 +374,60 @@ ap-northeast-1:
   - id: ami-f8220896
     name: SUSE Linux Enterprise Server 12 SP1 (HVM), SSD Volume Type
     icon: icon-suse
-  - id: ami-936d9d93
+  - id: ami-a21529cc
     name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
     icon: icon-ubuntu
-  - id: ami-482a1b26
+  - id: ami-57282639
     name: Microsoft Windows Server 2012 R2 Base
     icon: fa fa-windows
-  - id: ami-a81021c6
+  - id: ami-a7232dc9
     name: Microsoft Windows Server 2012 R2 with SQL Server Express
     icon: fa fa-windows
-  - id: ami-4e2f1e20
+  - id: ami-51202e3f
     name: Microsoft Windows Server 2012 R2 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-8c1120e2
+  - id: ami-43232d2d
     name: Microsoft Windows Server 2012 R2 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-28102146
+  - id: ami-37272959
     name: Microsoft Windows Server 2012 Base
     icon: fa fa-windows
-  - id: ami-ffecdd91
+  - id: ami-313f315f
     name: Microsoft Windows Server 2012 with SQL Server Express
     icon: fa fa-windows
-  - id: ami-921524fc
+  - id: ami-b23e30dc
     name: Microsoft Windows Server 2012 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-5b142535
+  - id: ami-023c326c
     name: Microsoft Windows Server 2012 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-9e1120f0
+  - id: ami-ea262884
     name: Microsoft Windows Server 2008 R2 Base
     icon: fa fa-windows
-  - id: ami-412e1f2f
+  - id: ami-8c3e30e2
     name: Microsoft Windows Server 2008 R2 with SQL Server Express and IIS
     icon: fa fa-windows
-  - id: ami-1e152470
+  - id: ami-35212f5b
     name: Microsoft Windows Server 2008 R2 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-0f132261
+  - id: ami-7f202e11
     name: Microsoft Windows Server 2008 R2 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-2e102140
+  - id: ami-df2729b1
     name: Microsoft Windows Server 2008 Base (64-bit)
     icon: fa fa-windows
-  - id: ami-b91425d7
+  - id: ami-5f292731
     name: Microsoft Windows Server 2008 Base (32-bit)
     icon: fa fa-windows
-  - id: ami-49261727
+  - id: ami-e9151b87
     name: Microsoft Windows Server 2003 R2 Base (64-bit)
     icon: fa fa-windows
-  - id: ami-962819f8
+  - id: ami-79111f17
     name: Microsoft Windows Server 2003 R2 Base (32-bit)
     icon: fa fa-windows
 ap-southeast-2:
-  - id : ami-48d38c2b
-    name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+  - id : ami-f2210191
+    name: Amazon Linux AMI 2016.03.0 (HVM), SSD Volume Type
     icon: icon-aws
   - id : ami-e0c19f83
     name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
@@ -435,118 +435,121 @@ ap-southeast-2:
   - id : ami-0f510a6c
     name: SUSE Linux Enterprise Server 12 SP 1 (HVM), SSD Volume Type
     icon: icon-suse
-  - id : ami-69631053
+  - id : ami-6c14310f
     name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
     icon: icon-ubuntu
-  - id: ami-9b4f15f8
+  - id: ami-1af6d779
     name: Microsoft Windows Server 2012 R2 Base
     icon: fa fa-windows
-  - id: ami-eb4d1788
+  - id: ami-14f8d977
     name: Microsoft Windows Server 2012 R2 with SQL Server Express
     icon: fa fa-windows
-  - id: ami-1f42187c
+  - id: ami-43f6d720
     name: Microsoft Windows Server 2012 R2 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-66421805
+  - id: ami-45f2d326
     name: Microsoft Windows Server 2012 R2 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-1f4c167c
+  - id: ami-6bf2d308
     name: Microsoft Windows Server 2012 Base
     icon: fa fa-windows
-  - id: ami-94441ef7
+  - id: ami-aafcddc9
     name: Microsoft Windows Server 2012 with SQL Server Express
     icon: fa fa-windows
-  - id: ami-8f461cec
+  - id: ami-eeffde8d
     name: Microsoft Windows Server 2012 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-35411b56
+  - id: ami-ebc1e088
     name: Microsoft Windows Server 2012 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-c54f15a6
+  - id: ami-26f2d345
     name: Microsoft Windows Server 2008 R2 Base
     icon: fa fa-windows
-  - id: ami-304d1753
+  - id: ami-1afddc79
     name: Microsoft Windows Server 2008 R2 with SQL Server Express and IIS
     icon: fa fa-windows
-  - id: ami-e0421883
+  - id: ami-bdfcddde
     name: Microsoft Windows Server 2008 R2 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-a44218c7
+  - id: ami-9ef8d9fd
     name: Microsoft Windows Server 2008 R2 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-02431961
+  - id: ami-00fddc63
     name: Microsoft Windows Server 2008 Base (64-bit)
     icon: fa fa-windows
-  - id: ami-ce4319ad
+  - id: ami-9dfadbfe
     name: Microsoft Windows Server 2008 Base (32-bit)
     icon: fa fa-windows
-  - id: ami-ce4913ad
+  - id: ami-41fddc22
     name: Microsoft Windows Server 2003 R2 Base (64-bit)
     icon: fa fa-windows
-  - id: ami-1a4e1479
+  - id: ami-6df9d80e
     name: Microsoft Windows Server 2003 R2 Base (32-bit)
     icon: fa fa-windows
 ap-northeast-2:
-  - id : ami-249b554a
-    name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+  - id : ami-6598510b
+    name: Amazon Linux AMI 2016.03.0 (HVM), SSD Volume Type
     icon: icon-aws
-  - id: ami-fea46a90
+  - id : ami-44db152a
+    name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
+    icon: icon-redhat
+  - id: ami-e9985687
+    name: SUSE Linux Enterprise Server 12 SP1 (HVM), SSD Volume Type
+    icon: icon-suse
+  - id: ami-09dc1267
     name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
     icon: icon-ubuntu
-  - id: ami-e9985687
-    name: SUSE Linux Enterprise Server 11 SP4
-    icon: icon-suse
-  - id: ami-a2a06ecc
+  - id: ami-397db357
     name: Microsoft Windows Server 2012 R2 Base
     icon: fa fa-windows
-  - id: ami-90be70fe
+  - id: ami-6c76b802
     name: Microsoft Windows Server 2012 R2 with SQL Server Express
     icon: fa fa-windows
-  - id: ami-93be70fd
+  - id: ami-6e76b800
     name: Microsoft Windows Server 2012 R2 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-16bf7178
+  - id: ami-747ab41a
     name: Microsoft Windows Server 2012 R2 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-61bc720f
+  - id: ami-1b7cb275
     name: Microsoft Windows Server 2012 Base
     icon: fa fa-windows
-  - id: ami-12bf717c
+  - id: ami-907bb5fe
     name: Microsoft Windows Server 2012 with SQL Server Express
     icon: fa fa-windows
-  - id: ami-f2bf719c
+  - id: ami-737ab41d
     name: Microsoft Windows Server 2012 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-d6be70b8
+  - id: ami-af7fb1c1
     name: Microsoft Windows Server 2012 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-3fa16f51
+  - id: ami-a07fb1ce
     name: Microsoft Windows Server 2008 R2 Base
     icon: fa fa-windows
-  - id: ami-a4a16fca
+  - id: ami-317db35f
     name: Microsoft Windows Server 2008 R2 with SQL Server Express and IIS
     icon: fa fa-windows
-  - id: ami-ccbe70a2
+  - id: ami-1678b678
     name: Microsoft Windows Server 2008 R2 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-70be701e
+  - id: ami-6176b80f
     name: Microsoft Windows Server 2008 R2 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-a1a06ecf
+  - id: ami-1f7cb271
     name: Microsoft Windows Server 2008 Base (64-bit)
     icon: fa fa-windows
-  - id: ami-e0bf718e
+  - id: ami-1378b67d
     name: Microsoft Windows Server 2008 Base (32-bit)
     icon: fa fa-windows
-  - id: ami-77be7019
+  - id: ami-8b7bb5e5
     name: Microsoft Windows Server 2003 R2 Base (64-bit)
     icon: fa fa-windows
-  - id: ami-09bf7167
+  - id: ami-a67fb1c8
     name: Microsoft Windows Server 2003 R2 Base (32-bit)
     icon: fa fa-windows
 sa-east-1:
-  - id : ami-6817af04
-    name: Amazon Linux AMI 2015.09.1 (HVM), SSD Volume Type
+  - id : ami-1e159872
+    name: Amazon Linux AMI 2016.03.0 (HVM), SSD Volume Type
     icon: icon-aws
   - id: ami-27b3094b
     name: Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
@@ -554,54 +557,54 @@ sa-east-1:
   - id: ami-4ede5922
     name: SUSE Linux Enterprise Server 12 SP 1 (HVM), SSD Volume Type
     icon: icon-suse
-  - id: ami-4d883350
+  - id: ami-0fb83963
     name: Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
     icon: icon-ubuntu
-  - id: ami-6a981e06
+  - id: ami-bdf974d1
     name: Microsoft Windows Server 2012 R2 Base
     icon: fa fa-windows
-  - id: ami-f59d1b99
+  - id: ami-8afa77e6
     name: Microsoft Windows Server 2012 R2 with SQL Server Express
     icon: fa fa-windows
-  - id: ami-6ca02600
+  - id: ami-aaf479c6
     name: Microsoft Windows Server 2012 R2 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-77a4221b
+  - id: ami-a5f17cc9
     name: Microsoft Windows Server 2012 R2 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-7ca42210
+  - id: ami-fcf87590
     name: Microsoft Windows Server 2012 Base
     icon: fa fa-windows
-  - id: ami-79ac2a15
+  - id: ami-22f37e4e
     name: Microsoft Windows Server 2012 with SQL Server Express
     icon: fa fa-windows
-  - id: ami-fea52392
+  - id: ami-20f27f4c
     name: Microsoft Windows Server 2012 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-699a1c05
+  - id: ami-c1f37ead
     name: Microsoft Windows Server 2012 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-f99d1b95
+  - id: ami-3ff77a53
     name: Microsoft Windows Server 2008 R2 Base
     icon: fa fa-windows
-  - id: ami-aaa224c6
+  - id: ami-97f578fb
     name: Microsoft Windows Server 2008 R2 with SQL Server Express and IIS
     icon: fa fa-windows
-  - id: ami-0faf2963
+  - id: ami-8ff67be3
     name: Microsoft Windows Server 2008 R2 with SQL Server Web
     icon: fa fa-windows
-  - id: ami-a2a224ce
+  - id: ami-11f17c7d
     name: Microsoft Windows Server 2008 R2 with SQL Server Standard
     icon: fa fa-windows
-  - id: ami-97a620fb
+  - id: ami-66f17c0a
     name: Microsoft Windows Server 2008 Base (64-bit)
     icon: fa fa-windows
-  - id: ami-ffa52393
+  - id: ami-9df578f1
     name: Microsoft Windows Server 2008 Base (32-bit)
     icon: fa fa-windows
-  - id: ami-c0a620ac
+  - id: ami-a4fb76c8
     name: Microsoft Windows Server 2003 R2 Base (64-bit)
     icon: fa fa-windows
-  - id: ami-dd9a1cb1
+  - id: ami-f8e86594
     name: Microsoft Windows Server 2003 R2 Base (32-bit)
     icon: fa fa-windows

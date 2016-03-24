@@ -508,6 +508,10 @@
     }
 
     function _describeImages(region, resource, amis) {
+      if (!resource.length) {
+        amis[region] = [];
+        return $q.when(amis[region]);
+      }
       var defer = $q.defer();
       var opt = {
         ImageIds: resource.map((ami) => ami.id)
@@ -529,6 +533,7 @@
         }, []);
         defer.resolve(amis[region]);
       });
+      return defer.promise;
 
       function _getNameAndIcon(region, ami) {
         var icon, name;
