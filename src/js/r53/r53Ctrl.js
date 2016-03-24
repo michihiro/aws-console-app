@@ -373,6 +373,10 @@
       },
       isZoneRRSet: isZoneRRSet,
       isAliasRRSet: isAliasRRSet,
+      typeDisabled: {
+        SOA: true,
+        NS: rrset.Name === currentZone.Name
+      },
       rrsets: rrsets,
       delrrsets: {},
       types: [

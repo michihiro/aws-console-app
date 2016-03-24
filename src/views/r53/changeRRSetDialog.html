@@ -39,9 +39,9 @@
           </button>
           <ul uib-dropdown-menu>
             <li ng-repeat="t in types"
-                ng-class="{disabled: t == 'SOA'}"
-                ng-click="(t != 'SOA') || $event.stopPropagation()">
-              <a ng-click="(t != 'SOA') && (inputs.type=t)"
+                ng-class="{disabled: typeDisabled[t]}"
+                ng-click="!typeDisabled[t] || $event.stopPropagation()">
+              <a ng-click="!typeDisabled[t] && (inputs.type=t)"
                  ng-bind="t"></a>
             </li>
           </ul>
