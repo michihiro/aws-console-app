@@ -3,6 +3,9 @@
 
   ng.module('aws-console')
     .factory('awsR53', awsR53Factory)
+    .factory('awsELB', awsELBFactory)
+    .factory('amCF', amCFFactory)
+    .factory('awsEB', awsEBFactory)
     .factory('r53Info', r53InfoFactory)
     .factory('r53Actions', r53ActionsFactory);
 
@@ -11,6 +14,32 @@
   function awsR53Factory($rootScope) {
     return () => new AWS.Route53({
       credentials: $rootScope.getCredentials(),
+    });
+  }
+
+  awsELBFactory.$inject = ['$rootScope'];
+
+  function awsELBFactory($rootScope) {
+    return (region) => new AWS.ELB({
+      credentials: $rootScope.getCredentials(),
+      region: region
+    });
+  }
+
+  amCFFactory.$inject = ['$rootScope'];
+
+  function amCFFactory($rootScope) {
+    return () => new AWS.CloudFront({
+      credentials: $rootScope.getCredentials()
+    });
+  }
+
+  awsEBFactory.$inject = ['$rootScope'];
+
+  function awsEBFactory($rootScope) {
+    return (region) => new AWS.ElasticBeanstalk({
+      credentials: $rootScope.getCredentials(),
+      region: region
     });
   }
 
@@ -71,7 +100,7 @@
         }
         return selected.some((r) =>
           r && r.Name.replace(/\.$/, '') === currentZone.Name.replace(/\.$/, '') &&
-          (r.Type === 'SOA' || r.Type === 'NS') || r.AliasTarget);
+          (r.Type === 'SOA' || r.Type === 'NS'));
       }
     }
   }

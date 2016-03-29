@@ -341,9 +341,9 @@
     }
   }
 
-  r53ChangeRRSetDialogCtrl.$inject = ['$scope', '$q', 'awsR53', 'appFocusOn', 'r53Info', 'dialogInputs'];
+  r53ChangeRRSetDialogCtrl.$inject = ['$scope', '$q', '$parse', 'awsR53', 'awsS3', 'awsELB', 'amCF', 'awsEB', 'awsRegions', 'appFocusOn', 'r53Info', 'hostedZoneIds', 'dialogInputs'];
 
-  function r53ChangeRRSetDialogCtrl($scope, $q, awsR53, appFocusOn, r53Info, dialogInputs) {
+  function r53ChangeRRSetDialogCtrl($scope, $q, $parse, awsR53, awsS3, awsELB, amCF, awsEB, awsRegions, appFocusOn, r53Info, hostedZoneIds, dialogInputs) {
     var currentZone = r53Info.getCurrent();
     var mode = dialogInputs.mode;
     var btnLabels = {
@@ -357,8 +357,16 @@
     var subDomain = (rrset.Name || '').replace(reg, '');
     var isZoneRRSet = rrset.Name === currentZone.Name &&
       (rrset.Type === 'SOA' || rrset.Type === 'NS');
-    var isAliasRRSet = !!rrset.AliasTarget;
     var type = rrset.Type || 'A';
+    var _aliasTargets = {};
+    var aliasTargetGroups = currentZone.VPCs.length ? ['r53'] : ['s3', 'elb', 'cf', 'eb', 'r53'];
+    var _getAliasTarget = {
+      s3: _getAliasTargetS3,
+      elb: _getAliasTargetELB,
+      cf: _getAliasTargetCF,
+      eb: _getAliasTargetEB,
+      r53: _getAliasTargetR53
+    };
 
     ng.extend($scope, {
       mode: mode,
@@ -368,11 +376,15 @@
       inputs: {
         subDomain: subDomain,
         type: type,
+        isAlias: !!rrset.AliasTarget,
         ttl: rrset.TTL || 300,
         values: (rrset.Values || []).join('\n'),
+        aliasTarget: (rrset.AliasTarget || {}).DNSName,
+        aliasHostedZoneId: (rrset.AliasTarget || {}).HostedZoneId,
+        evaluateTargetHealth: (rrset.AliasTarget || {}).EvaluateTargetHealth
       },
+      isOpen: {},
       isZoneRRSet: isZoneRRSet,
-      isAliasRRSet: isAliasRRSet,
       typeDisabled: {
         SOA: true,
         NS: rrset.Name === currentZone.Name
@@ -395,11 +407,158 @@
         label: '1day',
         val: 24 * 60 * 60
       }],
+      aliasTargetGroups: aliasTargetGroups,
+      aliasTargets: {},
+      isValidType: isValidType,
       isValidSubDomain: isValidSubDomain,
+      isValidDomain: r53Info.isValidDomain,
       isValidValues: isValidValues,
       onClickTtlBtn: onClickTtlBtn,
+      loadAliasTargets: loadAliasTargets,
       command: command,
     });
+
+    $scope.$watch('inputs.subDomain', () => {
+      _aliasTargets.s3 = undefined;
+      $scope.aliasTargets.s3 = undefined;
+      $scope.aliasTargets.r53 = undefined;
+    });
+
+    $scope.$watch('inputs.aliasTarget', (val) => {
+      var hostedZoneId, region;
+      var currentZoneName = currentZone.Name.replace(/\.$/, '');
+      val = (val || '').replace(/\.$/, '');
+
+      if (val.lastIndexOf(currentZoneName) === val.length - currentZoneName.length) {
+        hostedZoneId = currentZone.Id.replace(/^.*\//, '');
+      } else if (val.match(/\.cloudfront\.net\.?$/)) {
+        hostedZoneId = hostedZoneIds.cf;
+      } else if (val.match(/^s3-website-(.*)\.amazonaws\.com\.?$/)) {
+        region = RegExp.$1;
+        if (hostedZoneIds.s3[region]) {
+          hostedZoneId = hostedZoneIds.s3[region];
+        }
+      } else if (val.match(/\.([^\.]+)\.elasticbeanstalk\.com\.?$/)) {
+        region = RegExp.$1;
+        if (hostedZoneIds.eb[region]) {
+          hostedZoneId = hostedZoneIds.eb[region];
+        }
+      } else {
+        ($scope.aliasTargets.elb || []).some((item) => {
+          if (item.value === val) {
+            hostedZoneId = item.hostedZoneId;
+            return true;
+          }
+        });
+      }
+
+      $scope.inputs.aliasHostedZoneId = hostedZoneId;
+    }, true);
+
+    function loadAliasTargets() {
+      var aliasTargets = $scope.aliasTargets;
+      aliasTargetGroups.forEach((g) => {
+        if (aliasTargets[g] === undefined) {
+          aliasTargets[g] = null;
+          _getAliasTarget[g]();
+        }
+      });
+    }
+
+    function _getAliasTargetS3() {
+      var subDomain = $scope.inputs.subDomain;
+      var domain = (subDomain && subDomain.length ? (subDomain + '.') : '') + currentZone.Name;
+      var params = {
+        Bucket: domain.replace(/\.$/, '')
+      };
+
+      awsS3().getBucketLocation(params, (err, data) => {
+        if (err) {
+          $scope.aliasTargets.s3 = [];
+          return;
+        }
+        var region = data.LocationConstraint || 'us-east-1';
+        awsS3(region).getBucketWebsite(params, (err) => {
+          if (err) {
+            $scope.aliasTargets.s3 = [];
+            return;
+          }
+          $scope.aliasTargets.s3 = [{
+            label: domain,
+            value: 's3-website-' + region + '.amazonaws.com'
+          }];
+          $scope.$digest();
+        });
+      });
+    }
+
+    function _getAliasTargetELB() {
+      $q.all(awsRegions.ec2.map((region) => {
+        var elb = awsELB(region);
+        var defer = $q.defer();
+        elb.describeLoadBalancers({}, (err, data) => {
+          ($parse('LoadBalancerDescriptions')(data) || []).forEach((v) => {
+            $scope.aliasTargets.elb = $scope.aliasTargets.elb || [];
+            $scope.aliasTargets.elb.push({
+              hostedZoneId: v.CanonicalHostedZoneNameID,
+              label: v.DNSName,
+              value: 'dualstack.' + v.DNSName
+            });
+          });
+          $scope.$digest();
+          defer.resolve();
+        });
+        return defer.promise;
+      })).then(() => {
+        $scope.aliasTargets.elb = $scope.aliasTargets.elb || [];
+      });
+    }
+
+    function _getAliasTargetCF() {
+      var cf = amCF();
+      cf.listDistributions({}, (err, data) => {
+        $scope.aliasTargets.cf = $scope.aliasTargets.cf || [];
+        ($parse('DistributionList.Items')(data) || []).forEach((v) => {
+          $scope.aliasTargets.cf.push({
+            label: v.DomainName,
+            value: v.DomainName
+          });
+        });
+        $scope.$digest();
+      });
+    }
+
+    function _getAliasTargetEB() {
+      $q.all(awsRegions.ec2.map((region) => {
+        var eb = awsEB(region);
+        var defer = $q.defer();
+        eb.describeEnvironments({
+          IncludeDeleted: false,
+        }, (err, data) => {
+          $scope.aliasTargets.eb = $scope.aliasTargets.eb || [];
+          ($parse('Environments')(data) || []).forEach((v) => {
+
+            $scope.aliasTargets.eb.push({
+              label: v.CNAME,
+              value: v.CNAME
+            });
+          });
+
+          $scope.$digest();
+          defer.resolve();
+        });
+        return defer.promise;
+      })).then(() => {
+        $scope.aliasTargets.eb = $scope.aliasTargets.eb || [];
+      });
+    }
+
+    function _getAliasTargetR53() {
+      $scope.aliasTargets.r53 = currentZone.list.map((item) => ({
+        label: item.Name,
+        value: item.Name
+      }));
+    }
 
     function _getValues(value, type) {
       if (type === 'TXT') {
@@ -413,6 +572,22 @@
       var inSubDomain = $scope.inputs.subDomain;
       return inSubDomain.length ? (inSubDomain + '.' + currentZone.Name) :
         currentZone.Name;
+    }
+
+    function isValidType(val) {
+      var target = $scope.inputs.aliasTarget || '';
+      if ($scope.inputs.isAlias) {
+        if (target.match(/\.cloudfront\.net\.?$/) ||
+          target.match(/^s3-website-(.*)\.amazonaws\.com\.?$/) ||
+          target.match(/\.([^\.]+)\.elasticbeanstalk\.com\.?$/)) {
+          return val === 'A';
+        } else if (target.match(/^dualstack\.(.*)\.elb\.amazonaws\.com.?$/)) {
+          return val === 'A' || val === 'AAAA';
+        } else {
+          return val !== 'NS' && val !== 'SOA';
+        }
+      }
+      return val && val.length;
     }
 
     function isValidSubDomain(value) {
@@ -484,37 +659,53 @@
       var inputs = $scope.inputs;
       var vals = _getValues(inputs.values, inputs.type);
       var changes = [];
+      var rrset;
 
       if (mode !== 'deleteRRSet') {
-        vals = vals.length ? vals : [''];
+        rrset = {
+          Name: getDomainName(),
+          Type: inputs.type,
+        };
+
+        if (!inputs.isAlias) {
+          vals = vals.length ? vals : [''];
+          rrset.ResourceRecords = vals.map((v) => {
+            if (inputs.type === 'TXT' && !v.match(/^".*"$/)) {
+              v = '"' + v.replace(/([\\"])/g, '\\$1') + '"';
+            }
+            return {
+              Value: v
+            };
+          });
+          rrset.TTL = +inputs.ttl;
+        } else {
+          rrset.AliasTarget = {
+            DNSName: inputs.aliasTarget,
+            EvaluateTargetHealth: !!inputs.evaluateTargetHealth,
+            HostedZoneId: inputs.aliasHostedZoneId
+          };
+        }
         changes.push({
           Action: mode === 'createRRSet' ? 'CREATE' : 'UPSERT',
-          ResourceRecordSet: {
-            Name: getDomainName(),
-            Type: inputs.type,
-            TTL: +inputs.ttl,
-            ResourceRecords: vals.map((v) => {
-              if (inputs.type === 'TXT' && !v.match(/^".*"$/)) {
-                v = '"' + v.replace(/([\\"])/g, '\\$1') + '"';
-              }
-              return {
-                Value: v
-              };
-            })
-          }
+          ResourceRecordSet: rrset
         });
       }
       if (mode === 'deleteRRSet' ||
         (mode === 'updateRRSet' && (inputs.subDomain !== subDomain || inputs.type !== type))) {
         rrsets.forEach((r) => {
+          rrset = {
+            Name: r.Name,
+            Type: r.Type,
+          };
+          if (!r.AliasTarget) {
+            rrset.ResourceRecords = r.ResourceRecords;
+            rrset.TTL = r.TTL;
+          } else {
+            rrset.AliasTarget = r.AliasTarget;
+          }
           changes.push({
             Action: 'DELETE',
-            ResourceRecordSet: {
-              Name: r.Name,
-              Type: r.Type,
-              TTL: r.TTL,
-              ResourceRecords: r.ResourceRecords
-            }
+            ResourceRecordSet: rrset
           });
         });
       }

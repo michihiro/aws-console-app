@@ -15,7 +15,8 @@
                app-focus-on="domainName"
                ng-model="inputs.subDomain"
                ui-validate="'isValidSubDomain($value)'"
-               ng-disabled="processing || isAliasRRSet">
+               ng-focus="isOpen.AliasTargetList=false"
+               ng-disabled="processing">
       </div>
       <div class="form-control-static"
            ng-if="!isZoneRRSet"
@@ -28,10 +29,13 @@
       <label class="col-xs-3 control-label"
              ng-bind="::'r53.rrsetType'|i18next"></label>
       <div class="col-xs-9">
+        <input type="hidden" name="type" ng-model="inputs.type"
+               ui-validate="'isValidType($value)'"
+               ui-validate-watch="'inputs.isAlias'">
         <div class="form-control-static"
-             ng-if="isZoneRRSet || isAliasRRSet"
+             ng-if="isZoneRRSet"
              ng-bind="inputs.type"></div>
-        <div class="btn-group" uib-dropdown ng-if="!isZoneRRSet && !isAliasRRSet">
+        <div class="btn-group" uib-dropdown is-open="isOpen.Type" ng-if="!isZoneRRSet">
           <button class="btn btn-raised" uib-dropdown-toggle
                   ng-disabled="processing">
             <span ng-bind="inputs.type"></span>
@@ -50,6 +54,26 @@
     </div>
     <div class="form-group">
       <label class="col-xs-3 control-label"
+             ng-bind="::'r53.alias'|i18next"></label>
+      <div class="col-xs-9">
+        <div class="btn-group btn-group-raised">
+          <button class="btn"
+                  ng-class="{'btn-info':inputs.isAlias}"
+                  ng-bind="'r53.yes'|i18next"
+                  ng-model="inputs.isAlias"
+                  ng-disabled="isZoneRRSet && inputs.type != 'A' && inputs.type != 'AAAA'"
+                  uib-btn-radio="true"></button>
+          <button class="btn"
+                  ng-class="{'btn-info':!inputs.isAlias}"
+                  ng-bind="'r53.no'|i18next"
+                  ng-model="inputs.isAlias"
+                  ng-disabled="isZoneRRSet && inputs.type != 'A' && inputs.type != 'AAAA'"
+                  uib-btn-radio="false"></button>
+        </div>
+      </div>
+    </div>
+    <div class="form-group" ng-if="!inputs.isAlias">
+      <label class="col-xs-3 control-label"
              ng-bind="::'r53.ttl'|i18next"></label>
       <div class="col-xs-2">
         <input class="form-control" name="ttl"
@@ -58,9 +82,9 @@
                app-focus-on="ttl"
                ng-model="inputs.ttl"
                ng-pattern="/^[1-9]([0-9])*$/"
-               ng-disabled="processing || isAliasRRSet">
+               ng-disabled="processing">
       </div>
-      <div class="col-xs-7" ng-if="!isAliasRRSet">
+      <div class="col-xs-7">
         <div class="btns">
           <button class="btn btn-raised btn-default"
                   ng-repeat="b in ttlBtns"
@@ -70,7 +94,7 @@
         </div>
       </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" ng-if="!inputs.isAlias">
       <label class="col-xs-3 control-label"
              ng-bind="::'r53.value'|i18next"></label>
       <div class="col-xs-9">
@@ -80,9 +104,66 @@
                   class="form-control" name="value"
                   app-focus-on="value"
                   ng-model="inputs.values"
-                  ui-validate="'isValidValues($value) || isAliasRRSet'"
+                  ui-validate="'isValidValues($value)'"
                   ui-validate-watch="'inputs.type'"
-                  ng-disabled="processing || isAliasRRSet"></textarea>
+                  ng-disabled="processing"></textarea>
+      </div>
+    </div>
+    <div class="form-group" ng-if="inputs.isAlias">
+      <label class="col-xs-3 control-label"
+             ng-bind="::'r53.aliasTarget'|i18next"></label>
+      <div class="col-xs-9">
+        <div uib-dropdown is-open="isOpen.AliasTargetList"
+             on-toggle="open && loadAliasTargets()">
+          <input class="form-control" name="aliasTarget"
+                 spellcheck="false"
+                 inputmode="verbatim"
+                 app-focus-on="aliasTarget"
+                 ng-model="inputs.aliasTarget"
+                 ui-validate="'isValidDomain($value)'"
+                 ng-focus="isOpen.AliasTargetList=true"
+                 ng-disabled="processing">
+          <ul uib-dropdown-menu>
+            <li class="dropdown-header"
+                ng-repeat-start="s in aliasTargetGroups"
+                ng-bind="'r53.aliasTargetGroup.' + s|i18next"
+                ng-click="$event.stopPropagation();">
+            </li>
+            <li ng-repeat="t in aliasTargets[s]">
+              <a ng-click="inputs.aliasTarget=t.value"
+                 ng-bind="t.label"></a>
+            </li>
+            <li class="disabled"
+                ng-repeat-end
+                ng-if="!aliasTargets[s].length"
+                ng-click="$event.stopPropagation()">
+                <a ng-click="$event.stopPropagation()"
+                   ng-bind="aliasTargets[s].length===0 ? 'r53.noAliasTarget': 'r53.loadingAliasTarget'|i18next"></a>
+            </li>
+          </ul>
+        </div>
+        <div class="">
+          <span ng-bind="'r53.aliasHostedZoneId'|i18next"></span> :
+          <span ng-bind="inputs.aliasHostedZoneId"></span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group" ng-if="inputs.isAlias">
+      <label class="col-xs-3 control-label"
+             ng-bind="::'r53.evaluateTargetHealth'|i18next"></label>
+      <div class="col-xs-9">
+        <div class="btn-group btn-group-raised">
+          <button class="btn"
+                  ng-class="{'btn-info':inputs.evaluateTargetHealth}"
+                  ng-bind="'r53.yes'|i18next"
+                  ng-model="inputs.evaluateTargetHealth"
+                  uib-btn-radio="true"></button>
+          <button class="btn"
+                  ng-class="{'btn-info':!inputs.evaluateTargetHealth}"
+                  ng-bind="'r53.no'|i18next"
+                  ng-model="inputs.evaluateTargetHealth"
+                  uib-btn-radio="false"></button>
+        </div>
       </div>
     </div>
   </form>
@@ -117,7 +198,7 @@
           ng-bind="::btnLabel|i18next"
           ng-class="inputs.form.$invalid?'':btnClass"
           ng-click="command()"
-          ng-disabled="inputs.form.$invalid || processing || isAliasRRSet">
+          ng-disabled="inputs.form.$invalid || processing">
   </button>
   <div class="cover" ng-if="processing"></div>
 </div>

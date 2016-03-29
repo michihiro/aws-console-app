@@ -339,6 +339,20 @@ r53:
   privateZone: プライベート（VPC用）
   associatedVpc: 連携VPC
   rrsetType: タイプ
+  alias: エイリアス
+  aliasTarget: エイリアス対象
+  aliasTargetGroup:
+    s3: -- S3 webサイト エンドポイント
+    elb: -- ELB ロードバランサー
+    cf: -- CloudFront の配置
+    eb: -- Elastic Beanstalk 環境 --
+    r53: -- このゾーンのレコードセット --
+  loadingAliasTarget: loading...
+  noAliasTarget: 対象はありません
+  aliasHostedZoneId: Hosted Zone ID
+  evaluateTargetHealth: 対象のヘルスチェック
+  yes: はい
+  no: いいえ
   ttlBtn:
     "1min": 1分
     "5min": 5分

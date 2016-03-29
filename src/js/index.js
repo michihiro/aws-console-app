@@ -14,6 +14,34 @@
     'sa-east-1'
   ];
 
+  var hostedZoneIds = {
+    s3: {
+      'us-east-1': 'Z3AQBSTGFYJSTF',
+      'us-west-2': 'Z3BJ6K6RIION7M',
+      'us-west-1': 'Z2F56UZL2M1ACD',
+      'eu-west-1': 'Z1BKCTXD74EZPE',
+      'eu-central-1': 'Z21DNDUVLTQW6Q',
+      'ap-southeast-1': 'Z3O0J2DXBE1FTB',
+      'ap-northeast-1': 'Z2M4EHUR26P7ZW',
+      'ap-southeast-2': 'Z1WCIGYICN2BYD',
+      'ap-northeast-2': 'Z3W03O7B5YMIYP',
+      'sa-east-1': 'Z7KQH4QJS55SO'
+    },
+    eb: {
+      'us-east-1': 'Z117KPS5GTRQ2G',
+      'us-west-2': 'Z38NKT9BP95V3O',
+      'us-west-1': 'Z1LQECGX5PH1X',
+      'eu-west-1': 'Z2NYPWQ7DFZAZH',
+      'eu-central-1': 'Z1FRNW7UH4DEZJ',
+      'ap-southeast-1': 'Z16FZ9L249IFLT',
+      'ap-northeast-1': 'Z1R25G3KIG2GBW',
+      'ap-southeast-2': 'Z2PCDNR3VC2G1N',
+      'ap-northeast-2': 'Z3JE5OI70TWKCP',
+      'sa-east-1': 'Z10X7K2B4QSOFV'
+    },
+    cf: 'Z2FDTNDATAQYW2'
+  };
+
   ng.module('aws-console', [
       'app.templateCache',
       'ngAnimate',
@@ -28,6 +56,7 @@
       s3: regions,
       ec2: regions
     })
+    .constant('hostedZoneIds', hostedZoneIds)
     .config(appConfig)
     .run(appRun);
 

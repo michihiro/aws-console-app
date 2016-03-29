@@ -339,6 +339,20 @@ r53:
   privateZone: Private (for VPC)
   associatedVpc: Associated VPC
   rrsetType: Type
+  alias: Alias
+  aliasTarget: Alias Target
+  aliasTargetGroup:
+    s3: -- S3 website endpoints --
+    elb: -- ELB load balancers --
+    cf: -- CloudFront distributions --
+    eb: -- Elastic Beanstalk environments --
+    r53: -- Record sets in this hosted zone --
+  loadingAliasTarget: loading...
+  noAliasTarget: No Targets Available.
+  aliasHostedZoneId: Hosted Zone ID
+  evaluateTargetHealth: Evaluate Target Health
+  yes: Yes
+  no: No
   ttlBtn:
     "1min": 1min
     "5min": 5min

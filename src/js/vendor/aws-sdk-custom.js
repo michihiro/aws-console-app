@@ -1,4 +1,4 @@
-// AWS SDK for JavaScript v2.2.28
+// AWS SDK for JavaScript v2.2.43
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // License at https://sdk.amazonaws.com/js/BUNDLE_LICENSE.txt
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -17,16 +17,30 @@ require('./http/xhr');
 
 if (typeof window !== 'undefined') window.AWS = AWS;
 if (typeof module !== 'undefined') module.exports = AWS;
+if (typeof self !== 'undefined') self.AWS = AWS;
+AWS.apiLoader.services['cloudfront'] = {};
+AWS.CloudFront = AWS.Service.defineService('cloudfront', [ '2016-01-28' ]);
+require('./services/cloudfront');
+
+AWS.apiLoader.services['cloudfront']['2016-01-28'] = {"version":"2.0","metadata":{"apiVersion":"2016-01-28","endpointPrefix":"cloudfront","globalEndpoint":"cloudfront.amazonaws.com","protocol":"rest-xml","serviceAbbreviation":"CloudFront","serviceFullName":"Amazon CloudFront","signatureVersion":"v4"},"operations":{"CreateCloudFrontOriginAccessIdentity":{"http":{"requestUri":"/2016-01-28/origin-access-identity/cloudfront","responseCode":201},"input":{"type":"structure","required":["CloudFrontOriginAccessIdentityConfig"],"members":{"CloudFrontOriginAccessIdentityConfig":{"shape":"S2","locationName":"CloudFrontOriginAccessIdentityConfig","xmlNamespace":{"uri":"http://cloudfront.amazonaws.com/doc/2016-01-28/"}}},"payload":"CloudFrontOriginAccessIdentityConfig"},"output":{"type":"structure","members":{"CloudFrontOriginAccessIdentity":{"shape":"S5"},"Location":{"location":"header","locationName":"Location"},"ETag":{"location":"header","locationName":"ETag"}},"payload":"CloudFrontOriginAccessIdentity"}},"CreateDistribution":{"http":{"requestUri":"/2016-01-28/distribution","responseCode":201},"input":{"type":"structure","required":["DistributionConfig"],"members":{"DistributionConfig":{"shape":"S7","locationName":"DistributionConfig","xmlNamespace":{"uri":"http://cloudfront.amazonaws.com/doc/2016-01-28/"}}},"payload":"DistributionConfig"},"output":{"type":"structure","members":{"Distribution":{"shape":"S1l"},"Location":{"location":"header","locationName":"Location"},"ETag":{"location":"header","locationName":"ETag"}},"payload":"Distribution"}},"CreateInvalidation":{"http":{"requestUri":"/2016-01-28/distribution/{DistributionId}/invalidation","responseCode":201},"input":{"type":"structure","required":["DistributionId","InvalidationBatch"],"members":{"DistributionId":{"location":"uri","locationName":"DistributionId"},"InvalidationBatch":{"shape":"S1t","locationName":"InvalidationBatch","xmlNamespace":{"uri":"http://cloudfront.amazonaws.com/doc/2016-01-28/"}}},"payload":"InvalidationBatch"},"output":{"type":"structure","members":{"Location":{"location":"header","locationName":"Location"},"Invalidation":{"shape":"S1x"}},"payload":"Invalidation"}},"CreateStreamingDistribution":{"http":{"requestUri":"/2016-01-28/streaming-distribution","responseCode":201},"input":{"type":"structure","required":["StreamingDistributionConfig"],"members":{"StreamingDistributionConfig":{"shape":"S1z","locationName":"StreamingDistributionConfig","xmlNamespace":{"uri":"http://cloudfront.amazonaws.com/doc/2016-01-28/"}}},"payload":"StreamingDistributionConfig"},"output":{"type":"structure","members":{"StreamingDistribution":{"shape":"S23"},"Location":{"location":"header","locationName":"Location"},"ETag":{"location":"header","locationName":"ETag"}},"payload":"StreamingDistribution"}},"DeleteCloudFrontOriginAccessIdentity":{"http":{"method":"DELETE","requestUri":"/2016-01-28/origin-access-identity/cloudfront/{Id}","responseCode":204},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"},"IfMatch":{"location":"header","locationName":"If-Match"}}}},"DeleteDistribution":{"http":{"method":"DELETE","requestUri":"/2016-01-28/distribution/{Id}","responseCode":204},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"},"IfMatch":{"location":"header","locationName":"If-Match"}}}},"DeleteStreamingDistribution":{"http":{"method":"DELETE","requestUri":"/2016-01-28/streaming-distribution/{Id}","responseCode":204},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"},"IfMatch":{"location":"header","locationName":"If-Match"}}}},"GetCloudFrontOriginAccessIdentity":{"http":{"method":"GET","requestUri":"/2016-01-28/origin-access-identity/cloudfront/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","members":{"CloudFrontOriginAccessIdentity":{"shape":"S5"},"ETag":{"location":"header","locationName":"ETag"}},"payload":"CloudFrontOriginAccessIdentity"}},"GetCloudFrontOriginAccessIdentityConfig":{"http":{"method":"GET","requestUri":"/2016-01-28/origin-access-identity/cloudfront/{Id}/config"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","members":{"CloudFrontOriginAccessIdentityConfig":{"shape":"S2"},"ETag":{"location":"header","locationName":"ETag"}},"payload":"CloudFrontOriginAccessIdentityConfig"}},"GetDistribution":{"http":{"method":"GET","requestUri":"/2016-01-28/distribution/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","members":{"Distribution":{"shape":"S1l"},"ETag":{"location":"header","locationName":"ETag"}},"payload":"Distribution"}},"GetDistributionConfig":{"http":{"method":"GET","requestUri":"/2016-01-28/distribution/{Id}/config"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","members":{"DistributionConfig":{"shape":"S7"},"ETag":{"location":"header","locationName":"ETag"}},"payload":"DistributionConfig"}},"GetInvalidation":{"http":{"method":"GET","requestUri":"/2016-01-28/distribution/{DistributionId}/invalidation/{Id}"},"input":{"type":"structure","required":["DistributionId","Id"],"members":{"DistributionId":{"location":"uri","locationName":"DistributionId"},"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","members":{"Invalidation":{"shape":"S1x"}},"payload":"Invalidation"}},"GetStreamingDistribution":{"http":{"method":"GET","requestUri":"/2016-01-28/streaming-distribution/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","members":{"StreamingDistribution":{"shape":"S23"},"ETag":{"location":"header","locationName":"ETag"}},"payload":"StreamingDistribution"}},"GetStreamingDistributionConfig":{"http":{"method":"GET","requestUri":"/2016-01-28/streaming-distribution/{Id}/config"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","members":{"StreamingDistributionConfig":{"shape":"S1z"},"ETag":{"location":"header","locationName":"ETag"}},"payload":"StreamingDistributionConfig"}},"ListCloudFrontOriginAccessIdentities":{"http":{"method":"GET","requestUri":"/2016-01-28/origin-access-identity/cloudfront"},"input":{"type":"structure","members":{"Marker":{"location":"querystring","locationName":"Marker"},"MaxItems":{"location":"querystring","locationName":"MaxItems"}}},"output":{"type":"structure","members":{"CloudFrontOriginAccessIdentityList":{"type":"structure","required":["Marker","MaxItems","IsTruncated","Quantity"],"members":{"Marker":{},"NextMarker":{},"MaxItems":{"type":"integer"},"IsTruncated":{"type":"boolean"},"Quantity":{"type":"integer"},"Items":{"type":"list","member":{"locationName":"CloudFrontOriginAccessIdentitySummary","type":"structure","required":["Id","S3CanonicalUserId","Comment"],"members":{"Id":{},"S3CanonicalUserId":{},"Comment":{}}}}}}},"payload":"CloudFrontOriginAccessIdentityList"}},"ListDistributions":{"http":{"method":"GET","requestUri":"/2016-01-28/distribution"},"input":{"type":"structure","members":{"Marker":{"location":"querystring","locationName":"Marker"},"MaxItems":{"location":"querystring","locationName":"MaxItems"}}},"output":{"type":"structure","members":{"DistributionList":{"shape":"S2s"}},"payload":"DistributionList"}},"ListDistributionsByWebACLId":{"http":{"method":"GET","requestUri":"/2016-01-28/distributionsByWebACLId/{WebACLId}"},"input":{"type":"structure","required":["WebACLId"],"members":{"Marker":{"location":"querystring","locationName":"Marker"},"MaxItems":{"location":"querystring","locationName":"MaxItems"},"WebACLId":{"location":"uri","locationName":"WebACLId"}}},"output":{"type":"structure","members":{"DistributionList":{"shape":"S2s"}},"payload":"DistributionList"}},"ListInvalidations":{"http":{"method":"GET","requestUri":"/2016-01-28/distribution/{DistributionId}/invalidation"},"input":{"type":"structure","required":["DistributionId"],"members":{"DistributionId":{"location":"uri","locationName":"DistributionId"},"Marker":{"location":"querystring","locationName":"Marker"},"MaxItems":{"location":"querystring","locationName":"MaxItems"}}},"output":{"type":"structure","members":{"InvalidationList":{"type":"structure","required":["Marker","MaxItems","IsTruncated","Quantity"],"members":{"Marker":{},"NextMarker":{},"MaxItems":{"type":"integer"},"IsTruncated":{"type":"boolean"},"Quantity":{"type":"integer"},"Items":{"type":"list","member":{"locationName":"InvalidationSummary","type":"structure","required":["Id","CreateTime","Status"],"members":{"Id":{},"CreateTime":{"type":"timestamp"},"Status":{}}}}}}},"payload":"InvalidationList"}},"ListStreamingDistributions":{"http":{"method":"GET","requestUri":"/2016-01-28/streaming-distribution"},"input":{"type":"structure","members":{"Marker":{"location":"querystring","locationName":"Marker"},"MaxItems":{"location":"querystring","locationName":"MaxItems"}}},"output":{"type":"structure","members":{"StreamingDistributionList":{"type":"structure","required":["Marker","MaxItems","IsTruncated","Quantity"],"members":{"Marker":{},"NextMarker":{},"MaxItems":{"type":"integer"},"IsTruncated":{"type":"boolean"},"Quantity":{"type":"integer"},"Items":{"type":"list","member":{"locationName":"StreamingDistributionSummary","type":"structure","required":["Id","Status","LastModifiedTime","DomainName","S3Origin","Aliases","TrustedSigners","Comment","PriceClass","Enabled"],"members":{"Id":{},"Status":{},"LastModifiedTime":{"type":"timestamp"},"DomainName":{},"S3Origin":{"shape":"S20"},"Aliases":{"shape":"S8"},"TrustedSigners":{"shape":"Sw"},"Comment":{},"PriceClass":{},"Enabled":{"type":"boolean"}}}}}}},"payload":"StreamingDistributionList"}},"UpdateCloudFrontOriginAccessIdentity":{"http":{"method":"PUT","requestUri":"/2016-01-28/origin-access-identity/cloudfront/{Id}/config"},"input":{"type":"structure","required":["CloudFrontOriginAccessIdentityConfig","Id"],"members":{"CloudFrontOriginAccessIdentityConfig":{"shape":"S2","locationName":"CloudFrontOriginAccessIdentityConfig","xmlNamespace":{"uri":"http://cloudfront.amazonaws.com/doc/2016-01-28/"}},"Id":{"location":"uri","locationName":"Id"},"IfMatch":{"location":"header","locationName":"If-Match"}},"payload":"CloudFrontOriginAccessIdentityConfig"},"output":{"type":"structure","members":{"CloudFrontOriginAccessIdentity":{"shape":"S5"},"ETag":{"location":"header","locationName":"ETag"}},"payload":"CloudFrontOriginAccessIdentity"}},"UpdateDistribution":{"http":{"method":"PUT","requestUri":"/2016-01-28/distribution/{Id}/config"},"input":{"type":"structure","required":["DistributionConfig","Id"],"members":{"DistributionConfig":{"shape":"S7","locationName":"DistributionConfig","xmlNamespace":{"uri":"http://cloudfront.amazonaws.com/doc/2016-01-28/"}},"Id":{"location":"uri","locationName":"Id"},"IfMatch":{"location":"header","locationName":"If-Match"}},"payload":"DistributionConfig"},"output":{"type":"structure","members":{"Distribution":{"shape":"S1l"},"ETag":{"location":"header","locationName":"ETag"}},"payload":"Distribution"}},"UpdateStreamingDistribution":{"http":{"method":"PUT","requestUri":"/2016-01-28/streaming-distribution/{Id}/config"},"input":{"type":"structure","required":["StreamingDistributionConfig","Id"],"members":{"StreamingDistributionConfig":{"shape":"S1z","locationName":"StreamingDistributionConfig","xmlNamespace":{"uri":"http://cloudfront.amazonaws.com/doc/2016-01-28/"}},"Id":{"location":"uri","locationName":"Id"},"IfMatch":{"location":"header","locationName":"If-Match"}},"payload":"StreamingDistributionConfig"},"output":{"type":"structure","members":{"StreamingDistribution":{"shape":"S23"},"ETag":{"location":"header","locationName":"ETag"}},"payload":"StreamingDistribution"}}},"shapes":{"S2":{"type":"structure","required":["CallerReference","Comment"],"members":{"CallerReference":{},"Comment":{}}},"S5":{"type":"structure","required":["Id","S3CanonicalUserId"],"members":{"Id":{},"S3CanonicalUserId":{},"CloudFrontOriginAccessIdentityConfig":{"shape":"S2"}}},"S7":{"type":"structure","required":["CallerReference","Origins","DefaultCacheBehavior","Comment","Enabled"],"members":{"CallerReference":{},"Aliases":{"shape":"S8"},"DefaultRootObject":{},"Origins":{"shape":"Sb"},"DefaultCacheBehavior":{"shape":"Sn"},"CacheBehaviors":{"shape":"S14"},"CustomErrorResponses":{"shape":"S17"},"Comment":{},"Logging":{"type":"structure","required":["Enabled","IncludeCookies","Bucket","Prefix"],"members":{"Enabled":{"type":"boolean"},"IncludeCookies":{"type":"boolean"},"Bucket":{},"Prefix":{}}},"PriceClass":{},"Enabled":{"type":"boolean"},"ViewerCertificate":{"shape":"S1c"},"Restrictions":{"shape":"S1g"},"WebACLId":{}}},"S8":{"type":"structure","required":["Quantity"],"members":{"Quantity":{"type":"integer"},"Items":{"type":"list","member":{"locationName":"CNAME"}}}},"Sb":{"type":"structure","required":["Quantity"],"members":{"Quantity":{"type":"integer"},"Items":{"type":"list","member":{"locationName":"Origin","type":"structure","required":["Id","DomainName"],"members":{"Id":{},"DomainName":{},"OriginPath":{},"CustomHeaders":{"type":"structure","required":["Quantity"],"members":{"Quantity":{"type":"integer"},"Items":{"type":"list","member":{"locationName":"OriginCustomHeader","type":"structure","required":["HeaderName","HeaderValue"],"members":{"HeaderName":{},"HeaderValue":{}}}}}},"S3OriginConfig":{"type":"structure","required":["OriginAccessIdentity"],"members":{"OriginAccessIdentity":{}}},"CustomOriginConfig":{"type":"structure","required":["HTTPPort","HTTPSPort","OriginProtocolPolicy"],"members":{"HTTPPort":{"type":"integer"},"HTTPSPort":{"type":"integer"},"OriginProtocolPolicy":{},"OriginSslProtocols":{"type":"structure","required":["Quantity","Items"],"members":{"Quantity":{"type":"integer"},"Items":{"type":"list","member":{"locationName":"SslProtocol"}}}}}}}}}}},"Sn":{"type":"structure","required":["TargetOriginId","ForwardedValues","TrustedSigners","ViewerProtocolPolicy","MinTTL"],"members":{"TargetOriginId":{},"ForwardedValues":{"shape":"So"},"TrustedSigners":{"shape":"Sw"},"ViewerProtocolPolicy":{},"MinTTL":{"type":"long"},"AllowedMethods":{"shape":"S10"},"SmoothStreaming":{"type":"boolean"},"DefaultTTL":{"type":"long"},"MaxTTL":{"type":"long"},"Compress":{"type":"boolean"}}},"So":{"type":"structure","required":["QueryString","Cookies"],"members":{"QueryString":{"type":"boolean"},"Cookies":{"type":"structure","required":["Forward"],"members":{"Forward":{},"WhitelistedNames":{"type":"structure","required":["Quantity"],"members":{"Quantity":{"type":"integer"},"Items":{"type":"list","member":{"locationName":"Name"}}}}}},"Headers":{"type":"structure","required":["Quantity"],"members":{"Quantity":{"type":"integer"},"Items":{"type":"list","member":{"locationName":"Name"}}}}}},"Sw":{"type":"structure","required":["Enabled","Quantity"],"members":{"Enabled":{"type":"boolean"},"Quantity":{"type":"integer"},"Items":{"type":"list","member":{"locationName":"AwsAccountNumber"}}}},"S10":{"type":"structure","required":["Quantity","Items"],"members":{"Quantity":{"type":"integer"},"Items":{"shape":"S11"},"CachedMethods":{"type":"structure","required":["Quantity","Items"],"members":{"Quantity":{"type":"integer"},"Items":{"shape":"S11"}}}}},"S11":{"type":"list","member":{"locationName":"Method"}},"S14":{"type":"structure","required":["Quantity"],"members":{"Quantity":{"type":"integer"},"Items":{"type":"list","member":{"locationName":"CacheBehavior","type":"structure","required":["PathPattern","TargetOriginId","ForwardedValues","TrustedSigners","ViewerProtocolPolicy","MinTTL"],"members":{"PathPattern":{},"TargetOriginId":{},"ForwardedValues":{"shape":"So"},"TrustedSigners":{"shape":"Sw"},"ViewerProtocolPolicy":{},"MinTTL":{"type":"long"},"AllowedMethods":{"shape":"S10"},"SmoothStreaming":{"type":"boolean"},"DefaultTTL":{"type":"long"},"MaxTTL":{"type":"long"},"Compress":{"type":"boolean"}}}}}},"S17":{"type":"structure","required":["Quantity"],"members":{"Quantity":{"type":"integer"},"Items":{"type":"list","member":{"locationName":"CustomErrorResponse","type":"structure","required":["ErrorCode"],"members":{"ErrorCode":{"type":"integer"},"ResponsePagePath":{},"ResponseCode":{},"ErrorCachingMinTTL":{"type":"long"}}}}}},"S1c":{"type":"structure","members":{"CloudFrontDefaultCertificate":{"type":"boolean"},"IAMCertificateId":{},"ACMCertificateArn":{},"SSLSupportMethod":{},"MinimumProtocolVersion":{},"Certificate":{"deprecated":true},"CertificateSource":{"deprecated":true}}},"S1g":{"type":"structure","required":["GeoRestriction"],"members":{"GeoRestriction":{"type":"structure","required":["RestrictionType","Quantity"],"members":{"RestrictionType":{},"Quantity":{"type":"integer"},"Items":{"type":"list","member":{"locationName":"Location"}}}}}},"S1l":{"type":"structure","required":["Id","Status","LastModifiedTime","InProgressInvalidationBatches","DomainName","ActiveTrustedSigners","DistributionConfig"],"members":{"Id":{},"Status":{},"LastModifiedTime":{"type":"timestamp"},"InProgressInvalidationBatches":{"type":"integer"},"DomainName":{},"ActiveTrustedSigners":{"shape":"S1n"},"DistributionConfig":{"shape":"S7"}}},"S1n":{"type":"structure","required":["Enabled","Quantity"],"members":{"Enabled":{"type":"boolean"},"Quantity":{"type":"integer"},"Items":{"type":"list","member":{"locationName":"Signer","type":"structure","members":{"AwsAccountNumber":{},"KeyPairIds":{"type":"structure","required":["Quantity"],"members":{"Quantity":{"type":"integer"},"Items":{"type":"list","member":{"locationName":"KeyPairId"}}}}}}}}},"S1t":{"type":"structure","required":["Paths","CallerReference"],"members":{"Paths":{"type":"structure","required":["Quantity"],"members":{"Quantity":{"type":"integer"},"Items":{"type":"list","member":{"locationName":"Path"}}}},"CallerReference":{}}},"S1x":{"type":"structure","required":["Id","Status","CreateTime","InvalidationBatch"],"members":{"Id":{},"Status":{},"CreateTime":{"type":"timestamp"},"InvalidationBatch":{"shape":"S1t"}}},"S1z":{"type":"structure","required":["CallerReference","S3Origin","Comment","TrustedSigners","Enabled"],"members":{"CallerReference":{},"S3Origin":{"shape":"S20"},"Aliases":{"shape":"S8"},"Comment":{},"Logging":{"type":"structure","required":["Enabled","Bucket","Prefix"],"members":{"Enabled":{"type":"boolean"},"Bucket":{},"Prefix":{}}},"TrustedSigners":{"shape":"Sw"},"PriceClass":{},"Enabled":{"type":"boolean"}}},"S20":{"type":"structure","required":["DomainName","OriginAccessIdentity"],"members":{"DomainName":{},"OriginAccessIdentity":{}}},"S23":{"type":"structure","required":["Id","Status","DomainName","ActiveTrustedSigners","StreamingDistributionConfig"],"members":{"Id":{},"Status":{},"LastModifiedTime":{"type":"timestamp"},"DomainName":{},"ActiveTrustedSigners":{"shape":"S1n"},"StreamingDistributionConfig":{"shape":"S1z"}}},"S2s":{"type":"structure","required":["Marker","MaxItems","IsTruncated","Quantity"],"members":{"Marker":{},"NextMarker":{},"MaxItems":{"type":"integer"},"IsTruncated":{"type":"boolean"},"Quantity":{"type":"integer"},"Items":{"type":"list","member":{"locationName":"DistributionSummary","type":"structure","required":["Id","Status","LastModifiedTime","DomainName","Aliases","Origins","DefaultCacheBehavior","CacheBehaviors","CustomErrorResponses","Comment","PriceClass","Enabled","ViewerCertificate","Restrictions","WebACLId"],"members":{"Id":{},"Status":{},"LastModifiedTime":{"type":"timestamp"},"DomainName":{},"Aliases":{"shape":"S8"},"Origins":{"shape":"Sb"},"DefaultCacheBehavior":{"shape":"Sn"},"CacheBehaviors":{"shape":"S14"},"CustomErrorResponses":{"shape":"S17"},"Comment":{},"PriceClass":{},"Enabled":{"type":"boolean"},"ViewerCertificate":{"shape":"S1c"},"Restrictions":{"shape":"S1g"},"WebACLId":{}}}}}}},"paginators":{"ListCloudFrontOriginAccessIdentities":{"input_token":"Marker","output_token":"CloudFrontOriginAccessIdentityList.NextMarker","limit_key":"MaxItems","more_results":"CloudFrontOriginAccessIdentityList.IsTruncated","result_key":"CloudFrontOriginAccessIdentityList.Items"},"ListDistributions":{"input_token":"Marker","output_token":"DistributionList.NextMarker","limit_key":"MaxItems","more_results":"DistributionList.IsTruncated","result_key":"DistributionList.Items"},"ListInvalidations":{"input_token":"Marker","output_token":"InvalidationList.NextMarker","limit_key":"MaxItems","more_results":"InvalidationList.IsTruncated","result_key":"InvalidationList.Items"},"ListStreamingDistributions":{"input_token":"Marker","output_token":"StreamingDistributionList.NextMarker","limit_key":"MaxItems","more_results":"StreamingDistributionList.IsTruncated","result_key":"StreamingDistributionList.Items"}},"waiters":{"__default__":{"success_type":"output","success_path":"Status"},"StreamingDistributionDeployed":{"operation":"GetStreamingDistribution","description":"Wait until a streaming distribution is deployed.","interval":60,"max_attempts":25,"success_value":"Deployed"},"DistributionDeployed":{"operation":"GetDistribution","description":"Wait until a distribution is deployed.","interval":60,"max_attempts":25,"success_value":"Deployed"},"InvalidationCompleted":{"operation":"GetInvalidation","description":"Wait until an invalidation has completed.","interval":20,"max_attempts":30,"success_value":"Completed"}}};
 AWS.apiLoader.services['ec2'] = {};
 AWS.EC2 = AWS.Service.defineService('ec2', [ '2015-10-01' ]);
 require('./services/ec2');
 
-AWS.apiLoader.services['ec2']['2015-10-01'] = {"version":"2.0","metadata":{"apiVersion":"2015-10-01","endpointPrefix":"ec2","protocol":"ec2","serviceAbbreviation":"Amazon EC2","serviceFullName":"Amazon Elastic Compute Cloud","signatureVersion":"v4","xmlNamespace":"http://ec2.amazonaws.com/doc/2015-10-01"},"operations":{"AcceptVpcPeeringConnection":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcPeeringConnectionId":{"locationName":"vpcPeeringConnectionId"}}},"output":{"type":"structure","members":{"VpcPeeringConnection":{"shape":"S5","locationName":"vpcPeeringConnection"}}},"http":{}},"AllocateAddress":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Domain":{}}},"output":{"type":"structure","members":{"PublicIp":{"locationName":"publicIp"},"Domain":{"locationName":"domain"},"AllocationId":{"locationName":"allocationId"}}},"http":{}},"AllocateHosts":{"input":{"type":"structure","required":["InstanceType","Quantity","AvailabilityZone"],"members":{"AutoPlacement":{"locationName":"autoPlacement"},"ClientToken":{"locationName":"clientToken"},"InstanceType":{"locationName":"instanceType"},"Quantity":{"locationName":"quantity","type":"integer"},"AvailabilityZone":{"locationName":"availabilityZone"}}},"output":{"type":"structure","members":{"HostIds":{"shape":"Sj","locationName":"hostIdSet"}}},"http":{}},"AssignPrivateIpAddresses":{"input":{"type":"structure","required":["NetworkInterfaceId"],"members":{"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"PrivateIpAddresses":{"shape":"Sl","locationName":"privateIpAddress"},"SecondaryPrivateIpAddressCount":{"locationName":"secondaryPrivateIpAddressCount","type":"integer"},"AllowReassignment":{"locationName":"allowReassignment","type":"boolean"}}},"http":{}},"AssociateAddress":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{},"PublicIp":{},"AllocationId":{},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"PrivateIpAddress":{"locationName":"privateIpAddress"},"AllowReassociation":{"locationName":"allowReassociation","type":"boolean"}}},"output":{"type":"structure","members":{"AssociationId":{"locationName":"associationId"}}},"http":{}},"AssociateDhcpOptions":{"input":{"type":"structure","required":["DhcpOptionsId","VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"DhcpOptionsId":{},"VpcId":{}}},"http":{}},"AssociateRouteTable":{"input":{"type":"structure","required":["SubnetId","RouteTableId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SubnetId":{"locationName":"subnetId"},"RouteTableId":{"locationName":"routeTableId"}}},"output":{"type":"structure","members":{"AssociationId":{"locationName":"associationId"}}},"http":{}},"AttachClassicLinkVpc":{"input":{"type":"structure","required":["InstanceId","VpcId","Groups"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{"locationName":"instanceId"},"VpcId":{"locationName":"vpcId"},"Groups":{"shape":"Ss","locationName":"SecurityGroupId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"AttachInternetGateway":{"input":{"type":"structure","required":["InternetGatewayId","VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InternetGatewayId":{"locationName":"internetGatewayId"},"VpcId":{"locationName":"vpcId"}}},"http":{}},"AttachNetworkInterface":{"input":{"type":"structure","required":["NetworkInterfaceId","InstanceId","DeviceIndex"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"InstanceId":{"locationName":"instanceId"},"DeviceIndex":{"locationName":"deviceIndex","type":"integer"}}},"output":{"type":"structure","members":{"AttachmentId":{"locationName":"attachmentId"}}},"http":{}},"AttachVolume":{"input":{"type":"structure","required":["VolumeId","InstanceId","Device"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeId":{},"InstanceId":{},"Device":{}}},"output":{"shape":"Sy"},"http":{}},"AttachVpnGateway":{"input":{"type":"structure","required":["VpnGatewayId","VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpnGatewayId":{},"VpcId":{}}},"output":{"type":"structure","members":{"VpcAttachment":{"shape":"S12","locationName":"attachment"}}},"http":{}},"AuthorizeSecurityGroupEgress":{"input":{"type":"structure","required":["GroupId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupId":{"locationName":"groupId"},"SourceSecurityGroupName":{"locationName":"sourceSecurityGroupName"},"SourceSecurityGroupOwnerId":{"locationName":"sourceSecurityGroupOwnerId"},"IpProtocol":{"locationName":"ipProtocol"},"FromPort":{"locationName":"fromPort","type":"integer"},"ToPort":{"locationName":"toPort","type":"integer"},"CidrIp":{"locationName":"cidrIp"},"IpPermissions":{"shape":"S15","locationName":"ipPermissions"}}},"http":{}},"AuthorizeSecurityGroupIngress":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupName":{},"GroupId":{},"SourceSecurityGroupName":{},"SourceSecurityGroupOwnerId":{},"IpProtocol":{},"FromPort":{"type":"integer"},"ToPort":{"type":"integer"},"CidrIp":{},"IpPermissions":{"shape":"S15"}}},"http":{}},"BundleInstance":{"input":{"type":"structure","required":["InstanceId","Storage"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{},"Storage":{"shape":"S1f"}}},"output":{"type":"structure","members":{"BundleTask":{"shape":"S1j","locationName":"bundleInstanceTask"}}},"http":{}},"CancelBundleTask":{"input":{"type":"structure","required":["BundleId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"BundleId":{}}},"output":{"type":"structure","members":{"BundleTask":{"shape":"S1j","locationName":"bundleInstanceTask"}}},"http":{}},"CancelConversionTask":{"input":{"type":"structure","required":["ConversionTaskId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ConversionTaskId":{"locationName":"conversionTaskId"},"ReasonMessage":{"locationName":"reasonMessage"}}},"http":{}},"CancelExportTask":{"input":{"type":"structure","required":["ExportTaskId"],"members":{"ExportTaskId":{"locationName":"exportTaskId"}}},"http":{}},"CancelImportTask":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"ImportTaskId":{},"CancelReason":{}}},"output":{"type":"structure","members":{"ImportTaskId":{"locationName":"importTaskId"},"State":{"locationName":"state"},"PreviousState":{"locationName":"previousState"}}},"http":{}},"CancelReservedInstancesListing":{"input":{"type":"structure","required":["ReservedInstancesListingId"],"members":{"ReservedInstancesListingId":{"locationName":"reservedInstancesListingId"}}},"output":{"type":"structure","members":{"ReservedInstancesListings":{"shape":"S1u","locationName":"reservedInstancesListingsSet"}}},"http":{}},"CancelSpotFleetRequests":{"input":{"type":"structure","required":["SpotFleetRequestIds","TerminateInstances"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotFleetRequestIds":{"shape":"S26","locationName":"spotFleetRequestId"},"TerminateInstances":{"locationName":"terminateInstances","type":"boolean"}}},"output":{"type":"structure","members":{"UnsuccessfulFleetRequests":{"locationName":"unsuccessfulFleetRequestSet","type":"list","member":{"locationName":"item","type":"structure","required":["SpotFleetRequestId","Error"],"members":{"SpotFleetRequestId":{"locationName":"spotFleetRequestId"},"Error":{"locationName":"error","type":"structure","required":["Code","Message"],"members":{"Code":{"locationName":"code"},"Message":{"locationName":"message"}}}}}},"SuccessfulFleetRequests":{"locationName":"successfulFleetRequestSet","type":"list","member":{"locationName":"item","type":"structure","required":["SpotFleetRequestId","CurrentSpotFleetRequestState","PreviousSpotFleetRequestState"],"members":{"SpotFleetRequestId":{"locationName":"spotFleetRequestId"},"CurrentSpotFleetRequestState":{"locationName":"currentSpotFleetRequestState"},"PreviousSpotFleetRequestState":{"locationName":"previousSpotFleetRequestState"}}}}}},"http":{}},"CancelSpotInstanceRequests":{"input":{"type":"structure","required":["SpotInstanceRequestIds"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotInstanceRequestIds":{"shape":"S2g","locationName":"SpotInstanceRequestId"}}},"output":{"type":"structure","members":{"CancelledSpotInstanceRequests":{"locationName":"spotInstanceRequestSet","type":"list","member":{"locationName":"item","type":"structure","members":{"SpotInstanceRequestId":{"locationName":"spotInstanceRequestId"},"State":{"locationName":"state"}}}}}},"http":{}},"ConfirmProductInstance":{"input":{"type":"structure","required":["ProductCode","InstanceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ProductCode":{},"InstanceId":{}}},"output":{"type":"structure","members":{"OwnerId":{"locationName":"ownerId"},"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"CopyImage":{"input":{"type":"structure","required":["SourceRegion","SourceImageId","Name"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SourceRegion":{},"SourceImageId":{},"Name":{},"Description":{},"ClientToken":{},"Encrypted":{"locationName":"encrypted","type":"boolean"},"KmsKeyId":{"locationName":"kmsKeyId"}}},"output":{"type":"structure","members":{"ImageId":{"locationName":"imageId"}}},"http":{}},"CopySnapshot":{"input":{"type":"structure","required":["SourceRegion","SourceSnapshotId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SourceRegion":{},"SourceSnapshotId":{},"Description":{},"DestinationRegion":{"locationName":"destinationRegion"},"PresignedUrl":{"locationName":"presignedUrl"},"Encrypted":{"locationName":"encrypted","type":"boolean"},"KmsKeyId":{"locationName":"kmsKeyId"}}},"output":{"type":"structure","members":{"SnapshotId":{"locationName":"snapshotId"}}},"http":{}},"CreateCustomerGateway":{"input":{"type":"structure","required":["Type","PublicIp","BgpAsn"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Type":{},"PublicIp":{"locationName":"IpAddress"},"BgpAsn":{"type":"integer"}}},"output":{"type":"structure","members":{"CustomerGateway":{"shape":"S2u","locationName":"customerGateway"}}},"http":{}},"CreateDhcpOptions":{"input":{"type":"structure","required":["DhcpConfigurations"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"DhcpConfigurations":{"locationName":"dhcpConfiguration","type":"list","member":{"locationName":"item","type":"structure","members":{"Key":{"locationName":"key"},"Values":{"shape":"S26","locationName":"Value"}}}}}},"output":{"type":"structure","members":{"DhcpOptions":{"shape":"S2z","locationName":"dhcpOptions"}}},"http":{}},"CreateFlowLogs":{"input":{"type":"structure","required":["ResourceIds","ResourceType","TrafficType","LogGroupName","DeliverLogsPermissionArn"],"members":{"ResourceIds":{"shape":"S26","locationName":"ResourceId"},"ResourceType":{},"TrafficType":{},"LogGroupName":{},"DeliverLogsPermissionArn":{},"ClientToken":{}}},"output":{"type":"structure","members":{"FlowLogIds":{"shape":"S26","locationName":"flowLogIdSet"},"ClientToken":{"locationName":"clientToken"},"Unsuccessful":{"shape":"S38","locationName":"unsuccessful"}}},"http":{}},"CreateImage":{"input":{"type":"structure","required":["InstanceId","Name"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{"locationName":"instanceId"},"Name":{"locationName":"name"},"Description":{"locationName":"description"},"NoReboot":{"locationName":"noReboot","type":"boolean"},"BlockDeviceMappings":{"shape":"S3c","locationName":"blockDeviceMapping"}}},"output":{"type":"structure","members":{"ImageId":{"locationName":"imageId"}}},"http":{}},"CreateInstanceExportTask":{"input":{"type":"structure","required":["InstanceId"],"members":{"Description":{"locationName":"description"},"InstanceId":{"locationName":"instanceId"},"TargetEnvironment":{"locationName":"targetEnvironment"},"ExportToS3Task":{"locationName":"exportToS3","type":"structure","members":{"DiskImageFormat":{"locationName":"diskImageFormat"},"ContainerFormat":{"locationName":"containerFormat"},"S3Bucket":{"locationName":"s3Bucket"},"S3Prefix":{"locationName":"s3Prefix"}}}}},"output":{"type":"structure","members":{"ExportTask":{"shape":"S3n","locationName":"exportTask"}}},"http":{}},"CreateInternetGateway":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"}}},"output":{"type":"structure","members":{"InternetGateway":{"shape":"S3t","locationName":"internetGateway"}}},"http":{}},"CreateKeyPair":{"input":{"type":"structure","required":["KeyName"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"KeyName":{}}},"output":{"type":"structure","members":{"KeyName":{"locationName":"keyName"},"KeyFingerprint":{"locationName":"keyFingerprint"},"KeyMaterial":{"locationName":"keyMaterial"}}},"http":{}},"CreateNatGateway":{"input":{"type":"structure","required":["SubnetId","AllocationId"],"members":{"SubnetId":{},"AllocationId":{},"ClientToken":{}}},"output":{"type":"structure","members":{"NatGateway":{"shape":"S40","locationName":"natGateway"},"ClientToken":{"locationName":"clientToken"}}},"http":{}},"CreateNetworkAcl":{"input":{"type":"structure","required":["VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{"locationName":"vpcId"}}},"output":{"type":"structure","members":{"NetworkAcl":{"shape":"S46","locationName":"networkAcl"}}},"http":{}},"CreateNetworkAclEntry":{"input":{"type":"structure","required":["NetworkAclId","RuleNumber","Protocol","RuleAction","Egress","CidrBlock"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkAclId":{"locationName":"networkAclId"},"RuleNumber":{"locationName":"ruleNumber","type":"integer"},"Protocol":{"locationName":"protocol"},"RuleAction":{"locationName":"ruleAction"},"Egress":{"locationName":"egress","type":"boolean"},"CidrBlock":{"locationName":"cidrBlock"},"IcmpTypeCode":{"shape":"S4a","locationName":"Icmp"},"PortRange":{"shape":"S4b","locationName":"portRange"}}},"http":{}},"CreateNetworkInterface":{"input":{"type":"structure","required":["SubnetId"],"members":{"SubnetId":{"locationName":"subnetId"},"Description":{"locationName":"description"},"PrivateIpAddress":{"locationName":"privateIpAddress"},"Groups":{"shape":"S4g","locationName":"SecurityGroupId"},"PrivateIpAddresses":{"shape":"S4h","locationName":"privateIpAddresses"},"SecondaryPrivateIpAddressCount":{"locationName":"secondaryPrivateIpAddressCount","type":"integer"},"DryRun":{"locationName":"dryRun","type":"boolean"}}},"output":{"type":"structure","members":{"NetworkInterface":{"shape":"S4k","locationName":"networkInterface"}}},"http":{}},"CreatePlacementGroup":{"input":{"type":"structure","required":["GroupName","Strategy"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupName":{"locationName":"groupName"},"Strategy":{"locationName":"strategy"}}},"http":{}},"CreateReservedInstancesListing":{"input":{"type":"structure","required":["ReservedInstancesId","InstanceCount","PriceSchedules","ClientToken"],"members":{"ReservedInstancesId":{"locationName":"reservedInstancesId"},"InstanceCount":{"locationName":"instanceCount","type":"integer"},"PriceSchedules":{"locationName":"priceSchedules","type":"list","member":{"locationName":"item","type":"structure","members":{"Term":{"locationName":"term","type":"long"},"Price":{"locationName":"price","type":"double"},"CurrencyCode":{"locationName":"currencyCode"}}}},"ClientToken":{"locationName":"clientToken"}}},"output":{"type":"structure","members":{"ReservedInstancesListings":{"shape":"S1u","locationName":"reservedInstancesListingsSet"}}},"http":{}},"CreateRoute":{"input":{"type":"structure","required":["RouteTableId","DestinationCidrBlock"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"RouteTableId":{"locationName":"routeTableId"},"DestinationCidrBlock":{"locationName":"destinationCidrBlock"},"GatewayId":{"locationName":"gatewayId"},"InstanceId":{"locationName":"instanceId"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"VpcPeeringConnectionId":{"locationName":"vpcPeeringConnectionId"},"NatGatewayId":{"locationName":"natGatewayId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"CreateRouteTable":{"input":{"type":"structure","required":["VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{"locationName":"vpcId"}}},"output":{"type":"structure","members":{"RouteTable":{"shape":"S53","locationName":"routeTable"}}},"http":{}},"CreateSecurityGroup":{"input":{"type":"structure","required":["GroupName","Description"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupName":{},"Description":{"locationName":"GroupDescription"},"VpcId":{}}},"output":{"type":"structure","members":{"GroupId":{"locationName":"groupId"}}},"http":{}},"CreateSnapshot":{"input":{"type":"structure","required":["VolumeId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeId":{},"Description":{}}},"output":{"shape":"S5f"},"http":{}},"CreateSpotDatafeedSubscription":{"input":{"type":"structure","required":["Bucket"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Bucket":{"locationName":"bucket"},"Prefix":{"locationName":"prefix"}}},"output":{"type":"structure","members":{"SpotDatafeedSubscription":{"shape":"S5j","locationName":"spotDatafeedSubscription"}}},"http":{}},"CreateSubnet":{"input":{"type":"structure","required":["VpcId","CidrBlock"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{},"CidrBlock":{},"AvailabilityZone":{}}},"output":{"type":"structure","members":{"Subnet":{"shape":"S5o","locationName":"subnet"}}},"http":{}},"CreateTags":{"input":{"type":"structure","required":["Resources","Tags"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Resources":{"shape":"S5r","locationName":"ResourceId"},"Tags":{"shape":"Sa","locationName":"Tag"}}},"http":{}},"CreateVolume":{"input":{"type":"structure","required":["AvailabilityZone"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Size":{"type":"integer"},"SnapshotId":{},"AvailabilityZone":{},"VolumeType":{},"Iops":{"type":"integer"},"Encrypted":{"locationName":"encrypted","type":"boolean"},"KmsKeyId":{}}},"output":{"shape":"S5t"},"http":{}},"CreateVpc":{"input":{"type":"structure","required":["CidrBlock"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"CidrBlock":{},"InstanceTenancy":{"locationName":"instanceTenancy"}}},"output":{"type":"structure","members":{"Vpc":{"shape":"S5z","locationName":"vpc"}}},"http":{}},"CreateVpcEndpoint":{"input":{"type":"structure","required":["VpcId","ServiceName"],"members":{"DryRun":{"type":"boolean"},"VpcId":{},"ServiceName":{},"PolicyDocument":{},"RouteTableIds":{"shape":"S26","locationName":"RouteTableId"},"ClientToken":{}}},"output":{"type":"structure","members":{"VpcEndpoint":{"shape":"S63","locationName":"vpcEndpoint"},"ClientToken":{"locationName":"clientToken"}}},"http":{}},"CreateVpcPeeringConnection":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{"locationName":"vpcId"},"PeerVpcId":{"locationName":"peerVpcId"},"PeerOwnerId":{"locationName":"peerOwnerId"}}},"output":{"type":"structure","members":{"VpcPeeringConnection":{"shape":"S5","locationName":"vpcPeeringConnection"}}},"http":{}},"CreateVpnConnection":{"input":{"type":"structure","required":["Type","CustomerGatewayId","VpnGatewayId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Type":{},"CustomerGatewayId":{},"VpnGatewayId":{},"Options":{"locationName":"options","type":"structure","members":{"StaticRoutesOnly":{"locationName":"staticRoutesOnly","type":"boolean"}}}}},"output":{"type":"structure","members":{"VpnConnection":{"shape":"S6a","locationName":"vpnConnection"}}},"http":{}},"CreateVpnConnectionRoute":{"input":{"type":"structure","required":["VpnConnectionId","DestinationCidrBlock"],"members":{"VpnConnectionId":{},"DestinationCidrBlock":{}}},"http":{}},"CreateVpnGateway":{"input":{"type":"structure","required":["Type"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Type":{},"AvailabilityZone":{}}},"output":{"type":"structure","members":{"VpnGateway":{"shape":"S6m","locationName":"vpnGateway"}}},"http":{}},"DeleteCustomerGateway":{"input":{"type":"structure","required":["CustomerGatewayId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"CustomerGatewayId":{}}},"http":{}},"DeleteDhcpOptions":{"input":{"type":"structure","required":["DhcpOptionsId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"DhcpOptionsId":{}}},"http":{}},"DeleteFlowLogs":{"input":{"type":"structure","required":["FlowLogIds"],"members":{"FlowLogIds":{"shape":"S26","locationName":"FlowLogId"}}},"output":{"type":"structure","members":{"Unsuccessful":{"shape":"S38","locationName":"unsuccessful"}}},"http":{}},"DeleteInternetGateway":{"input":{"type":"structure","required":["InternetGatewayId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InternetGatewayId":{"locationName":"internetGatewayId"}}},"http":{}},"DeleteKeyPair":{"input":{"type":"structure","required":["KeyName"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"KeyName":{}}},"http":{}},"DeleteNatGateway":{"input":{"type":"structure","required":["NatGatewayId"],"members":{"NatGatewayId":{}}},"output":{"type":"structure","members":{"NatGatewayId":{"locationName":"natGatewayId"}}},"http":{}},"DeleteNetworkAcl":{"input":{"type":"structure","required":["NetworkAclId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkAclId":{"locationName":"networkAclId"}}},"http":{}},"DeleteNetworkAclEntry":{"input":{"type":"structure","required":["NetworkAclId","RuleNumber","Egress"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkAclId":{"locationName":"networkAclId"},"RuleNumber":{"locationName":"ruleNumber","type":"integer"},"Egress":{"locationName":"egress","type":"boolean"}}},"http":{}},"DeleteNetworkInterface":{"input":{"type":"structure","required":["NetworkInterfaceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"}}},"http":{}},"DeletePlacementGroup":{"input":{"type":"structure","required":["GroupName"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupName":{"locationName":"groupName"}}},"http":{}},"DeleteRoute":{"input":{"type":"structure","required":["RouteTableId","DestinationCidrBlock"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"RouteTableId":{"locationName":"routeTableId"},"DestinationCidrBlock":{"locationName":"destinationCidrBlock"}}},"http":{}},"DeleteRouteTable":{"input":{"type":"structure","required":["RouteTableId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"RouteTableId":{"locationName":"routeTableId"}}},"http":{}},"DeleteSecurityGroup":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupName":{},"GroupId":{}}},"http":{}},"DeleteSnapshot":{"input":{"type":"structure","required":["SnapshotId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SnapshotId":{}}},"http":{}},"DeleteSpotDatafeedSubscription":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"}}},"http":{}},"DeleteSubnet":{"input":{"type":"structure","required":["SubnetId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SubnetId":{}}},"http":{}},"DeleteTags":{"input":{"type":"structure","required":["Resources"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Resources":{"shape":"S5r","locationName":"resourceId"},"Tags":{"shape":"Sa","locationName":"tag"}}},"http":{}},"DeleteVolume":{"input":{"type":"structure","required":["VolumeId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeId":{}}},"http":{}},"DeleteVpc":{"input":{"type":"structure","required":["VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{}}},"http":{}},"DeleteVpcEndpoints":{"input":{"type":"structure","required":["VpcEndpointIds"],"members":{"DryRun":{"type":"boolean"},"VpcEndpointIds":{"shape":"S26","locationName":"VpcEndpointId"}}},"output":{"type":"structure","members":{"Unsuccessful":{"shape":"S38","locationName":"unsuccessful"}}},"http":{}},"DeleteVpcPeeringConnection":{"input":{"type":"structure","required":["VpcPeeringConnectionId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcPeeringConnectionId":{"locationName":"vpcPeeringConnectionId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"DeleteVpnConnection":{"input":{"type":"structure","required":["VpnConnectionId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpnConnectionId":{}}},"http":{}},"DeleteVpnConnectionRoute":{"input":{"type":"structure","required":["VpnConnectionId","DestinationCidrBlock"],"members":{"VpnConnectionId":{},"DestinationCidrBlock":{}}},"http":{}},"DeleteVpnGateway":{"input":{"type":"structure","required":["VpnGatewayId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpnGatewayId":{}}},"http":{}},"DeregisterImage":{"input":{"type":"structure","required":["ImageId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ImageId":{}}},"http":{}},"DescribeAccountAttributes":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"AttributeNames":{"locationName":"attributeName","type":"list","member":{"locationName":"attributeName"}}}},"output":{"type":"structure","members":{"AccountAttributes":{"locationName":"accountAttributeSet","type":"list","member":{"locationName":"item","type":"structure","members":{"AttributeName":{"locationName":"attributeName"},"AttributeValues":{"locationName":"attributeValueSet","type":"list","member":{"locationName":"item","type":"structure","members":{"AttributeValue":{"locationName":"attributeValue"}}}}}}}}},"http":{}},"DescribeAddresses":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"PublicIps":{"locationName":"PublicIp","type":"list","member":{"locationName":"PublicIp"}},"Filters":{"shape":"S7r","locationName":"Filter"},"AllocationIds":{"locationName":"AllocationId","type":"list","member":{"locationName":"AllocationId"}}}},"output":{"type":"structure","members":{"Addresses":{"locationName":"addressesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"PublicIp":{"locationName":"publicIp"},"AllocationId":{"locationName":"allocationId"},"AssociationId":{"locationName":"associationId"},"Domain":{"locationName":"domain"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"NetworkInterfaceOwnerId":{"locationName":"networkInterfaceOwnerId"},"PrivateIpAddress":{"locationName":"privateIpAddress"}}}}}},"http":{}},"DescribeAvailabilityZones":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ZoneNames":{"locationName":"ZoneName","type":"list","member":{"locationName":"ZoneName"}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"AvailabilityZones":{"locationName":"availabilityZoneInfo","type":"list","member":{"locationName":"item","type":"structure","members":{"ZoneName":{"locationName":"zoneName"},"State":{"locationName":"zoneState"},"RegionName":{"locationName":"regionName"},"Messages":{"locationName":"messageSet","type":"list","member":{"locationName":"item","type":"structure","members":{"Message":{"locationName":"message"}}}}}}}}},"http":{}},"DescribeBundleTasks":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"BundleIds":{"locationName":"BundleId","type":"list","member":{"locationName":"BundleId"}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"BundleTasks":{"locationName":"bundleInstanceTasksSet","type":"list","member":{"shape":"S1j","locationName":"item"}}}},"http":{}},"DescribeClassicLinkInstances":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S8a","locationName":"InstanceId"},"Filters":{"shape":"S7r","locationName":"Filter"},"NextToken":{"locationName":"nextToken"},"MaxResults":{"locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","members":{"Instances":{"locationName":"instancesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"VpcId":{"locationName":"vpcId"},"Groups":{"shape":"S4m","locationName":"groupSet"},"Tags":{"shape":"Sa","locationName":"tagSet"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeConversionTasks":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Filters":{"shape":"S7r","locationName":"filter"},"ConversionTaskIds":{"locationName":"conversionTaskId","type":"list","member":{"locationName":"item"}}}},"output":{"type":"structure","members":{"ConversionTasks":{"locationName":"conversionTasks","type":"list","member":{"shape":"S8i","locationName":"item"}}}},"http":{}},"DescribeCustomerGateways":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"CustomerGatewayIds":{"locationName":"CustomerGatewayId","type":"list","member":{"locationName":"CustomerGatewayId"}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"CustomerGateways":{"locationName":"customerGatewaySet","type":"list","member":{"shape":"S2u","locationName":"item"}}}},"http":{}},"DescribeDhcpOptions":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"DhcpOptionsIds":{"locationName":"DhcpOptionsId","type":"list","member":{"locationName":"DhcpOptionsId"}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"DhcpOptions":{"locationName":"dhcpOptionsSet","type":"list","member":{"shape":"S2z","locationName":"item"}}}},"http":{}},"DescribeExportTasks":{"input":{"type":"structure","members":{"ExportTaskIds":{"locationName":"exportTaskId","type":"list","member":{"locationName":"ExportTaskId"}}}},"output":{"type":"structure","members":{"ExportTasks":{"locationName":"exportTaskSet","type":"list","member":{"shape":"S3n","locationName":"item"}}}},"http":{}},"DescribeFlowLogs":{"input":{"type":"structure","members":{"FlowLogIds":{"shape":"S26","locationName":"FlowLogId"},"Filter":{"shape":"S7r"},"NextToken":{},"MaxResults":{"type":"integer"}}},"output":{"type":"structure","members":{"FlowLogs":{"locationName":"flowLogSet","type":"list","member":{"locationName":"item","type":"structure","members":{"CreationTime":{"locationName":"creationTime","type":"timestamp"},"FlowLogId":{"locationName":"flowLogId"},"FlowLogStatus":{"locationName":"flowLogStatus"},"ResourceId":{"locationName":"resourceId"},"TrafficType":{"locationName":"trafficType"},"LogGroupName":{"locationName":"logGroupName"},"DeliverLogsStatus":{"locationName":"deliverLogsStatus"},"DeliverLogsErrorMessage":{"locationName":"deliverLogsErrorMessage"},"DeliverLogsPermissionArn":{"locationName":"deliverLogsPermissionArn"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeHosts":{"input":{"type":"structure","members":{"HostIds":{"shape":"S98","locationName":"hostId"},"NextToken":{"locationName":"nextToken"},"MaxResults":{"locationName":"maxResults","type":"integer"},"Filter":{"shape":"S7r","locationName":"filter"}}},"output":{"type":"structure","members":{"Hosts":{"locationName":"hostSet","type":"list","member":{"locationName":"item","type":"structure","members":{"HostId":{"locationName":"hostId"},"AutoPlacement":{"locationName":"autoPlacement"},"HostReservationId":{"locationName":"hostReservationId"},"ClientToken":{"locationName":"clientToken"},"HostProperties":{"locationName":"hostProperties","type":"structure","members":{"Sockets":{"locationName":"sockets","type":"integer"},"Cores":{"locationName":"cores","type":"integer"},"TotalVCpus":{"locationName":"totalVCpus","type":"integer"},"InstanceType":{"locationName":"instanceType"}}},"State":{"locationName":"state"},"AvailabilityZone":{"locationName":"availabilityZone"},"Instances":{"locationName":"instances","type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"InstanceType":{"locationName":"instanceType"}}}},"AvailableCapacity":{"locationName":"availableCapacity","type":"structure","members":{"AvailableInstanceCapacity":{"locationName":"availableInstanceCapacity","type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceType":{"locationName":"instanceType"},"AvailableCapacity":{"locationName":"availableCapacity","type":"integer"},"TotalCapacity":{"locationName":"totalCapacity","type":"integer"}}}},"AvailableVCpus":{"locationName":"availableVCpus","type":"integer"}}}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeIdFormat":{"input":{"type":"structure","members":{"Resource":{}}},"output":{"type":"structure","members":{"Statuses":{"locationName":"statusSet","type":"list","member":{"locationName":"item","type":"structure","members":{"Resource":{"locationName":"resource"},"UseLongIds":{"locationName":"useLongIds","type":"boolean"},"Deadline":{"locationName":"deadline","type":"timestamp"}}}}}},"http":{}},"DescribeImageAttribute":{"input":{"type":"structure","required":["ImageId","Attribute"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ImageId":{},"Attribute":{}}},"output":{"type":"structure","members":{"ImageId":{"locationName":"imageId"},"LaunchPermissions":{"shape":"S9q","locationName":"launchPermission"},"ProductCodes":{"shape":"S9t","locationName":"productCodes"},"KernelId":{"shape":"S33","locationName":"kernel"},"RamdiskId":{"shape":"S33","locationName":"ramdisk"},"Description":{"shape":"S33","locationName":"description"},"SriovNetSupport":{"shape":"S33","locationName":"sriovNetSupport"},"BlockDeviceMappings":{"shape":"S9w","locationName":"blockDeviceMapping"}}},"http":{}},"DescribeImages":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ImageIds":{"locationName":"ImageId","type":"list","member":{"locationName":"ImageId"}},"Owners":{"shape":"S9z","locationName":"Owner"},"ExecutableUsers":{"locationName":"ExecutableBy","type":"list","member":{"locationName":"ExecutableBy"}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"Images":{"locationName":"imagesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ImageId":{"locationName":"imageId"},"ImageLocation":{"locationName":"imageLocation"},"State":{"locationName":"imageState"},"OwnerId":{"locationName":"imageOwnerId"},"CreationDate":{"locationName":"creationDate"},"Public":{"locationName":"isPublic","type":"boolean"},"ProductCodes":{"shape":"S9t","locationName":"productCodes"},"Architecture":{"locationName":"architecture"},"ImageType":{"locationName":"imageType"},"KernelId":{"locationName":"kernelId"},"RamdiskId":{"locationName":"ramdiskId"},"Platform":{"locationName":"platform"},"SriovNetSupport":{"locationName":"sriovNetSupport"},"StateReason":{"shape":"Sa7","locationName":"stateReason"},"ImageOwnerAlias":{"locationName":"imageOwnerAlias"},"Name":{"locationName":"name"},"Description":{"locationName":"description"},"RootDeviceType":{"locationName":"rootDeviceType"},"RootDeviceName":{"locationName":"rootDeviceName"},"BlockDeviceMappings":{"shape":"S9w","locationName":"blockDeviceMapping"},"VirtualizationType":{"locationName":"virtualizationType"},"Tags":{"shape":"Sa","locationName":"tagSet"},"Hypervisor":{"locationName":"hypervisor"}}}}}},"http":{}},"DescribeImportImageTasks":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"ImportTaskIds":{"shape":"Sac","locationName":"ImportTaskId"},"NextToken":{},"MaxResults":{"type":"integer"},"Filters":{"shape":"S7r"}}},"output":{"type":"structure","members":{"ImportImageTasks":{"locationName":"importImageTaskSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ImportTaskId":{"locationName":"importTaskId"},"Architecture":{"locationName":"architecture"},"LicenseType":{"locationName":"licenseType"},"Platform":{"locationName":"platform"},"Hypervisor":{"locationName":"hypervisor"},"Description":{"locationName":"description"},"SnapshotDetails":{"shape":"Sag","locationName":"snapshotDetailSet"},"ImageId":{"locationName":"imageId"},"Progress":{"locationName":"progress"},"StatusMessage":{"locationName":"statusMessage"},"Status":{"locationName":"status"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeImportSnapshotTasks":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"ImportTaskIds":{"shape":"Sac","locationName":"ImportTaskId"},"NextToken":{},"MaxResults":{"type":"integer"},"Filters":{"shape":"S7r"}}},"output":{"type":"structure","members":{"ImportSnapshotTasks":{"locationName":"importSnapshotTaskSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ImportTaskId":{"locationName":"importTaskId"},"SnapshotTaskDetail":{"shape":"San","locationName":"snapshotTaskDetail"},"Description":{"locationName":"description"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeInstanceAttribute":{"input":{"type":"structure","required":["InstanceId","Attribute"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{"locationName":"instanceId"},"Attribute":{"locationName":"attribute"}}},"output":{"type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"InstanceType":{"shape":"S33","locationName":"instanceType"},"KernelId":{"shape":"S33","locationName":"kernel"},"RamdiskId":{"shape":"S33","locationName":"ramdisk"},"UserData":{"shape":"S33","locationName":"userData"},"DisableApiTermination":{"shape":"Sar","locationName":"disableApiTermination"},"InstanceInitiatedShutdownBehavior":{"shape":"S33","locationName":"instanceInitiatedShutdownBehavior"},"RootDeviceName":{"shape":"S33","locationName":"rootDeviceName"},"BlockDeviceMappings":{"shape":"Sas","locationName":"blockDeviceMapping"},"ProductCodes":{"shape":"S9t","locationName":"productCodes"},"EbsOptimized":{"shape":"Sar","locationName":"ebsOptimized"},"SriovNetSupport":{"shape":"S33","locationName":"sriovNetSupport"},"SourceDestCheck":{"shape":"Sar","locationName":"sourceDestCheck"},"Groups":{"shape":"S4m","locationName":"groupSet"}}},"http":{}},"DescribeInstanceStatus":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S8a","locationName":"InstanceId"},"Filters":{"shape":"S7r","locationName":"Filter"},"NextToken":{},"MaxResults":{"type":"integer"},"IncludeAllInstances":{"locationName":"includeAllInstances","type":"boolean"}}},"output":{"type":"structure","members":{"InstanceStatuses":{"locationName":"instanceStatusSet","type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"AvailabilityZone":{"locationName":"availabilityZone"},"Events":{"locationName":"eventsSet","type":"list","member":{"locationName":"item","type":"structure","members":{"Code":{"locationName":"code"},"Description":{"locationName":"description"},"NotBefore":{"locationName":"notBefore","type":"timestamp"},"NotAfter":{"locationName":"notAfter","type":"timestamp"}}}},"InstanceState":{"shape":"Sb2","locationName":"instanceState"},"SystemStatus":{"shape":"Sb4","locationName":"systemStatus"},"InstanceStatus":{"shape":"Sb4","locationName":"instanceStatus"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeInstances":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S8a","locationName":"InstanceId"},"Filters":{"shape":"S7r","locationName":"Filter"},"NextToken":{"locationName":"nextToken"},"MaxResults":{"locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","members":{"Reservations":{"locationName":"reservationSet","type":"list","member":{"shape":"Sbd","locationName":"item"}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeInternetGateways":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InternetGatewayIds":{"shape":"S26","locationName":"internetGatewayId"},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"InternetGateways":{"locationName":"internetGatewaySet","type":"list","member":{"shape":"S3t","locationName":"item"}}}},"http":{}},"DescribeKeyPairs":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"KeyNames":{"locationName":"KeyName","type":"list","member":{"locationName":"KeyName"}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"KeyPairs":{"locationName":"keySet","type":"list","member":{"locationName":"item","type":"structure","members":{"KeyName":{"locationName":"keyName"},"KeyFingerprint":{"locationName":"keyFingerprint"}}}}}},"http":{}},"DescribeMovingAddresses":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"PublicIps":{"shape":"S26","locationName":"publicIp"},"NextToken":{"locationName":"nextToken"},"Filters":{"shape":"S7r","locationName":"filter"},"MaxResults":{"locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","members":{"MovingAddressStatuses":{"locationName":"movingAddressStatusSet","type":"list","member":{"locationName":"item","type":"structure","members":{"PublicIp":{"locationName":"publicIp"},"MoveStatus":{"locationName":"moveStatus"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeNatGateways":{"input":{"type":"structure","members":{"NatGatewayIds":{"shape":"S26","locationName":"NatGatewayId"},"Filter":{"shape":"S7r"},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"NatGateways":{"locationName":"natGatewaySet","type":"list","member":{"shape":"S40","locationName":"item"}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeNetworkAcls":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkAclIds":{"shape":"S26","locationName":"NetworkAclId"},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"NetworkAcls":{"locationName":"networkAclSet","type":"list","member":{"shape":"S46","locationName":"item"}}}},"http":{}},"DescribeNetworkInterfaceAttribute":{"input":{"type":"structure","required":["NetworkInterfaceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"Attribute":{"locationName":"attribute"}}},"output":{"type":"structure","members":{"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"Description":{"shape":"S33","locationName":"description"},"SourceDestCheck":{"shape":"Sar","locationName":"sourceDestCheck"},"Groups":{"shape":"S4m","locationName":"groupSet"},"Attachment":{"shape":"S4o","locationName":"attachment"}}},"http":{}},"DescribeNetworkInterfaces":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkInterfaceIds":{"locationName":"NetworkInterfaceId","type":"list","member":{"locationName":"item"}},"Filters":{"shape":"S7r","locationName":"filter"}}},"output":{"type":"structure","members":{"NetworkInterfaces":{"locationName":"networkInterfaceSet","type":"list","member":{"shape":"S4k","locationName":"item"}}}},"http":{}},"DescribePlacementGroups":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupNames":{"locationName":"groupName","type":"list","member":{}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"PlacementGroups":{"locationName":"placementGroupSet","type":"list","member":{"locationName":"item","type":"structure","members":{"GroupName":{"locationName":"groupName"},"Strategy":{"locationName":"strategy"},"State":{"locationName":"state"}}}}}},"http":{}},"DescribePrefixLists":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"PrefixListIds":{"shape":"S26","locationName":"PrefixListId"},"Filters":{"shape":"S7r","locationName":"Filter"},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"PrefixLists":{"locationName":"prefixListSet","type":"list","member":{"locationName":"item","type":"structure","members":{"PrefixListId":{"locationName":"prefixListId"},"PrefixListName":{"locationName":"prefixListName"},"Cidrs":{"shape":"S26","locationName":"cidrSet"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeRegions":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"RegionNames":{"locationName":"RegionName","type":"list","member":{"locationName":"RegionName"}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"Regions":{"locationName":"regionInfo","type":"list","member":{"locationName":"item","type":"structure","members":{"RegionName":{"locationName":"regionName"},"Endpoint":{"locationName":"regionEndpoint"}}}}}},"http":{}},"DescribeReservedInstances":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ReservedInstancesIds":{"shape":"Scy","locationName":"ReservedInstancesId"},"Filters":{"shape":"S7r","locationName":"Filter"},"OfferingType":{"locationName":"offeringType"}}},"output":{"type":"structure","members":{"ReservedInstances":{"locationName":"reservedInstancesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ReservedInstancesId":{"locationName":"reservedInstancesId"},"InstanceType":{"locationName":"instanceType"},"AvailabilityZone":{"locationName":"availabilityZone"},"Start":{"locationName":"start","type":"timestamp"},"End":{"locationName":"end","type":"timestamp"},"Duration":{"locationName":"duration","type":"long"},"UsagePrice":{"locationName":"usagePrice","type":"float"},"FixedPrice":{"locationName":"fixedPrice","type":"float"},"InstanceCount":{"locationName":"instanceCount","type":"integer"},"ProductDescription":{"locationName":"productDescription"},"State":{"locationName":"state"},"Tags":{"shape":"Sa","locationName":"tagSet"},"InstanceTenancy":{"locationName":"instanceTenancy"},"CurrencyCode":{"locationName":"currencyCode"},"OfferingType":{"locationName":"offeringType"},"RecurringCharges":{"shape":"Sd6","locationName":"recurringCharges"}}}}}},"http":{}},"DescribeReservedInstancesListings":{"input":{"type":"structure","members":{"ReservedInstancesId":{"locationName":"reservedInstancesId"},"ReservedInstancesListingId":{"locationName":"reservedInstancesListingId"},"Filters":{"shape":"S7r","locationName":"filters"}}},"output":{"type":"structure","members":{"ReservedInstancesListings":{"shape":"S1u","locationName":"reservedInstancesListingsSet"}}},"http":{}},"DescribeReservedInstancesModifications":{"input":{"type":"structure","members":{"ReservedInstancesModificationIds":{"locationName":"ReservedInstancesModificationId","type":"list","member":{"locationName":"ReservedInstancesModificationId"}},"NextToken":{"locationName":"nextToken"},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"ReservedInstancesModifications":{"locationName":"reservedInstancesModificationsSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ReservedInstancesModificationId":{"locationName":"reservedInstancesModificationId"},"ReservedInstancesIds":{"locationName":"reservedInstancesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ReservedInstancesId":{"locationName":"reservedInstancesId"}}}},"ModificationResults":{"locationName":"modificationResultSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ReservedInstancesId":{"locationName":"reservedInstancesId"},"TargetConfiguration":{"shape":"Sdk","locationName":"targetConfiguration"}}}},"CreateDate":{"locationName":"createDate","type":"timestamp"},"UpdateDate":{"locationName":"updateDate","type":"timestamp"},"EffectiveDate":{"locationName":"effectiveDate","type":"timestamp"},"Status":{"locationName":"status"},"StatusMessage":{"locationName":"statusMessage"},"ClientToken":{"locationName":"clientToken"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeReservedInstancesOfferings":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ReservedInstancesOfferingIds":{"locationName":"ReservedInstancesOfferingId","type":"list","member":{}},"InstanceType":{},"AvailabilityZone":{},"ProductDescription":{},"Filters":{"shape":"S7r","locationName":"Filter"},"InstanceTenancy":{"locationName":"instanceTenancy"},"OfferingType":{"locationName":"offeringType"},"NextToken":{"locationName":"nextToken"},"MaxResults":{"locationName":"maxResults","type":"integer"},"IncludeMarketplace":{"type":"boolean"},"MinDuration":{"type":"long"},"MaxDuration":{"type":"long"},"MaxInstanceCount":{"type":"integer"}}},"output":{"type":"structure","members":{"ReservedInstancesOfferings":{"locationName":"reservedInstancesOfferingsSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ReservedInstancesOfferingId":{"locationName":"reservedInstancesOfferingId"},"InstanceType":{"locationName":"instanceType"},"AvailabilityZone":{"locationName":"availabilityZone"},"Duration":{"locationName":"duration","type":"long"},"UsagePrice":{"locationName":"usagePrice","type":"float"},"FixedPrice":{"locationName":"fixedPrice","type":"float"},"ProductDescription":{"locationName":"productDescription"},"InstanceTenancy":{"locationName":"instanceTenancy"},"CurrencyCode":{"locationName":"currencyCode"},"OfferingType":{"locationName":"offeringType"},"RecurringCharges":{"shape":"Sd6","locationName":"recurringCharges"},"Marketplace":{"locationName":"marketplace","type":"boolean"},"PricingDetails":{"locationName":"pricingDetailsSet","type":"list","member":{"locationName":"item","type":"structure","members":{"Price":{"locationName":"price","type":"double"},"Count":{"locationName":"count","type":"integer"}}}}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeRouteTables":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"RouteTableIds":{"shape":"S26","locationName":"RouteTableId"},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"RouteTables":{"locationName":"routeTableSet","type":"list","member":{"shape":"S53","locationName":"item"}}}},"http":{}},"DescribeSecurityGroups":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupNames":{"shape":"Sdw","locationName":"GroupName"},"GroupIds":{"shape":"Ss","locationName":"GroupId"},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"SecurityGroups":{"locationName":"securityGroupInfo","type":"list","member":{"locationName":"item","type":"structure","members":{"OwnerId":{"locationName":"ownerId"},"GroupName":{"locationName":"groupName"},"GroupId":{"locationName":"groupId"},"Description":{"locationName":"groupDescription"},"IpPermissions":{"shape":"S15","locationName":"ipPermissions"},"IpPermissionsEgress":{"shape":"S15","locationName":"ipPermissionsEgress"},"VpcId":{"locationName":"vpcId"},"Tags":{"shape":"Sa","locationName":"tagSet"}}}}}},"http":{}},"DescribeSnapshotAttribute":{"input":{"type":"structure","required":["SnapshotId","Attribute"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SnapshotId":{},"Attribute":{}}},"output":{"type":"structure","members":{"SnapshotId":{"locationName":"snapshotId"},"CreateVolumePermissions":{"shape":"Se3","locationName":"createVolumePermission"},"ProductCodes":{"shape":"S9t","locationName":"productCodes"}}},"http":{}},"DescribeSnapshots":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SnapshotIds":{"locationName":"SnapshotId","type":"list","member":{"locationName":"SnapshotId"}},"OwnerIds":{"shape":"S9z","locationName":"Owner"},"RestorableByUserIds":{"locationName":"RestorableBy","type":"list","member":{}},"Filters":{"shape":"S7r","locationName":"Filter"},"NextToken":{},"MaxResults":{"type":"integer"}}},"output":{"type":"structure","members":{"Snapshots":{"locationName":"snapshotSet","type":"list","member":{"shape":"S5f","locationName":"item"}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeSpotDatafeedSubscription":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"}}},"output":{"type":"structure","members":{"SpotDatafeedSubscription":{"shape":"S5j","locationName":"spotDatafeedSubscription"}}},"http":{}},"DescribeSpotFleetInstances":{"input":{"type":"structure","required":["SpotFleetRequestId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotFleetRequestId":{"locationName":"spotFleetRequestId"},"NextToken":{"locationName":"nextToken"},"MaxResults":{"locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","required":["SpotFleetRequestId","ActiveInstances"],"members":{"SpotFleetRequestId":{"locationName":"spotFleetRequestId"},"ActiveInstances":{"locationName":"activeInstanceSet","type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceType":{"locationName":"instanceType"},"InstanceId":{"locationName":"instanceId"},"SpotInstanceRequestId":{"locationName":"spotInstanceRequestId"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeSpotFleetRequestHistory":{"input":{"type":"structure","required":["SpotFleetRequestId","StartTime"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotFleetRequestId":{"locationName":"spotFleetRequestId"},"EventType":{"locationName":"eventType"},"StartTime":{"locationName":"startTime","type":"timestamp"},"NextToken":{"locationName":"nextToken"},"MaxResults":{"locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","required":["SpotFleetRequestId","StartTime","LastEvaluatedTime","HistoryRecords"],"members":{"SpotFleetRequestId":{"locationName":"spotFleetRequestId"},"StartTime":{"locationName":"startTime","type":"timestamp"},"LastEvaluatedTime":{"locationName":"lastEvaluatedTime","type":"timestamp"},"HistoryRecords":{"locationName":"historyRecordSet","type":"list","member":{"locationName":"item","type":"structure","required":["Timestamp","EventType","EventInformation"],"members":{"Timestamp":{"locationName":"timestamp","type":"timestamp"},"EventType":{"locationName":"eventType"},"EventInformation":{"locationName":"eventInformation","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"EventSubType":{"locationName":"eventSubType"},"EventDescription":{"locationName":"eventDescription"}}}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeSpotFleetRequests":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotFleetRequestIds":{"shape":"S26","locationName":"spotFleetRequestId"},"NextToken":{"locationName":"nextToken"},"MaxResults":{"locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","required":["SpotFleetRequestConfigs"],"members":{"SpotFleetRequestConfigs":{"locationName":"spotFleetRequestConfigSet","type":"list","member":{"locationName":"item","type":"structure","required":["SpotFleetRequestId","SpotFleetRequestState","SpotFleetRequestConfig","CreateTime"],"members":{"SpotFleetRequestId":{"locationName":"spotFleetRequestId"},"SpotFleetRequestState":{"locationName":"spotFleetRequestState"},"SpotFleetRequestConfig":{"shape":"Seq","locationName":"spotFleetRequestConfig"},"CreateTime":{"locationName":"createTime","type":"timestamp"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeSpotInstanceRequests":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotInstanceRequestIds":{"shape":"S2g","locationName":"SpotInstanceRequestId"},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"SpotInstanceRequests":{"shape":"Sf2","locationName":"spotInstanceRequestSet"}}},"http":{}},"DescribeSpotPriceHistory":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"StartTime":{"locationName":"startTime","type":"timestamp"},"EndTime":{"locationName":"endTime","type":"timestamp"},"InstanceTypes":{"locationName":"InstanceType","type":"list","member":{}},"ProductDescriptions":{"locationName":"ProductDescription","type":"list","member":{}},"Filters":{"shape":"S7r","locationName":"Filter"},"AvailabilityZone":{"locationName":"availabilityZone"},"MaxResults":{"locationName":"maxResults","type":"integer"},"NextToken":{"locationName":"nextToken"}}},"output":{"type":"structure","members":{"SpotPriceHistory":{"locationName":"spotPriceHistorySet","type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceType":{"locationName":"instanceType"},"ProductDescription":{"locationName":"productDescription"},"SpotPrice":{"locationName":"spotPrice"},"Timestamp":{"locationName":"timestamp","type":"timestamp"},"AvailabilityZone":{"locationName":"availabilityZone"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeSubnets":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SubnetIds":{"locationName":"SubnetId","type":"list","member":{"locationName":"SubnetId"}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"Subnets":{"locationName":"subnetSet","type":"list","member":{"shape":"S5o","locationName":"item"}}}},"http":{}},"DescribeTags":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Filters":{"shape":"S7r","locationName":"Filter"},"MaxResults":{"locationName":"maxResults","type":"integer"},"NextToken":{"locationName":"nextToken"}}},"output":{"type":"structure","members":{"Tags":{"locationName":"tagSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ResourceId":{"locationName":"resourceId"},"ResourceType":{"locationName":"resourceType"},"Key":{"locationName":"key"},"Value":{"locationName":"value"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeVolumeAttribute":{"input":{"type":"structure","required":["VolumeId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeId":{},"Attribute":{}}},"output":{"type":"structure","members":{"VolumeId":{"locationName":"volumeId"},"AutoEnableIO":{"shape":"Sar","locationName":"autoEnableIO"},"ProductCodes":{"shape":"S9t","locationName":"productCodes"}}},"http":{}},"DescribeVolumeStatus":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeIds":{"shape":"Sfs","locationName":"VolumeId"},"Filters":{"shape":"S7r","locationName":"Filter"},"NextToken":{},"MaxResults":{"type":"integer"}}},"output":{"type":"structure","members":{"VolumeStatuses":{"locationName":"volumeStatusSet","type":"list","member":{"locationName":"item","type":"structure","members":{"VolumeId":{"locationName":"volumeId"},"AvailabilityZone":{"locationName":"availabilityZone"},"VolumeStatus":{"locationName":"volumeStatus","type":"structure","members":{"Status":{"locationName":"status"},"Details":{"locationName":"details","type":"list","member":{"locationName":"item","type":"structure","members":{"Name":{"locationName":"name"},"Status":{"locationName":"status"}}}}}},"Events":{"locationName":"eventsSet","type":"list","member":{"locationName":"item","type":"structure","members":{"EventType":{"locationName":"eventType"},"Description":{"locationName":"description"},"NotBefore":{"locationName":"notBefore","type":"timestamp"},"NotAfter":{"locationName":"notAfter","type":"timestamp"},"EventId":{"locationName":"eventId"}}}},"Actions":{"locationName":"actionsSet","type":"list","member":{"locationName":"item","type":"structure","members":{"Code":{"locationName":"code"},"Description":{"locationName":"description"},"EventType":{"locationName":"eventType"},"EventId":{"locationName":"eventId"}}}}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeVolumes":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeIds":{"shape":"Sfs","locationName":"VolumeId"},"Filters":{"shape":"S7r","locationName":"Filter"},"NextToken":{"locationName":"nextToken"},"MaxResults":{"locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","members":{"Volumes":{"locationName":"volumeSet","type":"list","member":{"shape":"S5t","locationName":"item"}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeVpcAttribute":{"input":{"type":"structure","required":["VpcId","Attribute"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{},"Attribute":{}}},"output":{"type":"structure","members":{"VpcId":{"locationName":"vpcId"},"EnableDnsSupport":{"shape":"Sar","locationName":"enableDnsSupport"},"EnableDnsHostnames":{"shape":"Sar","locationName":"enableDnsHostnames"}}},"http":{}},"DescribeVpcClassicLink":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcIds":{"locationName":"VpcId","type":"list","member":{"locationName":"VpcId"}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"Vpcs":{"locationName":"vpcSet","type":"list","member":{"locationName":"item","type":"structure","members":{"VpcId":{"locationName":"vpcId"},"ClassicLinkEnabled":{"locationName":"classicLinkEnabled","type":"boolean"},"Tags":{"shape":"Sa","locationName":"tagSet"}}}}}},"http":{}},"DescribeVpcEndpointServices":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"ServiceNames":{"shape":"S26","locationName":"serviceNameSet"},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeVpcEndpoints":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"VpcEndpointIds":{"shape":"S26","locationName":"VpcEndpointId"},"Filters":{"shape":"S7r","locationName":"Filter"},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"VpcEndpoints":{"locationName":"vpcEndpointSet","type":"list","member":{"shape":"S63","locationName":"item"}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeVpcPeeringConnections":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcPeeringConnectionIds":{"shape":"S26","locationName":"VpcPeeringConnectionId"},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"VpcPeeringConnections":{"locationName":"vpcPeeringConnectionSet","type":"list","member":{"shape":"S5","locationName":"item"}}}},"http":{}},"DescribeVpcs":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcIds":{"locationName":"VpcId","type":"list","member":{"locationName":"VpcId"}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"Vpcs":{"locationName":"vpcSet","type":"list","member":{"shape":"S5z","locationName":"item"}}}},"http":{}},"DescribeVpnConnections":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpnConnectionIds":{"locationName":"VpnConnectionId","type":"list","member":{"locationName":"VpnConnectionId"}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"VpnConnections":{"locationName":"vpnConnectionSet","type":"list","member":{"shape":"S6a","locationName":"item"}}}},"http":{}},"DescribeVpnGateways":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpnGatewayIds":{"locationName":"VpnGatewayId","type":"list","member":{"locationName":"VpnGatewayId"}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"VpnGateways":{"locationName":"vpnGatewaySet","type":"list","member":{"shape":"S6m","locationName":"item"}}}},"http":{}},"DetachClassicLinkVpc":{"input":{"type":"structure","required":["InstanceId","VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{"locationName":"instanceId"},"VpcId":{"locationName":"vpcId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"DetachInternetGateway":{"input":{"type":"structure","required":["InternetGatewayId","VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InternetGatewayId":{"locationName":"internetGatewayId"},"VpcId":{"locationName":"vpcId"}}},"http":{}},"DetachNetworkInterface":{"input":{"type":"structure","required":["AttachmentId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"AttachmentId":{"locationName":"attachmentId"},"Force":{"locationName":"force","type":"boolean"}}},"http":{}},"DetachVolume":{"input":{"type":"structure","required":["VolumeId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeId":{},"InstanceId":{},"Device":{},"Force":{"type":"boolean"}}},"output":{"shape":"Sy"},"http":{}},"DetachVpnGateway":{"input":{"type":"structure","required":["VpnGatewayId","VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpnGatewayId":{},"VpcId":{}}},"http":{}},"DisableVgwRoutePropagation":{"input":{"type":"structure","required":["RouteTableId","GatewayId"],"members":{"RouteTableId":{},"GatewayId":{}}},"http":{}},"DisableVpcClassicLink":{"input":{"type":"structure","required":["VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{"locationName":"vpcId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"DisassociateAddress":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"PublicIp":{},"AssociationId":{}}},"http":{}},"DisassociateRouteTable":{"input":{"type":"structure","required":["AssociationId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"AssociationId":{"locationName":"associationId"}}},"http":{}},"EnableVgwRoutePropagation":{"input":{"type":"structure","required":["RouteTableId","GatewayId"],"members":{"RouteTableId":{},"GatewayId":{}}},"http":{}},"EnableVolumeIO":{"input":{"type":"structure","required":["VolumeId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeId":{"locationName":"volumeId"}}},"http":{}},"EnableVpcClassicLink":{"input":{"type":"structure","required":["VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{"locationName":"vpcId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"GetConsoleOutput":{"input":{"type":"structure","required":["InstanceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{}}},"output":{"type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"Timestamp":{"locationName":"timestamp","type":"timestamp"},"Output":{"locationName":"output"}}},"http":{}},"GetPasswordData":{"input":{"type":"structure","required":["InstanceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{}}},"output":{"type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"Timestamp":{"locationName":"timestamp","type":"timestamp"},"PasswordData":{"locationName":"passwordData"}}},"http":{}},"ImportImage":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"Description":{},"DiskContainers":{"locationName":"DiskContainer","type":"list","member":{"locationName":"item","type":"structure","members":{"Description":{},"Format":{},"Url":{},"UserBucket":{"shape":"Shm"},"DeviceName":{},"SnapshotId":{}}}},"LicenseType":{},"Hypervisor":{},"Architecture":{},"Platform":{},"ClientData":{"shape":"Shn"},"ClientToken":{},"RoleName":{}}},"output":{"type":"structure","members":{"ImportTaskId":{"locationName":"importTaskId"},"Architecture":{"locationName":"architecture"},"LicenseType":{"locationName":"licenseType"},"Platform":{"locationName":"platform"},"Hypervisor":{"locationName":"hypervisor"},"Description":{"locationName":"description"},"SnapshotDetails":{"shape":"Sag","locationName":"snapshotDetailSet"},"ImageId":{"locationName":"imageId"},"Progress":{"locationName":"progress"},"StatusMessage":{"locationName":"statusMessage"},"Status":{"locationName":"status"}}},"http":{}},"ImportInstance":{"input":{"type":"structure","required":["Platform"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Description":{"locationName":"description"},"LaunchSpecification":{"locationName":"launchSpecification","type":"structure","members":{"Architecture":{"locationName":"architecture"},"GroupNames":{"shape":"Shr","locationName":"GroupName"},"GroupIds":{"shape":"S4g","locationName":"GroupId"},"AdditionalInfo":{"locationName":"additionalInfo"},"UserData":{"locationName":"userData","type":"structure","members":{"Data":{"locationName":"data"}}},"InstanceType":{"locationName":"instanceType"},"Placement":{"shape":"Sbh","locationName":"placement"},"Monitoring":{"locationName":"monitoring","type":"boolean"},"SubnetId":{"locationName":"subnetId"},"InstanceInitiatedShutdownBehavior":{"locationName":"instanceInitiatedShutdownBehavior"},"PrivateIpAddress":{"locationName":"privateIpAddress"}}},"DiskImages":{"locationName":"diskImage","type":"list","member":{"type":"structure","members":{"Image":{"shape":"Shw"},"Description":{},"Volume":{"shape":"Shx"}}}},"Platform":{"locationName":"platform"}}},"output":{"type":"structure","members":{"ConversionTask":{"shape":"S8i","locationName":"conversionTask"}}},"http":{}},"ImportKeyPair":{"input":{"type":"structure","required":["KeyName","PublicKeyMaterial"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"KeyName":{"locationName":"keyName"},"PublicKeyMaterial":{"locationName":"publicKeyMaterial","type":"blob"}}},"output":{"type":"structure","members":{"KeyName":{"locationName":"keyName"},"KeyFingerprint":{"locationName":"keyFingerprint"}}},"http":{}},"ImportSnapshot":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"Description":{},"DiskContainer":{"type":"structure","members":{"Description":{},"Format":{},"Url":{},"UserBucket":{"shape":"Shm"}}},"ClientData":{"shape":"Shn"},"ClientToken":{},"RoleName":{}}},"output":{"type":"structure","members":{"ImportTaskId":{"locationName":"importTaskId"},"SnapshotTaskDetail":{"shape":"San","locationName":"snapshotTaskDetail"},"Description":{"locationName":"description"}}},"http":{}},"ImportVolume":{"input":{"type":"structure","required":["AvailabilityZone","Image","Volume"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"AvailabilityZone":{"locationName":"availabilityZone"},"Image":{"shape":"Shw","locationName":"image"},"Description":{"locationName":"description"},"Volume":{"shape":"Shx","locationName":"volume"}}},"output":{"type":"structure","members":{"ConversionTask":{"shape":"S8i","locationName":"conversionTask"}}},"http":{}},"ModifyHosts":{"input":{"type":"structure","required":["HostIds","AutoPlacement"],"members":{"HostIds":{"shape":"S98","locationName":"hostId"},"AutoPlacement":{"locationName":"autoPlacement"}}},"output":{"type":"structure","members":{"Successful":{"shape":"Sj","locationName":"successful"},"Unsuccessful":{"shape":"Si8","locationName":"unsuccessful"}}},"http":{}},"ModifyIdFormat":{"input":{"type":"structure","required":["Resource","UseLongIds"],"members":{"Resource":{},"UseLongIds":{"type":"boolean"}}},"http":{}},"ModifyImageAttribute":{"input":{"type":"structure","required":["ImageId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ImageId":{},"Attribute":{},"OperationType":{},"UserIds":{"shape":"Sic","locationName":"UserId"},"UserGroups":{"locationName":"UserGroup","type":"list","member":{"locationName":"UserGroup"}},"ProductCodes":{"locationName":"ProductCode","type":"list","member":{"locationName":"ProductCode"}},"Value":{},"LaunchPermission":{"type":"structure","members":{"Add":{"shape":"S9q"},"Remove":{"shape":"S9q"}}},"Description":{"shape":"S33"}}},"http":{}},"ModifyInstanceAttribute":{"input":{"type":"structure","required":["InstanceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{"locationName":"instanceId"},"Attribute":{"locationName":"attribute"},"Value":{"locationName":"value"},"BlockDeviceMappings":{"locationName":"blockDeviceMapping","type":"list","member":{"locationName":"item","type":"structure","members":{"DeviceName":{"locationName":"deviceName"},"Ebs":{"locationName":"ebs","type":"structure","members":{"VolumeId":{"locationName":"volumeId"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"}}},"VirtualName":{"locationName":"virtualName"},"NoDevice":{"locationName":"noDevice"}}}},"SourceDestCheck":{"shape":"Sar"},"DisableApiTermination":{"shape":"Sar","locationName":"disableApiTermination"},"InstanceType":{"shape":"S33","locationName":"instanceType"},"Kernel":{"shape":"S33","locationName":"kernel"},"Ramdisk":{"shape":"S33","locationName":"ramdisk"},"UserData":{"locationName":"userData","type":"structure","members":{"Value":{"locationName":"value","type":"blob"}}},"InstanceInitiatedShutdownBehavior":{"shape":"S33","locationName":"instanceInitiatedShutdownBehavior"},"Groups":{"shape":"Ss","locationName":"GroupId"},"EbsOptimized":{"shape":"Sar","locationName":"ebsOptimized"},"SriovNetSupport":{"shape":"S33","locationName":"sriovNetSupport"}}},"http":{}},"ModifyInstancePlacement":{"input":{"type":"structure","required":["InstanceId"],"members":{"InstanceId":{"locationName":"instanceId"},"Tenancy":{"locationName":"tenancy"},"Affinity":{"locationName":"affinity"},"HostId":{"locationName":"hostId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"ModifyNetworkInterfaceAttribute":{"input":{"type":"structure","required":["NetworkInterfaceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"Description":{"shape":"S33","locationName":"description"},"SourceDestCheck":{"shape":"Sar","locationName":"sourceDestCheck"},"Groups":{"shape":"S4g","locationName":"SecurityGroupId"},"Attachment":{"locationName":"attachment","type":"structure","members":{"AttachmentId":{"locationName":"attachmentId"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"}}}}},"http":{}},"ModifyReservedInstances":{"input":{"type":"structure","required":["ReservedInstancesIds","TargetConfigurations"],"members":{"ClientToken":{"locationName":"clientToken"},"ReservedInstancesIds":{"shape":"Scy","locationName":"ReservedInstancesId"},"TargetConfigurations":{"locationName":"ReservedInstancesConfigurationSetItemType","type":"list","member":{"shape":"Sdk","locationName":"item"}}}},"output":{"type":"structure","members":{"ReservedInstancesModificationId":{"locationName":"reservedInstancesModificationId"}}},"http":{}},"ModifySnapshotAttribute":{"input":{"type":"structure","required":["SnapshotId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SnapshotId":{},"Attribute":{},"OperationType":{},"UserIds":{"shape":"Sic","locationName":"UserId"},"GroupNames":{"shape":"Sdw","locationName":"UserGroup"},"CreateVolumePermission":{"type":"structure","members":{"Add":{"shape":"Se3"},"Remove":{"shape":"Se3"}}}}},"http":{}},"ModifySpotFleetRequest":{"input":{"type":"structure","required":["SpotFleetRequestId"],"members":{"SpotFleetRequestId":{"locationName":"spotFleetRequestId"},"TargetCapacity":{"locationName":"targetCapacity","type":"integer"},"ExcessCapacityTerminationPolicy":{"locationName":"excessCapacityTerminationPolicy"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"ModifySubnetAttribute":{"input":{"type":"structure","required":["SubnetId"],"members":{"SubnetId":{"locationName":"subnetId"},"MapPublicIpOnLaunch":{"shape":"Sar"}}},"http":{}},"ModifyVolumeAttribute":{"input":{"type":"structure","required":["VolumeId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeId":{},"AutoEnableIO":{"shape":"Sar"}}},"http":{}},"ModifyVpcAttribute":{"input":{"type":"structure","required":["VpcId"],"members":{"VpcId":{"locationName":"vpcId"},"EnableDnsSupport":{"shape":"Sar"},"EnableDnsHostnames":{"shape":"Sar"}}},"http":{}},"ModifyVpcEndpoint":{"input":{"type":"structure","required":["VpcEndpointId"],"members":{"DryRun":{"type":"boolean"},"VpcEndpointId":{},"ResetPolicy":{"type":"boolean"},"PolicyDocument":{},"AddRouteTableIds":{"shape":"S26","locationName":"AddRouteTableId"},"RemoveRouteTableIds":{"shape":"S26","locationName":"RemoveRouteTableId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"MonitorInstances":{"input":{"type":"structure","required":["InstanceIds"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S8a","locationName":"InstanceId"}}},"output":{"type":"structure","members":{"InstanceMonitorings":{"shape":"Sj5","locationName":"instancesSet"}}},"http":{}},"MoveAddressToVpc":{"input":{"type":"structure","required":["PublicIp"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"PublicIp":{"locationName":"publicIp"}}},"output":{"type":"structure","members":{"AllocationId":{"locationName":"allocationId"},"Status":{"locationName":"status"}}},"http":{}},"PurchaseReservedInstancesOffering":{"input":{"type":"structure","required":["ReservedInstancesOfferingId","InstanceCount"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ReservedInstancesOfferingId":{},"InstanceCount":{"type":"integer"},"LimitPrice":{"locationName":"limitPrice","type":"structure","members":{"Amount":{"locationName":"amount","type":"double"},"CurrencyCode":{"locationName":"currencyCode"}}}}},"output":{"type":"structure","members":{"ReservedInstancesId":{"locationName":"reservedInstancesId"}}},"http":{}},"RebootInstances":{"input":{"type":"structure","required":["InstanceIds"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S8a","locationName":"InstanceId"}}},"http":{}},"RegisterImage":{"input":{"type":"structure","required":["Name"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ImageLocation":{},"Name":{"locationName":"name"},"Description":{"locationName":"description"},"Architecture":{"locationName":"architecture"},"KernelId":{"locationName":"kernelId"},"RamdiskId":{"locationName":"ramdiskId"},"RootDeviceName":{"locationName":"rootDeviceName"},"BlockDeviceMappings":{"shape":"S3c","locationName":"BlockDeviceMapping"},"VirtualizationType":{"locationName":"virtualizationType"},"SriovNetSupport":{"locationName":"sriovNetSupport"}}},"output":{"type":"structure","members":{"ImageId":{"locationName":"imageId"}}},"http":{}},"RejectVpcPeeringConnection":{"input":{"type":"structure","required":["VpcPeeringConnectionId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcPeeringConnectionId":{"locationName":"vpcPeeringConnectionId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"ReleaseAddress":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"PublicIp":{},"AllocationId":{}}},"http":{}},"ReleaseHosts":{"input":{"type":"structure","required":["HostIds"],"members":{"HostIds":{"shape":"S98","locationName":"hostId"}}},"output":{"type":"structure","members":{"Successful":{"shape":"Sj","locationName":"successful"},"Unsuccessful":{"shape":"Si8","locationName":"unsuccessful"}}},"http":{}},"ReplaceNetworkAclAssociation":{"input":{"type":"structure","required":["AssociationId","NetworkAclId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"AssociationId":{"locationName":"associationId"},"NetworkAclId":{"locationName":"networkAclId"}}},"output":{"type":"structure","members":{"NewAssociationId":{"locationName":"newAssociationId"}}},"http":{}},"ReplaceNetworkAclEntry":{"input":{"type":"structure","required":["NetworkAclId","RuleNumber","Protocol","RuleAction","Egress","CidrBlock"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkAclId":{"locationName":"networkAclId"},"RuleNumber":{"locationName":"ruleNumber","type":"integer"},"Protocol":{"locationName":"protocol"},"RuleAction":{"locationName":"ruleAction"},"Egress":{"locationName":"egress","type":"boolean"},"CidrBlock":{"locationName":"cidrBlock"},"IcmpTypeCode":{"shape":"S4a","locationName":"Icmp"},"PortRange":{"shape":"S4b","locationName":"portRange"}}},"http":{}},"ReplaceRoute":{"input":{"type":"structure","required":["RouteTableId","DestinationCidrBlock"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"RouteTableId":{"locationName":"routeTableId"},"DestinationCidrBlock":{"locationName":"destinationCidrBlock"},"GatewayId":{"locationName":"gatewayId"},"InstanceId":{"locationName":"instanceId"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"VpcPeeringConnectionId":{"locationName":"vpcPeeringConnectionId"},"NatGatewayId":{"locationName":"natGatewayId"}}},"http":{}},"ReplaceRouteTableAssociation":{"input":{"type":"structure","required":["AssociationId","RouteTableId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"AssociationId":{"locationName":"associationId"},"RouteTableId":{"locationName":"routeTableId"}}},"output":{"type":"structure","members":{"NewAssociationId":{"locationName":"newAssociationId"}}},"http":{}},"ReportInstanceStatus":{"input":{"type":"structure","required":["Instances","Status","ReasonCodes"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Instances":{"shape":"S8a","locationName":"instanceId"},"Status":{"locationName":"status"},"StartTime":{"locationName":"startTime","type":"timestamp"},"EndTime":{"locationName":"endTime","type":"timestamp"},"ReasonCodes":{"locationName":"reasonCode","type":"list","member":{"locationName":"item"}},"Description":{"locationName":"description"}}},"http":{}},"RequestSpotFleet":{"input":{"type":"structure","required":["SpotFleetRequestConfig"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotFleetRequestConfig":{"shape":"Seq","locationName":"spotFleetRequestConfig"}}},"output":{"type":"structure","required":["SpotFleetRequestId"],"members":{"SpotFleetRequestId":{"locationName":"spotFleetRequestId"}}},"http":{}},"RequestSpotInstances":{"input":{"type":"structure","required":["SpotPrice"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotPrice":{"locationName":"spotPrice"},"ClientToken":{"locationName":"clientToken"},"InstanceCount":{"locationName":"instanceCount","type":"integer"},"Type":{"locationName":"type"},"ValidFrom":{"locationName":"validFrom","type":"timestamp"},"ValidUntil":{"locationName":"validUntil","type":"timestamp"},"LaunchGroup":{"locationName":"launchGroup"},"AvailabilityZoneGroup":{"locationName":"availabilityZoneGroup"},"BlockDurationMinutes":{"locationName":"blockDurationMinutes","type":"integer"},"LaunchSpecification":{"type":"structure","members":{"ImageId":{"locationName":"imageId"},"KeyName":{"locationName":"keyName"},"SecurityGroups":{"shape":"S26","locationName":"SecurityGroup"},"UserData":{"locationName":"userData"},"AddressingType":{"locationName":"addressingType"},"InstanceType":{"locationName":"instanceType"},"Placement":{"shape":"Set","locationName":"placement"},"KernelId":{"locationName":"kernelId"},"RamdiskId":{"locationName":"ramdiskId"},"BlockDeviceMappings":{"shape":"S9w","locationName":"blockDeviceMapping"},"SubnetId":{"locationName":"subnetId"},"NetworkInterfaces":{"shape":"Sev","locationName":"NetworkInterface"},"IamInstanceProfile":{"shape":"Sex","locationName":"iamInstanceProfile"},"EbsOptimized":{"locationName":"ebsOptimized","type":"boolean"},"Monitoring":{"shape":"Sf8","locationName":"monitoring"},"SecurityGroupIds":{"shape":"S26","locationName":"SecurityGroupId"}}}}},"output":{"type":"structure","members":{"SpotInstanceRequests":{"shape":"Sf2","locationName":"spotInstanceRequestSet"}}},"http":{}},"ResetImageAttribute":{"input":{"type":"structure","required":["ImageId","Attribute"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ImageId":{},"Attribute":{}}},"http":{}},"ResetInstanceAttribute":{"input":{"type":"structure","required":["InstanceId","Attribute"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{"locationName":"instanceId"},"Attribute":{"locationName":"attribute"}}},"http":{}},"ResetNetworkInterfaceAttribute":{"input":{"type":"structure","required":["NetworkInterfaceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"SourceDestCheck":{"locationName":"sourceDestCheck"}}},"http":{}},"ResetSnapshotAttribute":{"input":{"type":"structure","required":["SnapshotId","Attribute"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SnapshotId":{},"Attribute":{}}},"http":{}},"RestoreAddressToClassic":{"input":{"type":"structure","required":["PublicIp"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"PublicIp":{"locationName":"publicIp"}}},"output":{"type":"structure","members":{"Status":{"locationName":"status"},"PublicIp":{"locationName":"publicIp"}}},"http":{}},"RevokeSecurityGroupEgress":{"input":{"type":"structure","required":["GroupId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupId":{"locationName":"groupId"},"SourceSecurityGroupName":{"locationName":"sourceSecurityGroupName"},"SourceSecurityGroupOwnerId":{"locationName":"sourceSecurityGroupOwnerId"},"IpProtocol":{"locationName":"ipProtocol"},"FromPort":{"locationName":"fromPort","type":"integer"},"ToPort":{"locationName":"toPort","type":"integer"},"CidrIp":{"locationName":"cidrIp"},"IpPermissions":{"shape":"S15","locationName":"ipPermissions"}}},"http":{}},"RevokeSecurityGroupIngress":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupName":{},"GroupId":{},"SourceSecurityGroupName":{},"SourceSecurityGroupOwnerId":{},"IpProtocol":{},"FromPort":{"type":"integer"},"ToPort":{"type":"integer"},"CidrIp":{},"IpPermissions":{"shape":"S15"}}},"http":{}},"RunInstances":{"input":{"type":"structure","required":["ImageId","MinCount","MaxCount"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ImageId":{},"MinCount":{"type":"integer"},"MaxCount":{"type":"integer"},"KeyName":{},"SecurityGroups":{"shape":"Shr","locationName":"SecurityGroup"},"SecurityGroupIds":{"shape":"S4g","locationName":"SecurityGroupId"},"UserData":{},"InstanceType":{},"Placement":{"shape":"Sbh"},"KernelId":{},"RamdiskId":{},"BlockDeviceMappings":{"shape":"S3c","locationName":"BlockDeviceMapping"},"Monitoring":{"shape":"Sf8"},"SubnetId":{},"DisableApiTermination":{"locationName":"disableApiTermination","type":"boolean"},"InstanceInitiatedShutdownBehavior":{"locationName":"instanceInitiatedShutdownBehavior"},"PrivateIpAddress":{"locationName":"privateIpAddress"},"ClientToken":{"locationName":"clientToken"},"AdditionalInfo":{"locationName":"additionalInfo"},"NetworkInterfaces":{"shape":"Sev","locationName":"networkInterface"},"IamInstanceProfile":{"shape":"Sex","locationName":"iamInstanceProfile"},"EbsOptimized":{"locationName":"ebsOptimized","type":"boolean"}}},"output":{"shape":"Sbd"},"http":{}},"StartInstances":{"input":{"type":"structure","required":["InstanceIds"],"members":{"InstanceIds":{"shape":"S8a","locationName":"InstanceId"},"AdditionalInfo":{"locationName":"additionalInfo"},"DryRun":{"locationName":"dryRun","type":"boolean"}}},"output":{"type":"structure","members":{"StartingInstances":{"shape":"Skc","locationName":"instancesSet"}}},"http":{}},"StopInstances":{"input":{"type":"structure","required":["InstanceIds"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S8a","locationName":"InstanceId"},"Force":{"locationName":"force","type":"boolean"}}},"output":{"type":"structure","members":{"StoppingInstances":{"shape":"Skc","locationName":"instancesSet"}}},"http":{}},"TerminateInstances":{"input":{"type":"structure","required":["InstanceIds"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S8a","locationName":"InstanceId"}}},"output":{"type":"structure","members":{"TerminatingInstances":{"shape":"Skc","locationName":"instancesSet"}}},"http":{}},"UnassignPrivateIpAddresses":{"input":{"type":"structure","required":["NetworkInterfaceId","PrivateIpAddresses"],"members":{"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"PrivateIpAddresses":{"shape":"Sl","locationName":"privateIpAddress"}}},"http":{}},"UnmonitorInstances":{"input":{"type":"structure","required":["InstanceIds"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S8a","locationName":"InstanceId"}}},"output":{"type":"structure","members":{"InstanceMonitorings":{"shape":"Sj5","locationName":"instancesSet"}}},"http":{}}},"shapes":{"S5":{"type":"structure","members":{"AccepterVpcInfo":{"shape":"S6","locationName":"accepterVpcInfo"},"ExpirationTime":{"locationName":"expirationTime","type":"timestamp"},"RequesterVpcInfo":{"shape":"S6","locationName":"requesterVpcInfo"},"Status":{"locationName":"status","type":"structure","members":{"Code":{"locationName":"code"},"Message":{"locationName":"message"}}},"Tags":{"shape":"Sa","locationName":"tagSet"},"VpcPeeringConnectionId":{"locationName":"vpcPeeringConnectionId"}}},"S6":{"type":"structure","members":{"CidrBlock":{"locationName":"cidrBlock"},"OwnerId":{"locationName":"ownerId"},"VpcId":{"locationName":"vpcId"}}},"Sa":{"type":"list","member":{"locationName":"item","type":"structure","members":{"Key":{"locationName":"key"},"Value":{"locationName":"value"}}}},"Sj":{"type":"list","member":{"locationName":"item"}},"Sl":{"type":"list","member":{"locationName":"PrivateIpAddress"}},"Ss":{"type":"list","member":{"locationName":"groupId"}},"Sy":{"type":"structure","members":{"VolumeId":{"locationName":"volumeId"},"InstanceId":{"locationName":"instanceId"},"Device":{"locationName":"device"},"State":{"locationName":"status"},"AttachTime":{"locationName":"attachTime","type":"timestamp"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"}}},"S12":{"type":"structure","members":{"VpcId":{"locationName":"vpcId"},"State":{"locationName":"state"}}},"S15":{"type":"list","member":{"locationName":"item","type":"structure","members":{"IpProtocol":{"locationName":"ipProtocol"},"FromPort":{"locationName":"fromPort","type":"integer"},"ToPort":{"locationName":"toPort","type":"integer"},"UserIdGroupPairs":{"locationName":"groups","type":"list","member":{"locationName":"item","type":"structure","members":{"UserId":{"locationName":"userId"},"GroupName":{"locationName":"groupName"},"GroupId":{"locationName":"groupId"}}}},"IpRanges":{"locationName":"ipRanges","type":"list","member":{"locationName":"item","type":"structure","members":{"CidrIp":{"locationName":"cidrIp"}}}},"PrefixListIds":{"locationName":"prefixListIds","type":"list","member":{"locationName":"item","type":"structure","members":{"PrefixListId":{"locationName":"prefixListId"}}}}}}},"S1f":{"type":"structure","members":{"S3":{"type":"structure","members":{"Bucket":{"locationName":"bucket"},"Prefix":{"locationName":"prefix"},"AWSAccessKeyId":{},"UploadPolicy":{"locationName":"uploadPolicy","type":"blob"},"UploadPolicySignature":{"locationName":"uploadPolicySignature"}}}}},"S1j":{"type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"BundleId":{"locationName":"bundleId"},"State":{"locationName":"state"},"StartTime":{"locationName":"startTime","type":"timestamp"},"UpdateTime":{"locationName":"updateTime","type":"timestamp"},"Storage":{"shape":"S1f","locationName":"storage"},"Progress":{"locationName":"progress"},"BundleTaskError":{"locationName":"error","type":"structure","members":{"Code":{"locationName":"code"},"Message":{"locationName":"message"}}}}},"S1u":{"type":"list","member":{"locationName":"item","type":"structure","members":{"ReservedInstancesListingId":{"locationName":"reservedInstancesListingId"},"ReservedInstancesId":{"locationName":"reservedInstancesId"},"CreateDate":{"locationName":"createDate","type":"timestamp"},"UpdateDate":{"locationName":"updateDate","type":"timestamp"},"Status":{"locationName":"status"},"StatusMessage":{"locationName":"statusMessage"},"InstanceCounts":{"locationName":"instanceCounts","type":"list","member":{"locationName":"item","type":"structure","members":{"State":{"locationName":"state"},"InstanceCount":{"locationName":"instanceCount","type":"integer"}}}},"PriceSchedules":{"locationName":"priceSchedules","type":"list","member":{"locationName":"item","type":"structure","members":{"Term":{"locationName":"term","type":"long"},"Price":{"locationName":"price","type":"double"},"CurrencyCode":{"locationName":"currencyCode"},"Active":{"locationName":"active","type":"boolean"}}}},"Tags":{"shape":"Sa","locationName":"tagSet"},"ClientToken":{"locationName":"clientToken"}}}},"S26":{"type":"list","member":{"locationName":"item"}},"S2g":{"type":"list","member":{"locationName":"SpotInstanceRequestId"}},"S2u":{"type":"structure","members":{"CustomerGatewayId":{"locationName":"customerGatewayId"},"State":{"locationName":"state"},"Type":{"locationName":"type"},"IpAddress":{"locationName":"ipAddress"},"BgpAsn":{"locationName":"bgpAsn"},"Tags":{"shape":"Sa","locationName":"tagSet"}}},"S2z":{"type":"structure","members":{"DhcpOptionsId":{"locationName":"dhcpOptionsId"},"DhcpConfigurations":{"locationName":"dhcpConfigurationSet","type":"list","member":{"locationName":"item","type":"structure","members":{"Key":{"locationName":"key"},"Values":{"locationName":"valueSet","type":"list","member":{"shape":"S33","locationName":"item"}}}}},"Tags":{"shape":"Sa","locationName":"tagSet"}}},"S33":{"type":"structure","members":{"Value":{"locationName":"value"}}},"S38":{"type":"list","member":{"shape":"S39","locationName":"item"}},"S39":{"type":"structure","required":["Error"],"members":{"ResourceId":{"locationName":"resourceId"},"Error":{"locationName":"error","type":"structure","required":["Code","Message"],"members":{"Code":{"locationName":"code"},"Message":{"locationName":"message"}}}}},"S3c":{"type":"list","member":{"shape":"S3d","locationName":"BlockDeviceMapping"}},"S3d":{"type":"structure","members":{"VirtualName":{"locationName":"virtualName"},"DeviceName":{"locationName":"deviceName"},"Ebs":{"locationName":"ebs","type":"structure","members":{"SnapshotId":{"locationName":"snapshotId"},"VolumeSize":{"locationName":"volumeSize","type":"integer"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"},"VolumeType":{"locationName":"volumeType"},"Iops":{"locationName":"iops","type":"integer"},"Encrypted":{"locationName":"encrypted","type":"boolean"}}},"NoDevice":{"locationName":"noDevice"}}},"S3n":{"type":"structure","members":{"ExportTaskId":{"locationName":"exportTaskId"},"Description":{"locationName":"description"},"State":{"locationName":"state"},"StatusMessage":{"locationName":"statusMessage"},"InstanceExportDetails":{"locationName":"instanceExport","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"TargetEnvironment":{"locationName":"targetEnvironment"}}},"ExportToS3Task":{"locationName":"exportToS3","type":"structure","members":{"DiskImageFormat":{"locationName":"diskImageFormat"},"ContainerFormat":{"locationName":"containerFormat"},"S3Bucket":{"locationName":"s3Bucket"},"S3Key":{"locationName":"s3Key"}}}}},"S3t":{"type":"structure","members":{"InternetGatewayId":{"locationName":"internetGatewayId"},"Attachments":{"locationName":"attachmentSet","type":"list","member":{"locationName":"item","type":"structure","members":{"VpcId":{"locationName":"vpcId"},"State":{"locationName":"state"}}}},"Tags":{"shape":"Sa","locationName":"tagSet"}}},"S40":{"type":"structure","members":{"VpcId":{"locationName":"vpcId"},"SubnetId":{"locationName":"subnetId"},"NatGatewayId":{"locationName":"natGatewayId"},"CreateTime":{"locationName":"createTime","type":"timestamp"},"DeleteTime":{"locationName":"deleteTime","type":"timestamp"},"NatGatewayAddresses":{"locationName":"natGatewayAddressSet","type":"list","member":{"locationName":"item","type":"structure","members":{"PublicIp":{"locationName":"publicIp"},"AllocationId":{"locationName":"allocationId"},"PrivateIp":{"locationName":"privateIp"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"}}}},"State":{"locationName":"state"},"FailureCode":{"locationName":"failureCode"},"FailureMessage":{"locationName":"failureMessage"}}},"S46":{"type":"structure","members":{"NetworkAclId":{"locationName":"networkAclId"},"VpcId":{"locationName":"vpcId"},"IsDefault":{"locationName":"default","type":"boolean"},"Entries":{"locationName":"entrySet","type":"list","member":{"locationName":"item","type":"structure","members":{"RuleNumber":{"locationName":"ruleNumber","type":"integer"},"Protocol":{"locationName":"protocol"},"RuleAction":{"locationName":"ruleAction"},"Egress":{"locationName":"egress","type":"boolean"},"CidrBlock":{"locationName":"cidrBlock"},"IcmpTypeCode":{"shape":"S4a","locationName":"icmpTypeCode"},"PortRange":{"shape":"S4b","locationName":"portRange"}}}},"Associations":{"locationName":"associationSet","type":"list","member":{"locationName":"item","type":"structure","members":{"NetworkAclAssociationId":{"locationName":"networkAclAssociationId"},"NetworkAclId":{"locationName":"networkAclId"},"SubnetId":{"locationName":"subnetId"}}}},"Tags":{"shape":"Sa","locationName":"tagSet"}}},"S4a":{"type":"structure","members":{"Type":{"locationName":"type","type":"integer"},"Code":{"locationName":"code","type":"integer"}}},"S4b":{"type":"structure","members":{"From":{"locationName":"from","type":"integer"},"To":{"locationName":"to","type":"integer"}}},"S4g":{"type":"list","member":{"locationName":"SecurityGroupId"}},"S4h":{"type":"list","member":{"locationName":"item","type":"structure","required":["PrivateIpAddress"],"members":{"PrivateIpAddress":{"locationName":"privateIpAddress"},"Primary":{"locationName":"primary","type":"boolean"}}}},"S4k":{"type":"structure","members":{"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"SubnetId":{"locationName":"subnetId"},"VpcId":{"locationName":"vpcId"},"AvailabilityZone":{"locationName":"availabilityZone"},"Description":{"locationName":"description"},"OwnerId":{"locationName":"ownerId"},"RequesterId":{"locationName":"requesterId"},"RequesterManaged":{"locationName":"requesterManaged","type":"boolean"},"Status":{"locationName":"status"},"MacAddress":{"locationName":"macAddress"},"PrivateIpAddress":{"locationName":"privateIpAddress"},"PrivateDnsName":{"locationName":"privateDnsName"},"SourceDestCheck":{"locationName":"sourceDestCheck","type":"boolean"},"Groups":{"shape":"S4m","locationName":"groupSet"},"Attachment":{"shape":"S4o","locationName":"attachment"},"Association":{"shape":"S4p","locationName":"association"},"TagSet":{"shape":"Sa","locationName":"tagSet"},"PrivateIpAddresses":{"locationName":"privateIpAddressesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"PrivateIpAddress":{"locationName":"privateIpAddress"},"PrivateDnsName":{"locationName":"privateDnsName"},"Primary":{"locationName":"primary","type":"boolean"},"Association":{"shape":"S4p","locationName":"association"}}}},"InterfaceType":{"locationName":"interfaceType"}}},"S4m":{"type":"list","member":{"locationName":"item","type":"structure","members":{"GroupName":{"locationName":"groupName"},"GroupId":{"locationName":"groupId"}}}},"S4o":{"type":"structure","members":{"AttachmentId":{"locationName":"attachmentId"},"InstanceId":{"locationName":"instanceId"},"InstanceOwnerId":{"locationName":"instanceOwnerId"},"DeviceIndex":{"locationName":"deviceIndex","type":"integer"},"Status":{"locationName":"status"},"AttachTime":{"locationName":"attachTime","type":"timestamp"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"}}},"S4p":{"type":"structure","members":{"PublicIp":{"locationName":"publicIp"},"PublicDnsName":{"locationName":"publicDnsName"},"IpOwnerId":{"locationName":"ipOwnerId"},"AllocationId":{"locationName":"allocationId"},"AssociationId":{"locationName":"associationId"}}},"S53":{"type":"structure","members":{"RouteTableId":{"locationName":"routeTableId"},"VpcId":{"locationName":"vpcId"},"Routes":{"locationName":"routeSet","type":"list","member":{"locationName":"item","type":"structure","members":{"DestinationCidrBlock":{"locationName":"destinationCidrBlock"},"DestinationPrefixListId":{"locationName":"destinationPrefixListId"},"GatewayId":{"locationName":"gatewayId"},"InstanceId":{"locationName":"instanceId"},"InstanceOwnerId":{"locationName":"instanceOwnerId"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"VpcPeeringConnectionId":{"locationName":"vpcPeeringConnectionId"},"NatGatewayId":{"locationName":"natGatewayId"},"State":{"locationName":"state"},"Origin":{"locationName":"origin"}}}},"Associations":{"locationName":"associationSet","type":"list","member":{"locationName":"item","type":"structure","members":{"RouteTableAssociationId":{"locationName":"routeTableAssociationId"},"RouteTableId":{"locationName":"routeTableId"},"SubnetId":{"locationName":"subnetId"},"Main":{"locationName":"main","type":"boolean"}}}},"Tags":{"shape":"Sa","locationName":"tagSet"},"PropagatingVgws":{"locationName":"propagatingVgwSet","type":"list","member":{"locationName":"item","type":"structure","members":{"GatewayId":{"locationName":"gatewayId"}}}}}},"S5f":{"type":"structure","members":{"SnapshotId":{"locationName":"snapshotId"},"VolumeId":{"locationName":"volumeId"},"State":{"locationName":"status"},"StateMessage":{"locationName":"statusMessage"},"StartTime":{"locationName":"startTime","type":"timestamp"},"Progress":{"locationName":"progress"},"OwnerId":{"locationName":"ownerId"},"Description":{"locationName":"description"},"VolumeSize":{"locationName":"volumeSize","type":"integer"},"OwnerAlias":{"locationName":"ownerAlias"},"Tags":{"shape":"Sa","locationName":"tagSet"},"Encrypted":{"locationName":"encrypted","type":"boolean"},"KmsKeyId":{"locationName":"kmsKeyId"},"DataEncryptionKeyId":{"locationName":"dataEncryptionKeyId"}}},"S5j":{"type":"structure","members":{"OwnerId":{"locationName":"ownerId"},"Bucket":{"locationName":"bucket"},"Prefix":{"locationName":"prefix"},"State":{"locationName":"state"},"Fault":{"shape":"S5l","locationName":"fault"}}},"S5l":{"type":"structure","members":{"Code":{"locationName":"code"},"Message":{"locationName":"message"}}},"S5o":{"type":"structure","members":{"SubnetId":{"locationName":"subnetId"},"State":{"locationName":"state"},"VpcId":{"locationName":"vpcId"},"CidrBlock":{"locationName":"cidrBlock"},"AvailableIpAddressCount":{"locationName":"availableIpAddressCount","type":"integer"},"AvailabilityZone":{"locationName":"availabilityZone"},"DefaultForAz":{"locationName":"defaultForAz","type":"boolean"},"MapPublicIpOnLaunch":{"locationName":"mapPublicIpOnLaunch","type":"boolean"},"Tags":{"shape":"Sa","locationName":"tagSet"}}},"S5r":{"type":"list","member":{}},"S5t":{"type":"structure","members":{"VolumeId":{"locationName":"volumeId"},"Size":{"locationName":"size","type":"integer"},"SnapshotId":{"locationName":"snapshotId"},"AvailabilityZone":{"locationName":"availabilityZone"},"State":{"locationName":"status"},"CreateTime":{"locationName":"createTime","type":"timestamp"},"Attachments":{"locationName":"attachmentSet","type":"list","member":{"shape":"Sy","locationName":"item"}},"Tags":{"shape":"Sa","locationName":"tagSet"},"VolumeType":{"locationName":"volumeType"},"Iops":{"locationName":"iops","type":"integer"},"Encrypted":{"locationName":"encrypted","type":"boolean"},"KmsKeyId":{"locationName":"kmsKeyId"}}},"S5z":{"type":"structure","members":{"VpcId":{"locationName":"vpcId"},"State":{"locationName":"state"},"CidrBlock":{"locationName":"cidrBlock"},"DhcpOptionsId":{"locationName":"dhcpOptionsId"},"Tags":{"shape":"Sa","locationName":"tagSet"},"InstanceTenancy":{"locationName":"instanceTenancy"},"IsDefault":{"locationName":"isDefault","type":"boolean"}}},"S63":{"type":"structure","members":{"VpcEndpointId":{"locationName":"vpcEndpointId"},"VpcId":{"locationName":"vpcId"},"ServiceName":{"locationName":"serviceName"},"State":{"locationName":"state"},"PolicyDocument":{"locationName":"policyDocument"},"RouteTableIds":{"shape":"S26","locationName":"routeTableIdSet"},"CreationTimestamp":{"locationName":"creationTimestamp","type":"timestamp"}}},"S6a":{"type":"structure","members":{"VpnConnectionId":{"locationName":"vpnConnectionId"},"State":{"locationName":"state"},"CustomerGatewayConfiguration":{"locationName":"customerGatewayConfiguration"},"Type":{"locationName":"type"},"CustomerGatewayId":{"locationName":"customerGatewayId"},"VpnGatewayId":{"locationName":"vpnGatewayId"},"Tags":{"shape":"Sa","locationName":"tagSet"},"VgwTelemetry":{"locationName":"vgwTelemetry","type":"list","member":{"locationName":"item","type":"structure","members":{"OutsideIpAddress":{"locationName":"outsideIpAddress"},"Status":{"locationName":"status"},"LastStatusChange":{"locationName":"lastStatusChange","type":"timestamp"},"StatusMessage":{"locationName":"statusMessage"},"AcceptedRouteCount":{"locationName":"acceptedRouteCount","type":"integer"}}}},"Options":{"locationName":"options","type":"structure","members":{"StaticRoutesOnly":{"locationName":"staticRoutesOnly","type":"boolean"}}},"Routes":{"locationName":"routes","type":"list","member":{"locationName":"item","type":"structure","members":{"DestinationCidrBlock":{"locationName":"destinationCidrBlock"},"Source":{"locationName":"source"},"State":{"locationName":"state"}}}}}},"S6m":{"type":"structure","members":{"VpnGatewayId":{"locationName":"vpnGatewayId"},"State":{"locationName":"state"},"Type":{"locationName":"type"},"AvailabilityZone":{"locationName":"availabilityZone"},"VpcAttachments":{"locationName":"attachments","type":"list","member":{"shape":"S12","locationName":"item"}},"Tags":{"shape":"Sa","locationName":"tagSet"}}},"S7r":{"type":"list","member":{"locationName":"Filter","type":"structure","members":{"Name":{},"Values":{"shape":"S26","locationName":"Value"}}}},"S8a":{"type":"list","member":{"locationName":"InstanceId"}},"S8i":{"type":"structure","required":["ConversionTaskId","State"],"members":{"ConversionTaskId":{"locationName":"conversionTaskId"},"ExpirationTime":{"locationName":"expirationTime"},"ImportInstance":{"locationName":"importInstance","type":"structure","required":["Volumes"],"members":{"Volumes":{"locationName":"volumes","type":"list","member":{"locationName":"item","type":"structure","required":["BytesConverted","AvailabilityZone","Image","Volume","Status"],"members":{"BytesConverted":{"locationName":"bytesConverted","type":"long"},"AvailabilityZone":{"locationName":"availabilityZone"},"Image":{"shape":"S8m","locationName":"image"},"Volume":{"shape":"S8n","locationName":"volume"},"Status":{"locationName":"status"},"StatusMessage":{"locationName":"statusMessage"},"Description":{"locationName":"description"}}}},"InstanceId":{"locationName":"instanceId"},"Platform":{"locationName":"platform"},"Description":{"locationName":"description"}}},"ImportVolume":{"locationName":"importVolume","type":"structure","required":["BytesConverted","AvailabilityZone","Image","Volume"],"members":{"BytesConverted":{"locationName":"bytesConverted","type":"long"},"AvailabilityZone":{"locationName":"availabilityZone"},"Description":{"locationName":"description"},"Image":{"shape":"S8m","locationName":"image"},"Volume":{"shape":"S8n","locationName":"volume"}}},"State":{"locationName":"state"},"StatusMessage":{"locationName":"statusMessage"},"Tags":{"shape":"Sa","locationName":"tagSet"}}},"S8m":{"type":"structure","required":["Format","Size","ImportManifestUrl"],"members":{"Format":{"locationName":"format"},"Size":{"locationName":"size","type":"long"},"ImportManifestUrl":{"locationName":"importManifestUrl"},"Checksum":{"locationName":"checksum"}}},"S8n":{"type":"structure","required":["Id"],"members":{"Size":{"locationName":"size","type":"long"},"Id":{"locationName":"id"}}},"S98":{"type":"list","member":{"locationName":"item"}},"S9q":{"type":"list","member":{"locationName":"item","type":"structure","members":{"UserId":{"locationName":"userId"},"Group":{"locationName":"group"}}}},"S9t":{"type":"list","member":{"locationName":"item","type":"structure","members":{"ProductCodeId":{"locationName":"productCode"},"ProductCodeType":{"locationName":"type"}}}},"S9w":{"type":"list","member":{"shape":"S3d","locationName":"item"}},"S9z":{"type":"list","member":{"locationName":"Owner"}},"Sa7":{"type":"structure","members":{"Code":{"locationName":"code"},"Message":{"locationName":"message"}}},"Sac":{"type":"list","member":{"locationName":"ImportTaskId"}},"Sag":{"type":"list","member":{"locationName":"item","type":"structure","members":{"DiskImageSize":{"locationName":"diskImageSize","type":"double"},"Description":{"locationName":"description"},"Format":{"locationName":"format"},"Url":{"locationName":"url"},"UserBucket":{"shape":"Sai","locationName":"userBucket"},"DeviceName":{"locationName":"deviceName"},"SnapshotId":{"locationName":"snapshotId"},"Progress":{"locationName":"progress"},"StatusMessage":{"locationName":"statusMessage"},"Status":{"locationName":"status"}}}},"Sai":{"type":"structure","members":{"S3Bucket":{"locationName":"s3Bucket"},"S3Key":{"locationName":"s3Key"}}},"San":{"type":"structure","members":{"DiskImageSize":{"locationName":"diskImageSize","type":"double"},"Description":{"locationName":"description"},"Format":{"locationName":"format"},"Url":{"locationName":"url"},"UserBucket":{"shape":"Sai","locationName":"userBucket"},"SnapshotId":{"locationName":"snapshotId"},"Progress":{"locationName":"progress"},"StatusMessage":{"locationName":"statusMessage"},"Status":{"locationName":"status"}}},"Sar":{"type":"structure","members":{"Value":{"locationName":"value","type":"boolean"}}},"Sas":{"type":"list","member":{"locationName":"item","type":"structure","members":{"DeviceName":{"locationName":"deviceName"},"Ebs":{"locationName":"ebs","type":"structure","members":{"VolumeId":{"locationName":"volumeId"},"Status":{"locationName":"status"},"AttachTime":{"locationName":"attachTime","type":"timestamp"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"}}}}}},"Sb2":{"type":"structure","members":{"Code":{"locationName":"code","type":"integer"},"Name":{"locationName":"name"}}},"Sb4":{"type":"structure","members":{"Status":{"locationName":"status"},"Details":{"locationName":"details","type":"list","member":{"locationName":"item","type":"structure","members":{"Name":{"locationName":"name"},"Status":{"locationName":"status"},"ImpairedSince":{"locationName":"impairedSince","type":"timestamp"}}}}}},"Sbd":{"type":"structure","members":{"ReservationId":{"locationName":"reservationId"},"OwnerId":{"locationName":"ownerId"},"RequesterId":{"locationName":"requesterId"},"Groups":{"shape":"S4m","locationName":"groupSet"},"Instances":{"locationName":"instancesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"ImageId":{"locationName":"imageId"},"State":{"shape":"Sb2","locationName":"instanceState"},"PrivateDnsName":{"locationName":"privateDnsName"},"PublicDnsName":{"locationName":"dnsName"},"StateTransitionReason":{"locationName":"reason"},"KeyName":{"locationName":"keyName"},"AmiLaunchIndex":{"locationName":"amiLaunchIndex","type":"integer"},"ProductCodes":{"shape":"S9t","locationName":"productCodes"},"InstanceType":{"locationName":"instanceType"},"LaunchTime":{"locationName":"launchTime","type":"timestamp"},"Placement":{"shape":"Sbh","locationName":"placement"},"KernelId":{"locationName":"kernelId"},"RamdiskId":{"locationName":"ramdiskId"},"Platform":{"locationName":"platform"},"Monitoring":{"shape":"Sbi","locationName":"monitoring"},"SubnetId":{"locationName":"subnetId"},"VpcId":{"locationName":"vpcId"},"PrivateIpAddress":{"locationName":"privateIpAddress"},"PublicIpAddress":{"locationName":"ipAddress"},"StateReason":{"shape":"Sa7","locationName":"stateReason"},"Architecture":{"locationName":"architecture"},"RootDeviceType":{"locationName":"rootDeviceType"},"RootDeviceName":{"locationName":"rootDeviceName"},"BlockDeviceMappings":{"shape":"Sas","locationName":"blockDeviceMapping"},"VirtualizationType":{"locationName":"virtualizationType"},"InstanceLifecycle":{"locationName":"instanceLifecycle"},"SpotInstanceRequestId":{"locationName":"spotInstanceRequestId"},"ClientToken":{"locationName":"clientToken"},"Tags":{"shape":"Sa","locationName":"tagSet"},"SecurityGroups":{"shape":"S4m","locationName":"groupSet"},"SourceDestCheck":{"locationName":"sourceDestCheck","type":"boolean"},"Hypervisor":{"locationName":"hypervisor"},"NetworkInterfaces":{"locationName":"networkInterfaceSet","type":"list","member":{"locationName":"item","type":"structure","members":{"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"SubnetId":{"locationName":"subnetId"},"VpcId":{"locationName":"vpcId"},"Description":{"locationName":"description"},"OwnerId":{"locationName":"ownerId"},"Status":{"locationName":"status"},"MacAddress":{"locationName":"macAddress"},"PrivateIpAddress":{"locationName":"privateIpAddress"},"PrivateDnsName":{"locationName":"privateDnsName"},"SourceDestCheck":{"locationName":"sourceDestCheck","type":"boolean"},"Groups":{"shape":"S4m","locationName":"groupSet"},"Attachment":{"locationName":"attachment","type":"structure","members":{"AttachmentId":{"locationName":"attachmentId"},"DeviceIndex":{"locationName":"deviceIndex","type":"integer"},"Status":{"locationName":"status"},"AttachTime":{"locationName":"attachTime","type":"timestamp"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"}}},"Association":{"shape":"Sbo","locationName":"association"},"PrivateIpAddresses":{"locationName":"privateIpAddressesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"PrivateIpAddress":{"locationName":"privateIpAddress"},"PrivateDnsName":{"locationName":"privateDnsName"},"Primary":{"locationName":"primary","type":"boolean"},"Association":{"shape":"Sbo","locationName":"association"}}}}}}},"IamInstanceProfile":{"locationName":"iamInstanceProfile","type":"structure","members":{"Arn":{"locationName":"arn"},"Id":{"locationName":"id"}}},"EbsOptimized":{"locationName":"ebsOptimized","type":"boolean"},"SriovNetSupport":{"locationName":"sriovNetSupport"}}}}}},"Sbh":{"type":"structure","members":{"AvailabilityZone":{"locationName":"availabilityZone"},"GroupName":{"locationName":"groupName"},"Tenancy":{"locationName":"tenancy"},"HostId":{"locationName":"hostId"},"Affinity":{"locationName":"affinity"}}},"Sbi":{"type":"structure","members":{"State":{"locationName":"state"}}},"Sbo":{"type":"structure","members":{"PublicIp":{"locationName":"publicIp"},"PublicDnsName":{"locationName":"publicDnsName"},"IpOwnerId":{"locationName":"ipOwnerId"}}},"Scy":{"type":"list","member":{"locationName":"ReservedInstancesId"}},"Sd6":{"type":"list","member":{"locationName":"item","type":"structure","members":{"Frequency":{"locationName":"frequency"},"Amount":{"locationName":"amount","type":"double"}}}},"Sdk":{"type":"structure","members":{"AvailabilityZone":{"locationName":"availabilityZone"},"Platform":{"locationName":"platform"},"InstanceCount":{"locationName":"instanceCount","type":"integer"},"InstanceType":{"locationName":"instanceType"}}},"Sdw":{"type":"list","member":{"locationName":"GroupName"}},"Se3":{"type":"list","member":{"locationName":"item","type":"structure","members":{"UserId":{"locationName":"userId"},"Group":{"locationName":"group"}}}},"Seq":{"type":"structure","required":["SpotPrice","TargetCapacity","IamFleetRole","LaunchSpecifications"],"members":{"ClientToken":{"locationName":"clientToken"},"SpotPrice":{"locationName":"spotPrice"},"TargetCapacity":{"locationName":"targetCapacity","type":"integer"},"ValidFrom":{"locationName":"validFrom","type":"timestamp"},"ValidUntil":{"locationName":"validUntil","type":"timestamp"},"TerminateInstancesWithExpiration":{"locationName":"terminateInstancesWithExpiration","type":"boolean"},"IamFleetRole":{"locationName":"iamFleetRole"},"LaunchSpecifications":{"locationName":"launchSpecifications","type":"list","member":{"locationName":"item","type":"structure","members":{"ImageId":{"locationName":"imageId"},"KeyName":{"locationName":"keyName"},"SecurityGroups":{"shape":"S4m","locationName":"groupSet"},"UserData":{"locationName":"userData"},"AddressingType":{"locationName":"addressingType"},"InstanceType":{"locationName":"instanceType"},"Placement":{"shape":"Set","locationName":"placement"},"KernelId":{"locationName":"kernelId"},"RamdiskId":{"locationName":"ramdiskId"},"BlockDeviceMappings":{"shape":"S9w","locationName":"blockDeviceMapping"},"Monitoring":{"locationName":"monitoring","type":"structure","members":{"Enabled":{"locationName":"enabled","type":"boolean"}}},"SubnetId":{"locationName":"subnetId"},"NetworkInterfaces":{"shape":"Sev","locationName":"networkInterfaceSet"},"IamInstanceProfile":{"shape":"Sex","locationName":"iamInstanceProfile"},"EbsOptimized":{"locationName":"ebsOptimized","type":"boolean"},"WeightedCapacity":{"locationName":"weightedCapacity","type":"double"},"SpotPrice":{"locationName":"spotPrice"}}}},"ExcessCapacityTerminationPolicy":{"locationName":"excessCapacityTerminationPolicy"},"AllocationStrategy":{"locationName":"allocationStrategy"}}},"Set":{"type":"structure","members":{"AvailabilityZone":{"locationName":"availabilityZone"},"GroupName":{"locationName":"groupName"}}},"Sev":{"type":"list","member":{"locationName":"item","type":"structure","members":{"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"DeviceIndex":{"locationName":"deviceIndex","type":"integer"},"SubnetId":{"locationName":"subnetId"},"Description":{"locationName":"description"},"PrivateIpAddress":{"locationName":"privateIpAddress"},"Groups":{"shape":"S4g","locationName":"SecurityGroupId"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"},"PrivateIpAddresses":{"shape":"S4h","locationName":"privateIpAddressesSet","queryName":"PrivateIpAddresses"},"SecondaryPrivateIpAddressCount":{"locationName":"secondaryPrivateIpAddressCount","type":"integer"},"AssociatePublicIpAddress":{"locationName":"associatePublicIpAddress","type":"boolean"}}}},"Sex":{"type":"structure","members":{"Arn":{"locationName":"arn"},"Name":{"locationName":"name"}}},"Sf2":{"type":"list","member":{"locationName":"item","type":"structure","members":{"SpotInstanceRequestId":{"locationName":"spotInstanceRequestId"},"SpotPrice":{"locationName":"spotPrice"},"Type":{"locationName":"type"},"State":{"locationName":"state"},"Fault":{"shape":"S5l","locationName":"fault"},"Status":{"locationName":"status","type":"structure","members":{"Code":{"locationName":"code"},"UpdateTime":{"locationName":"updateTime","type":"timestamp"},"Message":{"locationName":"message"}}},"ValidFrom":{"locationName":"validFrom","type":"timestamp"},"ValidUntil":{"locationName":"validUntil","type":"timestamp"},"LaunchGroup":{"locationName":"launchGroup"},"AvailabilityZoneGroup":{"locationName":"availabilityZoneGroup"},"LaunchSpecification":{"locationName":"launchSpecification","type":"structure","members":{"ImageId":{"locationName":"imageId"},"KeyName":{"locationName":"keyName"},"SecurityGroups":{"shape":"S4m","locationName":"groupSet"},"UserData":{"locationName":"userData"},"AddressingType":{"locationName":"addressingType"},"InstanceType":{"locationName":"instanceType"},"Placement":{"shape":"Set","locationName":"placement"},"KernelId":{"locationName":"kernelId"},"RamdiskId":{"locationName":"ramdiskId"},"BlockDeviceMappings":{"shape":"S9w","locationName":"blockDeviceMapping"},"SubnetId":{"locationName":"subnetId"},"NetworkInterfaces":{"shape":"Sev","locationName":"networkInterfaceSet"},"IamInstanceProfile":{"shape":"Sex","locationName":"iamInstanceProfile"},"EbsOptimized":{"locationName":"ebsOptimized","type":"boolean"},"Monitoring":{"shape":"Sf8","locationName":"monitoring"}}},"InstanceId":{"locationName":"instanceId"},"CreateTime":{"locationName":"createTime","type":"timestamp"},"ProductDescription":{"locationName":"productDescription"},"BlockDurationMinutes":{"locationName":"blockDurationMinutes","type":"integer"},"ActualBlockHourlyPrice":{"locationName":"actualBlockHourlyPrice"},"Tags":{"shape":"Sa","locationName":"tagSet"},"LaunchedAvailabilityZone":{"locationName":"launchedAvailabilityZone"}}}},"Sf8":{"type":"structure","required":["Enabled"],"members":{"Enabled":{"locationName":"enabled","type":"boolean"}}},"Sfs":{"type":"list","member":{"locationName":"VolumeId"}},"Shm":{"type":"structure","members":{"S3Bucket":{},"S3Key":{}}},"Shn":{"type":"structure","members":{"UploadStart":{"type":"timestamp"},"UploadEnd":{"type":"timestamp"},"UploadSize":{"type":"double"},"Comment":{}}},"Shr":{"type":"list","member":{"locationName":"SecurityGroup"}},"Shw":{"type":"structure","required":["Format","Bytes","ImportManifestUrl"],"members":{"Format":{"locationName":"format"},"Bytes":{"locationName":"bytes","type":"long"},"ImportManifestUrl":{"locationName":"importManifestUrl"}}},"Shx":{"type":"structure","required":["Size"],"members":{"Size":{"locationName":"size","type":"long"}}},"Si8":{"type":"list","member":{"shape":"S39","locationName":"item"}},"Sic":{"type":"list","member":{"locationName":"UserId"}},"Sj5":{"type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"Monitoring":{"shape":"Sbi","locationName":"monitoring"}}}},"Skc":{"type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"CurrentState":{"shape":"Sb2","locationName":"currentState"},"PreviousState":{"shape":"Sb2","locationName":"previousState"}}}}},"paginators":{"DescribeAccountAttributes":{"result_key":"AccountAttributes"},"DescribeAddresses":{"result_key":"Addresses"},"DescribeAvailabilityZones":{"result_key":"AvailabilityZones"},"DescribeBundleTasks":{"result_key":"BundleTasks"},"DescribeConversionTasks":{"result_key":"ConversionTasks"},"DescribeCustomerGateways":{"result_key":"CustomerGateways"},"DescribeDhcpOptions":{"result_key":"DhcpOptions"},"DescribeExportTasks":{"result_key":"ExportTasks"},"DescribeImages":{"result_key":"Images"},"DescribeInstanceStatus":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxResults","result_key":"InstanceStatuses"},"DescribeInstances":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxResults","result_key":"Reservations"},"DescribeInternetGateways":{"result_key":"InternetGateways"},"DescribeKeyPairs":{"result_key":"KeyPairs"},"DescribeNetworkAcls":{"result_key":"NetworkAcls"},"DescribeNetworkInterfaces":{"result_key":"NetworkInterfaces"},"DescribePlacementGroups":{"result_key":"PlacementGroups"},"DescribeRegions":{"result_key":"Regions"},"DescribeReservedInstances":{"result_key":"ReservedInstances"},"DescribeReservedInstancesListings":{"result_key":"ReservedInstancesListings"},"DescribeReservedInstancesOfferings":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxResults","result_key":"ReservedInstancesOfferings"},"DescribeReservedInstancesModifications":{"input_token":"NextToken","output_token":"NextToken","result_key":"ReservedInstancesModifications"},"DescribeRouteTables":{"result_key":"RouteTables"},"DescribeSecurityGroups":{"result_key":"SecurityGroups"},"DescribeSnapshots":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxResults","result_key":"Snapshots"},"DescribeSpotInstanceRequests":{"result_key":"SpotInstanceRequests"},"DescribeSpotPriceHistory":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxResults","result_key":"SpotPriceHistory"},"DescribeSubnets":{"result_key":"Subnets"},"DescribeTags":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxResults","result_key":"Tags"},"DescribeVolumeStatus":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxResults","result_key":"VolumeStatuses"},"DescribeVolumes":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxResults","result_key":"Volumes"},"DescribeVpcs":{"result_key":"Vpcs"},"DescribeVpnConnections":{"result_key":"VpnConnections"},"DescribeVpnGateways":{"result_key":"VpnGateways"}},"waiters":{"__default__":{"interval":15,"max_attempts":40,"acceptor_type":"output"},"__InstanceState":{"operation":"DescribeInstances","acceptor_path":"Reservations[].Instances[].State.Name"},"__InstanceStatus":{"operation":"DescribeInstanceStatus","success_value":"ok"},"SystemStatusOk":{"extends":"__InstanceStatus","acceptor_path":"InstanceStatuses[].SystemStatus.Status"},"InstanceStatusOk":{"extends":"__InstanceStatus","acceptor_path":"InstanceStatuses[].InstanceStatus.Status"},"ImageAvailable":{"operation":"DescribeImages","acceptor_path":"Images[].State","success_value":"available","failure_value":["failed"]},"InstanceRunning":{"extends":"__InstanceState","success_value":"running","failure_value":["shutting-down","terminated","stopping"]},"InstanceStopped":{"extends":"__InstanceState","success_value":"stopped","failure_value":["pending","terminated"]},"InstanceTerminated":{"extends":"__InstanceState","success_value":"terminated","failure_value":["pending","stopping"]},"__ExportTaskState":{"operation":"DescribeExportTasks","acceptor_path":"ExportTasks[].State"},"ExportTaskCompleted":{"extends":"__ExportTaskState","success_value":"completed"},"ExportTaskCancelled":{"extends":"__ExportTaskState","success_value":"cancelled"},"SnapshotCompleted":{"operation":"DescribeSnapshots","success_path":"Snapshots[].State","success_value":"completed"},"SubnetAvailable":{"operation":"DescribeSubnets","success_path":"Subnets[].State","success_value":"available"},"__VolumeStatus":{"operation":"DescribeVolumes","acceptor_path":"Volumes[].State"},"VolumeAvailable":{"extends":"__VolumeStatus","success_value":"available","failure_value":["deleted"]},"VolumeInUse":{"extends":"__VolumeStatus","success_value":"in-use","failure_value":["deleted"]},"VolumeDeleted":{"extends":"__VolumeStatus","success_type":"error","success_value":"InvalidVolume.NotFound"},"VpcAvailable":{"operation":"DescribeVpcs","success_path":"Vpcs[].State","success_value":"available"},"__VpnConnectionState":{"operation":"DescribeVpnConnections","acceptor_path":"VpnConnections[].State"},"VpnConnectionAvailable":{"extends":"__VpnConnectionState","success_value":"available","failure_value":["deleting","deleted"]},"VpnConnectionDeleted":{"extends":"__VpnConnectionState","success_value":"deleted","failure_value":["pending"]},"BundleTaskComplete":{"operation":"DescribeBundleTasks","acceptor_path":"BundleTasks[].State","success_value":"complete","failure_value":["failed"]},"__ConversionTaskState":{"operation":"DescribeConversionTasks","acceptor_path":"ConversionTasks[].State"},"ConversionTaskCompleted":{"extends":"__ConversionTaskState","success_value":"completed","failure_value":["cancelled","cancelling"]},"ConversionTaskCancelled":{"extends":"__ConversionTaskState","success_value":"cancelled"},"__CustomerGatewayState":{"operation":"DescribeCustomerGateways","acceptor_path":"CustomerGateways[].State"},"CustomerGatewayAvailable":{"extends":"__CustomerGatewayState","success_value":"available","failure_value":["deleted","deleting"]},"ConversionTaskDeleted":{"extends":"__CustomerGatewayState","success_value":"deleted"},"__SpotInstanceRequestState":{"operation":"DescribeSpotInstanceRequests","acceptor_path":"SpotInstanceRequests[].Status.Code"},"SpotInstanceRequestFulfilled":{"extends":"__SpotInstanceRequestState","success_value":"fulfilled","failure_value":["schedule-expired","canceled-before-fulfillment","bad-parameters","system-error"]}}};
+AWS.apiLoader.services['ec2']['2015-10-01'] = {"version":"2.0","metadata":{"apiVersion":"2015-10-01","endpointPrefix":"ec2","protocol":"ec2","serviceAbbreviation":"Amazon EC2","serviceFullName":"Amazon Elastic Compute Cloud","signatureVersion":"v4","xmlNamespace":"http://ec2.amazonaws.com/doc/2015-10-01"},"operations":{"AcceptVpcPeeringConnection":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcPeeringConnectionId":{"locationName":"vpcPeeringConnectionId"}}},"output":{"type":"structure","members":{"VpcPeeringConnection":{"shape":"S5","locationName":"vpcPeeringConnection"}}},"http":{}},"AllocateAddress":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Domain":{}}},"output":{"type":"structure","members":{"PublicIp":{"locationName":"publicIp"},"Domain":{"locationName":"domain"},"AllocationId":{"locationName":"allocationId"}}},"http":{}},"AllocateHosts":{"input":{"type":"structure","required":["InstanceType","Quantity","AvailabilityZone"],"members":{"AutoPlacement":{"locationName":"autoPlacement"},"ClientToken":{"locationName":"clientToken"},"InstanceType":{"locationName":"instanceType"},"Quantity":{"locationName":"quantity","type":"integer"},"AvailabilityZone":{"locationName":"availabilityZone"}}},"output":{"type":"structure","members":{"HostIds":{"shape":"Sj","locationName":"hostIdSet"}}},"http":{}},"AssignPrivateIpAddresses":{"input":{"type":"structure","required":["NetworkInterfaceId"],"members":{"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"PrivateIpAddresses":{"shape":"Sl","locationName":"privateIpAddress"},"SecondaryPrivateIpAddressCount":{"locationName":"secondaryPrivateIpAddressCount","type":"integer"},"AllowReassignment":{"locationName":"allowReassignment","type":"boolean"}}},"http":{}},"AssociateAddress":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{},"PublicIp":{},"AllocationId":{},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"PrivateIpAddress":{"locationName":"privateIpAddress"},"AllowReassociation":{"locationName":"allowReassociation","type":"boolean"}}},"output":{"type":"structure","members":{"AssociationId":{"locationName":"associationId"}}},"http":{}},"AssociateDhcpOptions":{"input":{"type":"structure","required":["DhcpOptionsId","VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"DhcpOptionsId":{},"VpcId":{}}},"http":{}},"AssociateRouteTable":{"input":{"type":"structure","required":["SubnetId","RouteTableId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SubnetId":{"locationName":"subnetId"},"RouteTableId":{"locationName":"routeTableId"}}},"output":{"type":"structure","members":{"AssociationId":{"locationName":"associationId"}}},"http":{}},"AttachClassicLinkVpc":{"input":{"type":"structure","required":["InstanceId","VpcId","Groups"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{"locationName":"instanceId"},"VpcId":{"locationName":"vpcId"},"Groups":{"shape":"Ss","locationName":"SecurityGroupId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"AttachInternetGateway":{"input":{"type":"structure","required":["InternetGatewayId","VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InternetGatewayId":{"locationName":"internetGatewayId"},"VpcId":{"locationName":"vpcId"}}},"http":{}},"AttachNetworkInterface":{"input":{"type":"structure","required":["NetworkInterfaceId","InstanceId","DeviceIndex"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"InstanceId":{"locationName":"instanceId"},"DeviceIndex":{"locationName":"deviceIndex","type":"integer"}}},"output":{"type":"structure","members":{"AttachmentId":{"locationName":"attachmentId"}}},"http":{}},"AttachVolume":{"input":{"type":"structure","required":["VolumeId","InstanceId","Device"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeId":{},"InstanceId":{},"Device":{}}},"output":{"shape":"Sy"},"http":{}},"AttachVpnGateway":{"input":{"type":"structure","required":["VpnGatewayId","VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpnGatewayId":{},"VpcId":{}}},"output":{"type":"structure","members":{"VpcAttachment":{"shape":"S12","locationName":"attachment"}}},"http":{}},"AuthorizeSecurityGroupEgress":{"input":{"type":"structure","required":["GroupId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupId":{"locationName":"groupId"},"SourceSecurityGroupName":{"locationName":"sourceSecurityGroupName"},"SourceSecurityGroupOwnerId":{"locationName":"sourceSecurityGroupOwnerId"},"IpProtocol":{"locationName":"ipProtocol"},"FromPort":{"locationName":"fromPort","type":"integer"},"ToPort":{"locationName":"toPort","type":"integer"},"CidrIp":{"locationName":"cidrIp"},"IpPermissions":{"shape":"S15","locationName":"ipPermissions"}}},"http":{}},"AuthorizeSecurityGroupIngress":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupName":{},"GroupId":{},"SourceSecurityGroupName":{},"SourceSecurityGroupOwnerId":{},"IpProtocol":{},"FromPort":{"type":"integer"},"ToPort":{"type":"integer"},"CidrIp":{},"IpPermissions":{"shape":"S15"}}},"http":{}},"BundleInstance":{"input":{"type":"structure","required":["InstanceId","Storage"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{},"Storage":{"shape":"S1f"}}},"output":{"type":"structure","members":{"BundleTask":{"shape":"S1j","locationName":"bundleInstanceTask"}}},"http":{}},"CancelBundleTask":{"input":{"type":"structure","required":["BundleId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"BundleId":{}}},"output":{"type":"structure","members":{"BundleTask":{"shape":"S1j","locationName":"bundleInstanceTask"}}},"http":{}},"CancelConversionTask":{"input":{"type":"structure","required":["ConversionTaskId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ConversionTaskId":{"locationName":"conversionTaskId"},"ReasonMessage":{"locationName":"reasonMessage"}}},"http":{}},"CancelExportTask":{"input":{"type":"structure","required":["ExportTaskId"],"members":{"ExportTaskId":{"locationName":"exportTaskId"}}},"http":{}},"CancelImportTask":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"ImportTaskId":{},"CancelReason":{}}},"output":{"type":"structure","members":{"ImportTaskId":{"locationName":"importTaskId"},"State":{"locationName":"state"},"PreviousState":{"locationName":"previousState"}}},"http":{}},"CancelReservedInstancesListing":{"input":{"type":"structure","required":["ReservedInstancesListingId"],"members":{"ReservedInstancesListingId":{"locationName":"reservedInstancesListingId"}}},"output":{"type":"structure","members":{"ReservedInstancesListings":{"shape":"S1u","locationName":"reservedInstancesListingsSet"}}},"http":{}},"CancelSpotFleetRequests":{"input":{"type":"structure","required":["SpotFleetRequestIds","TerminateInstances"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotFleetRequestIds":{"shape":"S26","locationName":"spotFleetRequestId"},"TerminateInstances":{"locationName":"terminateInstances","type":"boolean"}}},"output":{"type":"structure","members":{"UnsuccessfulFleetRequests":{"locationName":"unsuccessfulFleetRequestSet","type":"list","member":{"locationName":"item","type":"structure","required":["SpotFleetRequestId","Error"],"members":{"SpotFleetRequestId":{"locationName":"spotFleetRequestId"},"Error":{"locationName":"error","type":"structure","required":["Code","Message"],"members":{"Code":{"locationName":"code"},"Message":{"locationName":"message"}}}}}},"SuccessfulFleetRequests":{"locationName":"successfulFleetRequestSet","type":"list","member":{"locationName":"item","type":"structure","required":["SpotFleetRequestId","CurrentSpotFleetRequestState","PreviousSpotFleetRequestState"],"members":{"SpotFleetRequestId":{"locationName":"spotFleetRequestId"},"CurrentSpotFleetRequestState":{"locationName":"currentSpotFleetRequestState"},"PreviousSpotFleetRequestState":{"locationName":"previousSpotFleetRequestState"}}}}}},"http":{}},"CancelSpotInstanceRequests":{"input":{"type":"structure","required":["SpotInstanceRequestIds"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotInstanceRequestIds":{"shape":"S2g","locationName":"SpotInstanceRequestId"}}},"output":{"type":"structure","members":{"CancelledSpotInstanceRequests":{"locationName":"spotInstanceRequestSet","type":"list","member":{"locationName":"item","type":"structure","members":{"SpotInstanceRequestId":{"locationName":"spotInstanceRequestId"},"State":{"locationName":"state"}}}}}},"http":{}},"ConfirmProductInstance":{"input":{"type":"structure","required":["ProductCode","InstanceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ProductCode":{},"InstanceId":{}}},"output":{"type":"structure","members":{"OwnerId":{"locationName":"ownerId"},"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"CopyImage":{"input":{"type":"structure","required":["SourceRegion","SourceImageId","Name"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SourceRegion":{},"SourceImageId":{},"Name":{},"Description":{},"ClientToken":{},"Encrypted":{"locationName":"encrypted","type":"boolean"},"KmsKeyId":{"locationName":"kmsKeyId"}}},"output":{"type":"structure","members":{"ImageId":{"locationName":"imageId"}}},"http":{}},"CopySnapshot":{"input":{"type":"structure","required":["SourceRegion","SourceSnapshotId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SourceRegion":{},"SourceSnapshotId":{},"Description":{},"DestinationRegion":{"locationName":"destinationRegion"},"PresignedUrl":{"locationName":"presignedUrl"},"Encrypted":{"locationName":"encrypted","type":"boolean"},"KmsKeyId":{"locationName":"kmsKeyId"}}},"output":{"type":"structure","members":{"SnapshotId":{"locationName":"snapshotId"}}},"http":{}},"CreateCustomerGateway":{"input":{"type":"structure","required":["Type","PublicIp","BgpAsn"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Type":{},"PublicIp":{"locationName":"IpAddress"},"BgpAsn":{"type":"integer"}}},"output":{"type":"structure","members":{"CustomerGateway":{"shape":"S2u","locationName":"customerGateway"}}},"http":{}},"CreateDhcpOptions":{"input":{"type":"structure","required":["DhcpConfigurations"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"DhcpConfigurations":{"locationName":"dhcpConfiguration","type":"list","member":{"locationName":"item","type":"structure","members":{"Key":{"locationName":"key"},"Values":{"shape":"S26","locationName":"Value"}}}}}},"output":{"type":"structure","members":{"DhcpOptions":{"shape":"S2z","locationName":"dhcpOptions"}}},"http":{}},"CreateFlowLogs":{"input":{"type":"structure","required":["ResourceIds","ResourceType","TrafficType","LogGroupName","DeliverLogsPermissionArn"],"members":{"ResourceIds":{"shape":"S26","locationName":"ResourceId"},"ResourceType":{},"TrafficType":{},"LogGroupName":{},"DeliverLogsPermissionArn":{},"ClientToken":{}}},"output":{"type":"structure","members":{"FlowLogIds":{"shape":"S26","locationName":"flowLogIdSet"},"ClientToken":{"locationName":"clientToken"},"Unsuccessful":{"shape":"S38","locationName":"unsuccessful"}}},"http":{}},"CreateImage":{"input":{"type":"structure","required":["InstanceId","Name"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{"locationName":"instanceId"},"Name":{"locationName":"name"},"Description":{"locationName":"description"},"NoReboot":{"locationName":"noReboot","type":"boolean"},"BlockDeviceMappings":{"shape":"S3c","locationName":"blockDeviceMapping"}}},"output":{"type":"structure","members":{"ImageId":{"locationName":"imageId"}}},"http":{}},"CreateInstanceExportTask":{"input":{"type":"structure","required":["InstanceId"],"members":{"Description":{"locationName":"description"},"InstanceId":{"locationName":"instanceId"},"TargetEnvironment":{"locationName":"targetEnvironment"},"ExportToS3Task":{"locationName":"exportToS3","type":"structure","members":{"DiskImageFormat":{"locationName":"diskImageFormat"},"ContainerFormat":{"locationName":"containerFormat"},"S3Bucket":{"locationName":"s3Bucket"},"S3Prefix":{"locationName":"s3Prefix"}}}}},"output":{"type":"structure","members":{"ExportTask":{"shape":"S3n","locationName":"exportTask"}}},"http":{}},"CreateInternetGateway":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"}}},"output":{"type":"structure","members":{"InternetGateway":{"shape":"S3t","locationName":"internetGateway"}}},"http":{}},"CreateKeyPair":{"input":{"type":"structure","required":["KeyName"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"KeyName":{}}},"output":{"type":"structure","members":{"KeyName":{"locationName":"keyName"},"KeyFingerprint":{"locationName":"keyFingerprint"},"KeyMaterial":{"locationName":"keyMaterial"}}},"http":{}},"CreateNatGateway":{"input":{"type":"structure","required":["SubnetId","AllocationId"],"members":{"SubnetId":{},"AllocationId":{},"ClientToken":{}}},"output":{"type":"structure","members":{"NatGateway":{"shape":"S40","locationName":"natGateway"},"ClientToken":{"locationName":"clientToken"}}},"http":{}},"CreateNetworkAcl":{"input":{"type":"structure","required":["VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{"locationName":"vpcId"}}},"output":{"type":"structure","members":{"NetworkAcl":{"shape":"S46","locationName":"networkAcl"}}},"http":{}},"CreateNetworkAclEntry":{"input":{"type":"structure","required":["NetworkAclId","RuleNumber","Protocol","RuleAction","Egress","CidrBlock"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkAclId":{"locationName":"networkAclId"},"RuleNumber":{"locationName":"ruleNumber","type":"integer"},"Protocol":{"locationName":"protocol"},"RuleAction":{"locationName":"ruleAction"},"Egress":{"locationName":"egress","type":"boolean"},"CidrBlock":{"locationName":"cidrBlock"},"IcmpTypeCode":{"shape":"S4a","locationName":"Icmp"},"PortRange":{"shape":"S4b","locationName":"portRange"}}},"http":{}},"CreateNetworkInterface":{"input":{"type":"structure","required":["SubnetId"],"members":{"SubnetId":{"locationName":"subnetId"},"Description":{"locationName":"description"},"PrivateIpAddress":{"locationName":"privateIpAddress"},"Groups":{"shape":"S4g","locationName":"SecurityGroupId"},"PrivateIpAddresses":{"shape":"S4h","locationName":"privateIpAddresses"},"SecondaryPrivateIpAddressCount":{"locationName":"secondaryPrivateIpAddressCount","type":"integer"},"DryRun":{"locationName":"dryRun","type":"boolean"}}},"output":{"type":"structure","members":{"NetworkInterface":{"shape":"S4k","locationName":"networkInterface"}}},"http":{}},"CreatePlacementGroup":{"input":{"type":"structure","required":["GroupName","Strategy"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupName":{"locationName":"groupName"},"Strategy":{"locationName":"strategy"}}},"http":{}},"CreateReservedInstancesListing":{"input":{"type":"structure","required":["ReservedInstancesId","InstanceCount","PriceSchedules","ClientToken"],"members":{"ReservedInstancesId":{"locationName":"reservedInstancesId"},"InstanceCount":{"locationName":"instanceCount","type":"integer"},"PriceSchedules":{"locationName":"priceSchedules","type":"list","member":{"locationName":"item","type":"structure","members":{"Term":{"locationName":"term","type":"long"},"Price":{"locationName":"price","type":"double"},"CurrencyCode":{"locationName":"currencyCode"}}}},"ClientToken":{"locationName":"clientToken"}}},"output":{"type":"structure","members":{"ReservedInstancesListings":{"shape":"S1u","locationName":"reservedInstancesListingsSet"}}},"http":{}},"CreateRoute":{"input":{"type":"structure","required":["RouteTableId","DestinationCidrBlock"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"RouteTableId":{"locationName":"routeTableId"},"DestinationCidrBlock":{"locationName":"destinationCidrBlock"},"GatewayId":{"locationName":"gatewayId"},"InstanceId":{"locationName":"instanceId"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"VpcPeeringConnectionId":{"locationName":"vpcPeeringConnectionId"},"NatGatewayId":{"locationName":"natGatewayId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"CreateRouteTable":{"input":{"type":"structure","required":["VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{"locationName":"vpcId"}}},"output":{"type":"structure","members":{"RouteTable":{"shape":"S53","locationName":"routeTable"}}},"http":{}},"CreateSecurityGroup":{"input":{"type":"structure","required":["GroupName","Description"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupName":{},"Description":{"locationName":"GroupDescription"},"VpcId":{}}},"output":{"type":"structure","members":{"GroupId":{"locationName":"groupId"}}},"http":{}},"CreateSnapshot":{"input":{"type":"structure","required":["VolumeId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeId":{},"Description":{}}},"output":{"shape":"S5f"},"http":{}},"CreateSpotDatafeedSubscription":{"input":{"type":"structure","required":["Bucket"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Bucket":{"locationName":"bucket"},"Prefix":{"locationName":"prefix"}}},"output":{"type":"structure","members":{"SpotDatafeedSubscription":{"shape":"S5j","locationName":"spotDatafeedSubscription"}}},"http":{}},"CreateSubnet":{"input":{"type":"structure","required":["VpcId","CidrBlock"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{},"CidrBlock":{},"AvailabilityZone":{}}},"output":{"type":"structure","members":{"Subnet":{"shape":"S5o","locationName":"subnet"}}},"http":{}},"CreateTags":{"input":{"type":"structure","required":["Resources","Tags"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Resources":{"shape":"S5r","locationName":"ResourceId"},"Tags":{"shape":"Sa","locationName":"Tag"}}},"http":{}},"CreateVolume":{"input":{"type":"structure","required":["AvailabilityZone"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Size":{"type":"integer"},"SnapshotId":{},"AvailabilityZone":{},"VolumeType":{},"Iops":{"type":"integer"},"Encrypted":{"locationName":"encrypted","type":"boolean"},"KmsKeyId":{}}},"output":{"shape":"S5t"},"http":{}},"CreateVpc":{"input":{"type":"structure","required":["CidrBlock"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"CidrBlock":{},"InstanceTenancy":{"locationName":"instanceTenancy"}}},"output":{"type":"structure","members":{"Vpc":{"shape":"S5z","locationName":"vpc"}}},"http":{}},"CreateVpcEndpoint":{"input":{"type":"structure","required":["VpcId","ServiceName"],"members":{"DryRun":{"type":"boolean"},"VpcId":{},"ServiceName":{},"PolicyDocument":{},"RouteTableIds":{"shape":"S26","locationName":"RouteTableId"},"ClientToken":{}}},"output":{"type":"structure","members":{"VpcEndpoint":{"shape":"S63","locationName":"vpcEndpoint"},"ClientToken":{"locationName":"clientToken"}}},"http":{}},"CreateVpcPeeringConnection":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{"locationName":"vpcId"},"PeerVpcId":{"locationName":"peerVpcId"},"PeerOwnerId":{"locationName":"peerOwnerId"}}},"output":{"type":"structure","members":{"VpcPeeringConnection":{"shape":"S5","locationName":"vpcPeeringConnection"}}},"http":{}},"CreateVpnConnection":{"input":{"type":"structure","required":["Type","CustomerGatewayId","VpnGatewayId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Type":{},"CustomerGatewayId":{},"VpnGatewayId":{},"Options":{"locationName":"options","type":"structure","members":{"StaticRoutesOnly":{"locationName":"staticRoutesOnly","type":"boolean"}}}}},"output":{"type":"structure","members":{"VpnConnection":{"shape":"S6a","locationName":"vpnConnection"}}},"http":{}},"CreateVpnConnectionRoute":{"input":{"type":"structure","required":["VpnConnectionId","DestinationCidrBlock"],"members":{"VpnConnectionId":{},"DestinationCidrBlock":{}}},"http":{}},"CreateVpnGateway":{"input":{"type":"structure","required":["Type"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Type":{},"AvailabilityZone":{}}},"output":{"type":"structure","members":{"VpnGateway":{"shape":"S6m","locationName":"vpnGateway"}}},"http":{}},"DeleteCustomerGateway":{"input":{"type":"structure","required":["CustomerGatewayId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"CustomerGatewayId":{}}},"http":{}},"DeleteDhcpOptions":{"input":{"type":"structure","required":["DhcpOptionsId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"DhcpOptionsId":{}}},"http":{}},"DeleteFlowLogs":{"input":{"type":"structure","required":["FlowLogIds"],"members":{"FlowLogIds":{"shape":"S26","locationName":"FlowLogId"}}},"output":{"type":"structure","members":{"Unsuccessful":{"shape":"S38","locationName":"unsuccessful"}}},"http":{}},"DeleteInternetGateway":{"input":{"type":"structure","required":["InternetGatewayId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InternetGatewayId":{"locationName":"internetGatewayId"}}},"http":{}},"DeleteKeyPair":{"input":{"type":"structure","required":["KeyName"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"KeyName":{}}},"http":{}},"DeleteNatGateway":{"input":{"type":"structure","required":["NatGatewayId"],"members":{"NatGatewayId":{}}},"output":{"type":"structure","members":{"NatGatewayId":{"locationName":"natGatewayId"}}},"http":{}},"DeleteNetworkAcl":{"input":{"type":"structure","required":["NetworkAclId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkAclId":{"locationName":"networkAclId"}}},"http":{}},"DeleteNetworkAclEntry":{"input":{"type":"structure","required":["NetworkAclId","RuleNumber","Egress"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkAclId":{"locationName":"networkAclId"},"RuleNumber":{"locationName":"ruleNumber","type":"integer"},"Egress":{"locationName":"egress","type":"boolean"}}},"http":{}},"DeleteNetworkInterface":{"input":{"type":"structure","required":["NetworkInterfaceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"}}},"http":{}},"DeletePlacementGroup":{"input":{"type":"structure","required":["GroupName"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupName":{"locationName":"groupName"}}},"http":{}},"DeleteRoute":{"input":{"type":"structure","required":["RouteTableId","DestinationCidrBlock"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"RouteTableId":{"locationName":"routeTableId"},"DestinationCidrBlock":{"locationName":"destinationCidrBlock"}}},"http":{}},"DeleteRouteTable":{"input":{"type":"structure","required":["RouteTableId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"RouteTableId":{"locationName":"routeTableId"}}},"http":{}},"DeleteSecurityGroup":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupName":{},"GroupId":{}}},"http":{}},"DeleteSnapshot":{"input":{"type":"structure","required":["SnapshotId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SnapshotId":{}}},"http":{}},"DeleteSpotDatafeedSubscription":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"}}},"http":{}},"DeleteSubnet":{"input":{"type":"structure","required":["SubnetId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SubnetId":{}}},"http":{}},"DeleteTags":{"input":{"type":"structure","required":["Resources"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Resources":{"shape":"S5r","locationName":"resourceId"},"Tags":{"shape":"Sa","locationName":"tag"}}},"http":{}},"DeleteVolume":{"input":{"type":"structure","required":["VolumeId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeId":{}}},"http":{}},"DeleteVpc":{"input":{"type":"structure","required":["VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{}}},"http":{}},"DeleteVpcEndpoints":{"input":{"type":"structure","required":["VpcEndpointIds"],"members":{"DryRun":{"type":"boolean"},"VpcEndpointIds":{"shape":"S26","locationName":"VpcEndpointId"}}},"output":{"type":"structure","members":{"Unsuccessful":{"shape":"S38","locationName":"unsuccessful"}}},"http":{}},"DeleteVpcPeeringConnection":{"input":{"type":"structure","required":["VpcPeeringConnectionId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcPeeringConnectionId":{"locationName":"vpcPeeringConnectionId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"DeleteVpnConnection":{"input":{"type":"structure","required":["VpnConnectionId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpnConnectionId":{}}},"http":{}},"DeleteVpnConnectionRoute":{"input":{"type":"structure","required":["VpnConnectionId","DestinationCidrBlock"],"members":{"VpnConnectionId":{},"DestinationCidrBlock":{}}},"http":{}},"DeleteVpnGateway":{"input":{"type":"structure","required":["VpnGatewayId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpnGatewayId":{}}},"http":{}},"DeregisterImage":{"input":{"type":"structure","required":["ImageId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ImageId":{}}},"http":{}},"DescribeAccountAttributes":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"AttributeNames":{"locationName":"attributeName","type":"list","member":{"locationName":"attributeName"}}}},"output":{"type":"structure","members":{"AccountAttributes":{"locationName":"accountAttributeSet","type":"list","member":{"locationName":"item","type":"structure","members":{"AttributeName":{"locationName":"attributeName"},"AttributeValues":{"locationName":"attributeValueSet","type":"list","member":{"locationName":"item","type":"structure","members":{"AttributeValue":{"locationName":"attributeValue"}}}}}}}}},"http":{}},"DescribeAddresses":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"PublicIps":{"locationName":"PublicIp","type":"list","member":{"locationName":"PublicIp"}},"Filters":{"shape":"S7r","locationName":"Filter"},"AllocationIds":{"locationName":"AllocationId","type":"list","member":{"locationName":"AllocationId"}}}},"output":{"type":"structure","members":{"Addresses":{"locationName":"addressesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"PublicIp":{"locationName":"publicIp"},"AllocationId":{"locationName":"allocationId"},"AssociationId":{"locationName":"associationId"},"Domain":{"locationName":"domain"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"NetworkInterfaceOwnerId":{"locationName":"networkInterfaceOwnerId"},"PrivateIpAddress":{"locationName":"privateIpAddress"}}}}}},"http":{}},"DescribeAvailabilityZones":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ZoneNames":{"locationName":"ZoneName","type":"list","member":{"locationName":"ZoneName"}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"AvailabilityZones":{"locationName":"availabilityZoneInfo","type":"list","member":{"locationName":"item","type":"structure","members":{"ZoneName":{"locationName":"zoneName"},"State":{"locationName":"zoneState"},"RegionName":{"locationName":"regionName"},"Messages":{"locationName":"messageSet","type":"list","member":{"locationName":"item","type":"structure","members":{"Message":{"locationName":"message"}}}}}}}}},"http":{}},"DescribeBundleTasks":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"BundleIds":{"locationName":"BundleId","type":"list","member":{"locationName":"BundleId"}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"BundleTasks":{"locationName":"bundleInstanceTasksSet","type":"list","member":{"shape":"S1j","locationName":"item"}}}},"http":{}},"DescribeClassicLinkInstances":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S8a","locationName":"InstanceId"},"Filters":{"shape":"S7r","locationName":"Filter"},"NextToken":{"locationName":"nextToken"},"MaxResults":{"locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","members":{"Instances":{"locationName":"instancesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"VpcId":{"locationName":"vpcId"},"Groups":{"shape":"S4m","locationName":"groupSet"},"Tags":{"shape":"Sa","locationName":"tagSet"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeConversionTasks":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Filters":{"shape":"S7r","locationName":"filter"},"ConversionTaskIds":{"locationName":"conversionTaskId","type":"list","member":{"locationName":"item"}}}},"output":{"type":"structure","members":{"ConversionTasks":{"locationName":"conversionTasks","type":"list","member":{"shape":"S8i","locationName":"item"}}}},"http":{}},"DescribeCustomerGateways":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"CustomerGatewayIds":{"locationName":"CustomerGatewayId","type":"list","member":{"locationName":"CustomerGatewayId"}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"CustomerGateways":{"locationName":"customerGatewaySet","type":"list","member":{"shape":"S2u","locationName":"item"}}}},"http":{}},"DescribeDhcpOptions":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"DhcpOptionsIds":{"locationName":"DhcpOptionsId","type":"list","member":{"locationName":"DhcpOptionsId"}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"DhcpOptions":{"locationName":"dhcpOptionsSet","type":"list","member":{"shape":"S2z","locationName":"item"}}}},"http":{}},"DescribeExportTasks":{"input":{"type":"structure","members":{"ExportTaskIds":{"locationName":"exportTaskId","type":"list","member":{"locationName":"ExportTaskId"}}}},"output":{"type":"structure","members":{"ExportTasks":{"locationName":"exportTaskSet","type":"list","member":{"shape":"S3n","locationName":"item"}}}},"http":{}},"DescribeFlowLogs":{"input":{"type":"structure","members":{"FlowLogIds":{"shape":"S26","locationName":"FlowLogId"},"Filter":{"shape":"S7r"},"NextToken":{},"MaxResults":{"type":"integer"}}},"output":{"type":"structure","members":{"FlowLogs":{"locationName":"flowLogSet","type":"list","member":{"locationName":"item","type":"structure","members":{"CreationTime":{"locationName":"creationTime","type":"timestamp"},"FlowLogId":{"locationName":"flowLogId"},"FlowLogStatus":{"locationName":"flowLogStatus"},"ResourceId":{"locationName":"resourceId"},"TrafficType":{"locationName":"trafficType"},"LogGroupName":{"locationName":"logGroupName"},"DeliverLogsStatus":{"locationName":"deliverLogsStatus"},"DeliverLogsErrorMessage":{"locationName":"deliverLogsErrorMessage"},"DeliverLogsPermissionArn":{"locationName":"deliverLogsPermissionArn"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeHosts":{"input":{"type":"structure","members":{"HostIds":{"shape":"S98","locationName":"hostId"},"NextToken":{"locationName":"nextToken"},"MaxResults":{"locationName":"maxResults","type":"integer"},"Filter":{"shape":"S7r","locationName":"filter"}}},"output":{"type":"structure","members":{"Hosts":{"locationName":"hostSet","type":"list","member":{"locationName":"item","type":"structure","members":{"HostId":{"locationName":"hostId"},"AutoPlacement":{"locationName":"autoPlacement"},"HostReservationId":{"locationName":"hostReservationId"},"ClientToken":{"locationName":"clientToken"},"HostProperties":{"locationName":"hostProperties","type":"structure","members":{"Sockets":{"locationName":"sockets","type":"integer"},"Cores":{"locationName":"cores","type":"integer"},"TotalVCpus":{"locationName":"totalVCpus","type":"integer"},"InstanceType":{"locationName":"instanceType"}}},"State":{"locationName":"state"},"AvailabilityZone":{"locationName":"availabilityZone"},"Instances":{"locationName":"instances","type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"InstanceType":{"locationName":"instanceType"}}}},"AvailableCapacity":{"locationName":"availableCapacity","type":"structure","members":{"AvailableInstanceCapacity":{"locationName":"availableInstanceCapacity","type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceType":{"locationName":"instanceType"},"AvailableCapacity":{"locationName":"availableCapacity","type":"integer"},"TotalCapacity":{"locationName":"totalCapacity","type":"integer"}}}},"AvailableVCpus":{"locationName":"availableVCpus","type":"integer"}}}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeIdFormat":{"input":{"type":"structure","members":{"Resource":{}}},"output":{"type":"structure","members":{"Statuses":{"locationName":"statusSet","type":"list","member":{"locationName":"item","type":"structure","members":{"Resource":{"locationName":"resource"},"UseLongIds":{"locationName":"useLongIds","type":"boolean"},"Deadline":{"locationName":"deadline","type":"timestamp"}}}}}},"http":{}},"DescribeImageAttribute":{"input":{"type":"structure","required":["ImageId","Attribute"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ImageId":{},"Attribute":{}}},"output":{"type":"structure","members":{"ImageId":{"locationName":"imageId"},"LaunchPermissions":{"shape":"S9q","locationName":"launchPermission"},"ProductCodes":{"shape":"S9t","locationName":"productCodes"},"KernelId":{"shape":"S33","locationName":"kernel"},"RamdiskId":{"shape":"S33","locationName":"ramdisk"},"Description":{"shape":"S33","locationName":"description"},"SriovNetSupport":{"shape":"S33","locationName":"sriovNetSupport"},"BlockDeviceMappings":{"shape":"S9w","locationName":"blockDeviceMapping"}}},"http":{}},"DescribeImages":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ImageIds":{"locationName":"ImageId","type":"list","member":{"locationName":"ImageId"}},"Owners":{"shape":"S9z","locationName":"Owner"},"ExecutableUsers":{"locationName":"ExecutableBy","type":"list","member":{"locationName":"ExecutableBy"}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"Images":{"locationName":"imagesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ImageId":{"locationName":"imageId"},"ImageLocation":{"locationName":"imageLocation"},"State":{"locationName":"imageState"},"OwnerId":{"locationName":"imageOwnerId"},"CreationDate":{"locationName":"creationDate"},"Public":{"locationName":"isPublic","type":"boolean"},"ProductCodes":{"shape":"S9t","locationName":"productCodes"},"Architecture":{"locationName":"architecture"},"ImageType":{"locationName":"imageType"},"KernelId":{"locationName":"kernelId"},"RamdiskId":{"locationName":"ramdiskId"},"Platform":{"locationName":"platform"},"SriovNetSupport":{"locationName":"sriovNetSupport"},"StateReason":{"shape":"Sa7","locationName":"stateReason"},"ImageOwnerAlias":{"locationName":"imageOwnerAlias"},"Name":{"locationName":"name"},"Description":{"locationName":"description"},"RootDeviceType":{"locationName":"rootDeviceType"},"RootDeviceName":{"locationName":"rootDeviceName"},"BlockDeviceMappings":{"shape":"S9w","locationName":"blockDeviceMapping"},"VirtualizationType":{"locationName":"virtualizationType"},"Tags":{"shape":"Sa","locationName":"tagSet"},"Hypervisor":{"locationName":"hypervisor"}}}}}},"http":{}},"DescribeImportImageTasks":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"ImportTaskIds":{"shape":"Sac","locationName":"ImportTaskId"},"NextToken":{},"MaxResults":{"type":"integer"},"Filters":{"shape":"S7r"}}},"output":{"type":"structure","members":{"ImportImageTasks":{"locationName":"importImageTaskSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ImportTaskId":{"locationName":"importTaskId"},"Architecture":{"locationName":"architecture"},"LicenseType":{"locationName":"licenseType"},"Platform":{"locationName":"platform"},"Hypervisor":{"locationName":"hypervisor"},"Description":{"locationName":"description"},"SnapshotDetails":{"shape":"Sag","locationName":"snapshotDetailSet"},"ImageId":{"locationName":"imageId"},"Progress":{"locationName":"progress"},"StatusMessage":{"locationName":"statusMessage"},"Status":{"locationName":"status"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeImportSnapshotTasks":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"ImportTaskIds":{"shape":"Sac","locationName":"ImportTaskId"},"NextToken":{},"MaxResults":{"type":"integer"},"Filters":{"shape":"S7r"}}},"output":{"type":"structure","members":{"ImportSnapshotTasks":{"locationName":"importSnapshotTaskSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ImportTaskId":{"locationName":"importTaskId"},"SnapshotTaskDetail":{"shape":"San","locationName":"snapshotTaskDetail"},"Description":{"locationName":"description"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeInstanceAttribute":{"input":{"type":"structure","required":["InstanceId","Attribute"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{"locationName":"instanceId"},"Attribute":{"locationName":"attribute"}}},"output":{"type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"InstanceType":{"shape":"S33","locationName":"instanceType"},"KernelId":{"shape":"S33","locationName":"kernel"},"RamdiskId":{"shape":"S33","locationName":"ramdisk"},"UserData":{"shape":"S33","locationName":"userData"},"DisableApiTermination":{"shape":"Sar","locationName":"disableApiTermination"},"InstanceInitiatedShutdownBehavior":{"shape":"S33","locationName":"instanceInitiatedShutdownBehavior"},"RootDeviceName":{"shape":"S33","locationName":"rootDeviceName"},"BlockDeviceMappings":{"shape":"Sas","locationName":"blockDeviceMapping"},"ProductCodes":{"shape":"S9t","locationName":"productCodes"},"EbsOptimized":{"shape":"Sar","locationName":"ebsOptimized"},"SriovNetSupport":{"shape":"S33","locationName":"sriovNetSupport"},"SourceDestCheck":{"shape":"Sar","locationName":"sourceDestCheck"},"Groups":{"shape":"S4m","locationName":"groupSet"}}},"http":{}},"DescribeInstanceStatus":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S8a","locationName":"InstanceId"},"Filters":{"shape":"S7r","locationName":"Filter"},"NextToken":{},"MaxResults":{"type":"integer"},"IncludeAllInstances":{"locationName":"includeAllInstances","type":"boolean"}}},"output":{"type":"structure","members":{"InstanceStatuses":{"locationName":"instanceStatusSet","type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"AvailabilityZone":{"locationName":"availabilityZone"},"Events":{"locationName":"eventsSet","type":"list","member":{"locationName":"item","type":"structure","members":{"Code":{"locationName":"code"},"Description":{"locationName":"description"},"NotBefore":{"locationName":"notBefore","type":"timestamp"},"NotAfter":{"locationName":"notAfter","type":"timestamp"}}}},"InstanceState":{"shape":"Sb2","locationName":"instanceState"},"SystemStatus":{"shape":"Sb4","locationName":"systemStatus"},"InstanceStatus":{"shape":"Sb4","locationName":"instanceStatus"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeInstances":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S8a","locationName":"InstanceId"},"Filters":{"shape":"S7r","locationName":"Filter"},"NextToken":{"locationName":"nextToken"},"MaxResults":{"locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","members":{"Reservations":{"locationName":"reservationSet","type":"list","member":{"shape":"Sbd","locationName":"item"}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeInternetGateways":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InternetGatewayIds":{"shape":"S26","locationName":"internetGatewayId"},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"InternetGateways":{"locationName":"internetGatewaySet","type":"list","member":{"shape":"S3t","locationName":"item"}}}},"http":{}},"DescribeKeyPairs":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"KeyNames":{"locationName":"KeyName","type":"list","member":{"locationName":"KeyName"}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"KeyPairs":{"locationName":"keySet","type":"list","member":{"locationName":"item","type":"structure","members":{"KeyName":{"locationName":"keyName"},"KeyFingerprint":{"locationName":"keyFingerprint"}}}}}},"http":{}},"DescribeMovingAddresses":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"PublicIps":{"shape":"S26","locationName":"publicIp"},"NextToken":{"locationName":"nextToken"},"Filters":{"shape":"S7r","locationName":"filter"},"MaxResults":{"locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","members":{"MovingAddressStatuses":{"locationName":"movingAddressStatusSet","type":"list","member":{"locationName":"item","type":"structure","members":{"PublicIp":{"locationName":"publicIp"},"MoveStatus":{"locationName":"moveStatus"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeNatGateways":{"input":{"type":"structure","members":{"NatGatewayIds":{"shape":"S26","locationName":"NatGatewayId"},"Filter":{"shape":"S7r"},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"NatGateways":{"locationName":"natGatewaySet","type":"list","member":{"shape":"S40","locationName":"item"}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeNetworkAcls":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkAclIds":{"shape":"S26","locationName":"NetworkAclId"},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"NetworkAcls":{"locationName":"networkAclSet","type":"list","member":{"shape":"S46","locationName":"item"}}}},"http":{}},"DescribeNetworkInterfaceAttribute":{"input":{"type":"structure","required":["NetworkInterfaceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"Attribute":{"locationName":"attribute"}}},"output":{"type":"structure","members":{"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"Description":{"shape":"S33","locationName":"description"},"SourceDestCheck":{"shape":"Sar","locationName":"sourceDestCheck"},"Groups":{"shape":"S4m","locationName":"groupSet"},"Attachment":{"shape":"S4o","locationName":"attachment"}}},"http":{}},"DescribeNetworkInterfaces":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkInterfaceIds":{"locationName":"NetworkInterfaceId","type":"list","member":{"locationName":"item"}},"Filters":{"shape":"S7r","locationName":"filter"}}},"output":{"type":"structure","members":{"NetworkInterfaces":{"locationName":"networkInterfaceSet","type":"list","member":{"shape":"S4k","locationName":"item"}}}},"http":{}},"DescribePlacementGroups":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupNames":{"locationName":"groupName","type":"list","member":{}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"PlacementGroups":{"locationName":"placementGroupSet","type":"list","member":{"locationName":"item","type":"structure","members":{"GroupName":{"locationName":"groupName"},"Strategy":{"locationName":"strategy"},"State":{"locationName":"state"}}}}}},"http":{}},"DescribePrefixLists":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"PrefixListIds":{"shape":"S26","locationName":"PrefixListId"},"Filters":{"shape":"S7r","locationName":"Filter"},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"PrefixLists":{"locationName":"prefixListSet","type":"list","member":{"locationName":"item","type":"structure","members":{"PrefixListId":{"locationName":"prefixListId"},"PrefixListName":{"locationName":"prefixListName"},"Cidrs":{"shape":"S26","locationName":"cidrSet"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeRegions":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"RegionNames":{"locationName":"RegionName","type":"list","member":{"locationName":"RegionName"}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"Regions":{"locationName":"regionInfo","type":"list","member":{"locationName":"item","type":"structure","members":{"RegionName":{"locationName":"regionName"},"Endpoint":{"locationName":"regionEndpoint"}}}}}},"http":{}},"DescribeReservedInstances":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ReservedInstancesIds":{"shape":"Scy","locationName":"ReservedInstancesId"},"Filters":{"shape":"S7r","locationName":"Filter"},"OfferingType":{"locationName":"offeringType"}}},"output":{"type":"structure","members":{"ReservedInstances":{"locationName":"reservedInstancesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ReservedInstancesId":{"locationName":"reservedInstancesId"},"InstanceType":{"locationName":"instanceType"},"AvailabilityZone":{"locationName":"availabilityZone"},"Start":{"locationName":"start","type":"timestamp"},"End":{"locationName":"end","type":"timestamp"},"Duration":{"locationName":"duration","type":"long"},"UsagePrice":{"locationName":"usagePrice","type":"float"},"FixedPrice":{"locationName":"fixedPrice","type":"float"},"InstanceCount":{"locationName":"instanceCount","type":"integer"},"ProductDescription":{"locationName":"productDescription"},"State":{"locationName":"state"},"Tags":{"shape":"Sa","locationName":"tagSet"},"InstanceTenancy":{"locationName":"instanceTenancy"},"CurrencyCode":{"locationName":"currencyCode"},"OfferingType":{"locationName":"offeringType"},"RecurringCharges":{"shape":"Sd6","locationName":"recurringCharges"}}}}}},"http":{}},"DescribeReservedInstancesListings":{"input":{"type":"structure","members":{"ReservedInstancesId":{"locationName":"reservedInstancesId"},"ReservedInstancesListingId":{"locationName":"reservedInstancesListingId"},"Filters":{"shape":"S7r","locationName":"filters"}}},"output":{"type":"structure","members":{"ReservedInstancesListings":{"shape":"S1u","locationName":"reservedInstancesListingsSet"}}},"http":{}},"DescribeReservedInstancesModifications":{"input":{"type":"structure","members":{"ReservedInstancesModificationIds":{"locationName":"ReservedInstancesModificationId","type":"list","member":{"locationName":"ReservedInstancesModificationId"}},"NextToken":{"locationName":"nextToken"},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"ReservedInstancesModifications":{"locationName":"reservedInstancesModificationsSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ReservedInstancesModificationId":{"locationName":"reservedInstancesModificationId"},"ReservedInstancesIds":{"locationName":"reservedInstancesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ReservedInstancesId":{"locationName":"reservedInstancesId"}}}},"ModificationResults":{"locationName":"modificationResultSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ReservedInstancesId":{"locationName":"reservedInstancesId"},"TargetConfiguration":{"shape":"Sdk","locationName":"targetConfiguration"}}}},"CreateDate":{"locationName":"createDate","type":"timestamp"},"UpdateDate":{"locationName":"updateDate","type":"timestamp"},"EffectiveDate":{"locationName":"effectiveDate","type":"timestamp"},"Status":{"locationName":"status"},"StatusMessage":{"locationName":"statusMessage"},"ClientToken":{"locationName":"clientToken"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeReservedInstancesOfferings":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ReservedInstancesOfferingIds":{"locationName":"ReservedInstancesOfferingId","type":"list","member":{}},"InstanceType":{},"AvailabilityZone":{},"ProductDescription":{},"Filters":{"shape":"S7r","locationName":"Filter"},"InstanceTenancy":{"locationName":"instanceTenancy"},"OfferingType":{"locationName":"offeringType"},"NextToken":{"locationName":"nextToken"},"MaxResults":{"locationName":"maxResults","type":"integer"},"IncludeMarketplace":{"type":"boolean"},"MinDuration":{"type":"long"},"MaxDuration":{"type":"long"},"MaxInstanceCount":{"type":"integer"}}},"output":{"type":"structure","members":{"ReservedInstancesOfferings":{"locationName":"reservedInstancesOfferingsSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ReservedInstancesOfferingId":{"locationName":"reservedInstancesOfferingId"},"InstanceType":{"locationName":"instanceType"},"AvailabilityZone":{"locationName":"availabilityZone"},"Duration":{"locationName":"duration","type":"long"},"UsagePrice":{"locationName":"usagePrice","type":"float"},"FixedPrice":{"locationName":"fixedPrice","type":"float"},"ProductDescription":{"locationName":"productDescription"},"InstanceTenancy":{"locationName":"instanceTenancy"},"CurrencyCode":{"locationName":"currencyCode"},"OfferingType":{"locationName":"offeringType"},"RecurringCharges":{"shape":"Sd6","locationName":"recurringCharges"},"Marketplace":{"locationName":"marketplace","type":"boolean"},"PricingDetails":{"locationName":"pricingDetailsSet","type":"list","member":{"locationName":"item","type":"structure","members":{"Price":{"locationName":"price","type":"double"},"Count":{"locationName":"count","type":"integer"}}}}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeRouteTables":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"RouteTableIds":{"shape":"S26","locationName":"RouteTableId"},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"RouteTables":{"locationName":"routeTableSet","type":"list","member":{"shape":"S53","locationName":"item"}}}},"http":{}},"DescribeScheduledInstanceAvailability":{"input":{"type":"structure","required":["Recurrence","FirstSlotStartTimeRange"],"members":{"DryRun":{"type":"boolean"},"Recurrence":{"type":"structure","members":{"Frequency":{},"Interval":{"type":"integer"},"OccurrenceDays":{"locationName":"OccurrenceDay","type":"list","member":{"locationName":"OccurenceDay","type":"integer"}},"OccurrenceRelativeToEnd":{"type":"boolean"},"OccurrenceUnit":{}}},"FirstSlotStartTimeRange":{"type":"structure","required":["EarliestTime","LatestTime"],"members":{"EarliestTime":{"type":"timestamp"},"LatestTime":{"type":"timestamp"}}},"MinSlotDurationInHours":{"type":"integer"},"MaxSlotDurationInHours":{"type":"integer"},"NextToken":{},"MaxResults":{"type":"integer"},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"NextToken":{"locationName":"nextToken"},"ScheduledInstanceAvailabilitySet":{"locationName":"scheduledInstanceAvailabilitySet","type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceType":{"locationName":"instanceType"},"Platform":{"locationName":"platform"},"NetworkPlatform":{"locationName":"networkPlatform"},"AvailabilityZone":{"locationName":"availabilityZone"},"PurchaseToken":{"locationName":"purchaseToken"},"SlotDurationInHours":{"locationName":"slotDurationInHours","type":"integer"},"Recurrence":{"shape":"Se2","locationName":"recurrence"},"FirstSlotStartTime":{"locationName":"firstSlotStartTime","type":"timestamp"},"HourlyPrice":{"locationName":"hourlyPrice"},"TotalScheduledInstanceHours":{"locationName":"totalScheduledInstanceHours","type":"integer"},"AvailableInstanceCount":{"locationName":"availableInstanceCount","type":"integer"},"MinTermDurationInDays":{"locationName":"minTermDurationInDays","type":"integer"},"MaxTermDurationInDays":{"locationName":"maxTermDurationInDays","type":"integer"}}}}}},"http":{}},"DescribeScheduledInstances":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"ScheduledInstanceIds":{"locationName":"ScheduledInstanceId","type":"list","member":{"locationName":"ScheduledInstanceId"}},"SlotStartTimeRange":{"type":"structure","members":{"EarliestTime":{"type":"timestamp"},"LatestTime":{"type":"timestamp"}}},"NextToken":{},"MaxResults":{"type":"integer"},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"NextToken":{"locationName":"nextToken"},"ScheduledInstanceSet":{"locationName":"scheduledInstanceSet","type":"list","member":{"shape":"Se9","locationName":"item"}}}},"http":{}},"DescribeSecurityGroups":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupNames":{"shape":"Seb","locationName":"GroupName"},"GroupIds":{"shape":"Ss","locationName":"GroupId"},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"SecurityGroups":{"locationName":"securityGroupInfo","type":"list","member":{"locationName":"item","type":"structure","members":{"OwnerId":{"locationName":"ownerId"},"GroupName":{"locationName":"groupName"},"GroupId":{"locationName":"groupId"},"Description":{"locationName":"groupDescription"},"IpPermissions":{"shape":"S15","locationName":"ipPermissions"},"IpPermissionsEgress":{"shape":"S15","locationName":"ipPermissionsEgress"},"VpcId":{"locationName":"vpcId"},"Tags":{"shape":"Sa","locationName":"tagSet"}}}}}},"http":{}},"DescribeSnapshotAttribute":{"input":{"type":"structure","required":["SnapshotId","Attribute"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SnapshotId":{},"Attribute":{}}},"output":{"type":"structure","members":{"SnapshotId":{"locationName":"snapshotId"},"CreateVolumePermissions":{"shape":"Sei","locationName":"createVolumePermission"},"ProductCodes":{"shape":"S9t","locationName":"productCodes"}}},"http":{}},"DescribeSnapshots":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SnapshotIds":{"locationName":"SnapshotId","type":"list","member":{"locationName":"SnapshotId"}},"OwnerIds":{"shape":"S9z","locationName":"Owner"},"RestorableByUserIds":{"locationName":"RestorableBy","type":"list","member":{}},"Filters":{"shape":"S7r","locationName":"Filter"},"NextToken":{},"MaxResults":{"type":"integer"}}},"output":{"type":"structure","members":{"Snapshots":{"locationName":"snapshotSet","type":"list","member":{"shape":"S5f","locationName":"item"}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeSpotDatafeedSubscription":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"}}},"output":{"type":"structure","members":{"SpotDatafeedSubscription":{"shape":"S5j","locationName":"spotDatafeedSubscription"}}},"http":{}},"DescribeSpotFleetInstances":{"input":{"type":"structure","required":["SpotFleetRequestId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotFleetRequestId":{"locationName":"spotFleetRequestId"},"NextToken":{"locationName":"nextToken"},"MaxResults":{"locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","required":["SpotFleetRequestId","ActiveInstances"],"members":{"SpotFleetRequestId":{"locationName":"spotFleetRequestId"},"ActiveInstances":{"locationName":"activeInstanceSet","type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceType":{"locationName":"instanceType"},"InstanceId":{"locationName":"instanceId"},"SpotInstanceRequestId":{"locationName":"spotInstanceRequestId"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeSpotFleetRequestHistory":{"input":{"type":"structure","required":["SpotFleetRequestId","StartTime"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotFleetRequestId":{"locationName":"spotFleetRequestId"},"EventType":{"locationName":"eventType"},"StartTime":{"locationName":"startTime","type":"timestamp"},"NextToken":{"locationName":"nextToken"},"MaxResults":{"locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","required":["SpotFleetRequestId","StartTime","LastEvaluatedTime","HistoryRecords"],"members":{"SpotFleetRequestId":{"locationName":"spotFleetRequestId"},"StartTime":{"locationName":"startTime","type":"timestamp"},"LastEvaluatedTime":{"locationName":"lastEvaluatedTime","type":"timestamp"},"HistoryRecords":{"locationName":"historyRecordSet","type":"list","member":{"locationName":"item","type":"structure","required":["Timestamp","EventType","EventInformation"],"members":{"Timestamp":{"locationName":"timestamp","type":"timestamp"},"EventType":{"locationName":"eventType"},"EventInformation":{"locationName":"eventInformation","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"EventSubType":{"locationName":"eventSubType"},"EventDescription":{"locationName":"eventDescription"}}}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeSpotFleetRequests":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotFleetRequestIds":{"shape":"S26","locationName":"spotFleetRequestId"},"NextToken":{"locationName":"nextToken"},"MaxResults":{"locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","required":["SpotFleetRequestConfigs"],"members":{"SpotFleetRequestConfigs":{"locationName":"spotFleetRequestConfigSet","type":"list","member":{"locationName":"item","type":"structure","required":["SpotFleetRequestId","SpotFleetRequestState","SpotFleetRequestConfig","CreateTime"],"members":{"SpotFleetRequestId":{"locationName":"spotFleetRequestId"},"SpotFleetRequestState":{"locationName":"spotFleetRequestState"},"SpotFleetRequestConfig":{"shape":"Sf5","locationName":"spotFleetRequestConfig"},"CreateTime":{"locationName":"createTime","type":"timestamp"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeSpotInstanceRequests":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotInstanceRequestIds":{"shape":"S2g","locationName":"SpotInstanceRequestId"},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"SpotInstanceRequests":{"shape":"Sfh","locationName":"spotInstanceRequestSet"}}},"http":{}},"DescribeSpotPriceHistory":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"StartTime":{"locationName":"startTime","type":"timestamp"},"EndTime":{"locationName":"endTime","type":"timestamp"},"InstanceTypes":{"locationName":"InstanceType","type":"list","member":{}},"ProductDescriptions":{"locationName":"ProductDescription","type":"list","member":{}},"Filters":{"shape":"S7r","locationName":"Filter"},"AvailabilityZone":{"locationName":"availabilityZone"},"MaxResults":{"locationName":"maxResults","type":"integer"},"NextToken":{"locationName":"nextToken"}}},"output":{"type":"structure","members":{"SpotPriceHistory":{"locationName":"spotPriceHistorySet","type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceType":{"locationName":"instanceType"},"ProductDescription":{"locationName":"productDescription"},"SpotPrice":{"locationName":"spotPrice"},"Timestamp":{"locationName":"timestamp","type":"timestamp"},"AvailabilityZone":{"locationName":"availabilityZone"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeSubnets":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SubnetIds":{"locationName":"SubnetId","type":"list","member":{"locationName":"SubnetId"}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"Subnets":{"locationName":"subnetSet","type":"list","member":{"shape":"S5o","locationName":"item"}}}},"http":{}},"DescribeTags":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Filters":{"shape":"S7r","locationName":"Filter"},"MaxResults":{"locationName":"maxResults","type":"integer"},"NextToken":{"locationName":"nextToken"}}},"output":{"type":"structure","members":{"Tags":{"locationName":"tagSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ResourceId":{"locationName":"resourceId"},"ResourceType":{"locationName":"resourceType"},"Key":{"locationName":"key"},"Value":{"locationName":"value"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeVolumeAttribute":{"input":{"type":"structure","required":["VolumeId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeId":{},"Attribute":{}}},"output":{"type":"structure","members":{"VolumeId":{"locationName":"volumeId"},"AutoEnableIO":{"shape":"Sar","locationName":"autoEnableIO"},"ProductCodes":{"shape":"S9t","locationName":"productCodes"}}},"http":{}},"DescribeVolumeStatus":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeIds":{"shape":"Sg7","locationName":"VolumeId"},"Filters":{"shape":"S7r","locationName":"Filter"},"NextToken":{},"MaxResults":{"type":"integer"}}},"output":{"type":"structure","members":{"VolumeStatuses":{"locationName":"volumeStatusSet","type":"list","member":{"locationName":"item","type":"structure","members":{"VolumeId":{"locationName":"volumeId"},"AvailabilityZone":{"locationName":"availabilityZone"},"VolumeStatus":{"locationName":"volumeStatus","type":"structure","members":{"Status":{"locationName":"status"},"Details":{"locationName":"details","type":"list","member":{"locationName":"item","type":"structure","members":{"Name":{"locationName":"name"},"Status":{"locationName":"status"}}}}}},"Events":{"locationName":"eventsSet","type":"list","member":{"locationName":"item","type":"structure","members":{"EventType":{"locationName":"eventType"},"Description":{"locationName":"description"},"NotBefore":{"locationName":"notBefore","type":"timestamp"},"NotAfter":{"locationName":"notAfter","type":"timestamp"},"EventId":{"locationName":"eventId"}}}},"Actions":{"locationName":"actionsSet","type":"list","member":{"locationName":"item","type":"structure","members":{"Code":{"locationName":"code"},"Description":{"locationName":"description"},"EventType":{"locationName":"eventType"},"EventId":{"locationName":"eventId"}}}}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeVolumes":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeIds":{"shape":"Sg7","locationName":"VolumeId"},"Filters":{"shape":"S7r","locationName":"Filter"},"NextToken":{"locationName":"nextToken"},"MaxResults":{"locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","members":{"Volumes":{"locationName":"volumeSet","type":"list","member":{"shape":"S5t","locationName":"item"}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeVpcAttribute":{"input":{"type":"structure","required":["VpcId","Attribute"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{},"Attribute":{}}},"output":{"type":"structure","members":{"VpcId":{"locationName":"vpcId"},"EnableDnsSupport":{"shape":"Sar","locationName":"enableDnsSupport"},"EnableDnsHostnames":{"shape":"Sar","locationName":"enableDnsHostnames"}}},"http":{}},"DescribeVpcClassicLink":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcIds":{"shape":"Sgr","locationName":"VpcId"},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"Vpcs":{"locationName":"vpcSet","type":"list","member":{"locationName":"item","type":"structure","members":{"VpcId":{"locationName":"vpcId"},"ClassicLinkEnabled":{"locationName":"classicLinkEnabled","type":"boolean"},"Tags":{"shape":"Sa","locationName":"tagSet"}}}}}},"http":{}},"DescribeVpcClassicLinkDnsSupport":{"input":{"type":"structure","members":{"VpcIds":{"shape":"Sgr"},"MaxResults":{"locationName":"maxResults","type":"integer"},"NextToken":{"locationName":"nextToken"}}},"output":{"type":"structure","members":{"Vpcs":{"locationName":"vpcs","type":"list","member":{"locationName":"item","type":"structure","members":{"VpcId":{"locationName":"vpcId"},"ClassicLinkDnsSupported":{"locationName":"classicLinkDnsSupported","type":"boolean"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeVpcEndpointServices":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"ServiceNames":{"shape":"S26","locationName":"serviceNameSet"},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeVpcEndpoints":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"VpcEndpointIds":{"shape":"S26","locationName":"VpcEndpointId"},"Filters":{"shape":"S7r","locationName":"Filter"},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"VpcEndpoints":{"locationName":"vpcEndpointSet","type":"list","member":{"shape":"S63","locationName":"item"}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeVpcPeeringConnections":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcPeeringConnectionIds":{"shape":"S26","locationName":"VpcPeeringConnectionId"},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"VpcPeeringConnections":{"locationName":"vpcPeeringConnectionSet","type":"list","member":{"shape":"S5","locationName":"item"}}}},"http":{}},"DescribeVpcs":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcIds":{"locationName":"VpcId","type":"list","member":{"locationName":"VpcId"}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"Vpcs":{"locationName":"vpcSet","type":"list","member":{"shape":"S5z","locationName":"item"}}}},"http":{}},"DescribeVpnConnections":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpnConnectionIds":{"locationName":"VpnConnectionId","type":"list","member":{"locationName":"VpnConnectionId"}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"VpnConnections":{"locationName":"vpnConnectionSet","type":"list","member":{"shape":"S6a","locationName":"item"}}}},"http":{}},"DescribeVpnGateways":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpnGatewayIds":{"locationName":"VpnGatewayId","type":"list","member":{"locationName":"VpnGatewayId"}},"Filters":{"shape":"S7r","locationName":"Filter"}}},"output":{"type":"structure","members":{"VpnGateways":{"locationName":"vpnGatewaySet","type":"list","member":{"shape":"S6m","locationName":"item"}}}},"http":{}},"DetachClassicLinkVpc":{"input":{"type":"structure","required":["InstanceId","VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{"locationName":"instanceId"},"VpcId":{"locationName":"vpcId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"DetachInternetGateway":{"input":{"type":"structure","required":["InternetGatewayId","VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InternetGatewayId":{"locationName":"internetGatewayId"},"VpcId":{"locationName":"vpcId"}}},"http":{}},"DetachNetworkInterface":{"input":{"type":"structure","required":["AttachmentId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"AttachmentId":{"locationName":"attachmentId"},"Force":{"locationName":"force","type":"boolean"}}},"http":{}},"DetachVolume":{"input":{"type":"structure","required":["VolumeId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeId":{},"InstanceId":{},"Device":{},"Force":{"type":"boolean"}}},"output":{"shape":"Sy"},"http":{}},"DetachVpnGateway":{"input":{"type":"structure","required":["VpnGatewayId","VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpnGatewayId":{},"VpcId":{}}},"http":{}},"DisableVgwRoutePropagation":{"input":{"type":"structure","required":["RouteTableId","GatewayId"],"members":{"RouteTableId":{},"GatewayId":{}}},"http":{}},"DisableVpcClassicLink":{"input":{"type":"structure","required":["VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{"locationName":"vpcId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"DisableVpcClassicLinkDnsSupport":{"input":{"type":"structure","members":{"VpcId":{}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"DisassociateAddress":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"PublicIp":{},"AssociationId":{}}},"http":{}},"DisassociateRouteTable":{"input":{"type":"structure","required":["AssociationId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"AssociationId":{"locationName":"associationId"}}},"http":{}},"EnableVgwRoutePropagation":{"input":{"type":"structure","required":["RouteTableId","GatewayId"],"members":{"RouteTableId":{},"GatewayId":{}}},"http":{}},"EnableVolumeIO":{"input":{"type":"structure","required":["VolumeId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeId":{"locationName":"volumeId"}}},"http":{}},"EnableVpcClassicLink":{"input":{"type":"structure","required":["VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{"locationName":"vpcId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"EnableVpcClassicLinkDnsSupport":{"input":{"type":"structure","members":{"VpcId":{}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"GetConsoleOutput":{"input":{"type":"structure","required":["InstanceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{}}},"output":{"type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"Timestamp":{"locationName":"timestamp","type":"timestamp"},"Output":{"locationName":"output"}}},"http":{}},"GetPasswordData":{"input":{"type":"structure","required":["InstanceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{}}},"output":{"type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"Timestamp":{"locationName":"timestamp","type":"timestamp"},"PasswordData":{"locationName":"passwordData"}}},"http":{}},"ImportImage":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"Description":{},"DiskContainers":{"locationName":"DiskContainer","type":"list","member":{"locationName":"item","type":"structure","members":{"Description":{},"Format":{},"Url":{},"UserBucket":{"shape":"Sib"},"DeviceName":{},"SnapshotId":{}}}},"LicenseType":{},"Hypervisor":{},"Architecture":{},"Platform":{},"ClientData":{"shape":"Sic"},"ClientToken":{},"RoleName":{}}},"output":{"type":"structure","members":{"ImportTaskId":{"locationName":"importTaskId"},"Architecture":{"locationName":"architecture"},"LicenseType":{"locationName":"licenseType"},"Platform":{"locationName":"platform"},"Hypervisor":{"locationName":"hypervisor"},"Description":{"locationName":"description"},"SnapshotDetails":{"shape":"Sag","locationName":"snapshotDetailSet"},"ImageId":{"locationName":"imageId"},"Progress":{"locationName":"progress"},"StatusMessage":{"locationName":"statusMessage"},"Status":{"locationName":"status"}}},"http":{}},"ImportInstance":{"input":{"type":"structure","required":["Platform"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Description":{"locationName":"description"},"LaunchSpecification":{"locationName":"launchSpecification","type":"structure","members":{"Architecture":{"locationName":"architecture"},"GroupNames":{"shape":"Sig","locationName":"GroupName"},"GroupIds":{"shape":"S4g","locationName":"GroupId"},"AdditionalInfo":{"locationName":"additionalInfo"},"UserData":{"locationName":"userData","type":"structure","members":{"Data":{"locationName":"data"}}},"InstanceType":{"locationName":"instanceType"},"Placement":{"shape":"Sbh","locationName":"placement"},"Monitoring":{"locationName":"monitoring","type":"boolean"},"SubnetId":{"locationName":"subnetId"},"InstanceInitiatedShutdownBehavior":{"locationName":"instanceInitiatedShutdownBehavior"},"PrivateIpAddress":{"locationName":"privateIpAddress"}}},"DiskImages":{"locationName":"diskImage","type":"list","member":{"type":"structure","members":{"Image":{"shape":"Sil"},"Description":{},"Volume":{"shape":"Sim"}}}},"Platform":{"locationName":"platform"}}},"output":{"type":"structure","members":{"ConversionTask":{"shape":"S8i","locationName":"conversionTask"}}},"http":{}},"ImportKeyPair":{"input":{"type":"structure","required":["KeyName","PublicKeyMaterial"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"KeyName":{"locationName":"keyName"},"PublicKeyMaterial":{"locationName":"publicKeyMaterial","type":"blob"}}},"output":{"type":"structure","members":{"KeyName":{"locationName":"keyName"},"KeyFingerprint":{"locationName":"keyFingerprint"}}},"http":{}},"ImportSnapshot":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"Description":{},"DiskContainer":{"type":"structure","members":{"Description":{},"Format":{},"Url":{},"UserBucket":{"shape":"Sib"}}},"ClientData":{"shape":"Sic"},"ClientToken":{},"RoleName":{}}},"output":{"type":"structure","members":{"ImportTaskId":{"locationName":"importTaskId"},"SnapshotTaskDetail":{"shape":"San","locationName":"snapshotTaskDetail"},"Description":{"locationName":"description"}}},"http":{}},"ImportVolume":{"input":{"type":"structure","required":["AvailabilityZone","Image","Volume"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"AvailabilityZone":{"locationName":"availabilityZone"},"Image":{"shape":"Sil","locationName":"image"},"Description":{"locationName":"description"},"Volume":{"shape":"Sim","locationName":"volume"}}},"output":{"type":"structure","members":{"ConversionTask":{"shape":"S8i","locationName":"conversionTask"}}},"http":{}},"ModifyHosts":{"input":{"type":"structure","required":["HostIds","AutoPlacement"],"members":{"HostIds":{"shape":"S98","locationName":"hostId"},"AutoPlacement":{"locationName":"autoPlacement"}}},"output":{"type":"structure","members":{"Successful":{"shape":"Sj","locationName":"successful"},"Unsuccessful":{"shape":"Six","locationName":"unsuccessful"}}},"http":{}},"ModifyIdFormat":{"input":{"type":"structure","required":["Resource","UseLongIds"],"members":{"Resource":{},"UseLongIds":{"type":"boolean"}}},"http":{}},"ModifyImageAttribute":{"input":{"type":"structure","required":["ImageId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ImageId":{},"Attribute":{},"OperationType":{},"UserIds":{"shape":"Sj1","locationName":"UserId"},"UserGroups":{"locationName":"UserGroup","type":"list","member":{"locationName":"UserGroup"}},"ProductCodes":{"locationName":"ProductCode","type":"list","member":{"locationName":"ProductCode"}},"Value":{},"LaunchPermission":{"type":"structure","members":{"Add":{"shape":"S9q"},"Remove":{"shape":"S9q"}}},"Description":{"shape":"S33"}}},"http":{}},"ModifyInstanceAttribute":{"input":{"type":"structure","required":["InstanceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{"locationName":"instanceId"},"Attribute":{"locationName":"attribute"},"Value":{"locationName":"value"},"BlockDeviceMappings":{"locationName":"blockDeviceMapping","type":"list","member":{"locationName":"item","type":"structure","members":{"DeviceName":{"locationName":"deviceName"},"Ebs":{"locationName":"ebs","type":"structure","members":{"VolumeId":{"locationName":"volumeId"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"}}},"VirtualName":{"locationName":"virtualName"},"NoDevice":{"locationName":"noDevice"}}}},"SourceDestCheck":{"shape":"Sar"},"DisableApiTermination":{"shape":"Sar","locationName":"disableApiTermination"},"InstanceType":{"shape":"S33","locationName":"instanceType"},"Kernel":{"shape":"S33","locationName":"kernel"},"Ramdisk":{"shape":"S33","locationName":"ramdisk"},"UserData":{"locationName":"userData","type":"structure","members":{"Value":{"locationName":"value","type":"blob"}}},"InstanceInitiatedShutdownBehavior":{"shape":"S33","locationName":"instanceInitiatedShutdownBehavior"},"Groups":{"shape":"Ss","locationName":"GroupId"},"EbsOptimized":{"shape":"Sar","locationName":"ebsOptimized"},"SriovNetSupport":{"shape":"S33","locationName":"sriovNetSupport"}}},"http":{}},"ModifyInstancePlacement":{"input":{"type":"structure","required":["InstanceId"],"members":{"InstanceId":{"locationName":"instanceId"},"Tenancy":{"locationName":"tenancy"},"Affinity":{"locationName":"affinity"},"HostId":{"locationName":"hostId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"ModifyNetworkInterfaceAttribute":{"input":{"type":"structure","required":["NetworkInterfaceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"Description":{"shape":"S33","locationName":"description"},"SourceDestCheck":{"shape":"Sar","locationName":"sourceDestCheck"},"Groups":{"shape":"S4g","locationName":"SecurityGroupId"},"Attachment":{"locationName":"attachment","type":"structure","members":{"AttachmentId":{"locationName":"attachmentId"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"}}}}},"http":{}},"ModifyReservedInstances":{"input":{"type":"structure","required":["ReservedInstancesIds","TargetConfigurations"],"members":{"ClientToken":{"locationName":"clientToken"},"ReservedInstancesIds":{"shape":"Scy","locationName":"ReservedInstancesId"},"TargetConfigurations":{"locationName":"ReservedInstancesConfigurationSetItemType","type":"list","member":{"shape":"Sdk","locationName":"item"}}}},"output":{"type":"structure","members":{"ReservedInstancesModificationId":{"locationName":"reservedInstancesModificationId"}}},"http":{}},"ModifySnapshotAttribute":{"input":{"type":"structure","required":["SnapshotId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SnapshotId":{},"Attribute":{},"OperationType":{},"UserIds":{"shape":"Sj1","locationName":"UserId"},"GroupNames":{"shape":"Seb","locationName":"UserGroup"},"CreateVolumePermission":{"type":"structure","members":{"Add":{"shape":"Sei"},"Remove":{"shape":"Sei"}}}}},"http":{}},"ModifySpotFleetRequest":{"input":{"type":"structure","required":["SpotFleetRequestId"],"members":{"SpotFleetRequestId":{"locationName":"spotFleetRequestId"},"TargetCapacity":{"locationName":"targetCapacity","type":"integer"},"ExcessCapacityTerminationPolicy":{"locationName":"excessCapacityTerminationPolicy"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"ModifySubnetAttribute":{"input":{"type":"structure","required":["SubnetId"],"members":{"SubnetId":{"locationName":"subnetId"},"MapPublicIpOnLaunch":{"shape":"Sar"}}},"http":{}},"ModifyVolumeAttribute":{"input":{"type":"structure","required":["VolumeId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeId":{},"AutoEnableIO":{"shape":"Sar"}}},"http":{}},"ModifyVpcAttribute":{"input":{"type":"structure","required":["VpcId"],"members":{"VpcId":{"locationName":"vpcId"},"EnableDnsSupport":{"shape":"Sar"},"EnableDnsHostnames":{"shape":"Sar"}}},"http":{}},"ModifyVpcEndpoint":{"input":{"type":"structure","required":["VpcEndpointId"],"members":{"DryRun":{"type":"boolean"},"VpcEndpointId":{},"ResetPolicy":{"type":"boolean"},"PolicyDocument":{},"AddRouteTableIds":{"shape":"S26","locationName":"AddRouteTableId"},"RemoveRouteTableIds":{"shape":"S26","locationName":"RemoveRouteTableId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"MonitorInstances":{"input":{"type":"structure","required":["InstanceIds"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S8a","locationName":"InstanceId"}}},"output":{"type":"structure","members":{"InstanceMonitorings":{"shape":"Sju","locationName":"instancesSet"}}},"http":{}},"MoveAddressToVpc":{"input":{"type":"structure","required":["PublicIp"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"PublicIp":{"locationName":"publicIp"}}},"output":{"type":"structure","members":{"AllocationId":{"locationName":"allocationId"},"Status":{"locationName":"status"}}},"http":{}},"PurchaseReservedInstancesOffering":{"input":{"type":"structure","required":["ReservedInstancesOfferingId","InstanceCount"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ReservedInstancesOfferingId":{},"InstanceCount":{"type":"integer"},"LimitPrice":{"locationName":"limitPrice","type":"structure","members":{"Amount":{"locationName":"amount","type":"double"},"CurrencyCode":{"locationName":"currencyCode"}}}}},"output":{"type":"structure","members":{"ReservedInstancesId":{"locationName":"reservedInstancesId"}}},"http":{}},"PurchaseScheduledInstances":{"input":{"type":"structure","required":["PurchaseRequests"],"members":{"DryRun":{"type":"boolean"},"ClientToken":{"idempotencyToken":true},"PurchaseRequests":{"locationName":"PurchaseRequest","type":"list","member":{"locationName":"PurchaseRequest","type":"structure","required":["PurchaseToken","InstanceCount"],"members":{"PurchaseToken":{},"InstanceCount":{"type":"integer"}}}}}},"output":{"type":"structure","members":{"ScheduledInstanceSet":{"locationName":"scheduledInstanceSet","type":"list","member":{"shape":"Se9","locationName":"item"}}}},"http":{}},"RebootInstances":{"input":{"type":"structure","required":["InstanceIds"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S8a","locationName":"InstanceId"}}},"http":{}},"RegisterImage":{"input":{"type":"structure","required":["Name"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ImageLocation":{},"Name":{"locationName":"name"},"Description":{"locationName":"description"},"Architecture":{"locationName":"architecture"},"KernelId":{"locationName":"kernelId"},"RamdiskId":{"locationName":"ramdiskId"},"RootDeviceName":{"locationName":"rootDeviceName"},"BlockDeviceMappings":{"shape":"S3c","locationName":"BlockDeviceMapping"},"VirtualizationType":{"locationName":"virtualizationType"},"SriovNetSupport":{"locationName":"sriovNetSupport"}}},"output":{"type":"structure","members":{"ImageId":{"locationName":"imageId"}}},"http":{}},"RejectVpcPeeringConnection":{"input":{"type":"structure","required":["VpcPeeringConnectionId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcPeeringConnectionId":{"locationName":"vpcPeeringConnectionId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"ReleaseAddress":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"PublicIp":{},"AllocationId":{}}},"http":{}},"ReleaseHosts":{"input":{"type":"structure","required":["HostIds"],"members":{"HostIds":{"shape":"S98","locationName":"hostId"}}},"output":{"type":"structure","members":{"Successful":{"shape":"Sj","locationName":"successful"},"Unsuccessful":{"shape":"Six","locationName":"unsuccessful"}}},"http":{}},"ReplaceNetworkAclAssociation":{"input":{"type":"structure","required":["AssociationId","NetworkAclId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"AssociationId":{"locationName":"associationId"},"NetworkAclId":{"locationName":"networkAclId"}}},"output":{"type":"structure","members":{"NewAssociationId":{"locationName":"newAssociationId"}}},"http":{}},"ReplaceNetworkAclEntry":{"input":{"type":"structure","required":["NetworkAclId","RuleNumber","Protocol","RuleAction","Egress","CidrBlock"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkAclId":{"locationName":"networkAclId"},"RuleNumber":{"locationName":"ruleNumber","type":"integer"},"Protocol":{"locationName":"protocol"},"RuleAction":{"locationName":"ruleAction"},"Egress":{"locationName":"egress","type":"boolean"},"CidrBlock":{"locationName":"cidrBlock"},"IcmpTypeCode":{"shape":"S4a","locationName":"Icmp"},"PortRange":{"shape":"S4b","locationName":"portRange"}}},"http":{}},"ReplaceRoute":{"input":{"type":"structure","required":["RouteTableId","DestinationCidrBlock"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"RouteTableId":{"locationName":"routeTableId"},"DestinationCidrBlock":{"locationName":"destinationCidrBlock"},"GatewayId":{"locationName":"gatewayId"},"InstanceId":{"locationName":"instanceId"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"VpcPeeringConnectionId":{"locationName":"vpcPeeringConnectionId"},"NatGatewayId":{"locationName":"natGatewayId"}}},"http":{}},"ReplaceRouteTableAssociation":{"input":{"type":"structure","required":["AssociationId","RouteTableId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"AssociationId":{"locationName":"associationId"},"RouteTableId":{"locationName":"routeTableId"}}},"output":{"type":"structure","members":{"NewAssociationId":{"locationName":"newAssociationId"}}},"http":{}},"ReportInstanceStatus":{"input":{"type":"structure","required":["Instances","Status","ReasonCodes"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Instances":{"shape":"S8a","locationName":"instanceId"},"Status":{"locationName":"status"},"StartTime":{"locationName":"startTime","type":"timestamp"},"EndTime":{"locationName":"endTime","type":"timestamp"},"ReasonCodes":{"locationName":"reasonCode","type":"list","member":{"locationName":"item"}},"Description":{"locationName":"description"}}},"http":{}},"RequestSpotFleet":{"input":{"type":"structure","required":["SpotFleetRequestConfig"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotFleetRequestConfig":{"shape":"Sf5","locationName":"spotFleetRequestConfig"}}},"output":{"type":"structure","required":["SpotFleetRequestId"],"members":{"SpotFleetRequestId":{"locationName":"spotFleetRequestId"}}},"http":{}},"RequestSpotInstances":{"input":{"type":"structure","required":["SpotPrice"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotPrice":{"locationName":"spotPrice"},"ClientToken":{"locationName":"clientToken"},"InstanceCount":{"locationName":"instanceCount","type":"integer"},"Type":{"locationName":"type"},"ValidFrom":{"locationName":"validFrom","type":"timestamp"},"ValidUntil":{"locationName":"validUntil","type":"timestamp"},"LaunchGroup":{"locationName":"launchGroup"},"AvailabilityZoneGroup":{"locationName":"availabilityZoneGroup"},"BlockDurationMinutes":{"locationName":"blockDurationMinutes","type":"integer"},"LaunchSpecification":{"type":"structure","members":{"ImageId":{"locationName":"imageId"},"KeyName":{"locationName":"keyName"},"SecurityGroups":{"shape":"S26","locationName":"SecurityGroup"},"UserData":{"locationName":"userData"},"AddressingType":{"locationName":"addressingType"},"InstanceType":{"locationName":"instanceType"},"Placement":{"shape":"Sf8","locationName":"placement"},"KernelId":{"locationName":"kernelId"},"RamdiskId":{"locationName":"ramdiskId"},"BlockDeviceMappings":{"shape":"S9w","locationName":"blockDeviceMapping"},"SubnetId":{"locationName":"subnetId"},"NetworkInterfaces":{"shape":"Sfa","locationName":"NetworkInterface"},"IamInstanceProfile":{"shape":"Sfc","locationName":"iamInstanceProfile"},"EbsOptimized":{"locationName":"ebsOptimized","type":"boolean"},"Monitoring":{"shape":"Sfn","locationName":"monitoring"},"SecurityGroupIds":{"shape":"S26","locationName":"SecurityGroupId"}}}}},"output":{"type":"structure","members":{"SpotInstanceRequests":{"shape":"Sfh","locationName":"spotInstanceRequestSet"}}},"http":{}},"ResetImageAttribute":{"input":{"type":"structure","required":["ImageId","Attribute"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ImageId":{},"Attribute":{}}},"http":{}},"ResetInstanceAttribute":{"input":{"type":"structure","required":["InstanceId","Attribute"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{"locationName":"instanceId"},"Attribute":{"locationName":"attribute"}}},"http":{}},"ResetNetworkInterfaceAttribute":{"input":{"type":"structure","required":["NetworkInterfaceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"SourceDestCheck":{"locationName":"sourceDestCheck"}}},"http":{}},"ResetSnapshotAttribute":{"input":{"type":"structure","required":["SnapshotId","Attribute"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SnapshotId":{},"Attribute":{}}},"http":{}},"RestoreAddressToClassic":{"input":{"type":"structure","required":["PublicIp"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"PublicIp":{"locationName":"publicIp"}}},"output":{"type":"structure","members":{"Status":{"locationName":"status"},"PublicIp":{"locationName":"publicIp"}}},"http":{}},"RevokeSecurityGroupEgress":{"input":{"type":"structure","required":["GroupId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupId":{"locationName":"groupId"},"SourceSecurityGroupName":{"locationName":"sourceSecurityGroupName"},"SourceSecurityGroupOwnerId":{"locationName":"sourceSecurityGroupOwnerId"},"IpProtocol":{"locationName":"ipProtocol"},"FromPort":{"locationName":"fromPort","type":"integer"},"ToPort":{"locationName":"toPort","type":"integer"},"CidrIp":{"locationName":"cidrIp"},"IpPermissions":{"shape":"S15","locationName":"ipPermissions"}}},"http":{}},"RevokeSecurityGroupIngress":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupName":{},"GroupId":{},"SourceSecurityGroupName":{},"SourceSecurityGroupOwnerId":{},"IpProtocol":{},"FromPort":{"type":"integer"},"ToPort":{"type":"integer"},"CidrIp":{},"IpPermissions":{"shape":"S15"}}},"http":{}},"RunInstances":{"input":{"type":"structure","required":["ImageId","MinCount","MaxCount"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ImageId":{},"MinCount":{"type":"integer"},"MaxCount":{"type":"integer"},"KeyName":{},"SecurityGroups":{"shape":"Sig","locationName":"SecurityGroup"},"SecurityGroupIds":{"shape":"S4g","locationName":"SecurityGroupId"},"UserData":{},"InstanceType":{},"Placement":{"shape":"Sbh"},"KernelId":{},"RamdiskId":{},"BlockDeviceMappings":{"shape":"S3c","locationName":"BlockDeviceMapping"},"Monitoring":{"shape":"Sfn"},"SubnetId":{},"DisableApiTermination":{"locationName":"disableApiTermination","type":"boolean"},"InstanceInitiatedShutdownBehavior":{"locationName":"instanceInitiatedShutdownBehavior"},"PrivateIpAddress":{"locationName":"privateIpAddress"},"ClientToken":{"locationName":"clientToken"},"AdditionalInfo":{"locationName":"additionalInfo"},"NetworkInterfaces":{"shape":"Sfa","locationName":"networkInterface"},"IamInstanceProfile":{"shape":"Sfc","locationName":"iamInstanceProfile"},"EbsOptimized":{"locationName":"ebsOptimized","type":"boolean"}}},"output":{"shape":"Sbd"},"http":{}},"RunScheduledInstances":{"input":{"type":"structure","required":["ScheduledInstanceId","LaunchSpecification"],"members":{"DryRun":{"type":"boolean"},"ClientToken":{"idempotencyToken":true},"InstanceCount":{"type":"integer"},"ScheduledInstanceId":{},"LaunchSpecification":{"type":"structure","required":["ImageId"],"members":{"ImageId":{},"KeyName":{},"SecurityGroupIds":{"shape":"Sl6","locationName":"SecurityGroupId"},"UserData":{},"Placement":{"type":"structure","members":{"AvailabilityZone":{},"GroupName":{}}},"KernelId":{},"InstanceType":{},"RamdiskId":{},"BlockDeviceMappings":{"locationName":"BlockDeviceMapping","type":"list","member":{"locationName":"BlockDeviceMapping","type":"structure","members":{"DeviceName":{},"NoDevice":{},"VirtualName":{},"Ebs":{"type":"structure","members":{"SnapshotId":{},"VolumeSize":{"type":"integer"},"DeleteOnTermination":{"type":"boolean"},"VolumeType":{},"Iops":{"type":"integer"},"Encrypted":{"type":"boolean"}}}}}},"Monitoring":{"type":"structure","members":{"Enabled":{"type":"boolean"}}},"SubnetId":{},"NetworkInterfaces":{"locationName":"NetworkInterface","type":"list","member":{"locationName":"NetworkInterface","type":"structure","members":{"NetworkInterfaceId":{},"DeviceIndex":{"type":"integer"},"SubnetId":{},"Description":{},"PrivateIpAddress":{},"PrivateIpAddressConfigs":{"locationName":"PrivateIpAddressConfig","type":"list","member":{"locationName":"PrivateIpAddressConfigSet","type":"structure","members":{"PrivateIpAddress":{},"Primary":{"type":"boolean"}}}},"SecondaryPrivateIpAddressCount":{"type":"integer"},"AssociatePublicIpAddress":{"type":"boolean"},"Groups":{"shape":"Sl6","locationName":"Group"},"DeleteOnTermination":{"type":"boolean"}}}},"IamInstanceProfile":{"type":"structure","members":{"Arn":{},"Name":{}}},"EbsOptimized":{"type":"boolean"}}}}},"output":{"type":"structure","members":{"InstanceIdSet":{"locationName":"instanceIdSet","type":"list","member":{"locationName":"item"}}}},"http":{}},"StartInstances":{"input":{"type":"structure","required":["InstanceIds"],"members":{"InstanceIds":{"shape":"S8a","locationName":"InstanceId"},"AdditionalInfo":{"locationName":"additionalInfo"},"DryRun":{"locationName":"dryRun","type":"boolean"}}},"output":{"type":"structure","members":{"StartingInstances":{"shape":"Sll","locationName":"instancesSet"}}},"http":{}},"StopInstances":{"input":{"type":"structure","required":["InstanceIds"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S8a","locationName":"InstanceId"},"Force":{"locationName":"force","type":"boolean"}}},"output":{"type":"structure","members":{"StoppingInstances":{"shape":"Sll","locationName":"instancesSet"}}},"http":{}},"TerminateInstances":{"input":{"type":"structure","required":["InstanceIds"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S8a","locationName":"InstanceId"}}},"output":{"type":"structure","members":{"TerminatingInstances":{"shape":"Sll","locationName":"instancesSet"}}},"http":{}},"UnassignPrivateIpAddresses":{"input":{"type":"structure","required":["NetworkInterfaceId","PrivateIpAddresses"],"members":{"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"PrivateIpAddresses":{"shape":"Sl","locationName":"privateIpAddress"}}},"http":{}},"UnmonitorInstances":{"input":{"type":"structure","required":["InstanceIds"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S8a","locationName":"InstanceId"}}},"output":{"type":"structure","members":{"InstanceMonitorings":{"shape":"Sju","locationName":"instancesSet"}}},"http":{}}},"shapes":{"S5":{"type":"structure","members":{"AccepterVpcInfo":{"shape":"S6","locationName":"accepterVpcInfo"},"ExpirationTime":{"locationName":"expirationTime","type":"timestamp"},"RequesterVpcInfo":{"shape":"S6","locationName":"requesterVpcInfo"},"Status":{"locationName":"status","type":"structure","members":{"Code":{"locationName":"code"},"Message":{"locationName":"message"}}},"Tags":{"shape":"Sa","locationName":"tagSet"},"VpcPeeringConnectionId":{"locationName":"vpcPeeringConnectionId"}}},"S6":{"type":"structure","members":{"CidrBlock":{"locationName":"cidrBlock"},"OwnerId":{"locationName":"ownerId"},"VpcId":{"locationName":"vpcId"}}},"Sa":{"type":"list","member":{"locationName":"item","type":"structure","members":{"Key":{"locationName":"key"},"Value":{"locationName":"value"}}}},"Sj":{"type":"list","member":{"locationName":"item"}},"Sl":{"type":"list","member":{"locationName":"PrivateIpAddress"}},"Ss":{"type":"list","member":{"locationName":"groupId"}},"Sy":{"type":"structure","members":{"VolumeId":{"locationName":"volumeId"},"InstanceId":{"locationName":"instanceId"},"Device":{"locationName":"device"},"State":{"locationName":"status"},"AttachTime":{"locationName":"attachTime","type":"timestamp"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"}}},"S12":{"type":"structure","members":{"VpcId":{"locationName":"vpcId"},"State":{"locationName":"state"}}},"S15":{"type":"list","member":{"locationName":"item","type":"structure","members":{"IpProtocol":{"locationName":"ipProtocol"},"FromPort":{"locationName":"fromPort","type":"integer"},"ToPort":{"locationName":"toPort","type":"integer"},"UserIdGroupPairs":{"locationName":"groups","type":"list","member":{"locationName":"item","type":"structure","members":{"UserId":{"locationName":"userId"},"GroupName":{"locationName":"groupName"},"GroupId":{"locationName":"groupId"},"VpcId":{"locationName":"vpcId"},"VpcPeeringConnectionId":{"locationName":"vpcPeeringConnectionId"},"PeeringStatus":{"locationName":"peeringStatus"}}}},"IpRanges":{"locationName":"ipRanges","type":"list","member":{"locationName":"item","type":"structure","members":{"CidrIp":{"locationName":"cidrIp"}}}},"PrefixListIds":{"locationName":"prefixListIds","type":"list","member":{"locationName":"item","type":"structure","members":{"PrefixListId":{"locationName":"prefixListId"}}}}}}},"S1f":{"type":"structure","members":{"S3":{"type":"structure","members":{"Bucket":{"locationName":"bucket"},"Prefix":{"locationName":"prefix"},"AWSAccessKeyId":{},"UploadPolicy":{"locationName":"uploadPolicy","type":"blob"},"UploadPolicySignature":{"locationName":"uploadPolicySignature"}}}}},"S1j":{"type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"BundleId":{"locationName":"bundleId"},"State":{"locationName":"state"},"StartTime":{"locationName":"startTime","type":"timestamp"},"UpdateTime":{"locationName":"updateTime","type":"timestamp"},"Storage":{"shape":"S1f","locationName":"storage"},"Progress":{"locationName":"progress"},"BundleTaskError":{"locationName":"error","type":"structure","members":{"Code":{"locationName":"code"},"Message":{"locationName":"message"}}}}},"S1u":{"type":"list","member":{"locationName":"item","type":"structure","members":{"ReservedInstancesListingId":{"locationName":"reservedInstancesListingId"},"ReservedInstancesId":{"locationName":"reservedInstancesId"},"CreateDate":{"locationName":"createDate","type":"timestamp"},"UpdateDate":{"locationName":"updateDate","type":"timestamp"},"Status":{"locationName":"status"},"StatusMessage":{"locationName":"statusMessage"},"InstanceCounts":{"locationName":"instanceCounts","type":"list","member":{"locationName":"item","type":"structure","members":{"State":{"locationName":"state"},"InstanceCount":{"locationName":"instanceCount","type":"integer"}}}},"PriceSchedules":{"locationName":"priceSchedules","type":"list","member":{"locationName":"item","type":"structure","members":{"Term":{"locationName":"term","type":"long"},"Price":{"locationName":"price","type":"double"},"CurrencyCode":{"locationName":"currencyCode"},"Active":{"locationName":"active","type":"boolean"}}}},"Tags":{"shape":"Sa","locationName":"tagSet"},"ClientToken":{"locationName":"clientToken"}}}},"S26":{"type":"list","member":{"locationName":"item"}},"S2g":{"type":"list","member":{"locationName":"SpotInstanceRequestId"}},"S2u":{"type":"structure","members":{"CustomerGatewayId":{"locationName":"customerGatewayId"},"State":{"locationName":"state"},"Type":{"locationName":"type"},"IpAddress":{"locationName":"ipAddress"},"BgpAsn":{"locationName":"bgpAsn"},"Tags":{"shape":"Sa","locationName":"tagSet"}}},"S2z":{"type":"structure","members":{"DhcpOptionsId":{"locationName":"dhcpOptionsId"},"DhcpConfigurations":{"locationName":"dhcpConfigurationSet","type":"list","member":{"locationName":"item","type":"structure","members":{"Key":{"locationName":"key"},"Values":{"locationName":"valueSet","type":"list","member":{"shape":"S33","locationName":"item"}}}}},"Tags":{"shape":"Sa","locationName":"tagSet"}}},"S33":{"type":"structure","members":{"Value":{"locationName":"value"}}},"S38":{"type":"list","member":{"shape":"S39","locationName":"item"}},"S39":{"type":"structure","required":["Error"],"members":{"ResourceId":{"locationName":"resourceId"},"Error":{"locationName":"error","type":"structure","required":["Code","Message"],"members":{"Code":{"locationName":"code"},"Message":{"locationName":"message"}}}}},"S3c":{"type":"list","member":{"shape":"S3d","locationName":"BlockDeviceMapping"}},"S3d":{"type":"structure","members":{"VirtualName":{"locationName":"virtualName"},"DeviceName":{"locationName":"deviceName"},"Ebs":{"locationName":"ebs","type":"structure","members":{"SnapshotId":{"locationName":"snapshotId"},"VolumeSize":{"locationName":"volumeSize","type":"integer"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"},"VolumeType":{"locationName":"volumeType"},"Iops":{"locationName":"iops","type":"integer"},"Encrypted":{"locationName":"encrypted","type":"boolean"}}},"NoDevice":{"locationName":"noDevice"}}},"S3n":{"type":"structure","members":{"ExportTaskId":{"locationName":"exportTaskId"},"Description":{"locationName":"description"},"State":{"locationName":"state"},"StatusMessage":{"locationName":"statusMessage"},"InstanceExportDetails":{"locationName":"instanceExport","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"TargetEnvironment":{"locationName":"targetEnvironment"}}},"ExportToS3Task":{"locationName":"exportToS3","type":"structure","members":{"DiskImageFormat":{"locationName":"diskImageFormat"},"ContainerFormat":{"locationName":"containerFormat"},"S3Bucket":{"locationName":"s3Bucket"},"S3Key":{"locationName":"s3Key"}}}}},"S3t":{"type":"structure","members":{"InternetGatewayId":{"locationName":"internetGatewayId"},"Attachments":{"locationName":"attachmentSet","type":"list","member":{"locationName":"item","type":"structure","members":{"VpcId":{"locationName":"vpcId"},"State":{"locationName":"state"}}}},"Tags":{"shape":"Sa","locationName":"tagSet"}}},"S40":{"type":"structure","members":{"VpcId":{"locationName":"vpcId"},"SubnetId":{"locationName":"subnetId"},"NatGatewayId":{"locationName":"natGatewayId"},"CreateTime":{"locationName":"createTime","type":"timestamp"},"DeleteTime":{"locationName":"deleteTime","type":"timestamp"},"NatGatewayAddresses":{"locationName":"natGatewayAddressSet","type":"list","member":{"locationName":"item","type":"structure","members":{"PublicIp":{"locationName":"publicIp"},"AllocationId":{"locationName":"allocationId"},"PrivateIp":{"locationName":"privateIp"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"}}}},"State":{"locationName":"state"},"FailureCode":{"locationName":"failureCode"},"FailureMessage":{"locationName":"failureMessage"}}},"S46":{"type":"structure","members":{"NetworkAclId":{"locationName":"networkAclId"},"VpcId":{"locationName":"vpcId"},"IsDefault":{"locationName":"default","type":"boolean"},"Entries":{"locationName":"entrySet","type":"list","member":{"locationName":"item","type":"structure","members":{"RuleNumber":{"locationName":"ruleNumber","type":"integer"},"Protocol":{"locationName":"protocol"},"RuleAction":{"locationName":"ruleAction"},"Egress":{"locationName":"egress","type":"boolean"},"CidrBlock":{"locationName":"cidrBlock"},"IcmpTypeCode":{"shape":"S4a","locationName":"icmpTypeCode"},"PortRange":{"shape":"S4b","locationName":"portRange"}}}},"Associations":{"locationName":"associationSet","type":"list","member":{"locationName":"item","type":"structure","members":{"NetworkAclAssociationId":{"locationName":"networkAclAssociationId"},"NetworkAclId":{"locationName":"networkAclId"},"SubnetId":{"locationName":"subnetId"}}}},"Tags":{"shape":"Sa","locationName":"tagSet"}}},"S4a":{"type":"structure","members":{"Type":{"locationName":"type","type":"integer"},"Code":{"locationName":"code","type":"integer"}}},"S4b":{"type":"structure","members":{"From":{"locationName":"from","type":"integer"},"To":{"locationName":"to","type":"integer"}}},"S4g":{"type":"list","member":{"locationName":"SecurityGroupId"}},"S4h":{"type":"list","member":{"locationName":"item","type":"structure","required":["PrivateIpAddress"],"members":{"PrivateIpAddress":{"locationName":"privateIpAddress"},"Primary":{"locationName":"primary","type":"boolean"}}}},"S4k":{"type":"structure","members":{"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"SubnetId":{"locationName":"subnetId"},"VpcId":{"locationName":"vpcId"},"AvailabilityZone":{"locationName":"availabilityZone"},"Description":{"locationName":"description"},"OwnerId":{"locationName":"ownerId"},"RequesterId":{"locationName":"requesterId"},"RequesterManaged":{"locationName":"requesterManaged","type":"boolean"},"Status":{"locationName":"status"},"MacAddress":{"locationName":"macAddress"},"PrivateIpAddress":{"locationName":"privateIpAddress"},"PrivateDnsName":{"locationName":"privateDnsName"},"SourceDestCheck":{"locationName":"sourceDestCheck","type":"boolean"},"Groups":{"shape":"S4m","locationName":"groupSet"},"Attachment":{"shape":"S4o","locationName":"attachment"},"Association":{"shape":"S4p","locationName":"association"},"TagSet":{"shape":"Sa","locationName":"tagSet"},"PrivateIpAddresses":{"locationName":"privateIpAddressesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"PrivateIpAddress":{"locationName":"privateIpAddress"},"PrivateDnsName":{"locationName":"privateDnsName"},"Primary":{"locationName":"primary","type":"boolean"},"Association":{"shape":"S4p","locationName":"association"}}}},"InterfaceType":{"locationName":"interfaceType"}}},"S4m":{"type":"list","member":{"locationName":"item","type":"structure","members":{"GroupName":{"locationName":"groupName"},"GroupId":{"locationName":"groupId"}}}},"S4o":{"type":"structure","members":{"AttachmentId":{"locationName":"attachmentId"},"InstanceId":{"locationName":"instanceId"},"InstanceOwnerId":{"locationName":"instanceOwnerId"},"DeviceIndex":{"locationName":"deviceIndex","type":"integer"},"Status":{"locationName":"status"},"AttachTime":{"locationName":"attachTime","type":"timestamp"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"}}},"S4p":{"type":"structure","members":{"PublicIp":{"locationName":"publicIp"},"PublicDnsName":{"locationName":"publicDnsName"},"IpOwnerId":{"locationName":"ipOwnerId"},"AllocationId":{"locationName":"allocationId"},"AssociationId":{"locationName":"associationId"}}},"S53":{"type":"structure","members":{"RouteTableId":{"locationName":"routeTableId"},"VpcId":{"locationName":"vpcId"},"Routes":{"locationName":"routeSet","type":"list","member":{"locationName":"item","type":"structure","members":{"DestinationCidrBlock":{"locationName":"destinationCidrBlock"},"DestinationPrefixListId":{"locationName":"destinationPrefixListId"},"GatewayId":{"locationName":"gatewayId"},"InstanceId":{"locationName":"instanceId"},"InstanceOwnerId":{"locationName":"instanceOwnerId"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"VpcPeeringConnectionId":{"locationName":"vpcPeeringConnectionId"},"NatGatewayId":{"locationName":"natGatewayId"},"State":{"locationName":"state"},"Origin":{"locationName":"origin"}}}},"Associations":{"locationName":"associationSet","type":"list","member":{"locationName":"item","type":"structure","members":{"RouteTableAssociationId":{"locationName":"routeTableAssociationId"},"RouteTableId":{"locationName":"routeTableId"},"SubnetId":{"locationName":"subnetId"},"Main":{"locationName":"main","type":"boolean"}}}},"Tags":{"shape":"Sa","locationName":"tagSet"},"PropagatingVgws":{"locationName":"propagatingVgwSet","type":"list","member":{"locationName":"item","type":"structure","members":{"GatewayId":{"locationName":"gatewayId"}}}}}},"S5f":{"type":"structure","members":{"SnapshotId":{"locationName":"snapshotId"},"VolumeId":{"locationName":"volumeId"},"State":{"locationName":"status"},"StateMessage":{"locationName":"statusMessage"},"StartTime":{"locationName":"startTime","type":"timestamp"},"Progress":{"locationName":"progress"},"OwnerId":{"locationName":"ownerId"},"Description":{"locationName":"description"},"VolumeSize":{"locationName":"volumeSize","type":"integer"},"OwnerAlias":{"locationName":"ownerAlias"},"Tags":{"shape":"Sa","locationName":"tagSet"},"Encrypted":{"locationName":"encrypted","type":"boolean"},"KmsKeyId":{"locationName":"kmsKeyId"},"DataEncryptionKeyId":{"locationName":"dataEncryptionKeyId"}}},"S5j":{"type":"structure","members":{"OwnerId":{"locationName":"ownerId"},"Bucket":{"locationName":"bucket"},"Prefix":{"locationName":"prefix"},"State":{"locationName":"state"},"Fault":{"shape":"S5l","locationName":"fault"}}},"S5l":{"type":"structure","members":{"Code":{"locationName":"code"},"Message":{"locationName":"message"}}},"S5o":{"type":"structure","members":{"SubnetId":{"locationName":"subnetId"},"State":{"locationName":"state"},"VpcId":{"locationName":"vpcId"},"CidrBlock":{"locationName":"cidrBlock"},"AvailableIpAddressCount":{"locationName":"availableIpAddressCount","type":"integer"},"AvailabilityZone":{"locationName":"availabilityZone"},"DefaultForAz":{"locationName":"defaultForAz","type":"boolean"},"MapPublicIpOnLaunch":{"locationName":"mapPublicIpOnLaunch","type":"boolean"},"Tags":{"shape":"Sa","locationName":"tagSet"}}},"S5r":{"type":"list","member":{}},"S5t":{"type":"structure","members":{"VolumeId":{"locationName":"volumeId"},"Size":{"locationName":"size","type":"integer"},"SnapshotId":{"locationName":"snapshotId"},"AvailabilityZone":{"locationName":"availabilityZone"},"State":{"locationName":"status"},"CreateTime":{"locationName":"createTime","type":"timestamp"},"Attachments":{"locationName":"attachmentSet","type":"list","member":{"shape":"Sy","locationName":"item"}},"Tags":{"shape":"Sa","locationName":"tagSet"},"VolumeType":{"locationName":"volumeType"},"Iops":{"locationName":"iops","type":"integer"},"Encrypted":{"locationName":"encrypted","type":"boolean"},"KmsKeyId":{"locationName":"kmsKeyId"}}},"S5z":{"type":"structure","members":{"VpcId":{"locationName":"vpcId"},"State":{"locationName":"state"},"CidrBlock":{"locationName":"cidrBlock"},"DhcpOptionsId":{"locationName":"dhcpOptionsId"},"Tags":{"shape":"Sa","locationName":"tagSet"},"InstanceTenancy":{"locationName":"instanceTenancy"},"IsDefault":{"locationName":"isDefault","type":"boolean"}}},"S63":{"type":"structure","members":{"VpcEndpointId":{"locationName":"vpcEndpointId"},"VpcId":{"locationName":"vpcId"},"ServiceName":{"locationName":"serviceName"},"State":{"locationName":"state"},"PolicyDocument":{"locationName":"policyDocument"},"RouteTableIds":{"shape":"S26","locationName":"routeTableIdSet"},"CreationTimestamp":{"locationName":"creationTimestamp","type":"timestamp"}}},"S6a":{"type":"structure","members":{"VpnConnectionId":{"locationName":"vpnConnectionId"},"State":{"locationName":"state"},"CustomerGatewayConfiguration":{"locationName":"customerGatewayConfiguration"},"Type":{"locationName":"type"},"CustomerGatewayId":{"locationName":"customerGatewayId"},"VpnGatewayId":{"locationName":"vpnGatewayId"},"Tags":{"shape":"Sa","locationName":"tagSet"},"VgwTelemetry":{"locationName":"vgwTelemetry","type":"list","member":{"locationName":"item","type":"structure","members":{"OutsideIpAddress":{"locationName":"outsideIpAddress"},"Status":{"locationName":"status"},"LastStatusChange":{"locationName":"lastStatusChange","type":"timestamp"},"StatusMessage":{"locationName":"statusMessage"},"AcceptedRouteCount":{"locationName":"acceptedRouteCount","type":"integer"}}}},"Options":{"locationName":"options","type":"structure","members":{"StaticRoutesOnly":{"locationName":"staticRoutesOnly","type":"boolean"}}},"Routes":{"locationName":"routes","type":"list","member":{"locationName":"item","type":"structure","members":{"DestinationCidrBlock":{"locationName":"destinationCidrBlock"},"Source":{"locationName":"source"},"State":{"locationName":"state"}}}}}},"S6m":{"type":"structure","members":{"VpnGatewayId":{"locationName":"vpnGatewayId"},"State":{"locationName":"state"},"Type":{"locationName":"type"},"AvailabilityZone":{"locationName":"availabilityZone"},"VpcAttachments":{"locationName":"attachments","type":"list","member":{"shape":"S12","locationName":"item"}},"Tags":{"shape":"Sa","locationName":"tagSet"}}},"S7r":{"type":"list","member":{"locationName":"Filter","type":"structure","members":{"Name":{},"Values":{"shape":"S26","locationName":"Value"}}}},"S8a":{"type":"list","member":{"locationName":"InstanceId"}},"S8i":{"type":"structure","required":["ConversionTaskId","State"],"members":{"ConversionTaskId":{"locationName":"conversionTaskId"},"ExpirationTime":{"locationName":"expirationTime"},"ImportInstance":{"locationName":"importInstance","type":"structure","required":["Volumes"],"members":{"Volumes":{"locationName":"volumes","type":"list","member":{"locationName":"item","type":"structure","required":["BytesConverted","AvailabilityZone","Image","Volume","Status"],"members":{"BytesConverted":{"locationName":"bytesConverted","type":"long"},"AvailabilityZone":{"locationName":"availabilityZone"},"Image":{"shape":"S8m","locationName":"image"},"Volume":{"shape":"S8n","locationName":"volume"},"Status":{"locationName":"status"},"StatusMessage":{"locationName":"statusMessage"},"Description":{"locationName":"description"}}}},"InstanceId":{"locationName":"instanceId"},"Platform":{"locationName":"platform"},"Description":{"locationName":"description"}}},"ImportVolume":{"locationName":"importVolume","type":"structure","required":["BytesConverted","AvailabilityZone","Image","Volume"],"members":{"BytesConverted":{"locationName":"bytesConverted","type":"long"},"AvailabilityZone":{"locationName":"availabilityZone"},"Description":{"locationName":"description"},"Image":{"shape":"S8m","locationName":"image"},"Volume":{"shape":"S8n","locationName":"volume"}}},"State":{"locationName":"state"},"StatusMessage":{"locationName":"statusMessage"},"Tags":{"shape":"Sa","locationName":"tagSet"}}},"S8m":{"type":"structure","required":["Format","Size","ImportManifestUrl"],"members":{"Format":{"locationName":"format"},"Size":{"locationName":"size","type":"long"},"ImportManifestUrl":{"locationName":"importManifestUrl"},"Checksum":{"locationName":"checksum"}}},"S8n":{"type":"structure","required":["Id"],"members":{"Size":{"locationName":"size","type":"long"},"Id":{"locationName":"id"}}},"S98":{"type":"list","member":{"locationName":"item"}},"S9q":{"type":"list","member":{"locationName":"item","type":"structure","members":{"UserId":{"locationName":"userId"},"Group":{"locationName":"group"}}}},"S9t":{"type":"list","member":{"locationName":"item","type":"structure","members":{"ProductCodeId":{"locationName":"productCode"},"ProductCodeType":{"locationName":"type"}}}},"S9w":{"type":"list","member":{"shape":"S3d","locationName":"item"}},"S9z":{"type":"list","member":{"locationName":"Owner"}},"Sa7":{"type":"structure","members":{"Code":{"locationName":"code"},"Message":{"locationName":"message"}}},"Sac":{"type":"list","member":{"locationName":"ImportTaskId"}},"Sag":{"type":"list","member":{"locationName":"item","type":"structure","members":{"DiskImageSize":{"locationName":"diskImageSize","type":"double"},"Description":{"locationName":"description"},"Format":{"locationName":"format"},"Url":{"locationName":"url"},"UserBucket":{"shape":"Sai","locationName":"userBucket"},"DeviceName":{"locationName":"deviceName"},"SnapshotId":{"locationName":"snapshotId"},"Progress":{"locationName":"progress"},"StatusMessage":{"locationName":"statusMessage"},"Status":{"locationName":"status"}}}},"Sai":{"type":"structure","members":{"S3Bucket":{"locationName":"s3Bucket"},"S3Key":{"locationName":"s3Key"}}},"San":{"type":"structure","members":{"DiskImageSize":{"locationName":"diskImageSize","type":"double"},"Description":{"locationName":"description"},"Format":{"locationName":"format"},"Url":{"locationName":"url"},"UserBucket":{"shape":"Sai","locationName":"userBucket"},"SnapshotId":{"locationName":"snapshotId"},"Progress":{"locationName":"progress"},"StatusMessage":{"locationName":"statusMessage"},"Status":{"locationName":"status"}}},"Sar":{"type":"structure","members":{"Value":{"locationName":"value","type":"boolean"}}},"Sas":{"type":"list","member":{"locationName":"item","type":"structure","members":{"DeviceName":{"locationName":"deviceName"},"Ebs":{"locationName":"ebs","type":"structure","members":{"VolumeId":{"locationName":"volumeId"},"Status":{"locationName":"status"},"AttachTime":{"locationName":"attachTime","type":"timestamp"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"}}}}}},"Sb2":{"type":"structure","members":{"Code":{"locationName":"code","type":"integer"},"Name":{"locationName":"name"}}},"Sb4":{"type":"structure","members":{"Status":{"locationName":"status"},"Details":{"locationName":"details","type":"list","member":{"locationName":"item","type":"structure","members":{"Name":{"locationName":"name"},"Status":{"locationName":"status"},"ImpairedSince":{"locationName":"impairedSince","type":"timestamp"}}}}}},"Sbd":{"type":"structure","members":{"ReservationId":{"locationName":"reservationId"},"OwnerId":{"locationName":"ownerId"},"RequesterId":{"locationName":"requesterId"},"Groups":{"shape":"S4m","locationName":"groupSet"},"Instances":{"locationName":"instancesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"ImageId":{"locationName":"imageId"},"State":{"shape":"Sb2","locationName":"instanceState"},"PrivateDnsName":{"locationName":"privateDnsName"},"PublicDnsName":{"locationName":"dnsName"},"StateTransitionReason":{"locationName":"reason"},"KeyName":{"locationName":"keyName"},"AmiLaunchIndex":{"locationName":"amiLaunchIndex","type":"integer"},"ProductCodes":{"shape":"S9t","locationName":"productCodes"},"InstanceType":{"locationName":"instanceType"},"LaunchTime":{"locationName":"launchTime","type":"timestamp"},"Placement":{"shape":"Sbh","locationName":"placement"},"KernelId":{"locationName":"kernelId"},"RamdiskId":{"locationName":"ramdiskId"},"Platform":{"locationName":"platform"},"Monitoring":{"shape":"Sbi","locationName":"monitoring"},"SubnetId":{"locationName":"subnetId"},"VpcId":{"locationName":"vpcId"},"PrivateIpAddress":{"locationName":"privateIpAddress"},"PublicIpAddress":{"locationName":"ipAddress"},"StateReason":{"shape":"Sa7","locationName":"stateReason"},"Architecture":{"locationName":"architecture"},"RootDeviceType":{"locationName":"rootDeviceType"},"RootDeviceName":{"locationName":"rootDeviceName"},"BlockDeviceMappings":{"shape":"Sas","locationName":"blockDeviceMapping"},"VirtualizationType":{"locationName":"virtualizationType"},"InstanceLifecycle":{"locationName":"instanceLifecycle"},"SpotInstanceRequestId":{"locationName":"spotInstanceRequestId"},"ClientToken":{"locationName":"clientToken"},"Tags":{"shape":"Sa","locationName":"tagSet"},"SecurityGroups":{"shape":"S4m","locationName":"groupSet"},"SourceDestCheck":{"locationName":"sourceDestCheck","type":"boolean"},"Hypervisor":{"locationName":"hypervisor"},"NetworkInterfaces":{"locationName":"networkInterfaceSet","type":"list","member":{"locationName":"item","type":"structure","members":{"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"SubnetId":{"locationName":"subnetId"},"VpcId":{"locationName":"vpcId"},"Description":{"locationName":"description"},"OwnerId":{"locationName":"ownerId"},"Status":{"locationName":"status"},"MacAddress":{"locationName":"macAddress"},"PrivateIpAddress":{"locationName":"privateIpAddress"},"PrivateDnsName":{"locationName":"privateDnsName"},"SourceDestCheck":{"locationName":"sourceDestCheck","type":"boolean"},"Groups":{"shape":"S4m","locationName":"groupSet"},"Attachment":{"locationName":"attachment","type":"structure","members":{"AttachmentId":{"locationName":"attachmentId"},"DeviceIndex":{"locationName":"deviceIndex","type":"integer"},"Status":{"locationName":"status"},"AttachTime":{"locationName":"attachTime","type":"timestamp"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"}}},"Association":{"shape":"Sbo","locationName":"association"},"PrivateIpAddresses":{"locationName":"privateIpAddressesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"PrivateIpAddress":{"locationName":"privateIpAddress"},"PrivateDnsName":{"locationName":"privateDnsName"},"Primary":{"locationName":"primary","type":"boolean"},"Association":{"shape":"Sbo","locationName":"association"}}}}}}},"IamInstanceProfile":{"locationName":"iamInstanceProfile","type":"structure","members":{"Arn":{"locationName":"arn"},"Id":{"locationName":"id"}}},"EbsOptimized":{"locationName":"ebsOptimized","type":"boolean"},"SriovNetSupport":{"locationName":"sriovNetSupport"}}}}}},"Sbh":{"type":"structure","members":{"AvailabilityZone":{"locationName":"availabilityZone"},"GroupName":{"locationName":"groupName"},"Tenancy":{"locationName":"tenancy"},"HostId":{"locationName":"hostId"},"Affinity":{"locationName":"affinity"}}},"Sbi":{"type":"structure","members":{"State":{"locationName":"state"}}},"Sbo":{"type":"structure","members":{"PublicIp":{"locationName":"publicIp"},"PublicDnsName":{"locationName":"publicDnsName"},"IpOwnerId":{"locationName":"ipOwnerId"}}},"Scy":{"type":"list","member":{"locationName":"ReservedInstancesId"}},"Sd6":{"type":"list","member":{"locationName":"item","type":"structure","members":{"Frequency":{"locationName":"frequency"},"Amount":{"locationName":"amount","type":"double"}}}},"Sdk":{"type":"structure","members":{"AvailabilityZone":{"locationName":"availabilityZone"},"Platform":{"locationName":"platform"},"InstanceCount":{"locationName":"instanceCount","type":"integer"},"InstanceType":{"locationName":"instanceType"}}},"Se2":{"type":"structure","members":{"Frequency":{"locationName":"frequency"},"Interval":{"locationName":"interval","type":"integer"},"OccurrenceDaySet":{"locationName":"occurrenceDaySet","type":"list","member":{"locationName":"item","type":"integer"}},"OccurrenceRelativeToEnd":{"locationName":"occurrenceRelativeToEnd","type":"boolean"},"OccurrenceUnit":{"locationName":"occurrenceUnit"}}},"Se9":{"type":"structure","members":{"ScheduledInstanceId":{"locationName":"scheduledInstanceId"},"InstanceType":{"locationName":"instanceType"},"Platform":{"locationName":"platform"},"NetworkPlatform":{"locationName":"networkPlatform"},"AvailabilityZone":{"locationName":"availabilityZone"},"SlotDurationInHours":{"locationName":"slotDurationInHours","type":"integer"},"Recurrence":{"shape":"Se2","locationName":"recurrence"},"PreviousSlotEndTime":{"locationName":"previousSlotEndTime","type":"timestamp"},"NextSlotStartTime":{"locationName":"nextSlotStartTime","type":"timestamp"},"HourlyPrice":{"locationName":"hourlyPrice"},"TotalScheduledInstanceHours":{"locationName":"totalScheduledInstanceHours","type":"integer"},"InstanceCount":{"locationName":"instanceCount","type":"integer"},"TermStartDate":{"locationName":"termStartDate","type":"timestamp"},"TermEndDate":{"locationName":"termEndDate","type":"timestamp"},"CreateDate":{"locationName":"createDate","type":"timestamp"}}},"Seb":{"type":"list","member":{"locationName":"GroupName"}},"Sei":{"type":"list","member":{"locationName":"item","type":"structure","members":{"UserId":{"locationName":"userId"},"Group":{"locationName":"group"}}}},"Sf5":{"type":"structure","required":["SpotPrice","TargetCapacity","IamFleetRole","LaunchSpecifications"],"members":{"ClientToken":{"locationName":"clientToken"},"SpotPrice":{"locationName":"spotPrice"},"TargetCapacity":{"locationName":"targetCapacity","type":"integer"},"ValidFrom":{"locationName":"validFrom","type":"timestamp"},"ValidUntil":{"locationName":"validUntil","type":"timestamp"},"TerminateInstancesWithExpiration":{"locationName":"terminateInstancesWithExpiration","type":"boolean"},"IamFleetRole":{"locationName":"iamFleetRole"},"LaunchSpecifications":{"locationName":"launchSpecifications","type":"list","member":{"locationName":"item","type":"structure","members":{"ImageId":{"locationName":"imageId"},"KeyName":{"locationName":"keyName"},"SecurityGroups":{"shape":"S4m","locationName":"groupSet"},"UserData":{"locationName":"userData"},"AddressingType":{"locationName":"addressingType"},"InstanceType":{"locationName":"instanceType"},"Placement":{"shape":"Sf8","locationName":"placement"},"KernelId":{"locationName":"kernelId"},"RamdiskId":{"locationName":"ramdiskId"},"BlockDeviceMappings":{"shape":"S9w","locationName":"blockDeviceMapping"},"Monitoring":{"locationName":"monitoring","type":"structure","members":{"Enabled":{"locationName":"enabled","type":"boolean"}}},"SubnetId":{"locationName":"subnetId"},"NetworkInterfaces":{"shape":"Sfa","locationName":"networkInterfaceSet"},"IamInstanceProfile":{"shape":"Sfc","locationName":"iamInstanceProfile"},"EbsOptimized":{"locationName":"ebsOptimized","type":"boolean"},"WeightedCapacity":{"locationName":"weightedCapacity","type":"double"},"SpotPrice":{"locationName":"spotPrice"}}}},"ExcessCapacityTerminationPolicy":{"locationName":"excessCapacityTerminationPolicy"},"AllocationStrategy":{"locationName":"allocationStrategy"}}},"Sf8":{"type":"structure","members":{"AvailabilityZone":{"locationName":"availabilityZone"},"GroupName":{"locationName":"groupName"}}},"Sfa":{"type":"list","member":{"locationName":"item","type":"structure","members":{"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"DeviceIndex":{"locationName":"deviceIndex","type":"integer"},"SubnetId":{"locationName":"subnetId"},"Description":{"locationName":"description"},"PrivateIpAddress":{"locationName":"privateIpAddress"},"Groups":{"shape":"S4g","locationName":"SecurityGroupId"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"},"PrivateIpAddresses":{"shape":"S4h","locationName":"privateIpAddressesSet","queryName":"PrivateIpAddresses"},"SecondaryPrivateIpAddressCount":{"locationName":"secondaryPrivateIpAddressCount","type":"integer"},"AssociatePublicIpAddress":{"locationName":"associatePublicIpAddress","type":"boolean"}}}},"Sfc":{"type":"structure","members":{"Arn":{"locationName":"arn"},"Name":{"locationName":"name"}}},"Sfh":{"type":"list","member":{"locationName":"item","type":"structure","members":{"SpotInstanceRequestId":{"locationName":"spotInstanceRequestId"},"SpotPrice":{"locationName":"spotPrice"},"Type":{"locationName":"type"},"State":{"locationName":"state"},"Fault":{"shape":"S5l","locationName":"fault"},"Status":{"locationName":"status","type":"structure","members":{"Code":{"locationName":"code"},"UpdateTime":{"locationName":"updateTime","type":"timestamp"},"Message":{"locationName":"message"}}},"ValidFrom":{"locationName":"validFrom","type":"timestamp"},"ValidUntil":{"locationName":"validUntil","type":"timestamp"},"LaunchGroup":{"locationName":"launchGroup"},"AvailabilityZoneGroup":{"locationName":"availabilityZoneGroup"},"LaunchSpecification":{"locationName":"launchSpecification","type":"structure","members":{"ImageId":{"locationName":"imageId"},"KeyName":{"locationName":"keyName"},"SecurityGroups":{"shape":"S4m","locationName":"groupSet"},"UserData":{"locationName":"userData"},"AddressingType":{"locationName":"addressingType"},"InstanceType":{"locationName":"instanceType"},"Placement":{"shape":"Sf8","locationName":"placement"},"KernelId":{"locationName":"kernelId"},"RamdiskId":{"locationName":"ramdiskId"},"BlockDeviceMappings":{"shape":"S9w","locationName":"blockDeviceMapping"},"SubnetId":{"locationName":"subnetId"},"NetworkInterfaces":{"shape":"Sfa","locationName":"networkInterfaceSet"},"IamInstanceProfile":{"shape":"Sfc","locationName":"iamInstanceProfile"},"EbsOptimized":{"locationName":"ebsOptimized","type":"boolean"},"Monitoring":{"shape":"Sfn","locationName":"monitoring"}}},"InstanceId":{"locationName":"instanceId"},"CreateTime":{"locationName":"createTime","type":"timestamp"},"ProductDescription":{"locationName":"productDescription"},"BlockDurationMinutes":{"locationName":"blockDurationMinutes","type":"integer"},"ActualBlockHourlyPrice":{"locationName":"actualBlockHourlyPrice"},"Tags":{"shape":"Sa","locationName":"tagSet"},"LaunchedAvailabilityZone":{"locationName":"launchedAvailabilityZone"}}}},"Sfn":{"type":"structure","required":["Enabled"],"members":{"Enabled":{"locationName":"enabled","type":"boolean"}}},"Sg7":{"type":"list","member":{"locationName":"VolumeId"}},"Sgr":{"type":"list","member":{"locationName":"VpcId"}},"Sib":{"type":"structure","members":{"S3Bucket":{},"S3Key":{}}},"Sic":{"type":"structure","members":{"UploadStart":{"type":"timestamp"},"UploadEnd":{"type":"timestamp"},"UploadSize":{"type":"double"},"Comment":{}}},"Sig":{"type":"list","member":{"locationName":"SecurityGroup"}},"Sil":{"type":"structure","required":["Format","Bytes","ImportManifestUrl"],"members":{"Format":{"locationName":"format"},"Bytes":{"locationName":"bytes","type":"long"},"ImportManifestUrl":{"locationName":"importManifestUrl"}}},"Sim":{"type":"structure","required":["Size"],"members":{"Size":{"locationName":"size","type":"long"}}},"Six":{"type":"list","member":{"shape":"S39","locationName":"item"}},"Sj1":{"type":"list","member":{"locationName":"UserId"}},"Sju":{"type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"Monitoring":{"shape":"Sbi","locationName":"monitoring"}}}},"Sl6":{"type":"list","member":{"locationName":"SecurityGroupId"}},"Sll":{"type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"CurrentState":{"shape":"Sb2","locationName":"currentState"},"PreviousState":{"shape":"Sb2","locationName":"previousState"}}}}},"paginators":{"DescribeAccountAttributes":{"result_key":"AccountAttributes"},"DescribeAddresses":{"result_key":"Addresses"},"DescribeAvailabilityZones":{"result_key":"AvailabilityZones"},"DescribeBundleTasks":{"result_key":"BundleTasks"},"DescribeConversionTasks":{"result_key":"ConversionTasks"},"DescribeCustomerGateways":{"result_key":"CustomerGateways"},"DescribeDhcpOptions":{"result_key":"DhcpOptions"},"DescribeExportTasks":{"result_key":"ExportTasks"},"DescribeImages":{"result_key":"Images"},"DescribeInstanceStatus":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxResults","result_key":"InstanceStatuses"},"DescribeInstances":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxResults","result_key":"Reservations"},"DescribeInternetGateways":{"result_key":"InternetGateways"},"DescribeKeyPairs":{"result_key":"KeyPairs"},"DescribeNetworkAcls":{"result_key":"NetworkAcls"},"DescribeNetworkInterfaces":{"result_key":"NetworkInterfaces"},"DescribePlacementGroups":{"result_key":"PlacementGroups"},"DescribeRegions":{"result_key":"Regions"},"DescribeReservedInstances":{"result_key":"ReservedInstances"},"DescribeReservedInstancesListings":{"result_key":"ReservedInstancesListings"},"DescribeReservedInstancesOfferings":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxResults","result_key":"ReservedInstancesOfferings"},"DescribeReservedInstancesModifications":{"input_token":"NextToken","output_token":"NextToken","result_key":"ReservedInstancesModifications"},"DescribeRouteTables":{"result_key":"RouteTables"},"DescribeSecurityGroups":{"result_key":"SecurityGroups"},"DescribeSnapshots":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxResults","result_key":"Snapshots"},"DescribeSpotInstanceRequests":{"result_key":"SpotInstanceRequests"},"DescribeSpotPriceHistory":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxResults","result_key":"SpotPriceHistory"},"DescribeSubnets":{"result_key":"Subnets"},"DescribeTags":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxResults","result_key":"Tags"},"DescribeVolumeStatus":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxResults","result_key":"VolumeStatuses"},"DescribeVolumes":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxResults","result_key":"Volumes"},"DescribeVpcs":{"result_key":"Vpcs"},"DescribeVpcPeeringConnections":{"result_key":"VpcPeeringConnections"},"DescribeVpnConnections":{"result_key":"VpnConnections"},"DescribeVpnGateways":{"result_key":"VpnGateways"}},"waiters":{"__default__":{"interval":15,"max_attempts":40,"acceptor_type":"output"},"__InstanceState":{"operation":"DescribeInstances","acceptor_path":"Reservations[].Instances[].State.Name"},"__InstanceStatus":{"operation":"DescribeInstanceStatus","success_value":"ok"},"SystemStatusOk":{"extends":"__InstanceStatus","acceptor_path":"InstanceStatuses[].SystemStatus.Status"},"InstanceStatusOk":{"extends":"__InstanceStatus","acceptor_path":"InstanceStatuses[].InstanceStatus.Status"},"ImageAvailable":{"operation":"DescribeImages","acceptor_path":"Images[].State","success_value":"available","failure_value":["failed"]},"InstanceRunning":{"extends":"__InstanceState","success_value":"running","failure_value":["shutting-down","terminated","stopping"]},"InstanceStopped":{"extends":"__InstanceState","success_value":"stopped","failure_value":["pending","terminated"]},"InstanceTerminated":{"extends":"__InstanceState","success_value":"terminated","failure_value":["pending","stopping"]},"__ExportTaskState":{"operation":"DescribeExportTasks","acceptor_path":"ExportTasks[].State"},"ExportTaskCompleted":{"extends":"__ExportTaskState","success_value":"completed"},"ExportTaskCancelled":{"extends":"__ExportTaskState","success_value":"cancelled"},"SnapshotCompleted":{"operation":"DescribeSnapshots","success_path":"Snapshots[].State","success_value":"completed"},"SubnetAvailable":{"operation":"DescribeSubnets","success_path":"Subnets[].State","success_value":"available"},"__VolumeStatus":{"operation":"DescribeVolumes","acceptor_path":"Volumes[].State"},"VolumeAvailable":{"extends":"__VolumeStatus","success_value":"available","failure_value":["deleted"]},"VolumeInUse":{"extends":"__VolumeStatus","success_value":"in-use","failure_value":["deleted"]},"VolumeDeleted":{"extends":"__VolumeStatus","success_type":"error","success_value":"InvalidVolume.NotFound"},"VpcAvailable":{"operation":"DescribeVpcs","success_path":"Vpcs[].State","success_value":"available"},"__VpnConnectionState":{"operation":"DescribeVpnConnections","acceptor_path":"VpnConnections[].State"},"VpnConnectionAvailable":{"extends":"__VpnConnectionState","success_value":"available","failure_value":["deleting","deleted"]},"VpnConnectionDeleted":{"extends":"__VpnConnectionState","success_value":"deleted","failure_value":["pending"]},"BundleTaskComplete":{"operation":"DescribeBundleTasks","acceptor_path":"BundleTasks[].State","success_value":"complete","failure_value":["failed"]},"__ConversionTaskState":{"operation":"DescribeConversionTasks","acceptor_path":"ConversionTasks[].State"},"ConversionTaskCompleted":{"extends":"__ConversionTaskState","success_value":"completed","failure_value":["cancelled","cancelling"]},"ConversionTaskCancelled":{"extends":"__ConversionTaskState","success_value":"cancelled"},"__CustomerGatewayState":{"operation":"DescribeCustomerGateways","acceptor_path":"CustomerGateways[].State"},"CustomerGatewayAvailable":{"extends":"__CustomerGatewayState","success_value":"available","failure_value":["deleted","deleting"]},"ConversionTaskDeleted":{"extends":"__CustomerGatewayState","success_value":"deleted"},"__SpotInstanceRequestState":{"operation":"DescribeSpotInstanceRequests","acceptor_path":"SpotInstanceRequests[].Status.Code"},"SpotInstanceRequestFulfilled":{"extends":"__SpotInstanceRequestState","success_value":"fulfilled","failure_value":["schedule-expired","canceled-before-fulfillment","bad-parameters","system-error"]}}};
+AWS.apiLoader.services['elasticbeanstalk'] = {};
+AWS.ElasticBeanstalk = AWS.Service.defineService('elasticbeanstalk', [ '2010-12-01' ]);
+
+AWS.apiLoader.services['elasticbeanstalk']['2010-12-01'] = {"version":"2.0","metadata":{"apiVersion":"2010-12-01","endpointPrefix":"elasticbeanstalk","protocol":"query","serviceAbbreviation":"Elastic Beanstalk","serviceFullName":"AWS Elastic Beanstalk","signatureVersion":"v4","xmlNamespace":"http://elasticbeanstalk.amazonaws.com/docs/2010-12-01/"},"operations":{"AbortEnvironmentUpdate":{"input":{"type":"structure","members":{"EnvironmentId":{},"EnvironmentName":{}}},"http":{}},"CheckDNSAvailability":{"input":{"type":"structure","required":["CNAMEPrefix"],"members":{"CNAMEPrefix":{}}},"output":{"resultWrapper":"CheckDNSAvailabilityResult","type":"structure","members":{"Available":{"type":"boolean"},"FullyQualifiedCNAME":{}}},"http":{}},"ComposeEnvironments":{"input":{"type":"structure","members":{"ApplicationName":{},"GroupName":{},"VersionLabels":{"type":"list","member":{}}}},"output":{"shape":"Se","resultWrapper":"ComposeEnvironmentsResult"},"http":{}},"CreateApplication":{"input":{"type":"structure","required":["ApplicationName"],"members":{"ApplicationName":{},"Description":{}}},"output":{"shape":"S11","resultWrapper":"CreateApplicationResult"},"http":{}},"CreateApplicationVersion":{"input":{"type":"structure","required":["ApplicationName","VersionLabel"],"members":{"ApplicationName":{},"VersionLabel":{},"Description":{},"SourceBundle":{"shape":"S16"},"AutoCreateApplication":{"type":"boolean"},"Process":{"type":"boolean"}}},"output":{"shape":"S1b","resultWrapper":"CreateApplicationVersionResult"},"http":{}},"CreateConfigurationTemplate":{"input":{"type":"structure","required":["ApplicationName","TemplateName"],"members":{"ApplicationName":{},"TemplateName":{},"SolutionStackName":{},"SourceConfiguration":{"type":"structure","members":{"ApplicationName":{},"TemplateName":{}}},"EnvironmentId":{},"Description":{},"OptionSettings":{"shape":"S1g"}}},"output":{"shape":"S1m","resultWrapper":"CreateConfigurationTemplateResult"},"http":{}},"CreateEnvironment":{"input":{"type":"structure","required":["ApplicationName"],"members":{"ApplicationName":{},"EnvironmentName":{},"GroupName":{},"Description":{},"CNAMEPrefix":{},"Tier":{"shape":"Sx"},"Tags":{"type":"list","member":{"type":"structure","members":{"Key":{},"Value":{}}}},"VersionLabel":{},"TemplateName":{},"SolutionStackName":{},"OptionSettings":{"shape":"S1g"},"OptionsToRemove":{"shape":"S1t"}}},"output":{"shape":"Sg","resultWrapper":"CreateEnvironmentResult"},"http":{}},"CreateStorageLocation":{"output":{"resultWrapper":"CreateStorageLocationResult","type":"structure","members":{"S3Bucket":{}}},"http":{}},"DeleteApplication":{"input":{"type":"structure","required":["ApplicationName"],"members":{"ApplicationName":{},"TerminateEnvByForce":{"type":"boolean"}}},"http":{}},"DeleteApplicationVersion":{"input":{"type":"structure","required":["ApplicationName","VersionLabel"],"members":{"ApplicationName":{},"VersionLabel":{},"DeleteSourceBundle":{"type":"boolean"}}},"http":{}},"DeleteConfigurationTemplate":{"input":{"type":"structure","required":["ApplicationName","TemplateName"],"members":{"ApplicationName":{},"TemplateName":{}}},"http":{}},"DeleteEnvironmentConfiguration":{"input":{"type":"structure","required":["ApplicationName","EnvironmentName"],"members":{"ApplicationName":{},"EnvironmentName":{}}},"http":{}},"DescribeApplicationVersions":{"input":{"type":"structure","members":{"ApplicationName":{},"VersionLabels":{"shape":"S13"}}},"output":{"resultWrapper":"DescribeApplicationVersionsResult","type":"structure","members":{"ApplicationVersions":{"type":"list","member":{"shape":"S1c"}}}},"http":{}},"DescribeApplications":{"input":{"type":"structure","members":{"ApplicationNames":{"type":"list","member":{}}}},"output":{"resultWrapper":"DescribeApplicationsResult","type":"structure","members":{"Applications":{"type":"list","member":{"shape":"S12"}}}},"http":{}},"DescribeConfigurationOptions":{"input":{"type":"structure","members":{"ApplicationName":{},"TemplateName":{},"EnvironmentName":{},"SolutionStackName":{},"Options":{"shape":"S1t"}}},"output":{"resultWrapper":"DescribeConfigurationOptionsResult","type":"structure","members":{"SolutionStackName":{},"Options":{"type":"list","member":{"type":"structure","members":{"Namespace":{},"Name":{},"DefaultValue":{},"ChangeSeverity":{},"UserDefined":{"type":"boolean"},"ValueType":{},"ValueOptions":{"type":"list","member":{}},"MinValue":{"type":"integer"},"MaxValue":{"type":"integer"},"MaxLength":{"type":"integer"},"Regex":{"type":"structure","members":{"Pattern":{},"Label":{}}}}}}}},"http":{}},"DescribeConfigurationSettings":{"input":{"type":"structure","required":["ApplicationName"],"members":{"ApplicationName":{},"TemplateName":{},"EnvironmentName":{}}},"output":{"resultWrapper":"DescribeConfigurationSettingsResult","type":"structure","members":{"ConfigurationSettings":{"type":"list","member":{"shape":"S1m"}}}},"http":{}},"DescribeEnvironmentHealth":{"input":{"type":"structure","members":{"EnvironmentName":{},"EnvironmentId":{},"AttributeNames":{"type":"list","member":{}}}},"output":{"resultWrapper":"DescribeEnvironmentHealthResult","type":"structure","members":{"EnvironmentName":{},"HealthStatus":{},"Status":{},"Color":{},"Causes":{"shape":"S2w"},"ApplicationMetrics":{"shape":"S2y"},"InstancesHealth":{"type":"structure","members":{"NoData":{"type":"integer"},"Unknown":{"type":"integer"},"Pending":{"type":"integer"},"Ok":{"type":"integer"},"Info":{"type":"integer"},"Warning":{"type":"integer"},"Degraded":{"type":"integer"},"Severe":{"type":"integer"}}},"RefreshedAt":{"type":"timestamp"}}},"http":{}},"DescribeEnvironmentResources":{"input":{"type":"structure","members":{"EnvironmentId":{},"EnvironmentName":{}}},"output":{"resultWrapper":"DescribeEnvironmentResourcesResult","type":"structure","members":{"EnvironmentResources":{"type":"structure","members":{"EnvironmentName":{},"AutoScalingGroups":{"type":"list","member":{"type":"structure","members":{"Name":{}}}},"Instances":{"type":"list","member":{"type":"structure","members":{"Id":{}}}},"LaunchConfigurations":{"type":"list","member":{"type":"structure","members":{"Name":{}}}},"LoadBalancers":{"type":"list","member":{"type":"structure","members":{"Name":{}}}},"Triggers":{"type":"list","member":{"type":"structure","members":{"Name":{}}}},"Queues":{"type":"list","member":{"type":"structure","members":{"Name":{},"URL":{}}}}}}}},"http":{}},"DescribeEnvironments":{"input":{"type":"structure","members":{"ApplicationName":{},"VersionLabel":{},"EnvironmentIds":{"type":"list","member":{}},"EnvironmentNames":{"type":"list","member":{}},"IncludeDeleted":{"type":"boolean"},"IncludedDeletedBackTo":{"type":"timestamp"}}},"output":{"shape":"Se","resultWrapper":"DescribeEnvironmentsResult"},"http":{}},"DescribeEvents":{"input":{"type":"structure","members":{"ApplicationName":{},"VersionLabel":{},"TemplateName":{},"EnvironmentId":{},"EnvironmentName":{},"RequestId":{},"Severity":{},"StartTime":{"type":"timestamp"},"EndTime":{"type":"timestamp"},"MaxRecords":{"type":"integer"},"NextToken":{}}},"output":{"resultWrapper":"DescribeEventsResult","type":"structure","members":{"Events":{"type":"list","member":{"type":"structure","members":{"EventDate":{"type":"timestamp"},"Message":{},"ApplicationName":{},"VersionLabel":{},"TemplateName":{},"EnvironmentName":{},"RequestId":{},"Severity":{}}}},"NextToken":{}}},"http":{}},"DescribeInstancesHealth":{"input":{"type":"structure","members":{"EnvironmentName":{},"EnvironmentId":{},"AttributeNames":{"type":"list","member":{}},"NextToken":{}}},"output":{"resultWrapper":"DescribeInstancesHealthResult","type":"structure","members":{"InstanceHealthList":{"type":"list","member":{"type":"structure","members":{"InstanceId":{},"HealthStatus":{},"Color":{},"Causes":{"shape":"S2w"},"LaunchedAt":{"type":"timestamp"},"ApplicationMetrics":{"shape":"S2y"},"System":{"type":"structure","members":{"CPUUtilization":{"type":"structure","members":{"User":{"type":"double"},"Nice":{"type":"double"},"System":{"type":"double"},"Idle":{"type":"double"},"IOWait":{"type":"double"},"IRQ":{"type":"double"},"SoftIRQ":{"type":"double"}}},"LoadAverage":{"type":"list","member":{"type":"double"}}}}}}},"RefreshedAt":{"type":"timestamp"},"NextToken":{}}},"http":{}},"ListAvailableSolutionStacks":{"output":{"resultWrapper":"ListAvailableSolutionStacksResult","type":"structure","members":{"SolutionStacks":{"type":"list","member":{}},"SolutionStackDetails":{"type":"list","member":{"type":"structure","members":{"SolutionStackName":{},"PermittedFileTypes":{"type":"list","member":{}}}}}}},"http":{}},"RebuildEnvironment":{"input":{"type":"structure","members":{"EnvironmentId":{},"EnvironmentName":{}}},"http":{}},"RequestEnvironmentInfo":{"input":{"type":"structure","required":["InfoType"],"members":{"EnvironmentId":{},"EnvironmentName":{},"InfoType":{}}},"http":{}},"RestartAppServer":{"input":{"type":"structure","members":{"EnvironmentId":{},"EnvironmentName":{}}},"http":{}},"RetrieveEnvironmentInfo":{"input":{"type":"structure","required":["InfoType"],"members":{"EnvironmentId":{},"EnvironmentName":{},"InfoType":{}}},"output":{"resultWrapper":"RetrieveEnvironmentInfoResult","type":"structure","members":{"EnvironmentInfo":{"type":"list","member":{"type":"structure","members":{"InfoType":{},"Ec2InstanceId":{},"SampleTimestamp":{"type":"timestamp"},"Message":{}}}}}},"http":{}},"SwapEnvironmentCNAMEs":{"input":{"type":"structure","members":{"SourceEnvironmentId":{},"SourceEnvironmentName":{},"DestinationEnvironmentId":{},"DestinationEnvironmentName":{}}},"http":{}},"TerminateEnvironment":{"input":{"type":"structure","members":{"EnvironmentId":{},"EnvironmentName":{},"TerminateResources":{"type":"boolean"},"ForceTerminate":{"type":"boolean"}}},"output":{"shape":"Sg","resultWrapper":"TerminateEnvironmentResult"},"http":{}},"UpdateApplication":{"input":{"type":"structure","required":["ApplicationName"],"members":{"ApplicationName":{},"Description":{}}},"output":{"shape":"S11","resultWrapper":"UpdateApplicationResult"},"http":{}},"UpdateApplicationVersion":{"input":{"type":"structure","required":["ApplicationName","VersionLabel"],"members":{"ApplicationName":{},"VersionLabel":{},"Description":{}}},"output":{"shape":"S1b","resultWrapper":"UpdateApplicationVersionResult"},"http":{}},"UpdateConfigurationTemplate":{"input":{"type":"structure","required":["ApplicationName","TemplateName"],"members":{"ApplicationName":{},"TemplateName":{},"Description":{},"OptionSettings":{"shape":"S1g"},"OptionsToRemove":{"shape":"S1t"}}},"output":{"shape":"S1m","resultWrapper":"UpdateConfigurationTemplateResult"},"http":{}},"UpdateEnvironment":{"input":{"type":"structure","members":{"ApplicationName":{},"EnvironmentId":{},"EnvironmentName":{},"GroupName":{},"Description":{},"Tier":{"shape":"Sx"},"VersionLabel":{},"TemplateName":{},"SolutionStackName":{},"OptionSettings":{"shape":"S1g"},"OptionsToRemove":{"shape":"S1t"}}},"output":{"shape":"Sg","resultWrapper":"UpdateEnvironmentResult"},"http":{}},"ValidateConfigurationSettings":{"input":{"type":"structure","required":["ApplicationName","OptionSettings"],"members":{"ApplicationName":{},"TemplateName":{},"EnvironmentName":{},"OptionSettings":{"shape":"S1g"}}},"output":{"resultWrapper":"ValidateConfigurationSettingsResult","type":"structure","members":{"Messages":{"type":"list","member":{"type":"structure","members":{"Message":{},"Severity":{},"Namespace":{},"OptionName":{}}}}}},"http":{}}},"shapes":{"Se":{"type":"structure","members":{"Environments":{"type":"list","member":{"shape":"Sg"}}}},"Sg":{"type":"structure","members":{"EnvironmentName":{},"EnvironmentId":{},"ApplicationName":{},"VersionLabel":{},"SolutionStackName":{},"TemplateName":{},"Description":{},"EndpointURL":{},"CNAME":{},"DateCreated":{"type":"timestamp"},"DateUpdated":{"type":"timestamp"},"Status":{},"AbortableOperationInProgress":{"type":"boolean"},"Health":{},"HealthStatus":{},"Resources":{"type":"structure","members":{"LoadBalancer":{"type":"structure","members":{"LoadBalancerName":{},"Domain":{},"Listeners":{"type":"list","member":{"type":"structure","members":{"Protocol":{},"Port":{"type":"integer"}}}}}}}},"Tier":{"shape":"Sx"},"EnvironmentLinks":{"type":"list","member":{"type":"structure","members":{"LinkName":{},"EnvironmentName":{}}}}}},"Sx":{"type":"structure","members":{"Name":{},"Type":{},"Version":{}}},"S11":{"type":"structure","members":{"Application":{"shape":"S12"}}},"S12":{"type":"structure","members":{"ApplicationName":{},"Description":{},"DateCreated":{"type":"timestamp"},"DateUpdated":{"type":"timestamp"},"Versions":{"shape":"S13"},"ConfigurationTemplates":{"type":"list","member":{}}}},"S13":{"type":"list","member":{}},"S16":{"type":"structure","members":{"S3Bucket":{},"S3Key":{}}},"S1b":{"type":"structure","members":{"ApplicationVersion":{"shape":"S1c"}}},"S1c":{"type":"structure","members":{"ApplicationName":{},"Description":{},"VersionLabel":{},"SourceBundle":{"shape":"S16"},"DateCreated":{"type":"timestamp"},"DateUpdated":{"type":"timestamp"},"Status":{}}},"S1g":{"type":"list","member":{"type":"structure","members":{"ResourceName":{},"Namespace":{},"OptionName":{},"Value":{}}}},"S1m":{"type":"structure","members":{"SolutionStackName":{},"ApplicationName":{},"TemplateName":{},"Description":{},"EnvironmentName":{},"DeploymentStatus":{},"DateCreated":{"type":"timestamp"},"DateUpdated":{"type":"timestamp"},"OptionSettings":{"shape":"S1g"}}},"S1t":{"type":"list","member":{"type":"structure","members":{"ResourceName":{},"Namespace":{},"OptionName":{}}}},"S2w":{"type":"list","member":{}},"S2y":{"type":"structure","members":{"Duration":{"type":"integer"},"RequestCount":{"type":"integer"},"StatusCodes":{"type":"structure","members":{"Status2xx":{"type":"integer"},"Status3xx":{"type":"integer"},"Status4xx":{"type":"integer"},"Status5xx":{"type":"integer"}}},"Latency":{"type":"structure","members":{"P999":{"type":"double"},"P99":{"type":"double"},"P95":{"type":"double"},"P90":{"type":"double"},"P85":{"type":"double"},"P75":{"type":"double"},"P50":{"type":"double"},"P10":{"type":"double"}}}}}},"paginators":{"DescribeApplicationVersions":{"result_key":"ApplicationVersions"},"DescribeApplications":{"result_key":"Applications"},"DescribeConfigurationOptions":{"result_key":"Options"},"DescribeEnvironments":{"result_key":"Environments"},"DescribeEvents":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxRecords","result_key":"Events"},"ListAvailableSolutionStacks":{"result_key":"SolutionStacks"}}};
+AWS.apiLoader.services['elb'] = {};
+AWS.ELB = AWS.Service.defineService('elb', [ '2012-06-01' ]);
+
+AWS.apiLoader.services['elb']['2012-06-01'] = {"version":"2.0","metadata":{"apiVersion":"2012-06-01","endpointPrefix":"elasticloadbalancing","serviceFullName":"Elastic Load Balancing","signatureVersion":"v4","xmlNamespace":"http://elasticloadbalancing.amazonaws.com/doc/2012-06-01/","protocol":"query"},"operations":{"AddTags":{"input":{"type":"structure","required":["LoadBalancerNames","Tags"],"members":{"LoadBalancerNames":{"shape":"S2"},"Tags":{"shape":"S4"}}},"output":{"resultWrapper":"AddTagsResult","type":"structure","members":{}},"http":{}},"ApplySecurityGroupsToLoadBalancer":{"input":{"type":"structure","required":["LoadBalancerName","SecurityGroups"],"members":{"LoadBalancerName":{},"SecurityGroups":{"shape":"Sa"}}},"output":{"resultWrapper":"ApplySecurityGroupsToLoadBalancerResult","type":"structure","members":{"SecurityGroups":{"shape":"Sa"}}},"http":{}},"AttachLoadBalancerToSubnets":{"input":{"type":"structure","required":["LoadBalancerName","Subnets"],"members":{"LoadBalancerName":{},"Subnets":{"shape":"Se"}}},"output":{"resultWrapper":"AttachLoadBalancerToSubnetsResult","type":"structure","members":{"Subnets":{"shape":"Se"}}},"http":{}},"ConfigureHealthCheck":{"input":{"type":"structure","required":["LoadBalancerName","HealthCheck"],"members":{"LoadBalancerName":{},"HealthCheck":{"shape":"Si"}}},"output":{"resultWrapper":"ConfigureHealthCheckResult","type":"structure","members":{"HealthCheck":{"shape":"Si"}}},"http":{}},"CreateAppCookieStickinessPolicy":{"input":{"type":"structure","required":["LoadBalancerName","PolicyName","CookieName"],"members":{"LoadBalancerName":{},"PolicyName":{},"CookieName":{}}},"output":{"resultWrapper":"CreateAppCookieStickinessPolicyResult","type":"structure","members":{}},"http":{}},"CreateLBCookieStickinessPolicy":{"input":{"type":"structure","required":["LoadBalancerName","PolicyName"],"members":{"LoadBalancerName":{},"PolicyName":{},"CookieExpirationPeriod":{"type":"long"}}},"output":{"resultWrapper":"CreateLBCookieStickinessPolicyResult","type":"structure","members":{}},"http":{}},"CreateLoadBalancer":{"input":{"type":"structure","required":["LoadBalancerName","Listeners"],"members":{"LoadBalancerName":{},"Listeners":{"shape":"Sx"},"AvailabilityZones":{"shape":"S13"},"Subnets":{"shape":"Se"},"SecurityGroups":{"shape":"Sa"},"Scheme":{},"Tags":{"shape":"S4"}}},"output":{"resultWrapper":"CreateLoadBalancerResult","type":"structure","members":{"DNSName":{}}},"http":{}},"CreateLoadBalancerListeners":{"input":{"type":"structure","required":["LoadBalancerName","Listeners"],"members":{"LoadBalancerName":{},"Listeners":{"shape":"Sx"}}},"output":{"resultWrapper":"CreateLoadBalancerListenersResult","type":"structure","members":{}},"http":{}},"CreateLoadBalancerPolicy":{"input":{"type":"structure","required":["LoadBalancerName","PolicyName","PolicyTypeName"],"members":{"LoadBalancerName":{},"PolicyName":{},"PolicyTypeName":{},"PolicyAttributes":{"type":"list","member":{"type":"structure","members":{"AttributeName":{},"AttributeValue":{}}}}}},"output":{"resultWrapper":"CreateLoadBalancerPolicyResult","type":"structure","members":{}},"http":{}},"DeleteLoadBalancer":{"input":{"type":"structure","required":["LoadBalancerName"],"members":{"LoadBalancerName":{}}},"output":{"resultWrapper":"DeleteLoadBalancerResult","type":"structure","members":{}},"http":{}},"DeleteLoadBalancerListeners":{"input":{"type":"structure","required":["LoadBalancerName","LoadBalancerPorts"],"members":{"LoadBalancerName":{},"LoadBalancerPorts":{"type":"list","member":{"type":"integer"}}}},"output":{"resultWrapper":"DeleteLoadBalancerListenersResult","type":"structure","members":{}},"http":{}},"DeleteLoadBalancerPolicy":{"input":{"type":"structure","required":["LoadBalancerName","PolicyName"],"members":{"LoadBalancerName":{},"PolicyName":{}}},"output":{"resultWrapper":"DeleteLoadBalancerPolicyResult","type":"structure","members":{}},"http":{}},"DeregisterInstancesFromLoadBalancer":{"input":{"type":"structure","required":["LoadBalancerName","Instances"],"members":{"LoadBalancerName":{},"Instances":{"shape":"S1p"}}},"output":{"resultWrapper":"DeregisterInstancesFromLoadBalancerResult","type":"structure","members":{"Instances":{"shape":"S1p"}}},"http":{}},"DescribeInstanceHealth":{"input":{"type":"structure","required":["LoadBalancerName"],"members":{"LoadBalancerName":{},"Instances":{"shape":"S1p"}}},"output":{"resultWrapper":"DescribeInstanceHealthResult","type":"structure","members":{"InstanceStates":{"type":"list","member":{"type":"structure","members":{"InstanceId":{},"State":{},"ReasonCode":{},"Description":{}}}}}},"http":{}},"DescribeLoadBalancerAttributes":{"input":{"type":"structure","required":["LoadBalancerName"],"members":{"LoadBalancerName":{}}},"output":{"resultWrapper":"DescribeLoadBalancerAttributesResult","type":"structure","members":{"LoadBalancerAttributes":{"shape":"S22"}}},"http":{}},"DescribeLoadBalancerPolicies":{"input":{"type":"structure","members":{"LoadBalancerName":{},"PolicyNames":{"shape":"S2j"}}},"output":{"resultWrapper":"DescribeLoadBalancerPoliciesResult","type":"structure","members":{"PolicyDescriptions":{"type":"list","member":{"type":"structure","members":{"PolicyName":{},"PolicyTypeName":{},"PolicyAttributeDescriptions":{"type":"list","member":{"type":"structure","members":{"AttributeName":{},"AttributeValue":{}}}}}}}}},"http":{}},"DescribeLoadBalancerPolicyTypes":{"input":{"type":"structure","members":{"PolicyTypeNames":{"type":"list","member":{}}}},"output":{"resultWrapper":"DescribeLoadBalancerPolicyTypesResult","type":"structure","members":{"PolicyTypeDescriptions":{"type":"list","member":{"type":"structure","members":{"PolicyTypeName":{},"Description":{},"PolicyAttributeTypeDescriptions":{"type":"list","member":{"type":"structure","members":{"AttributeName":{},"AttributeType":{},"Description":{},"DefaultValue":{},"Cardinality":{}}}}}}}}},"http":{}},"DescribeLoadBalancers":{"input":{"type":"structure","members":{"LoadBalancerNames":{"shape":"S2"},"Marker":{},"PageSize":{"type":"integer"}}},"output":{"resultWrapper":"DescribeLoadBalancersResult","type":"structure","members":{"LoadBalancerDescriptions":{"type":"list","member":{"type":"structure","members":{"LoadBalancerName":{},"DNSName":{},"CanonicalHostedZoneName":{},"CanonicalHostedZoneNameID":{},"ListenerDescriptions":{"type":"list","member":{"type":"structure","members":{"Listener":{"shape":"Sy"},"PolicyNames":{"shape":"S2j"}}}},"Policies":{"type":"structure","members":{"AppCookieStickinessPolicies":{"type":"list","member":{"type":"structure","members":{"PolicyName":{},"CookieName":{}}}},"LBCookieStickinessPolicies":{"type":"list","member":{"type":"structure","members":{"PolicyName":{},"CookieExpirationPeriod":{"type":"long"}}}},"OtherPolicies":{"shape":"S2j"}}},"BackendServerDescriptions":{"type":"list","member":{"type":"structure","members":{"InstancePort":{"type":"integer"},"PolicyNames":{"shape":"S2j"}}}},"AvailabilityZones":{"shape":"S13"},"Subnets":{"shape":"Se"},"VPCId":{},"Instances":{"shape":"S1p"},"HealthCheck":{"shape":"Si"},"SourceSecurityGroup":{"type":"structure","members":{"OwnerAlias":{},"GroupName":{}}},"SecurityGroups":{"shape":"Sa"},"CreatedTime":{"type":"timestamp"},"Scheme":{}}}},"NextMarker":{}}},"http":{}},"DescribeTags":{"input":{"type":"structure","required":["LoadBalancerNames"],"members":{"LoadBalancerNames":{"type":"list","member":{}}}},"output":{"resultWrapper":"DescribeTagsResult","type":"structure","members":{"TagDescriptions":{"type":"list","member":{"type":"structure","members":{"LoadBalancerName":{},"Tags":{"shape":"S4"}}}}}},"http":{}},"DetachLoadBalancerFromSubnets":{"input":{"type":"structure","required":["LoadBalancerName","Subnets"],"members":{"LoadBalancerName":{},"Subnets":{"shape":"Se"}}},"output":{"resultWrapper":"DetachLoadBalancerFromSubnetsResult","type":"structure","members":{"Subnets":{"shape":"Se"}}},"http":{}},"DisableAvailabilityZonesForLoadBalancer":{"input":{"type":"structure","required":["LoadBalancerName","AvailabilityZones"],"members":{"LoadBalancerName":{},"AvailabilityZones":{"shape":"S13"}}},"output":{"resultWrapper":"DisableAvailabilityZonesForLoadBalancerResult","type":"structure","members":{"AvailabilityZones":{"shape":"S13"}}},"http":{}},"EnableAvailabilityZonesForLoadBalancer":{"input":{"type":"structure","required":["LoadBalancerName","AvailabilityZones"],"members":{"LoadBalancerName":{},"AvailabilityZones":{"shape":"S13"}}},"output":{"resultWrapper":"EnableAvailabilityZonesForLoadBalancerResult","type":"structure","members":{"AvailabilityZones":{"shape":"S13"}}},"http":{}},"ModifyLoadBalancerAttributes":{"input":{"type":"structure","required":["LoadBalancerName","LoadBalancerAttributes"],"members":{"LoadBalancerName":{},"LoadBalancerAttributes":{"shape":"S22"}}},"output":{"resultWrapper":"ModifyLoadBalancerAttributesResult","type":"structure","members":{"LoadBalancerName":{},"LoadBalancerAttributes":{"shape":"S22"}}},"http":{}},"RegisterInstancesWithLoadBalancer":{"input":{"type":"structure","required":["LoadBalancerName","Instances"],"members":{"LoadBalancerName":{},"Instances":{"shape":"S1p"}}},"output":{"resultWrapper":"RegisterInstancesWithLoadBalancerResult","type":"structure","members":{"Instances":{"shape":"S1p"}}},"http":{}},"RemoveTags":{"input":{"type":"structure","required":["LoadBalancerNames","Tags"],"members":{"LoadBalancerNames":{"shape":"S2"},"Tags":{"type":"list","member":{"type":"structure","members":{"Key":{}}}}}},"output":{"resultWrapper":"RemoveTagsResult","type":"structure","members":{}},"http":{}},"SetLoadBalancerListenerSSLCertificate":{"input":{"type":"structure","required":["LoadBalancerName","LoadBalancerPort","SSLCertificateId"],"members":{"LoadBalancerName":{},"LoadBalancerPort":{"type":"integer"},"SSLCertificateId":{}}},"output":{"resultWrapper":"SetLoadBalancerListenerSSLCertificateResult","type":"structure","members":{}},"http":{}},"SetLoadBalancerPoliciesForBackendServer":{"input":{"type":"structure","required":["LoadBalancerName","InstancePort","PolicyNames"],"members":{"LoadBalancerName":{},"InstancePort":{"type":"integer"},"PolicyNames":{"shape":"S2j"}}},"output":{"resultWrapper":"SetLoadBalancerPoliciesForBackendServerResult","type":"structure","members":{}},"http":{}},"SetLoadBalancerPoliciesOfListener":{"input":{"type":"structure","required":["LoadBalancerName","LoadBalancerPort","PolicyNames"],"members":{"LoadBalancerName":{},"LoadBalancerPort":{"type":"integer"},"PolicyNames":{"shape":"S2j"}}},"output":{"resultWrapper":"SetLoadBalancerPoliciesOfListenerResult","type":"structure","members":{}},"http":{}}},"shapes":{"S2":{"type":"list","member":{}},"S4":{"type":"list","member":{"type":"structure","required":["Key"],"members":{"Key":{},"Value":{}}}},"Sa":{"type":"list","member":{}},"Se":{"type":"list","member":{}},"Si":{"type":"structure","required":["Target","Interval","Timeout","UnhealthyThreshold","HealthyThreshold"],"members":{"Target":{},"Interval":{"type":"integer"},"Timeout":{"type":"integer"},"UnhealthyThreshold":{"type":"integer"},"HealthyThreshold":{"type":"integer"}}},"Sx":{"type":"list","member":{"shape":"Sy"}},"Sy":{"type":"structure","required":["Protocol","LoadBalancerPort","InstancePort"],"members":{"Protocol":{},"LoadBalancerPort":{"type":"integer"},"InstanceProtocol":{},"InstancePort":{"type":"integer"},"SSLCertificateId":{}}},"S13":{"type":"list","member":{}},"S1p":{"type":"list","member":{"type":"structure","members":{"InstanceId":{}}}},"S22":{"type":"structure","members":{"CrossZoneLoadBalancing":{"type":"structure","required":["Enabled"],"members":{"Enabled":{"type":"boolean"}}},"AccessLog":{"type":"structure","required":["Enabled"],"members":{"Enabled":{"type":"boolean"},"S3BucketName":{},"EmitInterval":{"type":"integer"},"S3BucketPrefix":{}}},"ConnectionDraining":{"type":"structure","required":["Enabled"],"members":{"Enabled":{"type":"boolean"},"Timeout":{"type":"integer"}}},"ConnectionSettings":{"type":"structure","required":["IdleTimeout"],"members":{"IdleTimeout":{"type":"integer"}}},"AdditionalAttributes":{"type":"list","member":{"type":"structure","members":{"Key":{},"Value":{}}}}}},"S2j":{"type":"list","member":{}}},"paginators":{"DescribeInstanceHealth":{"result_key":"InstanceStates"},"DescribeLoadBalancerPolicies":{"result_key":"PolicyDescriptions"},"DescribeLoadBalancerPolicyTypes":{"result_key":"PolicyTypeDescriptions"},"DescribeLoadBalancers":{"input_token":"Marker","output_token":"NextMarker","result_key":"LoadBalancerDescriptions"}}};
 AWS.apiLoader.services['route53'] = {};
 AWS.Route53 = AWS.Service.defineService('route53', [ '2013-04-01' ]);
 require('./services/route53');
 
-AWS.apiLoader.services['route53']['2013-04-01'] = {"version":"2.0","metadata":{"apiVersion":"2013-04-01","endpointPrefix":"route53","globalEndpoint":"route53.amazonaws.com","protocol":"rest-xml","serviceAbbreviation":"Route 53","serviceFullName":"Amazon Route 53","signatureVersion":"v4"},"operations":{"AssociateVPCWithHostedZone":{"http":{"requestUri":"/2013-04-01/hostedzone/{Id}/associatevpc"},"input":{"locationName":"AssociateVPCWithHostedZoneRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["HostedZoneId","VPC"],"members":{"HostedZoneId":{"location":"uri","locationName":"Id"},"VPC":{"shape":"S3"},"Comment":{}}},"output":{"type":"structure","required":["ChangeInfo"],"members":{"ChangeInfo":{"shape":"S8"}}}},"ChangeResourceRecordSets":{"http":{"requestUri":"/2013-04-01/hostedzone/{Id}/rrset/"},"input":{"locationName":"ChangeResourceRecordSetsRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["HostedZoneId","ChangeBatch"],"members":{"HostedZoneId":{"location":"uri","locationName":"Id"},"ChangeBatch":{"type":"structure","required":["Changes"],"members":{"Comment":{},"Changes":{"shape":"Se"}}}}},"output":{"type":"structure","required":["ChangeInfo"],"members":{"ChangeInfo":{"shape":"S8"}}}},"ChangeTagsForResource":{"http":{"requestUri":"/2013-04-01/tags/{ResourceType}/{ResourceId}"},"input":{"locationName":"ChangeTagsForResourceRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["ResourceType","ResourceId"],"members":{"ResourceType":{"location":"uri","locationName":"ResourceType"},"ResourceId":{"location":"uri","locationName":"ResourceId"},"AddTags":{"shape":"S14"},"RemoveTagKeys":{"type":"list","member":{"locationName":"Key"}}}},"output":{"type":"structure","members":{}}},"CreateHealthCheck":{"http":{"requestUri":"/2013-04-01/healthcheck","responseCode":201},"input":{"locationName":"CreateHealthCheckRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["CallerReference","HealthCheckConfig"],"members":{"CallerReference":{},"HealthCheckConfig":{"shape":"S1c"}}},"output":{"type":"structure","required":["HealthCheck","Location"],"members":{"HealthCheck":{"shape":"S1q"},"Location":{"location":"header","locationName":"Location"}}}},"CreateHostedZone":{"http":{"requestUri":"/2013-04-01/hostedzone","responseCode":201},"input":{"locationName":"CreateHostedZoneRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["Name","CallerReference"],"members":{"Name":{},"VPC":{"shape":"S3"},"CallerReference":{},"HostedZoneConfig":{"shape":"S1v"},"DelegationSetId":{}}},"output":{"type":"structure","required":["HostedZone","ChangeInfo","DelegationSet","Location"],"members":{"HostedZone":{"shape":"S1y"},"ChangeInfo":{"shape":"S8"},"DelegationSet":{"shape":"S20"},"VPC":{"shape":"S3"},"Location":{"location":"header","locationName":"Location"}}}},"CreateReusableDelegationSet":{"http":{"requestUri":"/2013-04-01/delegationset","responseCode":201},"input":{"locationName":"CreateReusableDelegationSetRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["CallerReference"],"members":{"CallerReference":{},"HostedZoneId":{}}},"output":{"type":"structure","required":["DelegationSet","Location"],"members":{"DelegationSet":{"shape":"S20"},"Location":{"location":"header","locationName":"Location"}}}},"CreateTrafficPolicy":{"http":{"requestUri":"/2013-04-01/trafficpolicy","responseCode":201},"input":{"locationName":"CreateTrafficPolicyRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["Name","Document"],"members":{"Name":{},"Document":{},"Comment":{}}},"output":{"type":"structure","required":["TrafficPolicy","Location"],"members":{"TrafficPolicy":{"shape":"S29"},"Location":{"location":"header","locationName":"Location"}}}},"CreateTrafficPolicyInstance":{"http":{"requestUri":"/2013-04-01/trafficpolicyinstance","responseCode":201},"input":{"locationName":"CreateTrafficPolicyInstanceRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["HostedZoneId","Name","TTL","TrafficPolicyId","TrafficPolicyVersion"],"members":{"HostedZoneId":{},"Name":{},"TTL":{"type":"long"},"TrafficPolicyId":{},"TrafficPolicyVersion":{"type":"integer"}}},"output":{"type":"structure","required":["TrafficPolicyInstance","Location"],"members":{"TrafficPolicyInstance":{"shape":"S2e"},"Location":{"location":"header","locationName":"Location"}}}},"CreateTrafficPolicyVersion":{"http":{"requestUri":"/2013-04-01/trafficpolicy/{Id}","responseCode":201},"input":{"locationName":"CreateTrafficPolicyVersionRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["Id","Document"],"members":{"Id":{"location":"uri","locationName":"Id"},"Document":{},"Comment":{}}},"output":{"type":"structure","required":["TrafficPolicy","Location"],"members":{"TrafficPolicy":{"shape":"S29"},"Location":{"location":"header","locationName":"Location"}}}},"DeleteHealthCheck":{"http":{"method":"DELETE","requestUri":"/2013-04-01/healthcheck/{HealthCheckId}"},"input":{"type":"structure","required":["HealthCheckId"],"members":{"HealthCheckId":{"location":"uri","locationName":"HealthCheckId"}}},"output":{"type":"structure","members":{}}},"DeleteHostedZone":{"http":{"method":"DELETE","requestUri":"/2013-04-01/hostedzone/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","required":["ChangeInfo"],"members":{"ChangeInfo":{"shape":"S8"}}}},"DeleteReusableDelegationSet":{"http":{"method":"DELETE","requestUri":"/2013-04-01/delegationset/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","members":{}}},"DeleteTrafficPolicy":{"http":{"method":"DELETE","requestUri":"/2013-04-01/trafficpolicy/{Id}/{Version}"},"input":{"type":"structure","required":["Id","Version"],"members":{"Id":{"location":"uri","locationName":"Id"},"Version":{"location":"uri","locationName":"Version","type":"integer"}}},"output":{"type":"structure","members":{}}},"DeleteTrafficPolicyInstance":{"http":{"method":"DELETE","requestUri":"/2013-04-01/trafficpolicyinstance/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","members":{}}},"DisassociateVPCFromHostedZone":{"http":{"requestUri":"/2013-04-01/hostedzone/{Id}/disassociatevpc"},"input":{"locationName":"DisassociateVPCFromHostedZoneRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["HostedZoneId","VPC"],"members":{"HostedZoneId":{"location":"uri","locationName":"Id"},"VPC":{"shape":"S3"},"Comment":{}}},"output":{"type":"structure","required":["ChangeInfo"],"members":{"ChangeInfo":{"shape":"S8"}}}},"GetChange":{"http":{"method":"GET","requestUri":"/2013-04-01/change/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","required":["ChangeInfo"],"members":{"ChangeInfo":{"shape":"S8"}}}},"GetChangeDetails":{"http":{"method":"GET","requestUri":"/2013-04-01/changedetails/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","required":["ChangeBatchRecord"],"members":{"ChangeBatchRecord":{"shape":"S30"}}}},"GetCheckerIpRanges":{"http":{"method":"GET","requestUri":"/2013-04-01/checkeripranges"},"input":{"type":"structure","members":{}},"output":{"type":"structure","required":["CheckerIpRanges"],"members":{"CheckerIpRanges":{"type":"list","member":{}}}}},"GetGeoLocation":{"http":{"method":"GET","requestUri":"/2013-04-01/geolocation"},"input":{"type":"structure","members":{"ContinentCode":{"location":"querystring","locationName":"continentcode"},"CountryCode":{"location":"querystring","locationName":"countrycode"},"SubdivisionCode":{"location":"querystring","locationName":"subdivisioncode"}}},"output":{"type":"structure","required":["GeoLocationDetails"],"members":{"GeoLocationDetails":{"shape":"S38"}}}},"GetHealthCheck":{"http":{"method":"GET","requestUri":"/2013-04-01/healthcheck/{HealthCheckId}"},"input":{"type":"structure","required":["HealthCheckId"],"members":{"HealthCheckId":{"location":"uri","locationName":"HealthCheckId"}}},"output":{"type":"structure","required":["HealthCheck"],"members":{"HealthCheck":{"shape":"S1q"}}}},"GetHealthCheckCount":{"http":{"method":"GET","requestUri":"/2013-04-01/healthcheckcount"},"input":{"type":"structure","members":{}},"output":{"type":"structure","required":["HealthCheckCount"],"members":{"HealthCheckCount":{"type":"long"}}}},"GetHealthCheckLastFailureReason":{"http":{"method":"GET","requestUri":"/2013-04-01/healthcheck/{HealthCheckId}/lastfailurereason"},"input":{"type":"structure","required":["HealthCheckId"],"members":{"HealthCheckId":{"location":"uri","locationName":"HealthCheckId"}}},"output":{"type":"structure","required":["HealthCheckObservations"],"members":{"HealthCheckObservations":{"shape":"S3j"}}}},"GetHealthCheckStatus":{"http":{"method":"GET","requestUri":"/2013-04-01/healthcheck/{HealthCheckId}/status"},"input":{"type":"structure","required":["HealthCheckId"],"members":{"HealthCheckId":{"location":"uri","locationName":"HealthCheckId"}}},"output":{"type":"structure","required":["HealthCheckObservations"],"members":{"HealthCheckObservations":{"shape":"S3j"}}}},"GetHostedZone":{"http":{"method":"GET","requestUri":"/2013-04-01/hostedzone/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","required":["HostedZone"],"members":{"HostedZone":{"shape":"S1y"},"DelegationSet":{"shape":"S20"},"VPCs":{"type":"list","member":{"shape":"S3","locationName":"VPC"}}}}},"GetHostedZoneCount":{"http":{"method":"GET","requestUri":"/2013-04-01/hostedzonecount"},"input":{"type":"structure","members":{}},"output":{"type":"structure","required":["HostedZoneCount"],"members":{"HostedZoneCount":{"type":"long"}}}},"GetReusableDelegationSet":{"http":{"method":"GET","requestUri":"/2013-04-01/delegationset/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","required":["DelegationSet"],"members":{"DelegationSet":{"shape":"S20"}}}},"GetTrafficPolicy":{"http":{"method":"GET","requestUri":"/2013-04-01/trafficpolicy/{Id}/{Version}"},"input":{"type":"structure","required":["Id","Version"],"members":{"Id":{"location":"uri","locationName":"Id"},"Version":{"location":"uri","locationName":"Version","type":"integer"}}},"output":{"type":"structure","required":["TrafficPolicy"],"members":{"TrafficPolicy":{"shape":"S29"}}}},"GetTrafficPolicyInstance":{"http":{"method":"GET","requestUri":"/2013-04-01/trafficpolicyinstance/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","required":["TrafficPolicyInstance"],"members":{"TrafficPolicyInstance":{"shape":"S2e"}}}},"GetTrafficPolicyInstanceCount":{"http":{"method":"GET","requestUri":"/2013-04-01/trafficpolicyinstancecount"},"input":{"type":"structure","members":{}},"output":{"type":"structure","required":["TrafficPolicyInstanceCount"],"members":{"TrafficPolicyInstanceCount":{"type":"integer"}}}},"ListChangeBatchesByHostedZone":{"http":{"method":"GET","requestUri":"/2013-04-01/hostedzone/{Id}/changes"},"input":{"type":"structure","required":["HostedZoneId","StartDate","EndDate"],"members":{"HostedZoneId":{"location":"uri","locationName":"Id"},"StartDate":{"location":"querystring","locationName":"startDate"},"EndDate":{"location":"querystring","locationName":"endDate"},"MaxItems":{"location":"querystring","locationName":"maxItems"},"Marker":{"location":"querystring","locationName":"marker"}}},"output":{"type":"structure","required":["MaxItems","Marker","ChangeBatchRecords"],"members":{"MaxItems":{},"Marker":{},"IsTruncated":{"type":"boolean"},"ChangeBatchRecords":{"shape":"S4a"},"NextMarker":{}}}},"ListChangeBatchesByRRSet":{"http":{"method":"GET","requestUri":"/2013-04-01/hostedzone/{Id}/rrsChanges"},"input":{"type":"structure","required":["HostedZoneId","Name","Type","StartDate","EndDate"],"members":{"HostedZoneId":{"location":"uri","locationName":"Id"},"Name":{"location":"querystring","locationName":"rrSet_name"},"Type":{"location":"querystring","locationName":"type"},"SetIdentifier":{"location":"querystring","locationName":"identifier"},"StartDate":{"location":"querystring","locationName":"startDate"},"EndDate":{"location":"querystring","locationName":"endDate"},"MaxItems":{"location":"querystring","locationName":"maxItems"},"Marker":{"location":"querystring","locationName":"marker"}}},"output":{"type":"structure","required":["MaxItems","Marker","ChangeBatchRecords"],"members":{"MaxItems":{},"Marker":{},"IsTruncated":{"type":"boolean"},"ChangeBatchRecords":{"shape":"S4a"},"NextMarker":{}}}},"ListGeoLocations":{"http":{"method":"GET","requestUri":"/2013-04-01/geolocations"},"input":{"type":"structure","members":{"StartContinentCode":{"location":"querystring","locationName":"startcontinentcode"},"StartCountryCode":{"location":"querystring","locationName":"startcountrycode"},"StartSubdivisionCode":{"location":"querystring","locationName":"startsubdivisioncode"},"MaxItems":{"location":"querystring","locationName":"maxitems"}}},"output":{"type":"structure","required":["GeoLocationDetailsList","IsTruncated","MaxItems"],"members":{"GeoLocationDetailsList":{"type":"list","member":{"shape":"S38","locationName":"GeoLocationDetails"}},"IsTruncated":{"type":"boolean"},"NextContinentCode":{},"NextCountryCode":{},"NextSubdivisionCode":{},"MaxItems":{}}}},"ListHealthChecks":{"http":{"method":"GET","requestUri":"/2013-04-01/healthcheck"},"input":{"type":"structure","members":{"Marker":{"location":"querystring","locationName":"marker"},"MaxItems":{"location":"querystring","locationName":"maxitems"}}},"output":{"type":"structure","required":["HealthChecks","Marker","IsTruncated","MaxItems"],"members":{"HealthChecks":{"type":"list","member":{"shape":"S1q","locationName":"HealthCheck"}},"Marker":{},"IsTruncated":{"type":"boolean"},"NextMarker":{},"MaxItems":{}}}},"ListHostedZones":{"http":{"method":"GET","requestUri":"/2013-04-01/hostedzone"},"input":{"type":"structure","members":{"Marker":{"location":"querystring","locationName":"marker"},"MaxItems":{"location":"querystring","locationName":"maxitems"},"DelegationSetId":{"location":"querystring","locationName":"delegationsetid"}}},"output":{"type":"structure","required":["HostedZones","Marker","IsTruncated","MaxItems"],"members":{"HostedZones":{"shape":"S4l"},"Marker":{},"IsTruncated":{"type":"boolean"},"NextMarker":{},"MaxItems":{}}}},"ListHostedZonesByName":{"http":{"method":"GET","requestUri":"/2013-04-01/hostedzonesbyname"},"input":{"type":"structure","members":{"DNSName":{"location":"querystring","locationName":"dnsname"},"HostedZoneId":{"location":"querystring","locationName":"hostedzoneid"},"MaxItems":{"location":"querystring","locationName":"maxitems"}}},"output":{"type":"structure","required":["HostedZones","IsTruncated","MaxItems"],"members":{"HostedZones":{"shape":"S4l"},"DNSName":{},"HostedZoneId":{},"IsTruncated":{"type":"boolean"},"NextDNSName":{},"NextHostedZoneId":{},"MaxItems":{}}}},"ListResourceRecordSets":{"http":{"method":"GET","requestUri":"/2013-04-01/hostedzone/{Id}/rrset"},"input":{"type":"structure","required":["HostedZoneId"],"members":{"HostedZoneId":{"location":"uri","locationName":"Id"},"StartRecordName":{"location":"querystring","locationName":"name"},"StartRecordType":{"location":"querystring","locationName":"type"},"StartRecordIdentifier":{"location":"querystring","locationName":"identifier"},"MaxItems":{"location":"querystring","locationName":"maxitems"}}},"output":{"type":"structure","required":["ResourceRecordSets","IsTruncated","MaxItems"],"members":{"ResourceRecordSets":{"type":"list","member":{"shape":"Sh","locationName":"ResourceRecordSet"}},"IsTruncated":{"type":"boolean"},"NextRecordName":{},"NextRecordType":{},"NextRecordIdentifier":{},"MaxItems":{}}}},"ListReusableDelegationSets":{"http":{"method":"GET","requestUri":"/2013-04-01/delegationset"},"input":{"type":"structure","members":{"Marker":{"location":"querystring","locationName":"marker"},"MaxItems":{"location":"querystring","locationName":"maxitems"}}},"output":{"type":"structure","required":["DelegationSets","Marker","IsTruncated","MaxItems"],"members":{"DelegationSets":{"type":"list","member":{"shape":"S20","locationName":"DelegationSet"}},"Marker":{},"IsTruncated":{"type":"boolean"},"NextMarker":{},"MaxItems":{}}}},"ListTagsForResource":{"http":{"method":"GET","requestUri":"/2013-04-01/tags/{ResourceType}/{ResourceId}"},"input":{"type":"structure","required":["ResourceType","ResourceId"],"members":{"ResourceType":{"location":"uri","locationName":"ResourceType"},"ResourceId":{"location":"uri","locationName":"ResourceId"}}},"output":{"type":"structure","required":["ResourceTagSet"],"members":{"ResourceTagSet":{"shape":"S4w"}}}},"ListTagsForResources":{"http":{"requestUri":"/2013-04-01/tags/{ResourceType}"},"input":{"locationName":"ListTagsForResourcesRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["ResourceType","ResourceIds"],"members":{"ResourceType":{"location":"uri","locationName":"ResourceType"},"ResourceIds":{"type":"list","member":{"locationName":"ResourceId"}}}},"output":{"type":"structure","required":["ResourceTagSets"],"members":{"ResourceTagSets":{"type":"list","member":{"shape":"S4w","locationName":"ResourceTagSet"}}}}},"ListTrafficPolicies":{"http":{"method":"GET","requestUri":"/2013-04-01/trafficpolicies"},"input":{"type":"structure","members":{"TrafficPolicyIdMarker":{"location":"querystring","locationName":"trafficpolicyid"},"MaxItems":{"location":"querystring","locationName":"maxitems"}}},"output":{"type":"structure","required":["TrafficPolicySummaries","IsTruncated","TrafficPolicyIdMarker","MaxItems"],"members":{"TrafficPolicySummaries":{"type":"list","member":{"locationName":"TrafficPolicySummary","type":"structure","required":["Id","Name","Type","LatestVersion","TrafficPolicyCount"],"members":{"Id":{},"Name":{},"Type":{},"LatestVersion":{"type":"integer"},"TrafficPolicyCount":{"type":"integer"}}}},"IsTruncated":{"type":"boolean"},"TrafficPolicyIdMarker":{},"MaxItems":{}}}},"ListTrafficPolicyInstances":{"http":{"method":"GET","requestUri":"/2013-04-01/trafficpolicyinstances"},"input":{"type":"structure","members":{"HostedZoneIdMarker":{"location":"querystring","locationName":"hostedzoneid"},"TrafficPolicyInstanceNameMarker":{"location":"querystring","locationName":"trafficpolicyinstancename"},"TrafficPolicyInstanceTypeMarker":{"location":"querystring","locationName":"trafficpolicyinstancetype"},"MaxItems":{"location":"querystring","locationName":"maxitems"}}},"output":{"type":"structure","required":["TrafficPolicyInstances","IsTruncated","MaxItems"],"members":{"TrafficPolicyInstances":{"shape":"S57"},"HostedZoneIdMarker":{},"TrafficPolicyInstanceNameMarker":{},"TrafficPolicyInstanceTypeMarker":{},"IsTruncated":{"type":"boolean"},"MaxItems":{}}}},"ListTrafficPolicyInstancesByHostedZone":{"http":{"method":"GET","requestUri":"/2013-04-01/trafficpolicyinstances/hostedzone"},"input":{"type":"structure","required":["HostedZoneId"],"members":{"HostedZoneId":{"location":"querystring","locationName":"id"},"TrafficPolicyInstanceNameMarker":{"location":"querystring","locationName":"trafficpolicyinstancename"},"TrafficPolicyInstanceTypeMarker":{"location":"querystring","locationName":"trafficpolicyinstancetype"},"MaxItems":{"location":"querystring","locationName":"maxitems"}}},"output":{"type":"structure","required":["TrafficPolicyInstances","IsTruncated","MaxItems"],"members":{"TrafficPolicyInstances":{"shape":"S57"},"TrafficPolicyInstanceNameMarker":{},"TrafficPolicyInstanceTypeMarker":{},"IsTruncated":{"type":"boolean"},"MaxItems":{}}}},"ListTrafficPolicyInstancesByPolicy":{"http":{"method":"GET","requestUri":"/2013-04-01/trafficpolicyinstances/trafficpolicy"},"input":{"type":"structure","required":["TrafficPolicyId","TrafficPolicyVersion"],"members":{"TrafficPolicyId":{"location":"querystring","locationName":"id"},"TrafficPolicyVersion":{"location":"querystring","locationName":"version","type":"integer"},"HostedZoneIdMarker":{"location":"querystring","locationName":"hostedzoneid"},"TrafficPolicyInstanceNameMarker":{"location":"querystring","locationName":"trafficpolicyinstancename"},"TrafficPolicyInstanceTypeMarker":{"location":"querystring","locationName":"trafficpolicyinstancetype"},"MaxItems":{"location":"querystring","locationName":"maxitems"}}},"output":{"type":"structure","required":["TrafficPolicyInstances","IsTruncated","MaxItems"],"members":{"TrafficPolicyInstances":{"shape":"S57"},"HostedZoneIdMarker":{},"TrafficPolicyInstanceNameMarker":{},"TrafficPolicyInstanceTypeMarker":{},"IsTruncated":{"type":"boolean"},"MaxItems":{}}}},"ListTrafficPolicyVersions":{"http":{"method":"GET","requestUri":"/2013-04-01/trafficpolicies/{Id}/versions"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"},"TrafficPolicyVersionMarker":{"location":"querystring","locationName":"trafficpolicyversion"},"MaxItems":{"location":"querystring","locationName":"maxitems"}}},"output":{"type":"structure","required":["TrafficPolicies","IsTruncated","TrafficPolicyVersionMarker","MaxItems"],"members":{"TrafficPolicies":{"type":"list","member":{"shape":"S29","locationName":"TrafficPolicy"}},"IsTruncated":{"type":"boolean"},"TrafficPolicyVersionMarker":{},"MaxItems":{}}}},"UpdateHealthCheck":{"http":{"requestUri":"/2013-04-01/healthcheck/{HealthCheckId}"},"input":{"locationName":"UpdateHealthCheckRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["HealthCheckId"],"members":{"HealthCheckId":{"location":"uri","locationName":"HealthCheckId"},"HealthCheckVersion":{"type":"long"},"IPAddress":{},"Port":{"type":"integer"},"ResourcePath":{},"FullyQualifiedDomainName":{},"SearchString":{},"FailureThreshold":{"type":"integer"},"Inverted":{"type":"boolean"},"HealthThreshold":{"type":"integer"},"ChildHealthChecks":{"shape":"S1o"}}},"output":{"type":"structure","required":["HealthCheck"],"members":{"HealthCheck":{"shape":"S1q"}}}},"UpdateHostedZoneComment":{"http":{"requestUri":"/2013-04-01/hostedzone/{Id}"},"input":{"locationName":"UpdateHostedZoneCommentRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"},"Comment":{}}},"output":{"type":"structure","required":["HostedZone"],"members":{"HostedZone":{"shape":"S1y"}}}},"UpdateTrafficPolicyComment":{"http":{"requestUri":"/2013-04-01/trafficpolicy/{Id}/{Version}"},"input":{"locationName":"UpdateTrafficPolicyCommentRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["Id","Version","Comment"],"members":{"Id":{"location":"uri","locationName":"Id"},"Version":{"location":"uri","locationName":"Version","type":"integer"},"Comment":{}}},"output":{"type":"structure","required":["TrafficPolicy"],"members":{"TrafficPolicy":{"shape":"S29"}}}},"UpdateTrafficPolicyInstance":{"http":{"requestUri":"/2013-04-01/trafficpolicyinstance/{Id}"},"input":{"locationName":"UpdateTrafficPolicyInstanceRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["Id","TTL","TrafficPolicyId","TrafficPolicyVersion"],"members":{"Id":{"location":"uri","locationName":"Id"},"TTL":{"type":"long"},"TrafficPolicyId":{},"TrafficPolicyVersion":{"type":"integer"}}},"output":{"type":"structure","required":["TrafficPolicyInstance"],"members":{"TrafficPolicyInstance":{"shape":"S2e"}}}}},"shapes":{"S3":{"type":"structure","members":{"VPCRegion":{},"VPCId":{}}},"S8":{"type":"structure","required":["Id","Status","SubmittedAt"],"members":{"Id":{},"Status":{},"SubmittedAt":{"type":"timestamp"},"Comment":{}}},"Se":{"type":"list","member":{"locationName":"Change","type":"structure","required":["Action","ResourceRecordSet"],"members":{"Action":{},"ResourceRecordSet":{"shape":"Sh"}}}},"Sh":{"type":"structure","required":["Name","Type"],"members":{"Name":{},"Type":{},"SetIdentifier":{},"Weight":{"type":"long"},"Region":{},"GeoLocation":{"type":"structure","members":{"ContinentCode":{},"CountryCode":{},"SubdivisionCode":{}}},"Failover":{},"TTL":{"type":"long"},"ResourceRecords":{"type":"list","member":{"locationName":"ResourceRecord","type":"structure","required":["Value"],"members":{"Value":{}}}},"AliasTarget":{"type":"structure","required":["HostedZoneId","DNSName","EvaluateTargetHealth"],"members":{"HostedZoneId":{},"DNSName":{},"EvaluateTargetHealth":{"type":"boolean"}}},"HealthCheckId":{},"TrafficPolicyInstanceId":{}}},"S14":{"type":"list","member":{"locationName":"Tag","type":"structure","members":{"Key":{},"Value":{}}}},"S1c":{"type":"structure","required":["Type"],"members":{"IPAddress":{},"Port":{"type":"integer"},"Type":{},"ResourcePath":{},"FullyQualifiedDomainName":{},"SearchString":{},"RequestInterval":{"type":"integer"},"FailureThreshold":{"type":"integer"},"MeasureLatency":{"type":"boolean"},"Inverted":{"type":"boolean"},"HealthThreshold":{"type":"integer"},"ChildHealthChecks":{"shape":"S1o"}}},"S1o":{"type":"list","member":{"locationName":"ChildHealthCheck"}},"S1q":{"type":"structure","required":["Id","CallerReference","HealthCheckConfig","HealthCheckVersion"],"members":{"Id":{},"CallerReference":{},"HealthCheckConfig":{"shape":"S1c"},"HealthCheckVersion":{"type":"long"}}},"S1v":{"type":"structure","members":{"Comment":{},"PrivateZone":{"type":"boolean"}}},"S1y":{"type":"structure","required":["Id","Name","CallerReference"],"members":{"Id":{},"Name":{},"CallerReference":{},"Config":{"shape":"S1v"},"ResourceRecordSetCount":{"type":"long"}}},"S20":{"type":"structure","required":["NameServers"],"members":{"Id":{},"CallerReference":{},"NameServers":{"type":"list","member":{"locationName":"NameServer"}}}},"S29":{"type":"structure","required":["Id","Version","Name","Type","Document"],"members":{"Id":{},"Version":{"type":"integer"},"Name":{},"Type":{},"Document":{},"Comment":{}}},"S2e":{"type":"structure","required":["Id","HostedZoneId","Name","TTL","State","Message","TrafficPolicyId","TrafficPolicyVersion","TrafficPolicyType"],"members":{"Id":{},"HostedZoneId":{},"Name":{},"TTL":{"type":"long"},"State":{},"Message":{},"TrafficPolicyId":{},"TrafficPolicyVersion":{"type":"integer"},"TrafficPolicyType":{}}},"S30":{"type":"structure","required":["Id","Status"],"members":{"Id":{},"SubmittedAt":{"type":"timestamp"},"Status":{},"Comment":{},"Submitter":{},"Changes":{"shape":"Se"}}},"S38":{"type":"structure","members":{"ContinentCode":{},"ContinentName":{},"CountryCode":{},"CountryName":{},"SubdivisionCode":{},"SubdivisionName":{}}},"S3j":{"type":"list","member":{"locationName":"HealthCheckObservation","type":"structure","members":{"IPAddress":{},"StatusReport":{"type":"structure","members":{"Status":{},"CheckedTime":{"type":"timestamp"}}}}}},"S4a":{"type":"list","member":{"shape":"S30","locationName":"ChangeBatchRecord"}},"S4l":{"type":"list","member":{"shape":"S1y","locationName":"HostedZone"}},"S4w":{"type":"structure","members":{"ResourceType":{},"ResourceId":{},"Tags":{"shape":"S14"}}},"S57":{"type":"list","member":{"shape":"S2e","locationName":"TrafficPolicyInstance"}}},"paginators":{"ListHealthChecks":{"input_token":"Marker","output_token":"NextMarker","more_results":"IsTruncated","limit_key":"MaxItems","result_key":"HealthChecks"},"ListHostedZones":{"input_token":"Marker","output_token":"NextMarker","more_results":"IsTruncated","limit_key":"MaxItems","result_key":"HostedZones"},"ListResourceRecordSets":{"more_results":"IsTruncated","limit_key":"MaxItems","result_key":"ResourceRecordSets","input_token":["StartRecordName","StartRecordType","StartRecordIdentifier"],"output_token":["NextRecordName","NextRecordType","NextRecordIdentifier"]}}};
+AWS.apiLoader.services['route53']['2013-04-01'] = {"version":"2.0","metadata":{"apiVersion":"2013-04-01","endpointPrefix":"route53","globalEndpoint":"route53.amazonaws.com","protocol":"rest-xml","serviceAbbreviation":"Route 53","serviceFullName":"Amazon Route 53","signatureVersion":"v4"},"operations":{"AssociateVPCWithHostedZone":{"http":{"requestUri":"/2013-04-01/hostedzone/{Id}/associatevpc"},"input":{"locationName":"AssociateVPCWithHostedZoneRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["HostedZoneId","VPC"],"members":{"HostedZoneId":{"location":"uri","locationName":"Id"},"VPC":{"shape":"S3"},"Comment":{}}},"output":{"type":"structure","required":["ChangeInfo"],"members":{"ChangeInfo":{"shape":"S8"}}}},"ChangeResourceRecordSets":{"http":{"requestUri":"/2013-04-01/hostedzone/{Id}/rrset/"},"input":{"locationName":"ChangeResourceRecordSetsRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["HostedZoneId","ChangeBatch"],"members":{"HostedZoneId":{"location":"uri","locationName":"Id"},"ChangeBatch":{"type":"structure","required":["Changes"],"members":{"Comment":{},"Changes":{"shape":"Se"}}}}},"output":{"type":"structure","required":["ChangeInfo"],"members":{"ChangeInfo":{"shape":"S8"}}}},"ChangeTagsForResource":{"http":{"requestUri":"/2013-04-01/tags/{ResourceType}/{ResourceId}"},"input":{"locationName":"ChangeTagsForResourceRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["ResourceType","ResourceId"],"members":{"ResourceType":{"location":"uri","locationName":"ResourceType"},"ResourceId":{"location":"uri","locationName":"ResourceId"},"AddTags":{"shape":"S14"},"RemoveTagKeys":{"type":"list","member":{"locationName":"Key"}}}},"output":{"type":"structure","members":{}}},"CreateHealthCheck":{"http":{"requestUri":"/2013-04-01/healthcheck","responseCode":201},"input":{"locationName":"CreateHealthCheckRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["CallerReference","HealthCheckConfig"],"members":{"CallerReference":{},"HealthCheckConfig":{"shape":"S1c"}}},"output":{"type":"structure","required":["HealthCheck","Location"],"members":{"HealthCheck":{"shape":"S1r"},"Location":{"location":"header","locationName":"Location"}}}},"CreateHostedZone":{"http":{"requestUri":"/2013-04-01/hostedzone","responseCode":201},"input":{"locationName":"CreateHostedZoneRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["Name","CallerReference"],"members":{"Name":{},"VPC":{"shape":"S3"},"CallerReference":{},"HostedZoneConfig":{"shape":"S1w"},"DelegationSetId":{}}},"output":{"type":"structure","required":["HostedZone","ChangeInfo","DelegationSet","Location"],"members":{"HostedZone":{"shape":"S1z"},"ChangeInfo":{"shape":"S8"},"DelegationSet":{"shape":"S21"},"VPC":{"shape":"S3"},"Location":{"location":"header","locationName":"Location"}}}},"CreateReusableDelegationSet":{"http":{"requestUri":"/2013-04-01/delegationset","responseCode":201},"input":{"locationName":"CreateReusableDelegationSetRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["CallerReference"],"members":{"CallerReference":{},"HostedZoneId":{}}},"output":{"type":"structure","required":["DelegationSet","Location"],"members":{"DelegationSet":{"shape":"S21"},"Location":{"location":"header","locationName":"Location"}}}},"CreateTrafficPolicy":{"http":{"requestUri":"/2013-04-01/trafficpolicy","responseCode":201},"input":{"locationName":"CreateTrafficPolicyRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["Name","Document"],"members":{"Name":{},"Document":{},"Comment":{}}},"output":{"type":"structure","required":["TrafficPolicy","Location"],"members":{"TrafficPolicy":{"shape":"S2a"},"Location":{"location":"header","locationName":"Location"}}}},"CreateTrafficPolicyInstance":{"http":{"requestUri":"/2013-04-01/trafficpolicyinstance","responseCode":201},"input":{"locationName":"CreateTrafficPolicyInstanceRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["HostedZoneId","Name","TTL","TrafficPolicyId","TrafficPolicyVersion"],"members":{"HostedZoneId":{},"Name":{},"TTL":{"type":"long"},"TrafficPolicyId":{},"TrafficPolicyVersion":{"type":"integer"}}},"output":{"type":"structure","required":["TrafficPolicyInstance","Location"],"members":{"TrafficPolicyInstance":{"shape":"S2f"},"Location":{"location":"header","locationName":"Location"}}}},"CreateTrafficPolicyVersion":{"http":{"requestUri":"/2013-04-01/trafficpolicy/{Id}","responseCode":201},"input":{"locationName":"CreateTrafficPolicyVersionRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["Id","Document"],"members":{"Id":{"location":"uri","locationName":"Id"},"Document":{},"Comment":{}}},"output":{"type":"structure","required":["TrafficPolicy","Location"],"members":{"TrafficPolicy":{"shape":"S2a"},"Location":{"location":"header","locationName":"Location"}}}},"DeleteHealthCheck":{"http":{"method":"DELETE","requestUri":"/2013-04-01/healthcheck/{HealthCheckId}"},"input":{"type":"structure","required":["HealthCheckId"],"members":{"HealthCheckId":{"location":"uri","locationName":"HealthCheckId"}}},"output":{"type":"structure","members":{}}},"DeleteHostedZone":{"http":{"method":"DELETE","requestUri":"/2013-04-01/hostedzone/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","required":["ChangeInfo"],"members":{"ChangeInfo":{"shape":"S8"}}}},"DeleteReusableDelegationSet":{"http":{"method":"DELETE","requestUri":"/2013-04-01/delegationset/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","members":{}}},"DeleteTrafficPolicy":{"http":{"method":"DELETE","requestUri":"/2013-04-01/trafficpolicy/{Id}/{Version}"},"input":{"type":"structure","required":["Id","Version"],"members":{"Id":{"location":"uri","locationName":"Id"},"Version":{"location":"uri","locationName":"Version","type":"integer"}}},"output":{"type":"structure","members":{}}},"DeleteTrafficPolicyInstance":{"http":{"method":"DELETE","requestUri":"/2013-04-01/trafficpolicyinstance/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","members":{}}},"DisassociateVPCFromHostedZone":{"http":{"requestUri":"/2013-04-01/hostedzone/{Id}/disassociatevpc"},"input":{"locationName":"DisassociateVPCFromHostedZoneRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["HostedZoneId","VPC"],"members":{"HostedZoneId":{"location":"uri","locationName":"Id"},"VPC":{"shape":"S3"},"Comment":{}}},"output":{"type":"structure","required":["ChangeInfo"],"members":{"ChangeInfo":{"shape":"S8"}}}},"GetChange":{"http":{"method":"GET","requestUri":"/2013-04-01/change/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","required":["ChangeInfo"],"members":{"ChangeInfo":{"shape":"S8"}}}},"GetChangeDetails":{"http":{"method":"GET","requestUri":"/2013-04-01/changedetails/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}},"deprecated":true},"output":{"type":"structure","required":["ChangeBatchRecord"],"members":{"ChangeBatchRecord":{"shape":"S31"}},"deprecated":true},"deprecated":true},"GetCheckerIpRanges":{"http":{"method":"GET","requestUri":"/2013-04-01/checkeripranges"},"input":{"type":"structure","members":{}},"output":{"type":"structure","required":["CheckerIpRanges"],"members":{"CheckerIpRanges":{"type":"list","member":{}}}}},"GetGeoLocation":{"http":{"method":"GET","requestUri":"/2013-04-01/geolocation"},"input":{"type":"structure","members":{"ContinentCode":{"location":"querystring","locationName":"continentcode"},"CountryCode":{"location":"querystring","locationName":"countrycode"},"SubdivisionCode":{"location":"querystring","locationName":"subdivisioncode"}}},"output":{"type":"structure","required":["GeoLocationDetails"],"members":{"GeoLocationDetails":{"shape":"S39"}}}},"GetHealthCheck":{"http":{"method":"GET","requestUri":"/2013-04-01/healthcheck/{HealthCheckId}"},"input":{"type":"structure","required":["HealthCheckId"],"members":{"HealthCheckId":{"location":"uri","locationName":"HealthCheckId"}}},"output":{"type":"structure","required":["HealthCheck"],"members":{"HealthCheck":{"shape":"S1r"}}}},"GetHealthCheckCount":{"http":{"method":"GET","requestUri":"/2013-04-01/healthcheckcount"},"input":{"type":"structure","members":{}},"output":{"type":"structure","required":["HealthCheckCount"],"members":{"HealthCheckCount":{"type":"long"}}}},"GetHealthCheckLastFailureReason":{"http":{"method":"GET","requestUri":"/2013-04-01/healthcheck/{HealthCheckId}/lastfailurereason"},"input":{"type":"structure","required":["HealthCheckId"],"members":{"HealthCheckId":{"location":"uri","locationName":"HealthCheckId"}}},"output":{"type":"structure","required":["HealthCheckObservations"],"members":{"HealthCheckObservations":{"shape":"S3k"}}}},"GetHealthCheckStatus":{"http":{"method":"GET","requestUri":"/2013-04-01/healthcheck/{HealthCheckId}/status"},"input":{"type":"structure","required":["HealthCheckId"],"members":{"HealthCheckId":{"location":"uri","locationName":"HealthCheckId"}}},"output":{"type":"structure","required":["HealthCheckObservations"],"members":{"HealthCheckObservations":{"shape":"S3k"}}}},"GetHostedZone":{"http":{"method":"GET","requestUri":"/2013-04-01/hostedzone/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","required":["HostedZone"],"members":{"HostedZone":{"shape":"S1z"},"DelegationSet":{"shape":"S21"},"VPCs":{"type":"list","member":{"shape":"S3","locationName":"VPC"}}}}},"GetHostedZoneCount":{"http":{"method":"GET","requestUri":"/2013-04-01/hostedzonecount"},"input":{"type":"structure","members":{}},"output":{"type":"structure","required":["HostedZoneCount"],"members":{"HostedZoneCount":{"type":"long"}}}},"GetReusableDelegationSet":{"http":{"method":"GET","requestUri":"/2013-04-01/delegationset/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","required":["DelegationSet"],"members":{"DelegationSet":{"shape":"S21"}}}},"GetTrafficPolicy":{"http":{"method":"GET","requestUri":"/2013-04-01/trafficpolicy/{Id}/{Version}"},"input":{"type":"structure","required":["Id","Version"],"members":{"Id":{"location":"uri","locationName":"Id"},"Version":{"location":"uri","locationName":"Version","type":"integer"}}},"output":{"type":"structure","required":["TrafficPolicy"],"members":{"TrafficPolicy":{"shape":"S2a"}}}},"GetTrafficPolicyInstance":{"http":{"method":"GET","requestUri":"/2013-04-01/trafficpolicyinstance/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","required":["TrafficPolicyInstance"],"members":{"TrafficPolicyInstance":{"shape":"S2f"}}}},"GetTrafficPolicyInstanceCount":{"http":{"method":"GET","requestUri":"/2013-04-01/trafficpolicyinstancecount"},"input":{"type":"structure","members":{}},"output":{"type":"structure","required":["TrafficPolicyInstanceCount"],"members":{"TrafficPolicyInstanceCount":{"type":"integer"}}}},"ListChangeBatchesByHostedZone":{"http":{"method":"GET","requestUri":"/2013-04-01/hostedzone/{Id}/changes"},"input":{"type":"structure","required":["HostedZoneId","StartDate","EndDate"],"members":{"HostedZoneId":{"location":"uri","locationName":"Id"},"StartDate":{"shape":"S46","location":"querystring","locationName":"startDate"},"EndDate":{"shape":"S46","location":"querystring","locationName":"endDate"},"MaxItems":{"location":"querystring","locationName":"maxItems"},"Marker":{"location":"querystring","locationName":"marker"}},"deprecated":true},"output":{"type":"structure","required":["MaxItems","Marker","ChangeBatchRecords"],"members":{"MaxItems":{},"Marker":{},"IsTruncated":{"type":"boolean"},"ChangeBatchRecords":{"shape":"S4b"},"NextMarker":{}},"deprecated":true},"deprecated":true},"ListChangeBatchesByRRSet":{"http":{"method":"GET","requestUri":"/2013-04-01/hostedzone/{Id}/rrsChanges"},"input":{"type":"structure","required":["HostedZoneId","Name","Type","StartDate","EndDate"],"members":{"HostedZoneId":{"location":"uri","locationName":"Id"},"Name":{"location":"querystring","locationName":"rrSet_name"},"Type":{"location":"querystring","locationName":"type"},"SetIdentifier":{"location":"querystring","locationName":"identifier"},"StartDate":{"shape":"S46","location":"querystring","locationName":"startDate"},"EndDate":{"shape":"S46","location":"querystring","locationName":"endDate"},"MaxItems":{"location":"querystring","locationName":"maxItems"},"Marker":{"location":"querystring","locationName":"marker"}},"deprecated":true},"output":{"type":"structure","required":["MaxItems","Marker","ChangeBatchRecords"],"members":{"MaxItems":{},"Marker":{},"IsTruncated":{"type":"boolean"},"ChangeBatchRecords":{"shape":"S4b"},"NextMarker":{}},"deprecated":true},"deprecated":true},"ListGeoLocations":{"http":{"method":"GET","requestUri":"/2013-04-01/geolocations"},"input":{"type":"structure","members":{"StartContinentCode":{"location":"querystring","locationName":"startcontinentcode"},"StartCountryCode":{"location":"querystring","locationName":"startcountrycode"},"StartSubdivisionCode":{"location":"querystring","locationName":"startsubdivisioncode"},"MaxItems":{"location":"querystring","locationName":"maxitems"}}},"output":{"type":"structure","required":["GeoLocationDetailsList","IsTruncated","MaxItems"],"members":{"GeoLocationDetailsList":{"type":"list","member":{"shape":"S39","locationName":"GeoLocationDetails"}},"IsTruncated":{"type":"boolean"},"NextContinentCode":{},"NextCountryCode":{},"NextSubdivisionCode":{},"MaxItems":{}}}},"ListHealthChecks":{"http":{"method":"GET","requestUri":"/2013-04-01/healthcheck"},"input":{"type":"structure","members":{"Marker":{"location":"querystring","locationName":"marker"},"MaxItems":{"location":"querystring","locationName":"maxitems"}}},"output":{"type":"structure","required":["HealthChecks","Marker","IsTruncated","MaxItems"],"members":{"HealthChecks":{"type":"list","member":{"shape":"S1r","locationName":"HealthCheck"}},"Marker":{},"IsTruncated":{"type":"boolean"},"NextMarker":{},"MaxItems":{}}}},"ListHostedZones":{"http":{"method":"GET","requestUri":"/2013-04-01/hostedzone"},"input":{"type":"structure","members":{"Marker":{"location":"querystring","locationName":"marker"},"MaxItems":{"location":"querystring","locationName":"maxitems"},"DelegationSetId":{"location":"querystring","locationName":"delegationsetid"}}},"output":{"type":"structure","required":["HostedZones","Marker","IsTruncated","MaxItems"],"members":{"HostedZones":{"shape":"S4m"},"Marker":{},"IsTruncated":{"type":"boolean"},"NextMarker":{},"MaxItems":{}}}},"ListHostedZonesByName":{"http":{"method":"GET","requestUri":"/2013-04-01/hostedzonesbyname"},"input":{"type":"structure","members":{"DNSName":{"location":"querystring","locationName":"dnsname"},"HostedZoneId":{"location":"querystring","locationName":"hostedzoneid"},"MaxItems":{"location":"querystring","locationName":"maxitems"}}},"output":{"type":"structure","required":["HostedZones","IsTruncated","MaxItems"],"members":{"HostedZones":{"shape":"S4m"},"DNSName":{},"HostedZoneId":{},"IsTruncated":{"type":"boolean"},"NextDNSName":{},"NextHostedZoneId":{},"MaxItems":{}}}},"ListResourceRecordSets":{"http":{"method":"GET","requestUri":"/2013-04-01/hostedzone/{Id}/rrset"},"input":{"type":"structure","required":["HostedZoneId"],"members":{"HostedZoneId":{"location":"uri","locationName":"Id"},"StartRecordName":{"location":"querystring","locationName":"name"},"StartRecordType":{"location":"querystring","locationName":"type"},"StartRecordIdentifier":{"location":"querystring","locationName":"identifier"},"MaxItems":{"location":"querystring","locationName":"maxitems"}}},"output":{"type":"structure","required":["ResourceRecordSets","IsTruncated","MaxItems"],"members":{"ResourceRecordSets":{"type":"list","member":{"shape":"Sh","locationName":"ResourceRecordSet"}},"IsTruncated":{"type":"boolean"},"NextRecordName":{},"NextRecordType":{},"NextRecordIdentifier":{},"MaxItems":{}}}},"ListReusableDelegationSets":{"http":{"method":"GET","requestUri":"/2013-04-01/delegationset"},"input":{"type":"structure","members":{"Marker":{"location":"querystring","locationName":"marker"},"MaxItems":{"location":"querystring","locationName":"maxitems"}}},"output":{"type":"structure","required":["DelegationSets","Marker","IsTruncated","MaxItems"],"members":{"DelegationSets":{"type":"list","member":{"shape":"S21","locationName":"DelegationSet"}},"Marker":{},"IsTruncated":{"type":"boolean"},"NextMarker":{},"MaxItems":{}}}},"ListTagsForResource":{"http":{"method":"GET","requestUri":"/2013-04-01/tags/{ResourceType}/{ResourceId}"},"input":{"type":"structure","required":["ResourceType","ResourceId"],"members":{"ResourceType":{"location":"uri","locationName":"ResourceType"},"ResourceId":{"location":"uri","locationName":"ResourceId"}}},"output":{"type":"structure","required":["ResourceTagSet"],"members":{"ResourceTagSet":{"shape":"S4x"}}}},"ListTagsForResources":{"http":{"requestUri":"/2013-04-01/tags/{ResourceType}"},"input":{"locationName":"ListTagsForResourcesRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["ResourceType","ResourceIds"],"members":{"ResourceType":{"location":"uri","locationName":"ResourceType"},"ResourceIds":{"type":"list","member":{"locationName":"ResourceId"}}}},"output":{"type":"structure","required":["ResourceTagSets"],"members":{"ResourceTagSets":{"type":"list","member":{"shape":"S4x","locationName":"ResourceTagSet"}}}}},"ListTrafficPolicies":{"http":{"method":"GET","requestUri":"/2013-04-01/trafficpolicies"},"input":{"type":"structure","members":{"TrafficPolicyIdMarker":{"location":"querystring","locationName":"trafficpolicyid"},"MaxItems":{"location":"querystring","locationName":"maxitems"}}},"output":{"type":"structure","required":["TrafficPolicySummaries","IsTruncated","TrafficPolicyIdMarker","MaxItems"],"members":{"TrafficPolicySummaries":{"type":"list","member":{"locationName":"TrafficPolicySummary","type":"structure","required":["Id","Name","Type","LatestVersion","TrafficPolicyCount"],"members":{"Id":{},"Name":{},"Type":{},"LatestVersion":{"type":"integer"},"TrafficPolicyCount":{"type":"integer"}}}},"IsTruncated":{"type":"boolean"},"TrafficPolicyIdMarker":{},"MaxItems":{}}}},"ListTrafficPolicyInstances":{"http":{"method":"GET","requestUri":"/2013-04-01/trafficpolicyinstances"},"input":{"type":"structure","members":{"HostedZoneIdMarker":{"location":"querystring","locationName":"hostedzoneid"},"TrafficPolicyInstanceNameMarker":{"location":"querystring","locationName":"trafficpolicyinstancename"},"TrafficPolicyInstanceTypeMarker":{"location":"querystring","locationName":"trafficpolicyinstancetype"},"MaxItems":{"location":"querystring","locationName":"maxitems"}}},"output":{"type":"structure","required":["TrafficPolicyInstances","IsTruncated","MaxItems"],"members":{"TrafficPolicyInstances":{"shape":"S58"},"HostedZoneIdMarker":{},"TrafficPolicyInstanceNameMarker":{},"TrafficPolicyInstanceTypeMarker":{},"IsTruncated":{"type":"boolean"},"MaxItems":{}}}},"ListTrafficPolicyInstancesByHostedZone":{"http":{"method":"GET","requestUri":"/2013-04-01/trafficpolicyinstances/hostedzone"},"input":{"type":"structure","required":["HostedZoneId"],"members":{"HostedZoneId":{"location":"querystring","locationName":"id"},"TrafficPolicyInstanceNameMarker":{"location":"querystring","locationName":"trafficpolicyinstancename"},"TrafficPolicyInstanceTypeMarker":{"location":"querystring","locationName":"trafficpolicyinstancetype"},"MaxItems":{"location":"querystring","locationName":"maxitems"}}},"output":{"type":"structure","required":["TrafficPolicyInstances","IsTruncated","MaxItems"],"members":{"TrafficPolicyInstances":{"shape":"S58"},"TrafficPolicyInstanceNameMarker":{},"TrafficPolicyInstanceTypeMarker":{},"IsTruncated":{"type":"boolean"},"MaxItems":{}}}},"ListTrafficPolicyInstancesByPolicy":{"http":{"method":"GET","requestUri":"/2013-04-01/trafficpolicyinstances/trafficpolicy"},"input":{"type":"structure","required":["TrafficPolicyId","TrafficPolicyVersion"],"members":{"TrafficPolicyId":{"location":"querystring","locationName":"id"},"TrafficPolicyVersion":{"location":"querystring","locationName":"version","type":"integer"},"HostedZoneIdMarker":{"location":"querystring","locationName":"hostedzoneid"},"TrafficPolicyInstanceNameMarker":{"location":"querystring","locationName":"trafficpolicyinstancename"},"TrafficPolicyInstanceTypeMarker":{"location":"querystring","locationName":"trafficpolicyinstancetype"},"MaxItems":{"location":"querystring","locationName":"maxitems"}}},"output":{"type":"structure","required":["TrafficPolicyInstances","IsTruncated","MaxItems"],"members":{"TrafficPolicyInstances":{"shape":"S58"},"HostedZoneIdMarker":{},"TrafficPolicyInstanceNameMarker":{},"TrafficPolicyInstanceTypeMarker":{},"IsTruncated":{"type":"boolean"},"MaxItems":{}}}},"ListTrafficPolicyVersions":{"http":{"method":"GET","requestUri":"/2013-04-01/trafficpolicies/{Id}/versions"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"},"TrafficPolicyVersionMarker":{"location":"querystring","locationName":"trafficpolicyversion"},"MaxItems":{"location":"querystring","locationName":"maxitems"}}},"output":{"type":"structure","required":["TrafficPolicies","IsTruncated","TrafficPolicyVersionMarker","MaxItems"],"members":{"TrafficPolicies":{"type":"list","member":{"shape":"S2a","locationName":"TrafficPolicy"}},"IsTruncated":{"type":"boolean"},"TrafficPolicyVersionMarker":{},"MaxItems":{}}}},"UpdateHealthCheck":{"http":{"requestUri":"/2013-04-01/healthcheck/{HealthCheckId}"},"input":{"locationName":"UpdateHealthCheckRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["HealthCheckId"],"members":{"HealthCheckId":{"location":"uri","locationName":"HealthCheckId"},"HealthCheckVersion":{"type":"long"},"IPAddress":{},"Port":{"type":"integer"},"ResourcePath":{},"FullyQualifiedDomainName":{},"SearchString":{},"FailureThreshold":{"type":"integer"},"Inverted":{"type":"boolean"},"HealthThreshold":{"type":"integer"},"ChildHealthChecks":{"shape":"S1o"},"EnableSNI":{"type":"boolean"}}},"output":{"type":"structure","required":["HealthCheck"],"members":{"HealthCheck":{"shape":"S1r"}}}},"UpdateHostedZoneComment":{"http":{"requestUri":"/2013-04-01/hostedzone/{Id}"},"input":{"locationName":"UpdateHostedZoneCommentRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"},"Comment":{}}},"output":{"type":"structure","required":["HostedZone"],"members":{"HostedZone":{"shape":"S1z"}}}},"UpdateTrafficPolicyComment":{"http":{"requestUri":"/2013-04-01/trafficpolicy/{Id}/{Version}"},"input":{"locationName":"UpdateTrafficPolicyCommentRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["Id","Version","Comment"],"members":{"Id":{"location":"uri","locationName":"Id"},"Version":{"location":"uri","locationName":"Version","type":"integer"},"Comment":{}}},"output":{"type":"structure","required":["TrafficPolicy"],"members":{"TrafficPolicy":{"shape":"S2a"}}}},"UpdateTrafficPolicyInstance":{"http":{"requestUri":"/2013-04-01/trafficpolicyinstance/{Id}"},"input":{"locationName":"UpdateTrafficPolicyInstanceRequest","xmlNamespace":{"uri":"https://route53.amazonaws.com/doc/2013-04-01/"},"type":"structure","required":["Id","TTL","TrafficPolicyId","TrafficPolicyVersion"],"members":{"Id":{"location":"uri","locationName":"Id"},"TTL":{"type":"long"},"TrafficPolicyId":{},"TrafficPolicyVersion":{"type":"integer"}}},"output":{"type":"structure","required":["TrafficPolicyInstance"],"members":{"TrafficPolicyInstance":{"shape":"S2f"}}}}},"shapes":{"S3":{"type":"structure","members":{"VPCRegion":{},"VPCId":{}}},"S8":{"type":"structure","required":["Id","Status","SubmittedAt"],"members":{"Id":{},"Status":{},"SubmittedAt":{"type":"timestamp"},"Comment":{}}},"Se":{"type":"list","member":{"locationName":"Change","type":"structure","required":["Action","ResourceRecordSet"],"members":{"Action":{},"ResourceRecordSet":{"shape":"Sh"}}}},"Sh":{"type":"structure","required":["Name","Type"],"members":{"Name":{},"Type":{},"SetIdentifier":{},"Weight":{"type":"long"},"Region":{},"GeoLocation":{"type":"structure","members":{"ContinentCode":{},"CountryCode":{},"SubdivisionCode":{}}},"Failover":{},"TTL":{"type":"long"},"ResourceRecords":{"type":"list","member":{"locationName":"ResourceRecord","type":"structure","required":["Value"],"members":{"Value":{}}}},"AliasTarget":{"type":"structure","required":["HostedZoneId","DNSName","EvaluateTargetHealth"],"members":{"HostedZoneId":{},"DNSName":{},"EvaluateTargetHealth":{"type":"boolean"}}},"HealthCheckId":{},"TrafficPolicyInstanceId":{}}},"S14":{"type":"list","member":{"locationName":"Tag","type":"structure","members":{"Key":{},"Value":{}}}},"S1c":{"type":"structure","required":["Type"],"members":{"IPAddress":{},"Port":{"type":"integer"},"Type":{},"ResourcePath":{},"FullyQualifiedDomainName":{},"SearchString":{},"RequestInterval":{"type":"integer"},"FailureThreshold":{"type":"integer"},"MeasureLatency":{"type":"boolean"},"Inverted":{"type":"boolean"},"HealthThreshold":{"type":"integer"},"ChildHealthChecks":{"shape":"S1o"},"EnableSNI":{"type":"boolean"}}},"S1o":{"type":"list","member":{"locationName":"ChildHealthCheck"}},"S1r":{"type":"structure","required":["Id","CallerReference","HealthCheckConfig","HealthCheckVersion"],"members":{"Id":{},"CallerReference":{},"HealthCheckConfig":{"shape":"S1c"},"HealthCheckVersion":{"type":"long"}}},"S1w":{"type":"structure","members":{"Comment":{},"PrivateZone":{"type":"boolean"}}},"S1z":{"type":"structure","required":["Id","Name","CallerReference"],"members":{"Id":{},"Name":{},"CallerReference":{},"Config":{"shape":"S1w"},"ResourceRecordSetCount":{"type":"long"}}},"S21":{"type":"structure","required":["NameServers"],"members":{"Id":{},"CallerReference":{},"NameServers":{"type":"list","member":{"locationName":"NameServer"}}}},"S2a":{"type":"structure","required":["Id","Version","Name","Type","Document"],"members":{"Id":{},"Version":{"type":"integer"},"Name":{},"Type":{},"Document":{},"Comment":{}}},"S2f":{"type":"structure","required":["Id","HostedZoneId","Name","TTL","State","Message","TrafficPolicyId","TrafficPolicyVersion","TrafficPolicyType"],"members":{"Id":{},"HostedZoneId":{},"Name":{},"TTL":{"type":"long"},"State":{},"Message":{},"TrafficPolicyId":{},"TrafficPolicyVersion":{"type":"integer"},"TrafficPolicyType":{}}},"S31":{"type":"structure","required":["Id","Status"],"members":{"Id":{},"SubmittedAt":{"type":"timestamp"},"Status":{},"Comment":{},"Submitter":{},"Changes":{"shape":"Se"}},"deprecated":true},"S39":{"type":"structure","members":{"ContinentCode":{},"ContinentName":{},"CountryCode":{},"CountryName":{},"SubdivisionCode":{},"SubdivisionName":{}}},"S3k":{"type":"list","member":{"locationName":"HealthCheckObservation","type":"structure","members":{"IPAddress":{},"StatusReport":{"type":"structure","members":{"Status":{},"CheckedTime":{"type":"timestamp"}}}}}},"S46":{"type":"string","deprecated":true},"S4b":{"type":"list","member":{"shape":"S31","locationName":"ChangeBatchRecord"},"deprecated":true},"S4m":{"type":"list","member":{"shape":"S1z","locationName":"HostedZone"}},"S4x":{"type":"structure","members":{"ResourceType":{},"ResourceId":{},"Tags":{"shape":"S14"}}},"S58":{"type":"list","member":{"shape":"S2f","locationName":"TrafficPolicyInstance"}}},"paginators":{"ListHealthChecks":{"input_token":"Marker","output_token":"NextMarker","more_results":"IsTruncated","limit_key":"MaxItems","result_key":"HealthChecks"},"ListHostedZones":{"input_token":"Marker","output_token":"NextMarker","more_results":"IsTruncated","limit_key":"MaxItems","result_key":"HostedZones"},"ListResourceRecordSets":{"more_results":"IsTruncated","limit_key":"MaxItems","result_key":"ResourceRecordSets","input_token":["StartRecordName","StartRecordType","StartRecordIdentifier"],"output_token":["NextRecordName","NextRecordType","NextRecordIdentifier"]}}};
 AWS.apiLoader.services['s3'] = {};
 AWS.S3 = AWS.Service.defineService('s3', [ '2006-03-01' ]);
 require('./services/s3');
@@ -36,9 +50,164 @@ AWS.apiLoader.services['sts'] = {};
 AWS.STS = AWS.Service.defineService('sts', [ '2011-06-15' ]);
 require('./services/sts');
 
-AWS.apiLoader.services['sts']['2011-06-15'] = {"version":"2.0","metadata":{"apiVersion":"2011-06-15","endpointPrefix":"sts","globalEndpoint":"sts.amazonaws.com","serviceAbbreviation":"AWS STS","serviceFullName":"AWS Security Token Service","signatureVersion":"v4","xmlNamespace":"https://sts.amazonaws.com/doc/2011-06-15/","protocol":"query"},"operations":{"AssumeRole":{"input":{"type":"structure","required":["RoleArn","RoleSessionName"],"members":{"RoleArn":{},"RoleSessionName":{},"Policy":{},"DurationSeconds":{"type":"integer"},"ExternalId":{},"SerialNumber":{},"TokenCode":{}}},"output":{"resultWrapper":"AssumeRoleResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"AssumedRoleUser":{"shape":"Sf"},"PackedPolicySize":{"type":"integer"}}},"http":{}},"AssumeRoleWithSAML":{"input":{"type":"structure","required":["RoleArn","PrincipalArn","SAMLAssertion"],"members":{"RoleArn":{},"PrincipalArn":{},"SAMLAssertion":{},"Policy":{},"DurationSeconds":{"type":"integer"}}},"output":{"resultWrapper":"AssumeRoleWithSAMLResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"AssumedRoleUser":{"shape":"Sf"},"PackedPolicySize":{"type":"integer"},"Subject":{},"SubjectType":{},"Issuer":{},"Audience":{},"NameQualifier":{}}},"http":{}},"AssumeRoleWithWebIdentity":{"input":{"type":"structure","required":["RoleArn","RoleSessionName","WebIdentityToken"],"members":{"RoleArn":{},"RoleSessionName":{},"WebIdentityToken":{},"ProviderId":{},"Policy":{},"DurationSeconds":{"type":"integer"}}},"output":{"resultWrapper":"AssumeRoleWithWebIdentityResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"SubjectFromWebIdentityToken":{},"AssumedRoleUser":{"shape":"Sf"},"PackedPolicySize":{"type":"integer"},"Provider":{},"Audience":{}}},"http":{}},"DecodeAuthorizationMessage":{"input":{"type":"structure","required":["EncodedMessage"],"members":{"EncodedMessage":{}}},"output":{"resultWrapper":"DecodeAuthorizationMessageResult","type":"structure","members":{"DecodedMessage":{}}},"http":{}},"GetFederationToken":{"input":{"type":"structure","required":["Name"],"members":{"Name":{},"Policy":{},"DurationSeconds":{"type":"integer"}}},"output":{"resultWrapper":"GetFederationTokenResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"FederatedUser":{"type":"structure","required":["FederatedUserId","Arn"],"members":{"FederatedUserId":{},"Arn":{}}},"PackedPolicySize":{"type":"integer"}}},"http":{}},"GetSessionToken":{"input":{"type":"structure","members":{"DurationSeconds":{"type":"integer"},"SerialNumber":{},"TokenCode":{}}},"output":{"resultWrapper":"GetSessionTokenResult","type":"structure","members":{"Credentials":{"shape":"Sa"}}},"http":{}}},"shapes":{"Sa":{"type":"structure","required":["AccessKeyId","SecretAccessKey","SessionToken","Expiration"],"members":{"AccessKeyId":{},"SecretAccessKey":{},"SessionToken":{},"Expiration":{"type":"timestamp"}}},"Sf":{"type":"structure","required":["AssumedRoleId","Arn"],"members":{"AssumedRoleId":{},"Arn":{}}}},"examples":{}};
+AWS.apiLoader.services['sts']['2011-06-15'] = {"version":"2.0","metadata":{"apiVersion":"2011-06-15","endpointPrefix":"sts","globalEndpoint":"sts.amazonaws.com","protocol":"query","serviceAbbreviation":"AWS STS","serviceFullName":"AWS Security Token Service","signatureVersion":"v4","xmlNamespace":"https://sts.amazonaws.com/doc/2011-06-15/"},"operations":{"AssumeRole":{"input":{"type":"structure","required":["RoleArn","RoleSessionName"],"members":{"RoleArn":{},"RoleSessionName":{},"Policy":{},"DurationSeconds":{"type":"integer"},"ExternalId":{},"SerialNumber":{},"TokenCode":{}}},"output":{"resultWrapper":"AssumeRoleResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"AssumedRoleUser":{"shape":"Sf"},"PackedPolicySize":{"type":"integer"}}},"http":{}},"AssumeRoleWithSAML":{"input":{"type":"structure","required":["RoleArn","PrincipalArn","SAMLAssertion"],"members":{"RoleArn":{},"PrincipalArn":{},"SAMLAssertion":{},"Policy":{},"DurationSeconds":{"type":"integer"}}},"output":{"resultWrapper":"AssumeRoleWithSAMLResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"AssumedRoleUser":{"shape":"Sf"},"PackedPolicySize":{"type":"integer"},"Subject":{},"SubjectType":{},"Issuer":{},"Audience":{},"NameQualifier":{}}},"http":{}},"AssumeRoleWithWebIdentity":{"input":{"type":"structure","required":["RoleArn","RoleSessionName","WebIdentityToken"],"members":{"RoleArn":{},"RoleSessionName":{},"WebIdentityToken":{},"ProviderId":{},"Policy":{},"DurationSeconds":{"type":"integer"}}},"output":{"resultWrapper":"AssumeRoleWithWebIdentityResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"SubjectFromWebIdentityToken":{},"AssumedRoleUser":{"shape":"Sf"},"PackedPolicySize":{"type":"integer"},"Provider":{},"Audience":{}}},"http":{}},"DecodeAuthorizationMessage":{"input":{"type":"structure","required":["EncodedMessage"],"members":{"EncodedMessage":{}}},"output":{"resultWrapper":"DecodeAuthorizationMessageResult","type":"structure","members":{"DecodedMessage":{}}},"http":{}},"GetFederationToken":{"input":{"type":"structure","required":["Name"],"members":{"Name":{},"Policy":{},"DurationSeconds":{"type":"integer"}}},"output":{"resultWrapper":"GetFederationTokenResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"FederatedUser":{"type":"structure","required":["FederatedUserId","Arn"],"members":{"FederatedUserId":{},"Arn":{}}},"PackedPolicySize":{"type":"integer"}}},"http":{}},"GetSessionToken":{"input":{"type":"structure","members":{"DurationSeconds":{"type":"integer"},"SerialNumber":{},"TokenCode":{}}},"output":{"resultWrapper":"GetSessionTokenResult","type":"structure","members":{"Credentials":{"shape":"Sa"}}},"http":{}}},"shapes":{"Sa":{"type":"structure","required":["AccessKeyId","SecretAccessKey","SessionToken","Expiration"],"members":{"AccessKeyId":{},"SecretAccessKey":{},"SessionToken":{},"Expiration":{"type":"timestamp"}}},"Sf":{"type":"structure","required":["AssumedRoleId","Arn"],"members":{"AssumedRoleId":{},"Arn":{}}}}};
 
-},{"./core":3,"./http/xhr":12,"./services/ec2":36,"./services/route53":37,"./services/s3":38,"./services/sts":39,"./xml/browser_parser":49}],2:[function(require,module,exports){
+},{"./core":4,"./http/xhr":13,"./services/cloudfront":37,"./services/ec2":38,"./services/route53":39,"./services/s3":40,"./services/sts":41,"./xml/browser_parser":51}],2:[function(require,module,exports){
+var crypto = require('crypto'),
+    url = require('url'),
+    AWS = require('../core'),
+    base64Encode = AWS.util.base64.encode,
+    inherit = AWS.util.inherit;
+
+var queryEncode = function (string) {
+    var replacements = {
+        '+': '-',
+        '=': '_',
+        '/': '~'
+    };
+    return string.replace(/[\+=\/]/g, function (match) {
+        return replacements[match];
+    });
+};
+
+var signPolicy = function (policy, privateKey) {
+    var sign = crypto.createSign('RSA-SHA1');
+    sign.write(policy);
+    return queryEncode(sign.sign(privateKey, 'base64'))
+};
+
+var signWithCannedPolicy = function (url, expires, keyPairId, privateKey) {
+    var policy = JSON.stringify({
+        Statement: [
+            {
+                Resource: url,
+                Condition: { DateLessThan: { 'AWS:EpochTime': expires } }
+            }
+        ]
+    });
+
+    return {
+        Expires: expires,
+        'Key-Pair-Id': keyPairId,
+        Signature: signPolicy(policy.toString(), privateKey)
+    };
+};
+
+var signWithCustomPolicy = function (policy, keyPairId, privateKey) {
+    policy = policy.replace(/\s/mg, policy);
+
+    return {
+        Policy: queryEncode(base64Encode(policy)),
+        'Key-Pair-Id': keyPairId,
+        Signature: signPolicy(policy, privateKey)
+    }
+};
+
+var determineScheme = function (url) {
+    var parts = url.split('://');
+    if (parts.length < 2) {
+        throw new Error('Invalid URL.');
+    }
+
+    return parts[0].replace('*', '');
+};
+
+var getRtmpUrl = function (rtmpUrl) {
+    var parsed = url.parse(rtmpUrl);
+    return parsed.path.replace(/^\//, '') + parsed.hash;
+};
+
+var getResource = function (url) {
+    switch (determineScheme(url)) {
+        case 'http':
+        case 'https':
+            return url;
+        case 'rtmp':
+            return getRtmpUrl(url);
+        default:
+            throw new Error('Invalid URI scheme. Scheme must be one of'
+                + ' http, https, or rtmp');
+    }
+};
+
+var handleError = function (err, callback) {
+    if (!callback || typeof callback !== 'function') {
+        throw err;
+    }
+
+    callback(err);
+};
+
+var handleSuccess = function (result, callback) {
+    if (!callback || typeof callback !== 'function') {
+        return result;
+    }
+
+    callback(null, result);
+};
+
+AWS.CloudFront.Signer = inherit({
+
+    constructor: function Signer(keyPairId, privateKey) {
+        if (keyPairId === void 0 || privateKey === void 0) {
+            throw new Error('A key pair ID and private key are required');
+        }
+
+        this.keyPairId = keyPairId;
+        this.privateKey = privateKey;
+    },
+
+
+    getSignedCookie: function (options, cb) {
+        var signatureHash = 'policy' in options
+            ? signWithCustomPolicy(options.policy, this.keyPairId, this.privateKey)
+            : signWithCannedPolicy(options.url, options.expires, this.keyPairId, this.privateKey);
+
+        var cookieHash = {};
+        for (var key in signatureHash) {
+            if (signatureHash.hasOwnProperty(key)) {
+                cookieHash['CloudFront-' + key] = signatureHash[key];
+            }
+        }
+
+        return handleSuccess(cookieHash, cb);
+    },
+
+
+    getSignedUrl: function (options, cb) {
+        try {
+            var resource = getResource(options.url);
+        } catch (err) {
+            return handleError(err, cb);
+        }
+
+        var parsedUrl = url.parse(options.url, true),
+            signatureHash = options.hasOwnProperty('policy')
+                ? signWithCustomPolicy(options.policy, this.keyPairId, this.privateKey)
+                : signWithCannedPolicy(resource, options.expires, this.keyPairId, this.privateKey);
+
+        parsedUrl.search = null;
+        for (var key in signatureHash) {
+            if (signatureHash.hasOwnProperty(key)) {
+                parsedUrl.query[key] = signatureHash[key];
+            }
+        }
+
+        try {
+            var signedUrl = determineScheme(options.url) === 'rtmp'
+                    ? getRtmpUrl(url.format(parsedUrl))
+                    : url.format(parsedUrl);
+        } catch (err) {
+            return handleError(err, cb);
+        }
+
+        return handleSuccess(signedUrl, cb);
+    }
+});
+
+module.exports = AWS.CloudFront.Signer;
+
+},{"../core":4,"crypto":57,"url":69}],3:[function(require,module,exports){
 var AWS = require('./core');
 require('./credentials');
 require('./credentials/credential_provider_chain');
@@ -197,7 +366,10 @@ AWS.Config = AWS.util.inherit({
     dynamoDbCrc32: true,
     systemClockOffset: 0,
     signatureVersion: null,
-    signatureCache: true
+    signatureCache: true,
+    retryDelayOptions: {
+      base: 100
+    }
   },
 
 
@@ -213,7 +385,7 @@ AWS.Config = AWS.util.inherit({
 
 AWS.config = new AWS.Config();
 
-},{"./core":3,"./credentials":4,"./credentials/credential_provider_chain":6}],3:[function(require,module,exports){
+},{"./core":4,"./credentials":5,"./credentials/credential_provider_chain":7}],4:[function(require,module,exports){
 
 var AWS = { util: require('./util') };
 
@@ -225,7 +397,7 @@ module.exports = AWS;
 AWS.util.update(AWS, {
 
 
-  VERSION: '2.2.28',
+  VERSION: '2.2.43',
 
 
   Signers: {},
@@ -288,7 +460,7 @@ require('./param_validator');
 
 AWS.events = new AWS.SequentialExecutor();
 
-},{"./config":2,"./credentials":4,"./credentials/cognito_identity_credentials":5,"./credentials/credential_provider_chain":6,"./credentials/saml_credentials":7,"./credentials/temporary_credentials":8,"./credentials/web_identity_credentials":9,"./event_listeners":10,"./http":11,"./json/builder":13,"./json/parser":14,"./model/api":15,"./model/operation":17,"./model/paginator":18,"./model/resource_waiter":19,"./model/shape":20,"./param_validator":21,"./protocol/json":22,"./protocol/query":23,"./protocol/rest":24,"./protocol/rest_json":25,"./protocol/rest_xml":26,"./request":30,"./resource_waiter":31,"./response":32,"./sequential_executor":34,"./service":35,"./signers/request_signer":41,"./util":48,"./xml/builder":50}],4:[function(require,module,exports){
+},{"./config":3,"./credentials":5,"./credentials/cognito_identity_credentials":6,"./credentials/credential_provider_chain":7,"./credentials/saml_credentials":8,"./credentials/temporary_credentials":9,"./credentials/web_identity_credentials":10,"./event_listeners":11,"./http":12,"./json/builder":14,"./json/parser":15,"./model/api":16,"./model/operation":18,"./model/paginator":19,"./model/resource_waiter":20,"./model/shape":21,"./param_validator":22,"./protocol/json":23,"./protocol/query":24,"./protocol/rest":25,"./protocol/rest_json":26,"./protocol/rest_xml":27,"./request":31,"./resource_waiter":32,"./response":33,"./sequential_executor":35,"./service":36,"./signers/request_signer":43,"./util":50,"./xml/builder":52}],5:[function(require,module,exports){
 var AWS = require('./core');
 
 
@@ -346,7 +518,7 @@ AWS.Credentials = AWS.util.inherit({
   }
 });
 
-},{"./core":3}],5:[function(require,module,exports){
+},{"./core":4}],6:[function(require,module,exports){
 var AWS = require('../core');
 
 
@@ -533,7 +705,7 @@ AWS.CognitoIdentityCredentials = AWS.util.inherit(AWS.Credentials, {
   })()
 });
 
-},{"../core":3}],6:[function(require,module,exports){
+},{"../core":4}],7:[function(require,module,exports){
 var AWS = require('../core');
 
 
@@ -589,7 +761,7 @@ AWS.CredentialProviderChain = AWS.util.inherit(AWS.Credentials, {
 
 AWS.CredentialProviderChain.defaultProviders = [];
 
-},{"../core":3}],7:[function(require,module,exports){
+},{"../core":4}],8:[function(require,module,exports){
 var AWS = require('../core');
 
 
@@ -622,7 +794,7 @@ AWS.SAMLCredentials = AWS.util.inherit(AWS.Credentials, {
 
 });
 
-},{"../core":3}],8:[function(require,module,exports){
+},{"../core":4}],9:[function(require,module,exports){
 var AWS = require('../core');
 
 
@@ -672,7 +844,7 @@ AWS.TemporaryCredentials = AWS.util.inherit(AWS.Credentials, {
 
 });
 
-},{"../core":3}],9:[function(require,module,exports){
+},{"../core":4}],10:[function(require,module,exports){
 var AWS = require('../core');
 
 
@@ -709,7 +881,7 @@ AWS.WebIdentityCredentials = AWS.util.inherit(AWS.Credentials, {
 
 });
 
-},{"../core":3}],10:[function(require,module,exports){
+},{"../core":4}],11:[function(require,module,exports){
 var AWS = require('./core');
 var SequentialExecutor = require('./sequential_executor');
 
@@ -742,7 +914,8 @@ AWS.EventListeners = {
 
     add('VALIDATE_PARAMETERS', 'validate', function VALIDATE_PARAMETERS(req) {
       var rules = req.service.api.operations[req.operation].input;
-      new AWS.ParamValidator().validate(rules, req.params);
+      var validation = req.service.config.paramValidation;
+      new AWS.ParamValidator(validation).validate(rules, req.params);
     });
 
     addAsync('COMPUTE_SHA256', 'afterBuild', function COMPUTE_SHA256(req, done) {
@@ -1004,8 +1177,7 @@ AWS.EventListeners = {
         if (resp.error.redirect && resp.redirectCount < resp.maxRedirects) {
           resp.error.retryDelay = 0;
         } else if (resp.retryCount < resp.maxRetries) {
-          var delays = this.service.retryDelays();
-          resp.error.retryDelay = delays[resp.retryCount] || 0;
+          resp.error.retryDelay = this.service.retryDelays(resp.retryCount) || 0;
         }
       }
     });
@@ -1122,7 +1294,7 @@ AWS.EventListeners = {
   })
 };
 
-},{"./core":3,"./protocol/json":22,"./protocol/query":23,"./protocol/rest":24,"./protocol/rest_json":25,"./protocol/rest_xml":26,"./sequential_executor":34,"util":69}],11:[function(require,module,exports){
+},{"./core":4,"./protocol/json":23,"./protocol/query":24,"./protocol/rest":25,"./protocol/rest_json":26,"./protocol/rest_xml":27,"./sequential_executor":35,"util":71}],12:[function(require,module,exports){
 var AWS = require('./core');
 var inherit = AWS.util.inherit;
 
@@ -1228,7 +1400,7 @@ AWS.HttpClient.getInstance = function getInstance() {
   return this.singleton;
 };
 
-},{"./core":3}],12:[function(require,module,exports){
+},{"./core":4}],13:[function(require,module,exports){
 var AWS = require('../core');
 var EventEmitter = require('events').EventEmitter;
 require('../http');
@@ -1346,7 +1518,7 @@ AWS.HttpClient.prototype = AWS.XHRClient.prototype;
 
 AWS.HttpClient.streamsApiVersion = 1;
 
-},{"../core":3,"../http":11,"events":60}],13:[function(require,module,exports){
+},{"../core":4,"../http":12,"events":62}],14:[function(require,module,exports){
 var util = require('../util');
 
 function JsonBuilder() { }
@@ -1404,7 +1576,7 @@ function translateScalar(value, shape) {
 
 module.exports = JsonBuilder;
 
-},{"../util":48}],14:[function(require,module,exports){
+},{"../util":50}],15:[function(require,module,exports){
 var util = require('../util');
 
 function JsonParser() { }
@@ -1470,7 +1642,7 @@ function translateScalar(value, shape) {
 
 module.exports = JsonParser;
 
-},{"../util":48}],15:[function(require,module,exports){
+},{"../util":50}],16:[function(require,module,exports){
 var Collection = require('./collection');
 var Operation = require('./operation');
 var Shape = require('./shape');
@@ -1535,7 +1707,7 @@ function Api(api, options) {
 
 module.exports = Api;
 
-},{"../util":48,"./collection":16,"./operation":17,"./paginator":18,"./resource_waiter":19,"./shape":20}],16:[function(require,module,exports){
+},{"../util":50,"./collection":17,"./operation":18,"./paginator":19,"./resource_waiter":20,"./shape":21}],17:[function(require,module,exports){
 var memoizedProperty = require('../util').memoizedProperty;
 
 function memoize(name, value, fn, nameTr) {
@@ -1557,7 +1729,7 @@ function Collection(iterable, options, fn, nameTr) {
 
 module.exports = Collection;
 
-},{"../util":48}],17:[function(require,module,exports){
+},{"../util":50}],18:[function(require,module,exports){
 var Shape = require('./shape');
 
 var util = require('../util');
@@ -1611,7 +1783,7 @@ function Operation(name, operation, options) {
 
 module.exports = Operation;
 
-},{"../util":48,"./shape":20}],18:[function(require,module,exports){
+},{"../util":50,"./shape":21}],19:[function(require,module,exports){
 var property = require('../util').property;
 
 function Paginator(name, paginator) {
@@ -1624,7 +1796,7 @@ function Paginator(name, paginator) {
 
 module.exports = Paginator;
 
-},{"../util":48}],19:[function(require,module,exports){
+},{"../util":50}],20:[function(require,module,exports){
 var util = require('../util');
 var property = util.property;
 
@@ -1675,7 +1847,7 @@ function ResourceWaiter(name, waiter, options) {
 
 module.exports = ResourceWaiter;
 
-},{"../util":48}],20:[function(require,module,exports){
+},{"../util":50}],21:[function(require,module,exports){
 var Collection = require('./collection');
 
 var util = require('../util');
@@ -1698,6 +1870,10 @@ function Shape(shape, options, memberName) {
   property(this, 'shape', shape.shape);
   property(this, 'api', options.api, false);
   property(this, 'type', shape.type);
+  property(this, 'enum', shape.enum);
+  property(this, 'min', shape.min);
+  property(this, 'max', shape.max);
+  property(this, 'pattern', shape.pattern);
   property(this, 'location', shape.location || this.location || 'body');
   property(this, 'name', this.name || shape.xmlName || shape.queryName ||
     shape.locationName || memberName);
@@ -2009,11 +2185,19 @@ Shape.shapes = {
 
 module.exports = Shape;
 
-},{"../util":48,"./collection":16}],21:[function(require,module,exports){
+},{"../util":50,"./collection":17}],22:[function(require,module,exports){
 var AWS = require('./core');
 
 
 AWS.ParamValidator = AWS.util.inherit({
+
+  constructor: function ParamValidator(validation) {
+    if (validation === true || validation === undefined) {
+      validation = {'min': true};
+    }
+    this.validation = validation;
+  },
+
   validate: function validate(shape, params, context) {
     this.errors = [];
     this.validateMember(shape, params || {}, context || 'params');
@@ -2031,8 +2215,12 @@ AWS.ParamValidator = AWS.util.inherit({
     }
   },
 
+  fail: function fail(code, message) {
+    this.errors.push(AWS.util.error(new Error(message), {code: code}));
+  },
+
   validateStructure: function validateStructure(shape, params, context) {
-    this.validateType(context, params, ['object'], 'structure');
+    this.validateType(params, context, ['object'], 'structure');
 
     var paramName;
     for (var i = 0; shape.required && i < shape.required.length; i++) {
@@ -2076,20 +2264,26 @@ AWS.ParamValidator = AWS.util.inherit({
   },
 
   validateList: function validateList(shape, params, context) {
-    this.validateType(context, params, [Array]);
-
-    for (var i = 0; i < params.length; i++) {
-      this.validateMember(shape.member, params[i], context + '[' + i + ']');
+    if (this.validateType(params, context, [Array])) {
+      this.validateRange(shape, params.length, context, 'list member count');
+      for (var i = 0; i < params.length; i++) {
+        this.validateMember(shape.member, params[i], context + '[' + i + ']');
+      }
     }
   },
 
   validateMap: function validateMap(shape, params, context) {
-    this.validateType(context, params, ['object'], 'map');
-
-    for (var param in params) {
-      if (!params.hasOwnProperty(param)) continue;
-      this.validateMember(shape.value, params[param],
-                          context + '[\'' + param + '\']');
+    if (this.validateType(params, context, ['object'], 'map')) {
+      var mapCount = 0;
+      for (var param in params) {
+        if (!params.hasOwnProperty(param)) continue;
+        this.validateMember(shape.key, param,
+                            context + '[key=\'' + param + '\']')
+        this.validateMember(shape.value, params[param],
+                            context + '[\'' + param + '\']');
+        mapCount++;
+      }
+      this.validateRange(shape, mapCount, context, 'map member count');
     }
   },
 
@@ -2098,17 +2292,17 @@ AWS.ParamValidator = AWS.util.inherit({
       case null:
       case undefined:
       case 'string':
-        return this.validateType(context, value, ['string']);
+        return this.validateString(shape, value, context);
       case 'base64':
       case 'binary':
-        return this.validatePayload(context, value);
+        return this.validatePayload(value, context);
       case 'integer':
       case 'float':
-        return this.validateNumber(context, value);
+        return this.validateNumber(shape, value, context);
       case 'boolean':
-        return this.validateType(context, value, ['boolean']);
+        return this.validateType(value, context, ['boolean']);
       case 'timestamp':
-        return this.validateType(context, value, [Date,
+        return this.validateType(value, context, [Date,
           /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/, 'number'],
           'Date object, ISO-8601 string, or a UNIX timestamp');
       default:
@@ -2117,22 +2311,60 @@ AWS.ParamValidator = AWS.util.inherit({
     }
   },
 
-  fail: function fail(code, message) {
-    this.errors.push(AWS.util.error(new Error(message), {code: code}));
+  validateString: function validateString(shape, value, context) {
+    if (this.validateType(value, context, ['string'])) {
+      this.validateEnum(shape, value, context);
+      this.validateRange(shape, value.length, context, 'string length');
+      this.validatePattern(shape, value, context);
+    }
   },
 
-  validateType: function validateType(context, value, acceptedTypes, type) {
-    if (value === null || value === undefined) return;
+  validatePattern: function validatePattern(shape, value, context) {
+    if (this.validation['pattern'] && shape['pattern'] !== undefined) {
+      if (!(new RegExp(shape['pattern'])).test(value)) {
+        this.fail('PatternMatchError', 'Provided value "' + value + '" '
+          + 'does not match regex pattern /' + shape['pattern'] + '/ for '
+          + context);
+      }
+    }
+  },
+
+  validateRange: function validateRange(shape, value, context, descriptor) {
+    if (this.validation['min']) {
+      if (shape['min'] !== undefined && value < shape['min']) {
+        this.fail('MinRangeError', 'Expected ' + descriptor + ' >= '
+          + shape['min'] + ', but found ' + value + ' for ' + context);
+      }
+    }
+    if (this.validation['max']) {
+      if (shape['max'] !== undefined && value > shape['max']) {
+        this.fail('MaxRangeError', 'Expected ' + descriptor + ' <= '
+          + shape['max'] + ', but found ' + value + ' for ' + context);
+      }
+    }
+  },
+
+  validateEnum: function validateRange(shape, value, context) {
+    if (this.validation['enum'] && shape['enum'] !== undefined) {
+      if (shape['enum'].indexOf(value) === -1) {
+        this.fail('EnumError', 'Found string value of ' + value + ', but '
+          + 'expected ' + shape['enum'].join('|') + ' for ' + context);
+      }
+    }
+  },
+
+  validateType: function validateType(value, context, acceptedTypes, type) {
+    if (value === null || value === undefined) return false;
 
     var foundInvalidType = false;
     for (var i = 0; i < acceptedTypes.length; i++) {
       if (typeof acceptedTypes[i] === 'string') {
-        if (typeof value === acceptedTypes[i]) return;
+        if (typeof value === acceptedTypes[i]) return true;
       } else if (acceptedTypes[i] instanceof RegExp) {
-        if ((value || '').toString().match(acceptedTypes[i])) return;
+        if ((value || '').toString().match(acceptedTypes[i])) return true;
       } else {
-        if (value instanceof acceptedTypes[i]) return;
-        if (AWS.util.isType(value, acceptedTypes[i])) return;
+        if (value instanceof acceptedTypes[i]) return true;
+        if (AWS.util.isType(value, acceptedTypes[i])) return true;
         if (!type && !foundInvalidType) acceptedTypes = acceptedTypes.slice();
         acceptedTypes[i] = AWS.util.typeName(acceptedTypes[i]);
       }
@@ -2147,18 +2379,21 @@ AWS.ParamValidator = AWS.util.inherit({
     var vowel = acceptedType.match(/^[aeiou]/i) ? 'n' : '';
     this.fail('InvalidParameterType', 'Expected ' + context + ' to be a' +
               vowel + ' ' + acceptedType);
+    return false;
   },
 
-  validateNumber: function validateNumber(context, value) {
+  validateNumber: function validateNumber(shape, value, context) {
     if (value === null || value === undefined) return;
     if (typeof value === 'string') {
       var castedValue = parseFloat(value);
       if (castedValue.toString() === value) value = castedValue;
     }
-    this.validateType(context, value, ['number']);
+    if (this.validateType(value, context, ['number'])) {
+      this.validateRange(shape, value, context, 'numeric value');
+    }
   },
 
-  validatePayload: function validatePayload(context, value) {
+  validatePayload: function validatePayload(value, context) {
     if (value === null || value === undefined) return;
     if (typeof value === 'string') return;
     if (value && typeof value.byteLength === 'number') return; // typed arrays
@@ -2180,7 +2415,7 @@ AWS.ParamValidator = AWS.util.inherit({
   }
 });
 
-},{"./core":3}],22:[function(require,module,exports){
+},{"./core":4}],23:[function(require,module,exports){
 var util = require('../util');
 var JsonBuilder = require('../json/builder');
 var JsonParser = require('../json/parser');
@@ -2244,7 +2479,7 @@ module.exports = {
   extractData: extractData
 };
 
-},{"../json/builder":13,"../json/parser":14,"../util":48}],23:[function(require,module,exports){
+},{"../json/builder":14,"../json/parser":15,"../util":50}],24:[function(require,module,exports){
 var AWS = require('../core');
 var util = require('../util');
 var QueryParamSerializer = require('../query/query_param_serializer');
@@ -2340,7 +2575,7 @@ module.exports = {
   extractData: extractData
 };
 
-},{"../core":3,"../model/shape":20,"../query/query_param_serializer":27,"../util":48}],24:[function(require,module,exports){
+},{"../core":4,"../model/shape":21,"../query/query_param_serializer":28,"../util":50}],25:[function(require,module,exports){
 var util = require('../util');
 
 function populateMethod(req) {
@@ -2471,7 +2706,7 @@ module.exports = {
   extractData: extractData
 };
 
-},{"../util":48}],25:[function(require,module,exports){
+},{"../util":50}],26:[function(require,module,exports){
 var util = require('../util');
 var Rest = require('./rest');
 var Json = require('./json');
@@ -2539,7 +2774,7 @@ module.exports = {
   extractData: extractData
 };
 
-},{"../json/builder":13,"../json/parser":14,"../util":48,"./json":22,"./rest":24}],26:[function(require,module,exports){
+},{"../json/builder":14,"../json/parser":15,"../util":50,"./json":23,"./rest":25}],27:[function(require,module,exports){
 var AWS = require('../core');
 var util = require('../util');
 var Rest = require('./rest');
@@ -2627,7 +2862,7 @@ module.exports = {
   extractData: extractData
 };
 
-},{"../core":3,"../util":48,"./rest":24}],27:[function(require,module,exports){
+},{"../core":4,"../util":50,"./rest":25}],28:[function(require,module,exports){
 var util = require('../util');
 
 function QueryParamSerializer() {
@@ -2709,7 +2944,7 @@ function serializeMember(name, value, rules, fn) {
 
 module.exports = QueryParamSerializer;
 
-},{"../util":48}],28:[function(require,module,exports){
+},{"../util":50}],29:[function(require,module,exports){
 var util = require('./util');
 var regionConfig = require('./region_config.json');
 
@@ -2771,7 +3006,7 @@ function configureEndpoint(service) {
 
 module.exports = configureEndpoint;
 
-},{"./region_config.json":29,"./util":48}],29:[function(require,module,exports){
+},{"./region_config.json":30,"./util":50}],30:[function(require,module,exports){
 module.exports={
   "rules": {
     "*/*": {
@@ -2835,7 +3070,7 @@ module.exports={
   }
 }
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 (function (process){
 var AWS = require('./core');
 var AcceptorStateMachine = require('./state_machine');
@@ -3142,7 +3377,7 @@ AWS.Request = inherit({
 AWS.util.mixin(AWS.Request, AWS.SequentialExecutor);
 
 }).call(this,require("Zbi7gb"))
-},{"./core":3,"./state_machine":47,"Zbi7gb":62}],31:[function(require,module,exports){
+},{"./core":4,"./state_machine":49,"Zbi7gb":64}],32:[function(require,module,exports){
 
 
 var AWS = require('./core');
@@ -3305,7 +3540,7 @@ AWS.ResourceWaiter = inherit({
   }
 });
 
-},{"./core":3}],32:[function(require,module,exports){
+},{"./core":4}],33:[function(require,module,exports){
 var AWS = require('./core');
 var inherit = AWS.util.inherit;
 
@@ -3392,7 +3627,7 @@ AWS.Response = inherit({
 
 });
 
-},{"./core":3}],33:[function(require,module,exports){
+},{"./core":4}],34:[function(require,module,exports){
 (function (Buffer){
 var AWS = require('../core');
 var byteLength = AWS.util.string.byteLength;
@@ -3610,7 +3845,8 @@ AWS.S3.ManagedUpload = AWS.util.inherit({
     }
 
     if (self.partBufferLength >= self.partSize) {
-      var pbuf = Buffer.concat(self.partBuffers);
+      var pbuf = self.partBuffers.length === 1 ?
+        self.partBuffers[0] : Buffer.concat(self.partBuffers);
       self.partBuffers = [];
       self.partBufferLength = 0;
 
@@ -3625,7 +3861,8 @@ AWS.S3.ManagedUpload = AWS.util.inherit({
     }
 
     if (self.isDoneChunking && !self.isDoneSending) {
-      pbuf = Buffer.concat(self.partBuffers);
+      pbuf = self.partBuffers.length === 1 ?
+          self.partBuffers[0] : Buffer.concat(self.partBuffers);
       self.partBuffers = [];
       self.partBufferLength = 0;
       self.totalBytes = self.totalChunkedBytes;
@@ -3814,7 +4051,7 @@ AWS.util.mixin(AWS.S3.ManagedUpload, AWS.SequentialExecutor);
 module.exports = AWS.S3.ManagedUpload;
 
 }).call(this,require("buffer").Buffer)
-},{"../core":3,"buffer":51}],34:[function(require,module,exports){
+},{"../core":4,"buffer":53}],35:[function(require,module,exports){
 var AWS = require('./core');
 
 
@@ -3963,7 +4200,7 @@ AWS.SequentialExecutor.prototype.addListener = AWS.SequentialExecutor.prototype.
 
 module.exports = AWS.SequentialExecutor;
 
-},{"./core":3}],35:[function(require,module,exports){
+},{"./core":4}],36:[function(require,module,exports){
 var AWS = require('./core');
 var Api = require('./model/api');
 var regionConfig = require('./region_config');
@@ -4178,13 +4415,15 @@ AWS.Service = inherit({
   },
 
 
-  retryDelays: function retryDelays() {
-    var retryCount = this.numRetries();
-    var delays = [];
-    for (var i = 0; i < retryCount; ++i) {
-      delays[i] = Math.pow(2, i) * 30;
+  retryDelays: function retryDelays(retryCount) {
+    var retryDelayOptions = this.config.retryDelayOptions || {};
+    var customBackoff = retryDelayOptions.customBackoff || null;
+    if (typeof customBackoff === 'function') {
+      return customBackoff(retryCount);
     }
-    return delays;
+    var base = retryDelayOptions.base || 30;
+    var delay = Math.random() * (Math.pow(2, retryCount) * base);
+    return delay;
   },
 
 
@@ -4362,7 +4601,20 @@ AWS.util.update(AWS.Service, {
   _serviceMap: {}
 });
 
-},{"./core":3,"./model/api":15,"./region_config":28}],36:[function(require,module,exports){
+},{"./core":4,"./model/api":16,"./region_config":29}],37:[function(require,module,exports){
+var AWS = require('../core');
+
+require('../cloudfront/signer');
+
+AWS.util.update(AWS.CloudFront.prototype, {
+
+  setupRequestListeners: function setupRequestListeners(request) {
+    request.addListener('extractData', AWS.util.hoistPayloadMember);
+  }
+
+});
+
+},{"../cloudfront/signer":2,"../core":4}],38:[function(require,module,exports){
 var AWS = require('../core');
 
 AWS.util.update(AWS.EC2.prototype, {
@@ -4419,7 +4671,7 @@ AWS.util.update(AWS.EC2.prototype, {
   }
 });
 
-},{"../core":3}],37:[function(require,module,exports){
+},{"../core":4}],39:[function(require,module,exports){
 var AWS = require('../core');
 
 AWS.util.update(AWS.Route53.prototype, {
@@ -4435,7 +4687,7 @@ AWS.util.update(AWS.Route53.prototype, {
   }
 });
 
-},{"../core":3}],38:[function(require,module,exports){
+},{"../core":4}],40:[function(require,module,exports){
 var AWS = require('../core');
 
 require('../s3/managed_upload');
@@ -4563,7 +4815,8 @@ AWS.util.update(AWS.S3.prototype, {
     putBucketLifecycle: true,
     putBucketLifecycleConfiguration: true,
     putBucketTagging: true,
-    deleteObjects: true
+    deleteObjects: true,
+    putBucketReplication: true
   },
 
 
@@ -4729,7 +4982,10 @@ AWS.util.update(AWS.S3.prototype, {
   },
 
   createBucket: function createBucket(params, callback) {
-    if (!params) params = {};
+    if (typeof params === 'function' || !params) {
+      callback = callback || params;
+      params = {};
+    }
     var hostname = this.endpoint.hostname;
     if (hostname !== this.api.globalEndpoint && !params.CreateBucketConfiguration) {
       params.CreateBucketConfiguration = { LocationConstraint: this.config.region };
@@ -4753,7 +5009,7 @@ AWS.util.update(AWS.S3.prototype, {
   }
 });
 
-},{"../core":3,"../s3/managed_upload":33}],39:[function(require,module,exports){
+},{"../core":4,"../s3/managed_upload":34}],41:[function(require,module,exports){
 var AWS = require('../core');
 
 AWS.util.update(AWS.STS.prototype, {
@@ -4778,7 +5034,7 @@ AWS.util.update(AWS.STS.prototype, {
   }
 });
 
-},{"../core":3}],40:[function(require,module,exports){
+},{"../core":4}],42:[function(require,module,exports){
 var AWS = require('../core');
 var inherit = AWS.util.inherit;
 
@@ -4824,7 +5080,7 @@ function signedUrlSigner(request) {
 
   AWS.util.each(request.httpRequest.headers, function (key, value) {
     if (key === expiresHeader) key = 'Expires';
-    if (key.indexOf('x-amz-') === 0) {
+    if (key.indexOf('x-amz-meta-') === 0) {
       key = key.toLowerCase();
     }
     queryParams[key] = value;
@@ -4881,7 +5137,7 @@ AWS.Signers.Presign = inherit({
 
 module.exports = AWS.Signers.Presign;
 
-},{"../core":3}],41:[function(require,module,exports){
+},{"../core":4}],43:[function(require,module,exports){
 var AWS = require('../core');
 var inherit = AWS.util.inherit;
 
@@ -4910,7 +5166,7 @@ require('./v4');
 require('./s3');
 require('./presign');
 
-},{"../core":3,"./presign":40,"./s3":42,"./v2":43,"./v3":44,"./v3https":45,"./v4":46}],42:[function(require,module,exports){
+},{"../core":4,"./presign":42,"./s3":44,"./v2":45,"./v3":46,"./v3https":47,"./v4":48}],44:[function(require,module,exports){
 var AWS = require('../core');
 var inherit = AWS.util.inherit;
 
@@ -4928,6 +5184,7 @@ AWS.Signers.S3 = inherit(AWS.Signers.RequestSigner, {
     'partNumber': 1,
     'policy': 1,
     'requestPayment': 1,
+    'replication': 1,
     'restore': 1,
     'tagging': 1,
     'torrent': 1,
@@ -5067,7 +5324,7 @@ AWS.Signers.S3 = inherit(AWS.Signers.RequestSigner, {
 
 module.exports = AWS.Signers.S3;
 
-},{"../core":3}],43:[function(require,module,exports){
+},{"../core":4}],45:[function(require,module,exports){
 var AWS = require('../core');
 var inherit = AWS.util.inherit;
 
@@ -5112,7 +5369,7 @@ AWS.Signers.V2 = inherit(AWS.Signers.RequestSigner, {
 
 module.exports = AWS.Signers.V2;
 
-},{"../core":3}],44:[function(require,module,exports){
+},{"../core":4}],46:[function(require,module,exports){
 var AWS = require('../core');
 var inherit = AWS.util.inherit;
 
@@ -5186,7 +5443,7 @@ AWS.Signers.V3 = inherit(AWS.Signers.RequestSigner, {
 
 module.exports = AWS.Signers.V3;
 
-},{"../core":3}],45:[function(require,module,exports){
+},{"../core":4}],47:[function(require,module,exports){
 var AWS = require('../core');
 var inherit = AWS.util.inherit;
 
@@ -5208,7 +5465,7 @@ AWS.Signers.V3Https = inherit(AWS.Signers.V3, {
 
 module.exports = AWS.Signers.V3Https;
 
-},{"../core":3,"./v3":44}],46:[function(require,module,exports){
+},{"../core":4,"./v3":46}],48:[function(require,module,exports){
 var AWS = require('../core');
 var inherit = AWS.util.inherit;
 
@@ -5267,6 +5524,9 @@ AWS.Signers.V4 = inherit(AWS.Signers.RequestSigner, {
     }
     if (this.request.headers['Content-MD5']) {
       qs['Content-MD5'] = this.request.headers['Content-MD5'];
+    }
+    if (this.request.headers['Cache-Control']) {
+      qs['Cache-Control'] = this.request.headers['Cache-Control'];
     }
 
     AWS.util.each.call(this, this.request.headers, function(key, value) {
@@ -5416,7 +5676,7 @@ AWS.Signers.V4 = inherit(AWS.Signers.RequestSigner, {
 
 module.exports = AWS.Signers.V4;
 
-},{"../core":3}],47:[function(require,module,exports){
+},{"../core":4}],49:[function(require,module,exports){
 function AcceptorStateMachine(states, state) {
   this.currentState = state || null;
   this.states = states || {};
@@ -5460,7 +5720,7 @@ AcceptorStateMachine.prototype.addState = function addState(name, acceptState, f
 
 module.exports = AcceptorStateMachine;
 
-},{}],48:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 (function (process){
 
 
@@ -5885,7 +6145,7 @@ var util = {
       if (typeof data === 'string') data = new Buffer(data);
       var sliceFn = util.arraySliceFn(data);
       var isBuffer = Buffer.isBuffer(data);
-      if (util.isBrowser() && data && data.buffer instanceof ArrayBuffer) isBuffer = true;
+      if (util.isBrowser() && typeof ArrayBuffer !== 'undefined' && data && data.buffer instanceof ArrayBuffer) isBuffer = true;
 
       if (callback && typeof data === 'object' &&
           typeof data.on === 'function' && !isBuffer) {
@@ -6197,7 +6457,7 @@ var util = {
 module.exports = util;
 
 }).call(this,require("Zbi7gb"))
-},{"./core":3,"Zbi7gb":62,"buffer":51,"crypto":55,"querystring":66,"url":67}],49:[function(require,module,exports){
+},{"./core":4,"Zbi7gb":64,"buffer":53,"crypto":57,"querystring":68,"url":69}],51:[function(require,module,exports){
 var util = require('../util');
 var Shape = require('../model/shape');
 
@@ -6214,24 +6474,43 @@ DomXmlParser.prototype.parse = function(xml, shape) {
         result = parser.parseFromString(xml, 'text/xml');
       } catch (syntaxError) {
         throw util.error(new Error('Parse error in document'),
-          {originalError: syntaxError});
+          {
+            originalError: syntaxError,
+            code: 'XMLParserError',
+            retryable: true
+          });
       }
 
       if (result.documentElement === null) {
-        throw new Error('Cannot parse empty document.');
+        throw util.error(new Error('Cannot parse empty document.'),
+          {
+            code: 'XMLParserError',
+            retryable: true
+          });
       }
 
       var isError = result.getElementsByTagName('parsererror')[0];
       if (isError && (isError.parentNode === result ||
-          isError.parentNode.nodeName === 'body')) {
-        throw new Error(isError.getElementsByTagName('div')[0].textContent);
+          isError.parentNode.nodeName === 'body' ||
+          isError.parentNode.parentNode === result ||
+          isError.parentNode.parentNode.nodeName === 'body')) {
+        var errorElement = isError.getElementsByTagName('div')[0] || isError;
+        throw util.error(new Error(errorElement.textContent || 'Parser error in document'),
+          {
+            code: 'XMLParserError',
+            retryable: true
+          });
       }
     } else if (window.ActiveXObject) {
       result = new window.ActiveXObject('Microsoft.XMLDOM');
       result.async = false;
 
       if (!result.loadXML(xml)) {
-        throw new Error('Parse error in document');
+        throw util.error(new Error('Parse error in document'),
+          {
+            code: 'XMLParserError',
+            retryable: true
+          });
       }
     } else {
       throw new Error('Cannot load XML parser');
@@ -6248,7 +6527,7 @@ DomXmlParser.prototype.parse = function(xml, shape) {
     }
     return data;
   } else if (error) {
-    throw util.error(error || new Error(), {code: 'XMLParserError'});
+    throw util.error(error || new Error(), {code: 'XMLParserError', retryable: true});
   } else { // empty xml document
     return {};
   }
@@ -6363,7 +6642,7 @@ function parseUnknown(xml) {
 
 module.exports = DomXmlParser;
 
-},{"../model/shape":20,"../util":48}],50:[function(require,module,exports){
+},{"../model/shape":21,"../util":50}],52:[function(require,module,exports){
 var util = require('../util');
 var builder = require('xmlbuilder');
 
@@ -6451,7 +6730,7 @@ function applyNamespaces(xml, shape) {
 
 module.exports = XmlBuilder;
 
-},{"../util":48,"xmlbuilder":72}],51:[function(require,module,exports){
+},{"../util":50,"xmlbuilder":88}],53:[function(require,module,exports){
 
 
 var base64 = require('base64-js')
@@ -7496,7 +7775,7 @@ function assert (test, message) {
   if (!test) throw new Error(message || 'Failed assertion')
 }
 
-},{"base64-js":52,"ieee754":53}],52:[function(require,module,exports){
+},{"base64-js":54,"ieee754":55}],54:[function(require,module,exports){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 ;(function (exports) {
@@ -7613,7 +7892,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 	exports.fromByteArray = uint8ToBase64
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
-},{}],53:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = nBytes * 8 - mLen - 1
@@ -7699,7 +7978,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],54:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 var Buffer = require('buffer').Buffer;
 var intSize = 4;
 var zeroBuffer = new Buffer(intSize); zeroBuffer.fill(0);
@@ -7736,7 +8015,7 @@ function hash(buf, fn, hashSize, bigEndian) {
 
 module.exports = { hash: hash };
 
-},{"buffer":51}],55:[function(require,module,exports){
+},{"buffer":53}],57:[function(require,module,exports){
 var Buffer = require('buffer').Buffer
 var sha = require('./sha')
 var sha256 = require('./sha256')
@@ -7834,7 +8113,7 @@ each(['createCredentials'
   }
 })
 
-},{"./md5":56,"./rng":57,"./sha":58,"./sha256":59,"buffer":51}],56:[function(require,module,exports){
+},{"./md5":58,"./rng":59,"./sha":60,"./sha256":61,"buffer":53}],58:[function(require,module,exports){
 
 
 var helpers = require('./helpers');
@@ -7981,7 +8260,7 @@ module.exports = function md5(buf) {
   return helpers.hash(buf, core_md5, 16);
 };
 
-},{"./helpers":54}],57:[function(require,module,exports){
+},{"./helpers":56}],59:[function(require,module,exports){
 (function() {
   var _global = this;
 
@@ -8011,7 +8290,7 @@ module.exports = function md5(buf) {
 
 }())
 
-},{}],58:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 
 
 var helpers = require('./helpers');
@@ -8095,7 +8374,7 @@ module.exports = function sha1(buf) {
   return helpers.hash(buf, core_sha1, 20, true);
 };
 
-},{"./helpers":54}],59:[function(require,module,exports){
+},{"./helpers":56}],61:[function(require,module,exports){
 
 
 
@@ -8170,7 +8449,7 @@ module.exports = function sha256(buf) {
   return helpers.hash(buf, core_sha256, 32, true);
 };
 
-},{"./helpers":54}],60:[function(require,module,exports){
+},{"./helpers":56}],62:[function(require,module,exports){
 
 function EventEmitter() {
   this._events = this._events || {};
@@ -8434,7 +8713,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],61:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   module.exports = function inherits(ctor, superCtor) {
     ctor.super_ = superCtor
@@ -8457,7 +8736,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],62:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 
 var process = module.exports = {};
 
@@ -8520,7 +8799,7 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],63:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 (function (global){
 
 ;(function(root) {
@@ -8893,7 +9172,7 @@ process.chdir = function (dir) {
 }(this));
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],64:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 
 'use strict';
 
@@ -8955,7 +9234,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],65:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 
 'use strict';
 
@@ -9022,13 +9301,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],66:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":64,"./encode":65}],67:[function(require,module,exports){
+},{"./decode":66,"./encode":67}],69:[function(require,module,exports){
 
 var punycode = require('punycode');
 
@@ -9595,14 +9874,14 @@ function isNullOrUndefined(arg) {
   return  arg == null;
 }
 
-},{"punycode":63,"querystring":66}],68:[function(require,module,exports){
+},{"punycode":65,"querystring":68}],70:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],69:[function(require,module,exports){
+},{}],71:[function(require,module,exports){
 (function (process,global){
 
 var formatRegExp = /%[sdj%]/g;
@@ -10122,445 +10401,920 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require("Zbi7gb"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":68,"Zbi7gb":62,"inherits":61}],70:[function(require,module,exports){
+},{"./support/isBuffer":70,"Zbi7gb":64,"inherits":63}],72:[function(require,module,exports){
 (function() {
-  var XMLBuilder, XMLFragment;
+  var XMLAttribute, create;
 
-  XMLFragment = require('./XMLFragment');
+  create = require('lodash/object/create');
 
-  XMLBuilder = (function() {
-
-    function XMLBuilder(name, xmldec, doctype) {
-      var att, child, _ref;
-      this.children = [];
-      this.rootObject = null;
-      if (this.is(name, 'Object')) {
-        _ref = [name, xmldec], xmldec = _ref[0], doctype = _ref[1];
-        name = null;
+  module.exports = XMLAttribute = (function() {
+    function XMLAttribute(parent, name, value) {
+      this.stringify = parent.stringify;
+      if (name == null) {
+        throw new Error("Missing attribute name of element " + parent.name);
       }
-      if (name != null) {
-        name = '' + name || '';
-        if (xmldec == null) {
-          xmldec = {
-            'version': '1.0'
-          };
-        }
+      if (value == null) {
+        throw new Error("Missing attribute value for attribute " + name + " of element " + parent.name);
       }
-      if ((xmldec != null) && !(xmldec.version != null)) {
-        throw new Error("Version number is required");
-      }
-      if (xmldec != null) {
-        xmldec.version = '' + xmldec.version || '';
-        if (!xmldec.version.match(/1\.[0-9]+/)) {
-          throw new Error("Invalid version number: " + xmldec.version);
-        }
-        att = {
-          version: xmldec.version
-        };
-        if (xmldec.encoding != null) {
-          xmldec.encoding = '' + xmldec.encoding || '';
-          if (!xmldec.encoding.match(/[A-Za-z](?:[A-Za-z0-9._-]|-)*/)) {
-            throw new Error("Invalid encoding: " + xmldec.encoding);
-          }
-          att.encoding = xmldec.encoding;
-        }
-        if (xmldec.standalone != null) {
-          att.standalone = xmldec.standalone ? "yes" : "no";
-        }
-        child = new XMLFragment(this, '?xml', att);
-        this.children.push(child);
-      }
-      if (doctype != null) {
-        att = {};
-        if (name != null) {
-          att.name = name;
-        }
-        if (doctype.ext != null) {
-          doctype.ext = '' + doctype.ext || '';
-          att.ext = doctype.ext;
-        }
-        child = new XMLFragment(this, '!DOCTYPE', att);
-        this.children.push(child);
-      }
-      if (name != null) {
-        this.begin(name);
-      }
+      this.name = this.stringify.attName(name);
+      this.value = this.stringify.attValue(value);
     }
 
-    XMLBuilder.prototype.begin = function(name, xmldec, doctype) {
-      var doc, root;
-      if (!(name != null)) {
+    XMLAttribute.prototype.clone = function() {
+      return create(XMLAttribute.prototype, this);
+    };
+
+    XMLAttribute.prototype.toString = function(options, level) {
+      return ' ' + this.name + '="' + this.value + '"';
+    };
+
+    return XMLAttribute;
+
+  })();
+
+}).call(this);
+
+},{"lodash/object/create":131}],73:[function(require,module,exports){
+(function() {
+  var XMLBuilder, XMLDeclaration, XMLDocType, XMLElement, XMLStringifier;
+
+  XMLStringifier = require('./XMLStringifier');
+
+  XMLDeclaration = require('./XMLDeclaration');
+
+  XMLDocType = require('./XMLDocType');
+
+  XMLElement = require('./XMLElement');
+
+  module.exports = XMLBuilder = (function() {
+    function XMLBuilder(name, options) {
+      var root, temp;
+      if (name == null) {
         throw new Error("Root element needs a name");
       }
-      if (this.rootObject) {
-        this.children = [];
-        this.rootObject = null;
+      if (options == null) {
+        options = {};
       }
-      if (xmldec != null) {
-        doc = new XMLBuilder(name, xmldec, doctype);
-        return doc.root();
-      }
-      name = '' + name || '';
-      root = new XMLFragment(this, name, {});
+      this.options = options;
+      this.stringify = new XMLStringifier(options);
+      temp = new XMLElement(this, 'doc');
+      root = temp.element(name);
       root.isRoot = true;
       root.documentObject = this;
-      this.children.push(root);
       this.rootObject = root;
-      return root;
-    };
+      if (!options.headless) {
+        root.declaration(options);
+        if ((options.pubID != null) || (options.sysID != null)) {
+          root.doctype(options);
+        }
+      }
+    }
 
     XMLBuilder.prototype.root = function() {
       return this.rootObject;
     };
 
     XMLBuilder.prototype.end = function(options) {
-      return toString(options);
+      return this.toString(options);
     };
 
     XMLBuilder.prototype.toString = function(options) {
-      var child, r, _i, _len, _ref;
+      var indent, newline, offset, pretty, r, ref, ref1, ref2;
+      pretty = (options != null ? options.pretty : void 0) || false;
+      indent = (ref = options != null ? options.indent : void 0) != null ? ref : '  ';
+      offset = (ref1 = options != null ? options.offset : void 0) != null ? ref1 : 0;
+      newline = (ref2 = options != null ? options.newline : void 0) != null ? ref2 : '\n';
       r = '';
-      _ref = this.children;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        child = _ref[_i];
-        r += child.toString(options);
+      if (this.xmldec != null) {
+        r += this.xmldec.toString(options);
+      }
+      if (this.doctype != null) {
+        r += this.doctype.toString(options);
+      }
+      r += this.rootObject.toString(options);
+      if (pretty && r.slice(-newline.length) === newline) {
+        r = r.slice(0, -newline.length);
       }
       return r;
-    };
-
-    XMLBuilder.prototype.is = function(obj, type) {
-      var clas;
-      clas = Object.prototype.toString.call(obj).slice(8, -1);
-      return (obj != null) && clas === type;
     };
 
     return XMLBuilder;
 
   })();
 
-  module.exports = XMLBuilder;
-
 }).call(this);
 
-},{"./XMLFragment":71}],71:[function(require,module,exports){
+},{"./XMLDeclaration":80,"./XMLDocType":81,"./XMLElement":82,"./XMLStringifier":86}],74:[function(require,module,exports){
 (function() {
-  var XMLFragment,
-    __hasProp = {}.hasOwnProperty;
+  var XMLCData, XMLNode, create,
+    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
 
-  XMLFragment = (function() {
+  create = require('lodash/object/create');
 
-    function XMLFragment(parent, name, attributes, text) {
-      this.isRoot = false;
-      this.documentObject = null;
-      this.parent = parent;
-      this.name = name;
-      this.attributes = attributes;
-      this.value = text;
-      this.children = [];
-    }
+  XMLNode = require('./XMLNode');
 
-    XMLFragment.prototype.element = function(name, attributes, text) {
-      var child, key, val, _ref, _ref1;
-      if (!(name != null)) {
-        throw new Error("Missing element name");
-      }
-      name = '' + name || '';
-      this.assertLegalChar(name);
-      if (attributes == null) {
-        attributes = {};
-      }
-      if (this.is(attributes, 'String') && this.is(text, 'Object')) {
-        _ref = [text, attributes], attributes = _ref[0], text = _ref[1];
-      } else if (this.is(attributes, 'String')) {
-        _ref1 = [{}, attributes], attributes = _ref1[0], text = _ref1[1];
-      }
-      for (key in attributes) {
-        if (!__hasProp.call(attributes, key)) continue;
-        val = attributes[key];
-        val = '' + val || '';
-        attributes[key] = this.escape(val);
-      }
-      child = new XMLFragment(this, name, attributes);
-      if (text != null) {
-        text = '' + text || '';
-        text = this.escape(text);
-        this.assertLegalChar(text);
-        child.raw(text);
-      }
-      this.children.push(child);
-      return child;
-    };
+  module.exports = XMLCData = (function(superClass) {
+    extend(XMLCData, superClass);
 
-    XMLFragment.prototype.insertBefore = function(name, attributes, text) {
-      var child, i, key, val, _ref, _ref1;
-      if (this.isRoot) {
-        throw new Error("Cannot insert elements at root level");
-      }
-      if (!(name != null)) {
-        throw new Error("Missing element name");
-      }
-      name = '' + name || '';
-      this.assertLegalChar(name);
-      if (attributes == null) {
-        attributes = {};
-      }
-      if (this.is(attributes, 'String') && this.is(text, 'Object')) {
-        _ref = [text, attributes], attributes = _ref[0], text = _ref[1];
-      } else if (this.is(attributes, 'String')) {
-        _ref1 = [{}, attributes], attributes = _ref1[0], text = _ref1[1];
-      }
-      for (key in attributes) {
-        if (!__hasProp.call(attributes, key)) continue;
-        val = attributes[key];
-        val = '' + val || '';
-        attributes[key] = this.escape(val);
-      }
-      child = new XMLFragment(this.parent, name, attributes);
-      if (text != null) {
-        text = '' + text || '';
-        text = this.escape(text);
-        this.assertLegalChar(text);
-        child.raw(text);
-      }
-      i = this.parent.children.indexOf(this);
-      this.parent.children.splice(i, 0, child);
-      return child;
-    };
-
-    XMLFragment.prototype.insertAfter = function(name, attributes, text) {
-      var child, i, key, val, _ref, _ref1;
-      if (this.isRoot) {
-        throw new Error("Cannot insert elements at root level");
-      }
-      if (!(name != null)) {
-        throw new Error("Missing element name");
-      }
-      name = '' + name || '';
-      this.assertLegalChar(name);
-      if (attributes == null) {
-        attributes = {};
-      }
-      if (this.is(attributes, 'String') && this.is(text, 'Object')) {
-        _ref = [text, attributes], attributes = _ref[0], text = _ref[1];
-      } else if (this.is(attributes, 'String')) {
-        _ref1 = [{}, attributes], attributes = _ref1[0], text = _ref1[1];
-      }
-      for (key in attributes) {
-        if (!__hasProp.call(attributes, key)) continue;
-        val = attributes[key];
-        val = '' + val || '';
-        attributes[key] = this.escape(val);
-      }
-      child = new XMLFragment(this.parent, name, attributes);
-      if (text != null) {
-        text = '' + text || '';
-        text = this.escape(text);
-        this.assertLegalChar(text);
-        child.raw(text);
-      }
-      i = this.parent.children.indexOf(this);
-      this.parent.children.splice(i + 1, 0, child);
-      return child;
-    };
-
-    XMLFragment.prototype.remove = function() {
-      var i, _ref;
-      if (this.isRoot) {
-        throw new Error("Cannot remove the root element");
-      }
-      i = this.parent.children.indexOf(this);
-      [].splice.apply(this.parent.children, [i, i - i + 1].concat(_ref = [])), _ref;
-      return this.parent;
-    };
-
-    XMLFragment.prototype.text = function(value) {
-      var child;
-      if (!(value != null)) {
-        throw new Error("Missing element text");
-      }
-      value = '' + value || '';
-      value = this.escape(value);
-      this.assertLegalChar(value);
-      child = new XMLFragment(this, '', {}, value);
-      this.children.push(child);
-      return this;
-    };
-
-    XMLFragment.prototype.cdata = function(value) {
-      var child;
-      if (!(value != null)) {
+    function XMLCData(parent, text) {
+      XMLCData.__super__.constructor.call(this, parent);
+      if (text == null) {
         throw new Error("Missing CDATA text");
       }
-      value = '' + value || '';
-      this.assertLegalChar(value);
-      if (value.match(/]]>/)) {
-        throw new Error("Invalid CDATA text: " + value);
-      }
-      child = new XMLFragment(this, '', {}, '<![CDATA[' + value + ']]>');
-      this.children.push(child);
-      return this;
+      this.text = this.stringify.cdata(text);
+    }
+
+    XMLCData.prototype.clone = function() {
+      return create(XMLCData.prototype, this);
     };
 
-    XMLFragment.prototype.comment = function(value) {
-      var child;
-      if (!(value != null)) {
-        throw new Error("Missing comment text");
-      }
-      value = '' + value || '';
-      value = this.escape(value);
-      this.assertLegalChar(value);
-      if (value.match(/--/)) {
-        throw new Error("Comment text cannot contain double-hypen: " + value);
-      }
-      child = new XMLFragment(this, '', {}, '<!-- ' + value + ' -->');
-      this.children.push(child);
-      return this;
-    };
-
-    XMLFragment.prototype.raw = function(value) {
-      var child;
-      if (!(value != null)) {
-        throw new Error("Missing raw text");
-      }
-      value = '' + value || '';
-      child = new XMLFragment(this, '', {}, value);
-      this.children.push(child);
-      return this;
-    };
-
-    XMLFragment.prototype.up = function() {
-      if (this.isRoot) {
-        throw new Error("This node has no parent. Use doc() if you need to get the document object.");
-      }
-      return this.parent;
-    };
-
-    XMLFragment.prototype.root = function() {
-      var child;
-      if (this.isRoot) {
-        return this;
-      }
-      child = this.parent;
-      while (!child.isRoot) {
-        child = child.parent;
-      }
-      return child;
-    };
-
-    XMLFragment.prototype.document = function() {
-      return this.root().documentObject;
-    };
-
-    XMLFragment.prototype.end = function(options) {
-      return this.document().toString(options);
-    };
-
-    XMLFragment.prototype.prev = function() {
-      var i;
-      if (this.isRoot) {
-        throw new Error("Root node has no siblings");
-      }
-      i = this.parent.children.indexOf(this);
-      if (i < 1) {
-        throw new Error("Already at the first node");
-      }
-      return this.parent.children[i - 1];
-    };
-
-    XMLFragment.prototype.next = function() {
-      var i;
-      if (this.isRoot) {
-        throw new Error("Root node has no siblings");
-      }
-      i = this.parent.children.indexOf(this);
-      if (i === -1 || i === this.parent.children.length - 1) {
-        throw new Error("Already at the last node");
-      }
-      return this.parent.children[i + 1];
-    };
-
-    XMLFragment.prototype.clone = function(deep) {
-      var clonedSelf;
-      clonedSelf = new XMLFragment(this.parent, this.name, this.attributes, this.value);
-      if (deep) {
-        this.children.forEach(function(child) {
-          var clonedChild;
-          clonedChild = child.clone(deep);
-          clonedChild.parent = clonedSelf;
-          return clonedSelf.children.push(clonedChild);
-        });
-      }
-      return clonedSelf;
-    };
-
-    XMLFragment.prototype.importXMLBuilder = function(xmlbuilder) {
-      var clonedRoot;
-      clonedRoot = xmlbuilder.root().clone(true);
-      clonedRoot.parent = this;
-      this.children.push(clonedRoot);
-      clonedRoot.isRoot = false;
-      return this;
-    };
-
-    XMLFragment.prototype.attribute = function(name, value) {
-      var _ref;
-      if (!(name != null)) {
-        throw new Error("Missing attribute name");
-      }
-      if (!(value != null)) {
-        throw new Error("Missing attribute value");
-      }
-      name = '' + name || '';
-      value = '' + value || '';
-      if ((_ref = this.attributes) == null) {
-        this.attributes = {};
-      }
-      this.attributes[name] = this.escape(value);
-      return this;
-    };
-
-    XMLFragment.prototype.removeAttribute = function(name) {
-      if (!(name != null)) {
-        throw new Error("Missing attribute name");
-      }
-      name = '' + name || '';
-      delete this.attributes[name];
-      return this;
-    };
-
-    XMLFragment.prototype.toString = function(options, level) {
-      var attName, attValue, child, indent, newline, pretty, r, space, _i, _len, _ref, _ref1;
-      pretty = (options != null) && options.pretty || false;
-      indent = (options != null) && options.indent || '  ';
-      newline = (options != null) && options.newline || '\n';
+    XMLCData.prototype.toString = function(options, level) {
+      var indent, newline, offset, pretty, r, ref, ref1, ref2, space;
+      pretty = (options != null ? options.pretty : void 0) || false;
+      indent = (ref = options != null ? options.indent : void 0) != null ? ref : '  ';
+      offset = (ref1 = options != null ? options.offset : void 0) != null ? ref1 : 0;
+      newline = (ref2 = options != null ? options.newline : void 0) != null ? ref2 : '\n';
       level || (level = 0);
-      space = new Array(level + 1).join(indent);
+      space = new Array(level + offset + 1).join(indent);
       r = '';
       if (pretty) {
         r += space;
       }
-      if (!(this.value != null)) {
-        r += '<' + this.name;
+      r += '<![CDATA[' + this.text + ']]>';
+      if (pretty) {
+        r += newline;
+      }
+      return r;
+    };
+
+    return XMLCData;
+
+  })(XMLNode);
+
+}).call(this);
+
+},{"./XMLNode":83,"lodash/object/create":131}],75:[function(require,module,exports){
+(function() {
+  var XMLComment, XMLNode, create,
+    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  create = require('lodash/object/create');
+
+  XMLNode = require('./XMLNode');
+
+  module.exports = XMLComment = (function(superClass) {
+    extend(XMLComment, superClass);
+
+    function XMLComment(parent, text) {
+      XMLComment.__super__.constructor.call(this, parent);
+      if (text == null) {
+        throw new Error("Missing comment text");
+      }
+      this.text = this.stringify.comment(text);
+    }
+
+    XMLComment.prototype.clone = function() {
+      return create(XMLComment.prototype, this);
+    };
+
+    XMLComment.prototype.toString = function(options, level) {
+      var indent, newline, offset, pretty, r, ref, ref1, ref2, space;
+      pretty = (options != null ? options.pretty : void 0) || false;
+      indent = (ref = options != null ? options.indent : void 0) != null ? ref : '  ';
+      offset = (ref1 = options != null ? options.offset : void 0) != null ? ref1 : 0;
+      newline = (ref2 = options != null ? options.newline : void 0) != null ? ref2 : '\n';
+      level || (level = 0);
+      space = new Array(level + offset + 1).join(indent);
+      r = '';
+      if (pretty) {
+        r += space;
+      }
+      r += '<!-- ' + this.text + ' -->';
+      if (pretty) {
+        r += newline;
+      }
+      return r;
+    };
+
+    return XMLComment;
+
+  })(XMLNode);
+
+}).call(this);
+
+},{"./XMLNode":83,"lodash/object/create":131}],76:[function(require,module,exports){
+(function() {
+  var XMLDTDAttList, create;
+
+  create = require('lodash/object/create');
+
+  module.exports = XMLDTDAttList = (function() {
+    function XMLDTDAttList(parent, elementName, attributeName, attributeType, defaultValueType, defaultValue) {
+      this.stringify = parent.stringify;
+      if (elementName == null) {
+        throw new Error("Missing DTD element name");
+      }
+      if (attributeName == null) {
+        throw new Error("Missing DTD attribute name");
+      }
+      if (!attributeType) {
+        throw new Error("Missing DTD attribute type");
+      }
+      if (!defaultValueType) {
+        throw new Error("Missing DTD attribute default");
+      }
+      if (defaultValueType.indexOf('#') !== 0) {
+        defaultValueType = '#' + defaultValueType;
+      }
+      if (!defaultValueType.match(/^(#REQUIRED|#IMPLIED|#FIXED|#DEFAULT)$/)) {
+        throw new Error("Invalid default value type; expected: #REQUIRED, #IMPLIED, #FIXED or #DEFAULT");
+      }
+      if (defaultValue && !defaultValueType.match(/^(#FIXED|#DEFAULT)$/)) {
+        throw new Error("Default value only applies to #FIXED or #DEFAULT");
+      }
+      this.elementName = this.stringify.eleName(elementName);
+      this.attributeName = this.stringify.attName(attributeName);
+      this.attributeType = this.stringify.dtdAttType(attributeType);
+      this.defaultValue = this.stringify.dtdAttDefault(defaultValue);
+      this.defaultValueType = defaultValueType;
+    }
+
+    XMLDTDAttList.prototype.clone = function() {
+      return create(XMLDTDAttList.prototype, this);
+    };
+
+    XMLDTDAttList.prototype.toString = function(options, level) {
+      var indent, newline, offset, pretty, r, ref, ref1, ref2, space;
+      pretty = (options != null ? options.pretty : void 0) || false;
+      indent = (ref = options != null ? options.indent : void 0) != null ? ref : '  ';
+      offset = (ref1 = options != null ? options.offset : void 0) != null ? ref1 : 0;
+      newline = (ref2 = options != null ? options.newline : void 0) != null ? ref2 : '\n';
+      level || (level = 0);
+      space = new Array(level + offset + 1).join(indent);
+      r = '';
+      if (pretty) {
+        r += space;
+      }
+      r += '<!ATTLIST ' + this.elementName + ' ' + this.attributeName + ' ' + this.attributeType;
+      if (this.defaultValueType !== '#DEFAULT') {
+        r += ' ' + this.defaultValueType;
+      }
+      if (this.defaultValue) {
+        r += ' "' + this.defaultValue + '"';
+      }
+      r += '>';
+      if (pretty) {
+        r += newline;
+      }
+      return r;
+    };
+
+    return XMLDTDAttList;
+
+  })();
+
+}).call(this);
+
+},{"lodash/object/create":131}],77:[function(require,module,exports){
+(function() {
+  var XMLDTDElement, create, isArray;
+
+  create = require('lodash/object/create');
+
+  isArray = require('lodash/lang/isArray');
+
+  module.exports = XMLDTDElement = (function() {
+    function XMLDTDElement(parent, name, value) {
+      this.stringify = parent.stringify;
+      if (name == null) {
+        throw new Error("Missing DTD element name");
+      }
+      if (!value) {
+        value = '(#PCDATA)';
+      }
+      if (isArray(value)) {
+        value = '(' + value.join(',') + ')';
+      }
+      this.name = this.stringify.eleName(name);
+      this.value = this.stringify.dtdElementValue(value);
+    }
+
+    XMLDTDElement.prototype.clone = function() {
+      return create(XMLDTDElement.prototype, this);
+    };
+
+    XMLDTDElement.prototype.toString = function(options, level) {
+      var indent, newline, offset, pretty, r, ref, ref1, ref2, space;
+      pretty = (options != null ? options.pretty : void 0) || false;
+      indent = (ref = options != null ? options.indent : void 0) != null ? ref : '  ';
+      offset = (ref1 = options != null ? options.offset : void 0) != null ? ref1 : 0;
+      newline = (ref2 = options != null ? options.newline : void 0) != null ? ref2 : '\n';
+      level || (level = 0);
+      space = new Array(level + offset + 1).join(indent);
+      r = '';
+      if (pretty) {
+        r += space;
+      }
+      r += '<!ELEMENT ' + this.name + ' ' + this.value + '>';
+      if (pretty) {
+        r += newline;
+      }
+      return r;
+    };
+
+    return XMLDTDElement;
+
+  })();
+
+}).call(this);
+
+},{"lodash/lang/isArray":123,"lodash/object/create":131}],78:[function(require,module,exports){
+(function() {
+  var XMLDTDEntity, create, isObject;
+
+  create = require('lodash/object/create');
+
+  isObject = require('lodash/lang/isObject');
+
+  module.exports = XMLDTDEntity = (function() {
+    function XMLDTDEntity(parent, pe, name, value) {
+      this.stringify = parent.stringify;
+      if (name == null) {
+        throw new Error("Missing entity name");
+      }
+      if (value == null) {
+        throw new Error("Missing entity value");
+      }
+      this.pe = !!pe;
+      this.name = this.stringify.eleName(name);
+      if (!isObject(value)) {
+        this.value = this.stringify.dtdEntityValue(value);
       } else {
-        r += '' + this.value;
-      }
-      _ref = this.attributes;
-      for (attName in _ref) {
-        attValue = _ref[attName];
-        if (this.name === '!DOCTYPE') {
-          r += ' ' + attValue;
-        } else {
-          r += ' ' + attName + '="' + attValue + '"';
+        if (!value.pubID && !value.sysID) {
+          throw new Error("Public and/or system identifiers are required for an external entity");
+        }
+        if (value.pubID && !value.sysID) {
+          throw new Error("System identifier is required for a public external entity");
+        }
+        if (value.pubID != null) {
+          this.pubID = this.stringify.dtdPubID(value.pubID);
+        }
+        if (value.sysID != null) {
+          this.sysID = this.stringify.dtdSysID(value.sysID);
+        }
+        if (value.nData != null) {
+          this.nData = this.stringify.dtdNData(value.nData);
+        }
+        if (this.pe && this.nData) {
+          throw new Error("Notation declaration is not allowed in a parameter entity");
         }
       }
-      if (this.children.length === 0) {
-        if (!(this.value != null)) {
-          r += this.name === '?xml' ? '?>' : this.name === '!DOCTYPE' ? '>' : '/>';
+    }
+
+    XMLDTDEntity.prototype.clone = function() {
+      return create(XMLDTDEntity.prototype, this);
+    };
+
+    XMLDTDEntity.prototype.toString = function(options, level) {
+      var indent, newline, offset, pretty, r, ref, ref1, ref2, space;
+      pretty = (options != null ? options.pretty : void 0) || false;
+      indent = (ref = options != null ? options.indent : void 0) != null ? ref : '  ';
+      offset = (ref1 = options != null ? options.offset : void 0) != null ? ref1 : 0;
+      newline = (ref2 = options != null ? options.newline : void 0) != null ? ref2 : '\n';
+      level || (level = 0);
+      space = new Array(level + offset + 1).join(indent);
+      r = '';
+      if (pretty) {
+        r += space;
+      }
+      r += '<!ENTITY';
+      if (this.pe) {
+        r += ' %';
+      }
+      r += ' ' + this.name;
+      if (this.value) {
+        r += ' "' + this.value + '"';
+      } else {
+        if (this.pubID && this.sysID) {
+          r += ' PUBLIC "' + this.pubID + '" "' + this.sysID + '"';
+        } else if (this.sysID) {
+          r += ' SYSTEM "' + this.sysID + '"';
         }
+        if (this.nData) {
+          r += ' NDATA ' + this.nData;
+        }
+      }
+      r += '>';
+      if (pretty) {
+        r += newline;
+      }
+      return r;
+    };
+
+    return XMLDTDEntity;
+
+  })();
+
+}).call(this);
+
+},{"lodash/lang/isObject":127,"lodash/object/create":131}],79:[function(require,module,exports){
+(function() {
+  var XMLDTDNotation, create;
+
+  create = require('lodash/object/create');
+
+  module.exports = XMLDTDNotation = (function() {
+    function XMLDTDNotation(parent, name, value) {
+      this.stringify = parent.stringify;
+      if (name == null) {
+        throw new Error("Missing notation name");
+      }
+      if (!value.pubID && !value.sysID) {
+        throw new Error("Public or system identifiers are required for an external entity");
+      }
+      this.name = this.stringify.eleName(name);
+      if (value.pubID != null) {
+        this.pubID = this.stringify.dtdPubID(value.pubID);
+      }
+      if (value.sysID != null) {
+        this.sysID = this.stringify.dtdSysID(value.sysID);
+      }
+    }
+
+    XMLDTDNotation.prototype.clone = function() {
+      return create(XMLDTDNotation.prototype, this);
+    };
+
+    XMLDTDNotation.prototype.toString = function(options, level) {
+      var indent, newline, offset, pretty, r, ref, ref1, ref2, space;
+      pretty = (options != null ? options.pretty : void 0) || false;
+      indent = (ref = options != null ? options.indent : void 0) != null ? ref : '  ';
+      offset = (ref1 = options != null ? options.offset : void 0) != null ? ref1 : 0;
+      newline = (ref2 = options != null ? options.newline : void 0) != null ? ref2 : '\n';
+      level || (level = 0);
+      space = new Array(level + offset + 1).join(indent);
+      r = '';
+      if (pretty) {
+        r += space;
+      }
+      r += '<!NOTATION ' + this.name;
+      if (this.pubID && this.sysID) {
+        r += ' PUBLIC "' + this.pubID + '" "' + this.sysID + '"';
+      } else if (this.pubID) {
+        r += ' PUBLIC "' + this.pubID + '"';
+      } else if (this.sysID) {
+        r += ' SYSTEM "' + this.sysID + '"';
+      }
+      r += '>';
+      if (pretty) {
+        r += newline;
+      }
+      return r;
+    };
+
+    return XMLDTDNotation;
+
+  })();
+
+}).call(this);
+
+},{"lodash/object/create":131}],80:[function(require,module,exports){
+(function() {
+  var XMLDeclaration, XMLNode, create, isObject,
+    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  create = require('lodash/object/create');
+
+  isObject = require('lodash/lang/isObject');
+
+  XMLNode = require('./XMLNode');
+
+  module.exports = XMLDeclaration = (function(superClass) {
+    extend(XMLDeclaration, superClass);
+
+    function XMLDeclaration(parent, version, encoding, standalone) {
+      var ref;
+      XMLDeclaration.__super__.constructor.call(this, parent);
+      if (isObject(version)) {
+        ref = version, version = ref.version, encoding = ref.encoding, standalone = ref.standalone;
+      }
+      if (!version) {
+        version = '1.0';
+      }
+      if (version != null) {
+        this.version = this.stringify.xmlVersion(version);
+      }
+      if (encoding != null) {
+        this.encoding = this.stringify.xmlEncoding(encoding);
+      }
+      if (standalone != null) {
+        this.standalone = this.stringify.xmlStandalone(standalone);
+      }
+    }
+
+    XMLDeclaration.prototype.clone = function() {
+      return create(XMLDeclaration.prototype, this);
+    };
+
+    XMLDeclaration.prototype.toString = function(options, level) {
+      var indent, newline, offset, pretty, r, ref, ref1, ref2, space;
+      pretty = (options != null ? options.pretty : void 0) || false;
+      indent = (ref = options != null ? options.indent : void 0) != null ? ref : '  ';
+      offset = (ref1 = options != null ? options.offset : void 0) != null ? ref1 : 0;
+      newline = (ref2 = options != null ? options.newline : void 0) != null ? ref2 : '\n';
+      level || (level = 0);
+      space = new Array(level + offset + 1).join(indent);
+      r = '';
+      if (pretty) {
+        r += space;
+      }
+      r += '<?xml';
+      if (this.version != null) {
+        r += ' version="' + this.version + '"';
+      }
+      if (this.encoding != null) {
+        r += ' encoding="' + this.encoding + '"';
+      }
+      if (this.standalone != null) {
+        r += ' standalone="' + this.standalone + '"';
+      }
+      r += '?>';
+      if (pretty) {
+        r += newline;
+      }
+      return r;
+    };
+
+    return XMLDeclaration;
+
+  })(XMLNode);
+
+}).call(this);
+
+},{"./XMLNode":83,"lodash/lang/isObject":127,"lodash/object/create":131}],81:[function(require,module,exports){
+(function() {
+  var XMLCData, XMLComment, XMLDTDAttList, XMLDTDElement, XMLDTDEntity, XMLDTDNotation, XMLDocType, XMLProcessingInstruction, create, isObject;
+
+  create = require('lodash/object/create');
+
+  isObject = require('lodash/lang/isObject');
+
+  XMLCData = require('./XMLCData');
+
+  XMLComment = require('./XMLComment');
+
+  XMLDTDAttList = require('./XMLDTDAttList');
+
+  XMLDTDEntity = require('./XMLDTDEntity');
+
+  XMLDTDElement = require('./XMLDTDElement');
+
+  XMLDTDNotation = require('./XMLDTDNotation');
+
+  XMLProcessingInstruction = require('./XMLProcessingInstruction');
+
+  module.exports = XMLDocType = (function() {
+    function XMLDocType(parent, pubID, sysID) {
+      var ref, ref1;
+      this.documentObject = parent;
+      this.stringify = this.documentObject.stringify;
+      this.children = [];
+      if (isObject(pubID)) {
+        ref = pubID, pubID = ref.pubID, sysID = ref.sysID;
+      }
+      if (sysID == null) {
+        ref1 = [pubID, sysID], sysID = ref1[0], pubID = ref1[1];
+      }
+      if (pubID != null) {
+        this.pubID = this.stringify.dtdPubID(pubID);
+      }
+      if (sysID != null) {
+        this.sysID = this.stringify.dtdSysID(sysID);
+      }
+    }
+
+    XMLDocType.prototype.clone = function() {
+      return create(XMLDocType.prototype, this);
+    };
+
+    XMLDocType.prototype.element = function(name, value) {
+      var child;
+      child = new XMLDTDElement(this, name, value);
+      this.children.push(child);
+      return this;
+    };
+
+    XMLDocType.prototype.attList = function(elementName, attributeName, attributeType, defaultValueType, defaultValue) {
+      var child;
+      child = new XMLDTDAttList(this, elementName, attributeName, attributeType, defaultValueType, defaultValue);
+      this.children.push(child);
+      return this;
+    };
+
+    XMLDocType.prototype.entity = function(name, value) {
+      var child;
+      child = new XMLDTDEntity(this, false, name, value);
+      this.children.push(child);
+      return this;
+    };
+
+    XMLDocType.prototype.pEntity = function(name, value) {
+      var child;
+      child = new XMLDTDEntity(this, true, name, value);
+      this.children.push(child);
+      return this;
+    };
+
+    XMLDocType.prototype.notation = function(name, value) {
+      var child;
+      child = new XMLDTDNotation(this, name, value);
+      this.children.push(child);
+      return this;
+    };
+
+    XMLDocType.prototype.cdata = function(value) {
+      var child;
+      child = new XMLCData(this, value);
+      this.children.push(child);
+      return this;
+    };
+
+    XMLDocType.prototype.comment = function(value) {
+      var child;
+      child = new XMLComment(this, value);
+      this.children.push(child);
+      return this;
+    };
+
+    XMLDocType.prototype.instruction = function(target, value) {
+      var child;
+      child = new XMLProcessingInstruction(this, target, value);
+      this.children.push(child);
+      return this;
+    };
+
+    XMLDocType.prototype.root = function() {
+      return this.documentObject.root();
+    };
+
+    XMLDocType.prototype.document = function() {
+      return this.documentObject;
+    };
+
+    XMLDocType.prototype.toString = function(options, level) {
+      var child, i, indent, len, newline, offset, pretty, r, ref, ref1, ref2, ref3, space;
+      pretty = (options != null ? options.pretty : void 0) || false;
+      indent = (ref = options != null ? options.indent : void 0) != null ? ref : '  ';
+      offset = (ref1 = options != null ? options.offset : void 0) != null ? ref1 : 0;
+      newline = (ref2 = options != null ? options.newline : void 0) != null ? ref2 : '\n';
+      level || (level = 0);
+      space = new Array(level + offset + 1).join(indent);
+      r = '';
+      if (pretty) {
+        r += space;
+      }
+      r += '<!DOCTYPE ' + this.root().name;
+      if (this.pubID && this.sysID) {
+        r += ' PUBLIC "' + this.pubID + '" "' + this.sysID + '"';
+      } else if (this.sysID) {
+        r += ' SYSTEM "' + this.sysID + '"';
+      }
+      if (this.children.length > 0) {
+        r += ' [';
         if (pretty) {
           r += newline;
         }
-      } else if (pretty && this.children.length === 1 && this.children[0].value) {
+        ref3 = this.children;
+        for (i = 0, len = ref3.length; i < len; i++) {
+          child = ref3[i];
+          r += child.toString(options, level + 1);
+        }
+        r += ']';
+      }
+      r += '>';
+      if (pretty) {
+        r += newline;
+      }
+      return r;
+    };
+
+    XMLDocType.prototype.ele = function(name, value) {
+      return this.element(name, value);
+    };
+
+    XMLDocType.prototype.att = function(elementName, attributeName, attributeType, defaultValueType, defaultValue) {
+      return this.attList(elementName, attributeName, attributeType, defaultValueType, defaultValue);
+    };
+
+    XMLDocType.prototype.ent = function(name, value) {
+      return this.entity(name, value);
+    };
+
+    XMLDocType.prototype.pent = function(name, value) {
+      return this.pEntity(name, value);
+    };
+
+    XMLDocType.prototype.not = function(name, value) {
+      return this.notation(name, value);
+    };
+
+    XMLDocType.prototype.dat = function(value) {
+      return this.cdata(value);
+    };
+
+    XMLDocType.prototype.com = function(value) {
+      return this.comment(value);
+    };
+
+    XMLDocType.prototype.ins = function(target, value) {
+      return this.instruction(target, value);
+    };
+
+    XMLDocType.prototype.up = function() {
+      return this.root();
+    };
+
+    XMLDocType.prototype.doc = function() {
+      return this.document();
+    };
+
+    return XMLDocType;
+
+  })();
+
+}).call(this);
+
+},{"./XMLCData":74,"./XMLComment":75,"./XMLDTDAttList":76,"./XMLDTDElement":77,"./XMLDTDEntity":78,"./XMLDTDNotation":79,"./XMLProcessingInstruction":84,"lodash/lang/isObject":127,"lodash/object/create":131}],82:[function(require,module,exports){
+(function() {
+  var XMLAttribute, XMLElement, XMLNode, XMLProcessingInstruction, create, every, isArray, isFunction, isObject,
+    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  create = require('lodash/object/create');
+
+  isObject = require('lodash/lang/isObject');
+
+  isArray = require('lodash/lang/isArray');
+
+  isFunction = require('lodash/lang/isFunction');
+
+  every = require('lodash/collection/every');
+
+  XMLNode = require('./XMLNode');
+
+  XMLAttribute = require('./XMLAttribute');
+
+  XMLProcessingInstruction = require('./XMLProcessingInstruction');
+
+  module.exports = XMLElement = (function(superClass) {
+    extend(XMLElement, superClass);
+
+    function XMLElement(parent, name, attributes) {
+      XMLElement.__super__.constructor.call(this, parent);
+      if (name == null) {
+        throw new Error("Missing element name");
+      }
+      this.name = this.stringify.eleName(name);
+      this.children = [];
+      this.instructions = [];
+      this.attributes = {};
+      if (attributes != null) {
+        this.attribute(attributes);
+      }
+    }
+
+    XMLElement.prototype.clone = function() {
+      var att, attName, clonedSelf, i, len, pi, ref, ref1;
+      clonedSelf = create(XMLElement.prototype, this);
+      if (clonedSelf.isRoot) {
+        clonedSelf.documentObject = null;
+      }
+      clonedSelf.attributes = {};
+      ref = this.attributes;
+      for (attName in ref) {
+        if (!hasProp.call(ref, attName)) continue;
+        att = ref[attName];
+        clonedSelf.attributes[attName] = att.clone();
+      }
+      clonedSelf.instructions = [];
+      ref1 = this.instructions;
+      for (i = 0, len = ref1.length; i < len; i++) {
+        pi = ref1[i];
+        clonedSelf.instructions.push(pi.clone());
+      }
+      clonedSelf.children = [];
+      this.children.forEach(function(child) {
+        var clonedChild;
+        clonedChild = child.clone();
+        clonedChild.parent = clonedSelf;
+        return clonedSelf.children.push(clonedChild);
+      });
+      return clonedSelf;
+    };
+
+    XMLElement.prototype.attribute = function(name, value) {
+      var attName, attValue;
+      if (name != null) {
+        name = name.valueOf();
+      }
+      if (isObject(name)) {
+        for (attName in name) {
+          if (!hasProp.call(name, attName)) continue;
+          attValue = name[attName];
+          this.attribute(attName, attValue);
+        }
+      } else {
+        if (isFunction(value)) {
+          value = value.apply();
+        }
+        if (!this.options.skipNullAttributes || (value != null)) {
+          this.attributes[name] = new XMLAttribute(this, name, value);
+        }
+      }
+      return this;
+    };
+
+    XMLElement.prototype.removeAttribute = function(name) {
+      var attName, i, len;
+      if (name == null) {
+        throw new Error("Missing attribute name");
+      }
+      name = name.valueOf();
+      if (isArray(name)) {
+        for (i = 0, len = name.length; i < len; i++) {
+          attName = name[i];
+          delete this.attributes[attName];
+        }
+      } else {
+        delete this.attributes[name];
+      }
+      return this;
+    };
+
+    XMLElement.prototype.instruction = function(target, value) {
+      var i, insTarget, insValue, instruction, len;
+      if (target != null) {
+        target = target.valueOf();
+      }
+      if (value != null) {
+        value = value.valueOf();
+      }
+      if (isArray(target)) {
+        for (i = 0, len = target.length; i < len; i++) {
+          insTarget = target[i];
+          this.instruction(insTarget);
+        }
+      } else if (isObject(target)) {
+        for (insTarget in target) {
+          if (!hasProp.call(target, insTarget)) continue;
+          insValue = target[insTarget];
+          this.instruction(insTarget, insValue);
+        }
+      } else {
+        if (isFunction(value)) {
+          value = value.apply();
+        }
+        instruction = new XMLProcessingInstruction(this, target, value);
+        this.instructions.push(instruction);
+      }
+      return this;
+    };
+
+    XMLElement.prototype.toString = function(options, level) {
+      var att, child, i, indent, instruction, j, len, len1, name, newline, offset, pretty, r, ref, ref1, ref2, ref3, ref4, ref5, space;
+      pretty = (options != null ? options.pretty : void 0) || false;
+      indent = (ref = options != null ? options.indent : void 0) != null ? ref : '  ';
+      offset = (ref1 = options != null ? options.offset : void 0) != null ? ref1 : 0;
+      newline = (ref2 = options != null ? options.newline : void 0) != null ? ref2 : '\n';
+      level || (level = 0);
+      space = new Array(level + offset + 1).join(indent);
+      r = '';
+      ref3 = this.instructions;
+      for (i = 0, len = ref3.length; i < len; i++) {
+        instruction = ref3[i];
+        r += instruction.toString(options, level + 1);
+      }
+      if (pretty) {
+        r += space;
+      }
+      r += '<' + this.name;
+      ref4 = this.attributes;
+      for (name in ref4) {
+        if (!hasProp.call(ref4, name)) continue;
+        att = ref4[name];
+        r += att.toString(options);
+      }
+      if (this.children.length === 0 || every(this.children, function(e) {
+        return e.value === '';
+      })) {
+        r += '/>';
+        if (pretty) {
+          r += newline;
+        }
+      } else if (pretty && this.children.length === 1 && (this.children[0].value != null)) {
         r += '>';
         r += this.children[0].value;
         r += '</' + this.name + '>';
@@ -10570,9 +11324,9 @@ function hasOwnProperty(obj, prop) {
         if (pretty) {
           r += newline;
         }
-        _ref1 = this.children;
-        for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-          child = _ref1[_i];
+        ref5 = this.children;
+        for (j = 0, len1 = ref5.length; j < len1; j++) {
+          child = ref5[j];
           r += child.toString(options, level + 1);
         }
         if (pretty) {
@@ -10586,99 +11340,1901 @@ function hasOwnProperty(obj, prop) {
       return r;
     };
 
-    XMLFragment.prototype.escape = function(str) {
-      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/'/g, '&apos;').replace(/"/g, '&quot;');
-    };
-
-    XMLFragment.prototype.assertLegalChar = function(str) {
-      var chars, chr;
-      chars = /[\u0000-\u0008\u000B-\u000C\u000E-\u001F\uD800-\uDFFF\uFFFE-\uFFFF]/;
-      chr = str.match(chars);
-      if (chr) {
-        throw new Error("Invalid character (" + chr + ") in string: " + str);
-      }
-    };
-
-    XMLFragment.prototype.is = function(obj, type) {
-      var clas;
-      clas = Object.prototype.toString.call(obj).slice(8, -1);
-      return (obj != null) && clas === type;
-    };
-
-    XMLFragment.prototype.ele = function(name, attributes, text) {
-      return this.element(name, attributes, text);
-    };
-
-    XMLFragment.prototype.txt = function(value) {
-      return this.text(value);
-    };
-
-    XMLFragment.prototype.dat = function(value) {
-      return this.cdata(value);
-    };
-
-    XMLFragment.prototype.att = function(name, value) {
+    XMLElement.prototype.att = function(name, value) {
       return this.attribute(name, value);
     };
 
-    XMLFragment.prototype.com = function(value) {
-      return this.comment(value);
+    XMLElement.prototype.ins = function(target, value) {
+      return this.instruction(target, value);
     };
 
-    XMLFragment.prototype.doc = function() {
-      return this.document();
-    };
-
-    XMLFragment.prototype.e = function(name, attributes, text) {
-      return this.element(name, attributes, text);
-    };
-
-    XMLFragment.prototype.t = function(value) {
-      return this.text(value);
-    };
-
-    XMLFragment.prototype.d = function(value) {
-      return this.cdata(value);
-    };
-
-    XMLFragment.prototype.a = function(name, value) {
+    XMLElement.prototype.a = function(name, value) {
       return this.attribute(name, value);
     };
 
-    XMLFragment.prototype.c = function(value) {
-      return this.comment(value);
+    XMLElement.prototype.i = function(target, value) {
+      return this.instruction(target, value);
     };
 
-    XMLFragment.prototype.r = function(value) {
-      return this.raw(value);
-    };
+    return XMLElement;
 
-    XMLFragment.prototype.u = function() {
-      return this.up();
-    };
-
-    return XMLFragment;
-
-  })();
-
-  module.exports = XMLFragment;
+  })(XMLNode);
 
 }).call(this);
 
-},{}],72:[function(require,module,exports){
+},{"./XMLAttribute":72,"./XMLNode":83,"./XMLProcessingInstruction":84,"lodash/collection/every":89,"lodash/lang/isArray":123,"lodash/lang/isFunction":125,"lodash/lang/isObject":127,"lodash/object/create":131}],83:[function(require,module,exports){
 (function() {
-  var XMLBuilder;
+  var XMLCData, XMLComment, XMLDeclaration, XMLDocType, XMLElement, XMLNode, XMLRaw, XMLText, isArray, isEmpty, isFunction, isObject,
+    hasProp = {}.hasOwnProperty;
+
+  isObject = require('lodash/lang/isObject');
+
+  isArray = require('lodash/lang/isArray');
+
+  isFunction = require('lodash/lang/isFunction');
+
+  isEmpty = require('lodash/lang/isEmpty');
+
+  XMLElement = null;
+
+  XMLCData = null;
+
+  XMLComment = null;
+
+  XMLDeclaration = null;
+
+  XMLDocType = null;
+
+  XMLRaw = null;
+
+  XMLText = null;
+
+  module.exports = XMLNode = (function() {
+    function XMLNode(parent) {
+      this.parent = parent;
+      this.options = this.parent.options;
+      this.stringify = this.parent.stringify;
+      if (XMLElement === null) {
+        XMLElement = require('./XMLElement');
+        XMLCData = require('./XMLCData');
+        XMLComment = require('./XMLComment');
+        XMLDeclaration = require('./XMLDeclaration');
+        XMLDocType = require('./XMLDocType');
+        XMLRaw = require('./XMLRaw');
+        XMLText = require('./XMLText');
+      }
+    }
+
+    XMLNode.prototype.clone = function() {
+      throw new Error("Cannot clone generic XMLNode");
+    };
+
+    XMLNode.prototype.element = function(name, attributes, text) {
+      var item, j, key, lastChild, len, ref, val;
+      lastChild = null;
+      if (attributes == null) {
+        attributes = {};
+      }
+      attributes = attributes.valueOf();
+      if (!isObject(attributes)) {
+        ref = [attributes, text], text = ref[0], attributes = ref[1];
+      }
+      if (name != null) {
+        name = name.valueOf();
+      }
+      if (isArray(name)) {
+        for (j = 0, len = name.length; j < len; j++) {
+          item = name[j];
+          lastChild = this.element(item);
+        }
+      } else if (isFunction(name)) {
+        lastChild = this.element(name.apply());
+      } else if (isObject(name)) {
+        for (key in name) {
+          if (!hasProp.call(name, key)) continue;
+          val = name[key];
+          if (isFunction(val)) {
+            val = val.apply();
+          }
+          if ((isObject(val)) && (isEmpty(val))) {
+            val = null;
+          }
+          if (!this.options.ignoreDecorators && this.stringify.convertAttKey && key.indexOf(this.stringify.convertAttKey) === 0) {
+            lastChild = this.attribute(key.substr(this.stringify.convertAttKey.length), val);
+          } else if (!this.options.ignoreDecorators && this.stringify.convertPIKey && key.indexOf(this.stringify.convertPIKey) === 0) {
+            lastChild = this.instruction(key.substr(this.stringify.convertPIKey.length), val);
+          } else if (isObject(val)) {
+            if (!this.options.ignoreDecorators && this.stringify.convertListKey && key.indexOf(this.stringify.convertListKey) === 0 && isArray(val)) {
+              lastChild = this.element(val);
+            } else {
+              lastChild = this.element(key);
+              lastChild.element(val);
+            }
+          } else {
+            lastChild = this.element(key, val);
+          }
+        }
+      } else {
+        if (!this.options.ignoreDecorators && this.stringify.convertTextKey && name.indexOf(this.stringify.convertTextKey) === 0) {
+          lastChild = this.text(text);
+        } else if (!this.options.ignoreDecorators && this.stringify.convertCDataKey && name.indexOf(this.stringify.convertCDataKey) === 0) {
+          lastChild = this.cdata(text);
+        } else if (!this.options.ignoreDecorators && this.stringify.convertCommentKey && name.indexOf(this.stringify.convertCommentKey) === 0) {
+          lastChild = this.comment(text);
+        } else if (!this.options.ignoreDecorators && this.stringify.convertRawKey && name.indexOf(this.stringify.convertRawKey) === 0) {
+          lastChild = this.raw(text);
+        } else {
+          lastChild = this.node(name, attributes, text);
+        }
+      }
+      if (lastChild == null) {
+        throw new Error("Could not create any elements with: " + name);
+      }
+      return lastChild;
+    };
+
+    XMLNode.prototype.insertBefore = function(name, attributes, text) {
+      var child, i, removed;
+      if (this.isRoot) {
+        throw new Error("Cannot insert elements at root level");
+      }
+      i = this.parent.children.indexOf(this);
+      removed = this.parent.children.splice(i);
+      child = this.parent.element(name, attributes, text);
+      Array.prototype.push.apply(this.parent.children, removed);
+      return child;
+    };
+
+    XMLNode.prototype.insertAfter = function(name, attributes, text) {
+      var child, i, removed;
+      if (this.isRoot) {
+        throw new Error("Cannot insert elements at root level");
+      }
+      i = this.parent.children.indexOf(this);
+      removed = this.parent.children.splice(i + 1);
+      child = this.parent.element(name, attributes, text);
+      Array.prototype.push.apply(this.parent.children, removed);
+      return child;
+    };
+
+    XMLNode.prototype.remove = function() {
+      var i, ref;
+      if (this.isRoot) {
+        throw new Error("Cannot remove the root element");
+      }
+      i = this.parent.children.indexOf(this);
+      [].splice.apply(this.parent.children, [i, i - i + 1].concat(ref = [])), ref;
+      return this.parent;
+    };
+
+    XMLNode.prototype.node = function(name, attributes, text) {
+      var child, ref;
+      if (name != null) {
+        name = name.valueOf();
+      }
+      if (attributes == null) {
+        attributes = {};
+      }
+      attributes = attributes.valueOf();
+      if (!isObject(attributes)) {
+        ref = [attributes, text], text = ref[0], attributes = ref[1];
+      }
+      child = new XMLElement(this, name, attributes);
+      if (text != null) {
+        child.text(text);
+      }
+      this.children.push(child);
+      return child;
+    };
+
+    XMLNode.prototype.text = function(value) {
+      var child;
+      child = new XMLText(this, value);
+      this.children.push(child);
+      return this;
+    };
+
+    XMLNode.prototype.cdata = function(value) {
+      var child;
+      child = new XMLCData(this, value);
+      this.children.push(child);
+      return this;
+    };
+
+    XMLNode.prototype.comment = function(value) {
+      var child;
+      child = new XMLComment(this, value);
+      this.children.push(child);
+      return this;
+    };
+
+    XMLNode.prototype.raw = function(value) {
+      var child;
+      child = new XMLRaw(this, value);
+      this.children.push(child);
+      return this;
+    };
+
+    XMLNode.prototype.declaration = function(version, encoding, standalone) {
+      var doc, xmldec;
+      doc = this.document();
+      xmldec = new XMLDeclaration(doc, version, encoding, standalone);
+      doc.xmldec = xmldec;
+      return doc.root();
+    };
+
+    XMLNode.prototype.doctype = function(pubID, sysID) {
+      var doc, doctype;
+      doc = this.document();
+      doctype = new XMLDocType(doc, pubID, sysID);
+      doc.doctype = doctype;
+      return doctype;
+    };
+
+    XMLNode.prototype.up = function() {
+      if (this.isRoot) {
+        throw new Error("The root node has no parent. Use doc() if you need to get the document object.");
+      }
+      return this.parent;
+    };
+
+    XMLNode.prototype.root = function() {
+      var child;
+      if (this.isRoot) {
+        return this;
+      }
+      child = this.parent;
+      while (!child.isRoot) {
+        child = child.parent;
+      }
+      return child;
+    };
+
+    XMLNode.prototype.document = function() {
+      return this.root().documentObject;
+    };
+
+    XMLNode.prototype.end = function(options) {
+      return this.document().toString(options);
+    };
+
+    XMLNode.prototype.prev = function() {
+      var i;
+      if (this.isRoot) {
+        throw new Error("Root node has no siblings");
+      }
+      i = this.parent.children.indexOf(this);
+      if (i < 1) {
+        throw new Error("Already at the first node");
+      }
+      return this.parent.children[i - 1];
+    };
+
+    XMLNode.prototype.next = function() {
+      var i;
+      if (this.isRoot) {
+        throw new Error("Root node has no siblings");
+      }
+      i = this.parent.children.indexOf(this);
+      if (i === -1 || i === this.parent.children.length - 1) {
+        throw new Error("Already at the last node");
+      }
+      return this.parent.children[i + 1];
+    };
+
+    XMLNode.prototype.importXMLBuilder = function(xmlbuilder) {
+      var clonedRoot;
+      clonedRoot = xmlbuilder.root().clone();
+      clonedRoot.parent = this;
+      clonedRoot.isRoot = false;
+      this.children.push(clonedRoot);
+      return this;
+    };
+
+    XMLNode.prototype.ele = function(name, attributes, text) {
+      return this.element(name, attributes, text);
+    };
+
+    XMLNode.prototype.nod = function(name, attributes, text) {
+      return this.node(name, attributes, text);
+    };
+
+    XMLNode.prototype.txt = function(value) {
+      return this.text(value);
+    };
+
+    XMLNode.prototype.dat = function(value) {
+      return this.cdata(value);
+    };
+
+    XMLNode.prototype.com = function(value) {
+      return this.comment(value);
+    };
+
+    XMLNode.prototype.doc = function() {
+      return this.document();
+    };
+
+    XMLNode.prototype.dec = function(version, encoding, standalone) {
+      return this.declaration(version, encoding, standalone);
+    };
+
+    XMLNode.prototype.dtd = function(pubID, sysID) {
+      return this.doctype(pubID, sysID);
+    };
+
+    XMLNode.prototype.e = function(name, attributes, text) {
+      return this.element(name, attributes, text);
+    };
+
+    XMLNode.prototype.n = function(name, attributes, text) {
+      return this.node(name, attributes, text);
+    };
+
+    XMLNode.prototype.t = function(value) {
+      return this.text(value);
+    };
+
+    XMLNode.prototype.d = function(value) {
+      return this.cdata(value);
+    };
+
+    XMLNode.prototype.c = function(value) {
+      return this.comment(value);
+    };
+
+    XMLNode.prototype.r = function(value) {
+      return this.raw(value);
+    };
+
+    XMLNode.prototype.u = function() {
+      return this.up();
+    };
+
+    return XMLNode;
+
+  })();
+
+}).call(this);
+
+},{"./XMLCData":74,"./XMLComment":75,"./XMLDeclaration":80,"./XMLDocType":81,"./XMLElement":82,"./XMLRaw":85,"./XMLText":87,"lodash/lang/isArray":123,"lodash/lang/isEmpty":124,"lodash/lang/isFunction":125,"lodash/lang/isObject":127}],84:[function(require,module,exports){
+(function() {
+  var XMLProcessingInstruction, create;
+
+  create = require('lodash/object/create');
+
+  module.exports = XMLProcessingInstruction = (function() {
+    function XMLProcessingInstruction(parent, target, value) {
+      this.stringify = parent.stringify;
+      if (target == null) {
+        throw new Error("Missing instruction target");
+      }
+      this.target = this.stringify.insTarget(target);
+      if (value) {
+        this.value = this.stringify.insValue(value);
+      }
+    }
+
+    XMLProcessingInstruction.prototype.clone = function() {
+      return create(XMLProcessingInstruction.prototype, this);
+    };
+
+    XMLProcessingInstruction.prototype.toString = function(options, level) {
+      var indent, newline, offset, pretty, r, ref, ref1, ref2, space;
+      pretty = (options != null ? options.pretty : void 0) || false;
+      indent = (ref = options != null ? options.indent : void 0) != null ? ref : '  ';
+      offset = (ref1 = options != null ? options.offset : void 0) != null ? ref1 : 0;
+      newline = (ref2 = options != null ? options.newline : void 0) != null ? ref2 : '\n';
+      level || (level = 0);
+      space = new Array(level + offset + 1).join(indent);
+      r = '';
+      if (pretty) {
+        r += space;
+      }
+      r += '<?';
+      r += this.target;
+      if (this.value) {
+        r += ' ' + this.value;
+      }
+      r += '?>';
+      if (pretty) {
+        r += newline;
+      }
+      return r;
+    };
+
+    return XMLProcessingInstruction;
+
+  })();
+
+}).call(this);
+
+},{"lodash/object/create":131}],85:[function(require,module,exports){
+(function() {
+  var XMLNode, XMLRaw, create,
+    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  create = require('lodash/object/create');
+
+  XMLNode = require('./XMLNode');
+
+  module.exports = XMLRaw = (function(superClass) {
+    extend(XMLRaw, superClass);
+
+    function XMLRaw(parent, text) {
+      XMLRaw.__super__.constructor.call(this, parent);
+      if (text == null) {
+        throw new Error("Missing raw text");
+      }
+      this.value = this.stringify.raw(text);
+    }
+
+    XMLRaw.prototype.clone = function() {
+      return create(XMLRaw.prototype, this);
+    };
+
+    XMLRaw.prototype.toString = function(options, level) {
+      var indent, newline, offset, pretty, r, ref, ref1, ref2, space;
+      pretty = (options != null ? options.pretty : void 0) || false;
+      indent = (ref = options != null ? options.indent : void 0) != null ? ref : '  ';
+      offset = (ref1 = options != null ? options.offset : void 0) != null ? ref1 : 0;
+      newline = (ref2 = options != null ? options.newline : void 0) != null ? ref2 : '\n';
+      level || (level = 0);
+      space = new Array(level + offset + 1).join(indent);
+      r = '';
+      if (pretty) {
+        r += space;
+      }
+      r += this.value;
+      if (pretty) {
+        r += newline;
+      }
+      return r;
+    };
+
+    return XMLRaw;
+
+  })(XMLNode);
+
+}).call(this);
+
+},{"./XMLNode":83,"lodash/object/create":131}],86:[function(require,module,exports){
+(function() {
+  var XMLStringifier,
+    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    hasProp = {}.hasOwnProperty;
+
+  module.exports = XMLStringifier = (function() {
+    function XMLStringifier(options) {
+      this.assertLegalChar = bind(this.assertLegalChar, this);
+      var key, ref, value;
+      this.allowSurrogateChars = options != null ? options.allowSurrogateChars : void 0;
+      ref = (options != null ? options.stringify : void 0) || {};
+      for (key in ref) {
+        if (!hasProp.call(ref, key)) continue;
+        value = ref[key];
+        this[key] = value;
+      }
+    }
+
+    XMLStringifier.prototype.eleName = function(val) {
+      val = '' + val || '';
+      return this.assertLegalChar(val);
+    };
+
+    XMLStringifier.prototype.eleText = function(val) {
+      val = '' + val || '';
+      return this.assertLegalChar(this.elEscape(val));
+    };
+
+    XMLStringifier.prototype.cdata = function(val) {
+      val = '' + val || '';
+      if (val.match(/]]>/)) {
+        throw new Error("Invalid CDATA text: " + val);
+      }
+      return this.assertLegalChar(val);
+    };
+
+    XMLStringifier.prototype.comment = function(val) {
+      val = '' + val || '';
+      if (val.match(/--/)) {
+        throw new Error("Comment text cannot contain double-hypen: " + val);
+      }
+      return this.assertLegalChar(val);
+    };
+
+    XMLStringifier.prototype.raw = function(val) {
+      return '' + val || '';
+    };
+
+    XMLStringifier.prototype.attName = function(val) {
+      return '' + val || '';
+    };
+
+    XMLStringifier.prototype.attValue = function(val) {
+      val = '' + val || '';
+      return this.attEscape(val);
+    };
+
+    XMLStringifier.prototype.insTarget = function(val) {
+      return '' + val || '';
+    };
+
+    XMLStringifier.prototype.insValue = function(val) {
+      val = '' + val || '';
+      if (val.match(/\?>/)) {
+        throw new Error("Invalid processing instruction value: " + val);
+      }
+      return val;
+    };
+
+    XMLStringifier.prototype.xmlVersion = function(val) {
+      val = '' + val || '';
+      if (!val.match(/1\.[0-9]+/)) {
+        throw new Error("Invalid version number: " + val);
+      }
+      return val;
+    };
+
+    XMLStringifier.prototype.xmlEncoding = function(val) {
+      val = '' + val || '';
+      if (!val.match(/[A-Za-z](?:[A-Za-z0-9._-]|-)*/)) {
+        throw new Error("Invalid encoding: " + val);
+      }
+      return val;
+    };
+
+    XMLStringifier.prototype.xmlStandalone = function(val) {
+      if (val) {
+        return "yes";
+      } else {
+        return "no";
+      }
+    };
+
+    XMLStringifier.prototype.dtdPubID = function(val) {
+      return '' + val || '';
+    };
+
+    XMLStringifier.prototype.dtdSysID = function(val) {
+      return '' + val || '';
+    };
+
+    XMLStringifier.prototype.dtdElementValue = function(val) {
+      return '' + val || '';
+    };
+
+    XMLStringifier.prototype.dtdAttType = function(val) {
+      return '' + val || '';
+    };
+
+    XMLStringifier.prototype.dtdAttDefault = function(val) {
+      if (val != null) {
+        return '' + val || '';
+      } else {
+        return val;
+      }
+    };
+
+    XMLStringifier.prototype.dtdEntityValue = function(val) {
+      return '' + val || '';
+    };
+
+    XMLStringifier.prototype.dtdNData = function(val) {
+      return '' + val || '';
+    };
+
+    XMLStringifier.prototype.convertAttKey = '@';
+
+    XMLStringifier.prototype.convertPIKey = '?';
+
+    XMLStringifier.prototype.convertTextKey = '#text';
+
+    XMLStringifier.prototype.convertCDataKey = '#cdata';
+
+    XMLStringifier.prototype.convertCommentKey = '#comment';
+
+    XMLStringifier.prototype.convertRawKey = '#raw';
+
+    XMLStringifier.prototype.convertListKey = '#list';
+
+    XMLStringifier.prototype.assertLegalChar = function(str) {
+      var chars, chr;
+      if (this.allowSurrogateChars) {
+        chars = /[\u0000-\u0008\u000B-\u000C\u000E-\u001F\uFFFE-\uFFFF]/;
+      } else {
+        chars = /[\u0000-\u0008\u000B-\u000C\u000E-\u001F\uD800-\uDFFF\uFFFE-\uFFFF]/;
+      }
+      chr = str.match(chars);
+      if (chr) {
+        throw new Error("Invalid character (" + chr + ") in string: " + str + " at index " + chr.index);
+      }
+      return str;
+    };
+
+    XMLStringifier.prototype.elEscape = function(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r/g, '&#xD;');
+    };
+
+    XMLStringifier.prototype.attEscape = function(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/\t/g, '&#x9;').replace(/\n/g, '&#xA;').replace(/\r/g, '&#xD;');
+    };
+
+    return XMLStringifier;
+
+  })();
+
+}).call(this);
+
+},{}],87:[function(require,module,exports){
+(function() {
+  var XMLNode, XMLText, create,
+    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  create = require('lodash/object/create');
+
+  XMLNode = require('./XMLNode');
+
+  module.exports = XMLText = (function(superClass) {
+    extend(XMLText, superClass);
+
+    function XMLText(parent, text) {
+      XMLText.__super__.constructor.call(this, parent);
+      if (text == null) {
+        throw new Error("Missing element text");
+      }
+      this.value = this.stringify.eleText(text);
+    }
+
+    XMLText.prototype.clone = function() {
+      return create(XMLText.prototype, this);
+    };
+
+    XMLText.prototype.toString = function(options, level) {
+      var indent, newline, offset, pretty, r, ref, ref1, ref2, space;
+      pretty = (options != null ? options.pretty : void 0) || false;
+      indent = (ref = options != null ? options.indent : void 0) != null ? ref : '  ';
+      offset = (ref1 = options != null ? options.offset : void 0) != null ? ref1 : 0;
+      newline = (ref2 = options != null ? options.newline : void 0) != null ? ref2 : '\n';
+      level || (level = 0);
+      space = new Array(level + offset + 1).join(indent);
+      r = '';
+      if (pretty) {
+        r += space;
+      }
+      r += this.value;
+      if (pretty) {
+        r += newline;
+      }
+      return r;
+    };
+
+    return XMLText;
+
+  })(XMLNode);
+
+}).call(this);
+
+},{"./XMLNode":83,"lodash/object/create":131}],88:[function(require,module,exports){
+(function() {
+  var XMLBuilder, assign;
+
+  assign = require('lodash/object/assign');
 
   XMLBuilder = require('./XMLBuilder');
 
-  module.exports.create = function(name, xmldec, doctype) {
-    if (name != null) {
-      return new XMLBuilder(name, xmldec, doctype).root();
-    } else {
-      return new XMLBuilder();
-    }
+  module.exports.create = function(name, xmldec, doctype, options) {
+    options = assign({}, xmldec, doctype, options);
+    return new XMLBuilder(name, options).root();
   };
 
 }).call(this);
 
-},{"./XMLBuilder":70}]},{},[1])
+},{"./XMLBuilder":73,"lodash/object/assign":130}],89:[function(require,module,exports){
+var arrayEvery = require('../internal/arrayEvery'),
+    baseCallback = require('../internal/baseCallback'),
+    baseEvery = require('../internal/baseEvery'),
+    isArray = require('../lang/isArray');
+
+
+function every(collection, predicate, thisArg) {
+  var func = isArray(collection) ? arrayEvery : baseEvery;
+  if (typeof predicate != 'function' || typeof thisArg != 'undefined') {
+    predicate = baseCallback(predicate, thisArg, 3);
+  }
+  return func(collection, predicate);
+}
+
+module.exports = every;
+
+},{"../internal/arrayEvery":90,"../internal/baseCallback":92,"../internal/baseEvery":96,"../lang/isArray":123}],90:[function(require,module,exports){
+
+function arrayEvery(array, predicate) {
+  var index = -1,
+      length = array.length;
+
+  while (++index < length) {
+    if (!predicate(array[index], index, array)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+module.exports = arrayEvery;
+
+},{}],91:[function(require,module,exports){
+var baseCopy = require('./baseCopy'),
+    keys = require('../object/keys');
+
+
+function baseAssign(object, source, customizer) {
+  var props = keys(source);
+  if (!customizer) {
+    return baseCopy(source, object, props);
+  }
+  var index = -1,
+      length = props.length;
+
+  while (++index < length) {
+    var key = props[index],
+        value = object[key],
+        result = customizer(value, source[key], key, object, source);
+
+    if ((result === result ? (result !== value) : (value === value)) ||
+        (typeof value == 'undefined' && !(key in object))) {
+      object[key] = result;
+    }
+  }
+  return object;
+}
+
+module.exports = baseAssign;
+
+},{"../object/keys":132,"./baseCopy":93}],92:[function(require,module,exports){
+var baseMatches = require('./baseMatches'),
+    baseMatchesProperty = require('./baseMatchesProperty'),
+    baseProperty = require('./baseProperty'),
+    bindCallback = require('./bindCallback'),
+    identity = require('../utility/identity'),
+    isBindable = require('./isBindable');
+
+
+function baseCallback(func, thisArg, argCount) {
+  var type = typeof func;
+  if (type == 'function') {
+    return (typeof thisArg != 'undefined' && isBindable(func))
+      ? bindCallback(func, thisArg, argCount)
+      : func;
+  }
+  if (func == null) {
+    return identity;
+  }
+  if (type == 'object') {
+    return baseMatches(func);
+  }
+  return typeof thisArg == 'undefined'
+    ? baseProperty(func + '')
+    : baseMatchesProperty(func + '', thisArg);
+}
+
+module.exports = baseCallback;
+
+},{"../utility/identity":136,"./baseMatches":103,"./baseMatchesProperty":104,"./baseProperty":105,"./bindCallback":108,"./isBindable":113}],93:[function(require,module,exports){
+
+function baseCopy(source, object, props) {
+  if (!props) {
+    props = object;
+    object = {};
+  }
+  var index = -1,
+      length = props.length;
+
+  while (++index < length) {
+    var key = props[index];
+    object[key] = source[key];
+  }
+  return object;
+}
+
+module.exports = baseCopy;
+
+},{}],94:[function(require,module,exports){
+(function (global){
+var isObject = require('../lang/isObject');
+
+
+var baseCreate = (function() {
+  function Object() {}
+  return function(prototype) {
+    if (isObject(prototype)) {
+      Object.prototype = prototype;
+      var result = new Object;
+      Object.prototype = null;
+    }
+    return result || global.Object();
+  };
+}());
+
+module.exports = baseCreate;
+
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../lang/isObject":127}],95:[function(require,module,exports){
+var baseForOwn = require('./baseForOwn'),
+    isLength = require('./isLength'),
+    toObject = require('./toObject');
+
+
+function baseEach(collection, iteratee) {
+  var length = collection ? collection.length : 0;
+  if (!isLength(length)) {
+    return baseForOwn(collection, iteratee);
+  }
+  var index = -1,
+      iterable = toObject(collection);
+
+  while (++index < length) {
+    if (iteratee(iterable[index], index, iterable) === false) {
+      break;
+    }
+  }
+  return collection;
+}
+
+module.exports = baseEach;
+
+},{"./baseForOwn":98,"./isLength":116,"./toObject":121}],96:[function(require,module,exports){
+var baseEach = require('./baseEach');
+
+
+function baseEvery(collection, predicate) {
+  var result = true;
+  baseEach(collection, function(value, index, collection) {
+    result = !!predicate(value, index, collection);
+    return result;
+  });
+  return result;
+}
+
+module.exports = baseEvery;
+
+},{"./baseEach":95}],97:[function(require,module,exports){
+var toObject = require('./toObject');
+
+
+function baseFor(object, iteratee, keysFunc) {
+  var index = -1,
+      iterable = toObject(object),
+      props = keysFunc(object),
+      length = props.length;
+
+  while (++index < length) {
+    var key = props[index];
+    if (iteratee(iterable[key], key, iterable) === false) {
+      break;
+    }
+  }
+  return object;
+}
+
+module.exports = baseFor;
+
+},{"./toObject":121}],98:[function(require,module,exports){
+var baseFor = require('./baseFor'),
+    keys = require('../object/keys');
+
+
+function baseForOwn(object, iteratee) {
+  return baseFor(object, iteratee, keys);
+}
+
+module.exports = baseForOwn;
+
+},{"../object/keys":132,"./baseFor":97}],99:[function(require,module,exports){
+var baseIsEqualDeep = require('./baseIsEqualDeep');
+
+
+function baseIsEqual(value, other, customizer, isWhere, stackA, stackB) {
+  if (value === other) {
+    return value !== 0 || (1 / value == 1 / other);
+  }
+  var valType = typeof value,
+      othType = typeof other;
+
+  if ((valType != 'function' && valType != 'object' && othType != 'function' && othType != 'object') ||
+      value == null || other == null) {
+    return value !== value && other !== other;
+  }
+  return baseIsEqualDeep(value, other, baseIsEqual, customizer, isWhere, stackA, stackB);
+}
+
+module.exports = baseIsEqual;
+
+},{"./baseIsEqualDeep":100}],100:[function(require,module,exports){
+var equalArrays = require('./equalArrays'),
+    equalByTag = require('./equalByTag'),
+    equalObjects = require('./equalObjects'),
+    isArray = require('../lang/isArray'),
+    isTypedArray = require('../lang/isTypedArray');
+
+
+var argsTag = '[object Arguments]',
+    arrayTag = '[object Array]',
+    objectTag = '[object Object]';
+
+
+var objectProto = Object.prototype;
+
+
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+
+var objToString = objectProto.toString;
+
+
+function baseIsEqualDeep(object, other, equalFunc, customizer, isWhere, stackA, stackB) {
+  var objIsArr = isArray(object),
+      othIsArr = isArray(other),
+      objTag = arrayTag,
+      othTag = arrayTag;
+
+  if (!objIsArr) {
+    objTag = objToString.call(object);
+    if (objTag == argsTag) {
+      objTag = objectTag;
+    } else if (objTag != objectTag) {
+      objIsArr = isTypedArray(object);
+    }
+  }
+  if (!othIsArr) {
+    othTag = objToString.call(other);
+    if (othTag == argsTag) {
+      othTag = objectTag;
+    } else if (othTag != objectTag) {
+      othIsArr = isTypedArray(other);
+    }
+  }
+  var objIsObj = objTag == objectTag,
+      othIsObj = othTag == objectTag,
+      isSameTag = objTag == othTag;
+
+  if (isSameTag && !(objIsArr || objIsObj)) {
+    return equalByTag(object, other, objTag);
+  }
+  var valWrapped = objIsObj && hasOwnProperty.call(object, '__wrapped__'),
+      othWrapped = othIsObj && hasOwnProperty.call(other, '__wrapped__');
+
+  if (valWrapped || othWrapped) {
+    return equalFunc(valWrapped ? object.value() : object, othWrapped ? other.value() : other, customizer, isWhere, stackA, stackB);
+  }
+  if (!isSameTag) {
+    return false;
+  }
+  stackA || (stackA = []);
+  stackB || (stackB = []);
+
+  var length = stackA.length;
+  while (length--) {
+    if (stackA[length] == object) {
+      return stackB[length] == other;
+    }
+  }
+  stackA.push(object);
+  stackB.push(other);
+
+  var result = (objIsArr ? equalArrays : equalObjects)(object, other, equalFunc, customizer, isWhere, stackA, stackB);
+
+  stackA.pop();
+  stackB.pop();
+
+  return result;
+}
+
+module.exports = baseIsEqualDeep;
+
+},{"../lang/isArray":123,"../lang/isTypedArray":129,"./equalArrays":110,"./equalByTag":111,"./equalObjects":112}],101:[function(require,module,exports){
+
+function baseIsFunction(value) {
+  return typeof value == 'function' || false;
+}
+
+module.exports = baseIsFunction;
+
+},{}],102:[function(require,module,exports){
+var baseIsEqual = require('./baseIsEqual');
+
+
+var objectProto = Object.prototype;
+
+
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+
+function baseIsMatch(object, props, values, strictCompareFlags, customizer) {
+  var length = props.length;
+  if (object == null) {
+    return !length;
+  }
+  var index = -1,
+      noCustomizer = !customizer;
+
+  while (++index < length) {
+    if ((noCustomizer && strictCompareFlags[index])
+          ? values[index] !== object[props[index]]
+          : !hasOwnProperty.call(object, props[index])
+        ) {
+      return false;
+    }
+  }
+  index = -1;
+  while (++index < length) {
+    var key = props[index];
+    if (noCustomizer && strictCompareFlags[index]) {
+      var result = hasOwnProperty.call(object, key);
+    } else {
+      var objValue = object[key],
+          srcValue = values[index];
+
+      result = customizer ? customizer(objValue, srcValue, key) : undefined;
+      if (typeof result == 'undefined') {
+        result = baseIsEqual(srcValue, objValue, customizer, true);
+      }
+    }
+    if (!result) {
+      return false;
+    }
+  }
+  return true;
+}
+
+module.exports = baseIsMatch;
+
+},{"./baseIsEqual":99}],103:[function(require,module,exports){
+var baseIsMatch = require('./baseIsMatch'),
+    isStrictComparable = require('./isStrictComparable'),
+    keys = require('../object/keys');
+
+
+var objectProto = Object.prototype;
+
+
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+
+function baseMatches(source) {
+  var props = keys(source),
+      length = props.length;
+
+  if (length == 1) {
+    var key = props[0],
+        value = source[key];
+
+    if (isStrictComparable(value)) {
+      return function(object) {
+        return object != null && object[key] === value && hasOwnProperty.call(object, key);
+      };
+    }
+  }
+  var values = Array(length),
+      strictCompareFlags = Array(length);
+
+  while (length--) {
+    value = source[props[length]];
+    values[length] = value;
+    strictCompareFlags[length] = isStrictComparable(value);
+  }
+  return function(object) {
+    return baseIsMatch(object, props, values, strictCompareFlags);
+  };
+}
+
+module.exports = baseMatches;
+
+},{"../object/keys":132,"./baseIsMatch":102,"./isStrictComparable":118}],104:[function(require,module,exports){
+var baseIsEqual = require('./baseIsEqual'),
+    isStrictComparable = require('./isStrictComparable');
+
+
+function baseMatchesProperty(key, value) {
+  if (isStrictComparable(value)) {
+    return function(object) {
+      return object != null && object[key] === value;
+    };
+  }
+  return function(object) {
+    return object != null && baseIsEqual(value, object[key], null, true);
+  };
+}
+
+module.exports = baseMatchesProperty;
+
+},{"./baseIsEqual":99,"./isStrictComparable":118}],105:[function(require,module,exports){
+
+function baseProperty(key) {
+  return function(object) {
+    return object == null ? undefined : object[key];
+  };
+}
+
+module.exports = baseProperty;
+
+},{}],106:[function(require,module,exports){
+var identity = require('../utility/identity'),
+    metaMap = require('./metaMap');
+
+
+var baseSetData = !metaMap ? identity : function(func, data) {
+  metaMap.set(func, data);
+  return func;
+};
+
+module.exports = baseSetData;
+
+},{"../utility/identity":136,"./metaMap":119}],107:[function(require,module,exports){
+
+function baseToString(value) {
+  if (typeof value == 'string') {
+    return value;
+  }
+  return value == null ? '' : (value + '');
+}
+
+module.exports = baseToString;
+
+},{}],108:[function(require,module,exports){
+var identity = require('../utility/identity');
+
+
+function bindCallback(func, thisArg, argCount) {
+  if (typeof func != 'function') {
+    return identity;
+  }
+  if (typeof thisArg == 'undefined') {
+    return func;
+  }
+  switch (argCount) {
+    case 1: return function(value) {
+      return func.call(thisArg, value);
+    };
+    case 3: return function(value, index, collection) {
+      return func.call(thisArg, value, index, collection);
+    };
+    case 4: return function(accumulator, value, index, collection) {
+      return func.call(thisArg, accumulator, value, index, collection);
+    };
+    case 5: return function(value, other, key, object, source) {
+      return func.call(thisArg, value, other, key, object, source);
+    };
+  }
+  return function() {
+    return func.apply(thisArg, arguments);
+  };
+}
+
+module.exports = bindCallback;
+
+},{"../utility/identity":136}],109:[function(require,module,exports){
+var bindCallback = require('./bindCallback'),
+    isIterateeCall = require('./isIterateeCall');
+
+
+function createAssigner(assigner) {
+  return function() {
+    var args = arguments,
+        length = args.length,
+        object = args[0];
+
+    if (length < 2 || object == null) {
+      return object;
+    }
+    var customizer = args[length - 2],
+        thisArg = args[length - 1],
+        guard = args[3];
+
+    if (length > 3 && typeof customizer == 'function') {
+      customizer = bindCallback(customizer, thisArg, 5);
+      length -= 2;
+    } else {
+      customizer = (length > 2 && typeof thisArg == 'function') ? thisArg : null;
+      length -= (customizer ? 1 : 0);
+    }
+    if (guard && isIterateeCall(args[1], args[2], guard)) {
+      customizer = length == 3 ? null : customizer;
+      length = 2;
+    }
+    var index = 0;
+    while (++index < length) {
+      var source = args[index];
+      if (source) {
+        assigner(object, source, customizer);
+      }
+    }
+    return object;
+  };
+}
+
+module.exports = createAssigner;
+
+},{"./bindCallback":108,"./isIterateeCall":115}],110:[function(require,module,exports){
+
+function equalArrays(array, other, equalFunc, customizer, isWhere, stackA, stackB) {
+  var index = -1,
+      arrLength = array.length,
+      othLength = other.length,
+      result = true;
+
+  if (arrLength != othLength && !(isWhere && othLength > arrLength)) {
+    return false;
+  }
+  while (result && ++index < arrLength) {
+    var arrValue = array[index],
+        othValue = other[index];
+
+    result = undefined;
+    if (customizer) {
+      result = isWhere
+        ? customizer(othValue, arrValue, index)
+        : customizer(arrValue, othValue, index);
+    }
+    if (typeof result == 'undefined') {
+      if (isWhere) {
+        var othIndex = othLength;
+        while (othIndex--) {
+          othValue = other[othIndex];
+          result = (arrValue && arrValue === othValue) || equalFunc(arrValue, othValue, customizer, isWhere, stackA, stackB);
+          if (result) {
+            break;
+          }
+        }
+      } else {
+        result = (arrValue && arrValue === othValue) || equalFunc(arrValue, othValue, customizer, isWhere, stackA, stackB);
+      }
+    }
+  }
+  return !!result;
+}
+
+module.exports = equalArrays;
+
+},{}],111:[function(require,module,exports){
+
+var boolTag = '[object Boolean]',
+    dateTag = '[object Date]',
+    errorTag = '[object Error]',
+    numberTag = '[object Number]',
+    regexpTag = '[object RegExp]',
+    stringTag = '[object String]';
+
+
+function equalByTag(object, other, tag) {
+  switch (tag) {
+    case boolTag:
+    case dateTag:
+      return +object == +other;
+
+    case errorTag:
+      return object.name == other.name && object.message == other.message;
+
+    case numberTag:
+      return (object != +object)
+        ? other != +other
+        : (object == 0 ? ((1 / object) == (1 / other)) : object == +other);
+
+    case regexpTag:
+    case stringTag:
+      return object == (other + '');
+  }
+  return false;
+}
+
+module.exports = equalByTag;
+
+},{}],112:[function(require,module,exports){
+var keys = require('../object/keys');
+
+
+var objectProto = Object.prototype;
+
+
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+
+function equalObjects(object, other, equalFunc, customizer, isWhere, stackA, stackB) {
+  var objProps = keys(object),
+      objLength = objProps.length,
+      othProps = keys(other),
+      othLength = othProps.length;
+
+  if (objLength != othLength && !isWhere) {
+    return false;
+  }
+  var hasCtor,
+      index = -1;
+
+  while (++index < objLength) {
+    var key = objProps[index],
+        result = hasOwnProperty.call(other, key);
+
+    if (result) {
+      var objValue = object[key],
+          othValue = other[key];
+
+      result = undefined;
+      if (customizer) {
+        result = isWhere
+          ? customizer(othValue, objValue, key)
+          : customizer(objValue, othValue, key);
+      }
+      if (typeof result == 'undefined') {
+        result = (objValue && objValue === othValue) || equalFunc(objValue, othValue, customizer, isWhere, stackA, stackB);
+      }
+    }
+    if (!result) {
+      return false;
+    }
+    hasCtor || (hasCtor = key == 'constructor');
+  }
+  if (!hasCtor) {
+    var objCtor = object.constructor,
+        othCtor = other.constructor;
+
+    if (objCtor != othCtor &&
+        ('constructor' in object && 'constructor' in other) &&
+        !(typeof objCtor == 'function' && objCtor instanceof objCtor &&
+          typeof othCtor == 'function' && othCtor instanceof othCtor)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+module.exports = equalObjects;
+
+},{"../object/keys":132}],113:[function(require,module,exports){
+var baseSetData = require('./baseSetData'),
+    isNative = require('../lang/isNative'),
+    support = require('../support');
+
+
+var reFuncName = /^\s*function[ \n\r\t]+\w/;
+
+
+var reThis = /\bthis\b/;
+
+
+var fnToString = Function.prototype.toString;
+
+
+function isBindable(func) {
+  var result = !(support.funcNames ? func.name : support.funcDecomp);
+
+  if (!result) {
+    var source = fnToString.call(func);
+    if (!support.funcNames) {
+      result = !reFuncName.test(source);
+    }
+    if (!result) {
+      result = reThis.test(source) || isNative(func);
+      baseSetData(func, result);
+    }
+  }
+  return result;
+}
+
+module.exports = isBindable;
+
+},{"../lang/isNative":126,"../support":135,"./baseSetData":106}],114:[function(require,module,exports){
+
+var MAX_SAFE_INTEGER = Math.pow(2, 53) - 1;
+
+
+function isIndex(value, length) {
+  value = +value;
+  length = length == null ? MAX_SAFE_INTEGER : length;
+  return value > -1 && value % 1 == 0 && value < length;
+}
+
+module.exports = isIndex;
+
+},{}],115:[function(require,module,exports){
+var isIndex = require('./isIndex'),
+    isLength = require('./isLength'),
+    isObject = require('../lang/isObject');
+
+
+function isIterateeCall(value, index, object) {
+  if (!isObject(object)) {
+    return false;
+  }
+  var type = typeof index;
+  if (type == 'number') {
+    var length = object.length,
+        prereq = isLength(length) && isIndex(index, length);
+  } else {
+    prereq = type == 'string' && index in object;
+  }
+  if (prereq) {
+    var other = object[index];
+    return value === value ? (value === other) : (other !== other);
+  }
+  return false;
+}
+
+module.exports = isIterateeCall;
+
+},{"../lang/isObject":127,"./isIndex":114,"./isLength":116}],116:[function(require,module,exports){
+
+var MAX_SAFE_INTEGER = Math.pow(2, 53) - 1;
+
+
+function isLength(value) {
+  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+}
+
+module.exports = isLength;
+
+},{}],117:[function(require,module,exports){
+
+function isObjectLike(value) {
+  return (value && typeof value == 'object') || false;
+}
+
+module.exports = isObjectLike;
+
+},{}],118:[function(require,module,exports){
+var isObject = require('../lang/isObject');
+
+
+function isStrictComparable(value) {
+  return value === value && (value === 0 ? ((1 / value) > 0) : !isObject(value));
+}
+
+module.exports = isStrictComparable;
+
+},{"../lang/isObject":127}],119:[function(require,module,exports){
+(function (global){
+var isNative = require('../lang/isNative');
+
+
+var WeakMap = isNative(WeakMap = global.WeakMap) && WeakMap;
+
+
+var metaMap = WeakMap && new WeakMap;
+
+module.exports = metaMap;
+
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../lang/isNative":126}],120:[function(require,module,exports){
+var isArguments = require('../lang/isArguments'),
+    isArray = require('../lang/isArray'),
+    isIndex = require('./isIndex'),
+    isLength = require('./isLength'),
+    keysIn = require('../object/keysIn'),
+    support = require('../support');
+
+
+var objectProto = Object.prototype;
+
+
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+
+function shimKeys(object) {
+  var props = keysIn(object),
+      propsLength = props.length,
+      length = propsLength && object.length;
+
+  var allowIndexes = length && isLength(length) &&
+    (isArray(object) || (support.nonEnumArgs && isArguments(object)));
+
+  var index = -1,
+      result = [];
+
+  while (++index < propsLength) {
+    var key = props[index];
+    if ((allowIndexes && isIndex(key, length)) || hasOwnProperty.call(object, key)) {
+      result.push(key);
+    }
+  }
+  return result;
+}
+
+module.exports = shimKeys;
+
+},{"../lang/isArguments":122,"../lang/isArray":123,"../object/keysIn":133,"../support":135,"./isIndex":114,"./isLength":116}],121:[function(require,module,exports){
+var isObject = require('../lang/isObject');
+
+
+function toObject(value) {
+  return isObject(value) ? value : Object(value);
+}
+
+module.exports = toObject;
+
+},{"../lang/isObject":127}],122:[function(require,module,exports){
+var isLength = require('../internal/isLength'),
+    isObjectLike = require('../internal/isObjectLike');
+
+
+var argsTag = '[object Arguments]';
+
+
+var objectProto = Object.prototype;
+
+
+var objToString = objectProto.toString;
+
+
+function isArguments(value) {
+  var length = isObjectLike(value) ? value.length : undefined;
+  return (isLength(length) && objToString.call(value) == argsTag) || false;
+}
+
+module.exports = isArguments;
+
+},{"../internal/isLength":116,"../internal/isObjectLike":117}],123:[function(require,module,exports){
+var isLength = require('../internal/isLength'),
+    isNative = require('./isNative'),
+    isObjectLike = require('../internal/isObjectLike');
+
+
+var arrayTag = '[object Array]';
+
+
+var objectProto = Object.prototype;
+
+
+var objToString = objectProto.toString;
+
+
+var nativeIsArray = isNative(nativeIsArray = Array.isArray) && nativeIsArray;
+
+
+var isArray = nativeIsArray || function(value) {
+  return (isObjectLike(value) && isLength(value.length) && objToString.call(value) == arrayTag) || false;
+};
+
+module.exports = isArray;
+
+},{"../internal/isLength":116,"../internal/isObjectLike":117,"./isNative":126}],124:[function(require,module,exports){
+var isArguments = require('./isArguments'),
+    isArray = require('./isArray'),
+    isFunction = require('./isFunction'),
+    isLength = require('../internal/isLength'),
+    isObjectLike = require('../internal/isObjectLike'),
+    isString = require('./isString'),
+    keys = require('../object/keys');
+
+
+function isEmpty(value) {
+  if (value == null) {
+    return true;
+  }
+  var length = value.length;
+  if (isLength(length) && (isArray(value) || isString(value) || isArguments(value) ||
+      (isObjectLike(value) && isFunction(value.splice)))) {
+    return !length;
+  }
+  return !keys(value).length;
+}
+
+module.exports = isEmpty;
+
+},{"../internal/isLength":116,"../internal/isObjectLike":117,"../object/keys":132,"./isArguments":122,"./isArray":123,"./isFunction":125,"./isString":128}],125:[function(require,module,exports){
+(function (global){
+var baseIsFunction = require('../internal/baseIsFunction'),
+    isNative = require('./isNative');
+
+
+var funcTag = '[object Function]';
+
+
+var objectProto = Object.prototype;
+
+
+var objToString = objectProto.toString;
+
+
+var Uint8Array = isNative(Uint8Array = global.Uint8Array) && Uint8Array;
+
+
+var isFunction = !(baseIsFunction(/x/) || (Uint8Array && !baseIsFunction(Uint8Array))) ? baseIsFunction : function(value) {
+  return objToString.call(value) == funcTag;
+};
+
+module.exports = isFunction;
+
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../internal/baseIsFunction":101,"./isNative":126}],126:[function(require,module,exports){
+var escapeRegExp = require('../string/escapeRegExp'),
+    isObjectLike = require('../internal/isObjectLike');
+
+
+var funcTag = '[object Function]';
+
+
+var reHostCtor = /^\[object .+?Constructor\]$/;
+
+
+var objectProto = Object.prototype;
+
+
+var fnToString = Function.prototype.toString;
+
+
+var objToString = objectProto.toString;
+
+
+var reNative = RegExp('^' +
+  escapeRegExp(objToString)
+  .replace(/toString|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
+);
+
+
+function isNative(value) {
+  if (value == null) {
+    return false;
+  }
+  if (objToString.call(value) == funcTag) {
+    return reNative.test(fnToString.call(value));
+  }
+  return (isObjectLike(value) && reHostCtor.test(value)) || false;
+}
+
+module.exports = isNative;
+
+},{"../internal/isObjectLike":117,"../string/escapeRegExp":134}],127:[function(require,module,exports){
+
+function isObject(value) {
+  var type = typeof value;
+  return type == 'function' || (value && type == 'object') || false;
+}
+
+module.exports = isObject;
+
+},{}],128:[function(require,module,exports){
+var isObjectLike = require('../internal/isObjectLike');
+
+
+var stringTag = '[object String]';
+
+
+var objectProto = Object.prototype;
+
+
+var objToString = objectProto.toString;
+
+
+function isString(value) {
+  return typeof value == 'string' || (isObjectLike(value) && objToString.call(value) == stringTag) || false;
+}
+
+module.exports = isString;
+
+},{"../internal/isObjectLike":117}],129:[function(require,module,exports){
+var isLength = require('../internal/isLength'),
+    isObjectLike = require('../internal/isObjectLike');
+
+
+var argsTag = '[object Arguments]',
+    arrayTag = '[object Array]',
+    boolTag = '[object Boolean]',
+    dateTag = '[object Date]',
+    errorTag = '[object Error]',
+    funcTag = '[object Function]',
+    mapTag = '[object Map]',
+    numberTag = '[object Number]',
+    objectTag = '[object Object]',
+    regexpTag = '[object RegExp]',
+    setTag = '[object Set]',
+    stringTag = '[object String]',
+    weakMapTag = '[object WeakMap]';
+
+var arrayBufferTag = '[object ArrayBuffer]',
+    float32Tag = '[object Float32Array]',
+    float64Tag = '[object Float64Array]',
+    int8Tag = '[object Int8Array]',
+    int16Tag = '[object Int16Array]',
+    int32Tag = '[object Int32Array]',
+    uint8Tag = '[object Uint8Array]',
+    uint8ClampedTag = '[object Uint8ClampedArray]',
+    uint16Tag = '[object Uint16Array]',
+    uint32Tag = '[object Uint32Array]';
+
+
+var typedArrayTags = {};
+typedArrayTags[float32Tag] = typedArrayTags[float64Tag] =
+typedArrayTags[int8Tag] = typedArrayTags[int16Tag] =
+typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] =
+typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] =
+typedArrayTags[uint32Tag] = true;
+typedArrayTags[argsTag] = typedArrayTags[arrayTag] =
+typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] =
+typedArrayTags[dateTag] = typedArrayTags[errorTag] =
+typedArrayTags[funcTag] = typedArrayTags[mapTag] =
+typedArrayTags[numberTag] = typedArrayTags[objectTag] =
+typedArrayTags[regexpTag] = typedArrayTags[setTag] =
+typedArrayTags[stringTag] = typedArrayTags[weakMapTag] = false;
+
+
+var objectProto = Object.prototype;
+
+
+var objToString = objectProto.toString;
+
+
+function isTypedArray(value) {
+  return (isObjectLike(value) && isLength(value.length) && typedArrayTags[objToString.call(value)]) || false;
+}
+
+module.exports = isTypedArray;
+
+},{"../internal/isLength":116,"../internal/isObjectLike":117}],130:[function(require,module,exports){
+var baseAssign = require('../internal/baseAssign'),
+    createAssigner = require('../internal/createAssigner');
+
+
+var assign = createAssigner(baseAssign);
+
+module.exports = assign;
+
+},{"../internal/baseAssign":91,"../internal/createAssigner":109}],131:[function(require,module,exports){
+var baseCopy = require('../internal/baseCopy'),
+    baseCreate = require('../internal/baseCreate'),
+    isIterateeCall = require('../internal/isIterateeCall'),
+    keys = require('./keys');
+
+
+function create(prototype, properties, guard) {
+  var result = baseCreate(prototype);
+  if (guard && isIterateeCall(prototype, properties, guard)) {
+    properties = null;
+  }
+  return properties ? baseCopy(properties, result, keys(properties)) : result;
+}
+
+module.exports = create;
+
+},{"../internal/baseCopy":93,"../internal/baseCreate":94,"../internal/isIterateeCall":115,"./keys":132}],132:[function(require,module,exports){
+var isLength = require('../internal/isLength'),
+    isNative = require('../lang/isNative'),
+    isObject = require('../lang/isObject'),
+    shimKeys = require('../internal/shimKeys');
+
+
+var nativeKeys = isNative(nativeKeys = Object.keys) && nativeKeys;
+
+
+var keys = !nativeKeys ? shimKeys : function(object) {
+  if (object) {
+    var Ctor = object.constructor,
+        length = object.length;
+  }
+  if ((typeof Ctor == 'function' && Ctor.prototype === object) ||
+      (typeof object != 'function' && (length && isLength(length)))) {
+    return shimKeys(object);
+  }
+  return isObject(object) ? nativeKeys(object) : [];
+};
+
+module.exports = keys;
+
+},{"../internal/isLength":116,"../internal/shimKeys":120,"../lang/isNative":126,"../lang/isObject":127}],133:[function(require,module,exports){
+var isArguments = require('../lang/isArguments'),
+    isArray = require('../lang/isArray'),
+    isIndex = require('../internal/isIndex'),
+    isLength = require('../internal/isLength'),
+    isObject = require('../lang/isObject'),
+    support = require('../support');
+
+
+var objectProto = Object.prototype;
+
+
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+
+function keysIn(object) {
+  if (object == null) {
+    return [];
+  }
+  if (!isObject(object)) {
+    object = Object(object);
+  }
+  var length = object.length;
+  length = (length && isLength(length) &&
+    (isArray(object) || (support.nonEnumArgs && isArguments(object))) && length) || 0;
+
+  var Ctor = object.constructor,
+      index = -1,
+      isProto = typeof Ctor == 'function' && Ctor.prototype === object,
+      result = Array(length),
+      skipIndexes = length > 0;
+
+  while (++index < length) {
+    result[index] = (index + '');
+  }
+  for (var key in object) {
+    if (!(skipIndexes && isIndex(key, length)) &&
+        !(key == 'constructor' && (isProto || !hasOwnProperty.call(object, key)))) {
+      result.push(key);
+    }
+  }
+  return result;
+}
+
+module.exports = keysIn;
+
+},{"../internal/isIndex":114,"../internal/isLength":116,"../lang/isArguments":122,"../lang/isArray":123,"../lang/isObject":127,"../support":135}],134:[function(require,module,exports){
+var baseToString = require('../internal/baseToString');
+
+
+var reRegExpChars = /[.*+?^${}()|[\]\/\\]/g,
+    reHasRegExpChars = RegExp(reRegExpChars.source);
+
+
+function escapeRegExp(string) {
+  string = baseToString(string);
+  return (string && reHasRegExpChars.test(string))
+    ? string.replace(reRegExpChars, '\\$&')
+    : string;
+}
+
+module.exports = escapeRegExp;
+
+},{"../internal/baseToString":107}],135:[function(require,module,exports){
+(function (global){
+var isNative = require('./lang/isNative');
+
+
+var reThis = /\bthis\b/;
+
+
+var objectProto = Object.prototype;
+
+
+var document = (document = global.window) && document.document;
+
+
+var propertyIsEnumerable = objectProto.propertyIsEnumerable;
+
+
+var support = {};
+
+(function(x) {
+
+
+  support.funcDecomp = !isNative(global.WinRTError) && reThis.test(function() { return this; });
+
+
+  support.funcNames = typeof Function.name == 'string';
+
+
+  try {
+    support.dom = document.createDocumentFragment().nodeType === 11;
+  } catch(e) {
+    support.dom = false;
+  }
+
+
+  try {
+    support.nonEnumArgs = !propertyIsEnumerable.call(arguments, 1);
+  } catch(e) {
+    support.nonEnumArgs = true;
+  }
+}(0, 0));
+
+module.exports = support;
+
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./lang/isNative":126}],136:[function(require,module,exports){
+
+function identity(value) {
+  return value;
+}
+
+module.exports = identity;
+
+},{}]},{},[1])
