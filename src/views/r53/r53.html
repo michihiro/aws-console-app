@@ -19,7 +19,7 @@
            ng-dblclick="openDialog('r53/changeHostedZoneDialog', {mode: 'updateHostedZone'})"
            app-right-click="r53Info.setCurrent(z)">
           <i class="fa fa-globe" ng-class="{local:z.Config.PrivateZone}"></i>
-          <span ng-bind="z.Name"></span>
+          <span ng-bind="z.Name" app-selectable-text></span>
         </a>
       </li>
     </ul>
@@ -73,11 +73,11 @@
                 <div class="td-inner" ng-style="{width: col.width+'px'}">
                   <div ng-if="col.isArray"
                        ng-repeat="val in item[col.col] track by $index"
-                       ng-bind="val"></div>
+                       ng-bind="val" app-selectable-text></div>
                   <div ng-if="!col.isArray && col.filterFn"
-                       ng-bind="col.filterFn(item[col.col])"></div>
+                       ng-bind="col.filterFn(item[col.col])" app-selectable-text></div>
                   <div ng-if="!col.isArray && !col.filterFn"
-                       ng-bind="item[col.col]"></div>
+                       ng-bind="item[col.col]" app-selectable-text></div>
                 </div>
               </td>
             </tr>
