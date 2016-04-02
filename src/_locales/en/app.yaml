@@ -92,6 +92,7 @@ s3:
   changeVersioningMsg: Once enabled, Versioning cannot be disabled, only suspended.
   changeBucketWebsite: Bucket Static Website Hosting
   websiteHosting: Website Hosting
+  websiteEndpoint: Endpoint
   websiteDisabled: Disabled
   websiteEnabled: Enabled
   websiteRedirect: Redirect all to another host

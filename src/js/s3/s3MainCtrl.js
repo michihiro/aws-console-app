@@ -72,7 +72,7 @@
         });
       } else {
         scope.openDialog('s3/' + key + 'Dialog', {}, {
-          size: key === 'changeBucketAcl' ? 'lg800' : undefined
+          size: (key === 'changeBucketAcl' || key === 'changeBucketWebsite') ? 'lg800' : undefined
         });
       }
     }

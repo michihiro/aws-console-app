@@ -341,9 +341,12 @@
 
   function s3ChangeBucketWebsiteDialogCtrl($scope, $timeout, s3List, awsS3, comValidator) {
     var current = s3List.getCurrent();
+    var region = current.LocationConstraint;
+    region = region === 'EU' ? 'eu-west-1' : (region || 'us-east-1');
     var routingRules;
     ng.extend($scope, {
       bucketName: current.bucketName,
+      endpoint: ['http://', current.bucketName, '.s3-website-', region, '.amazonaws.com'].join(''),
       inputs: {},
       isValidRedirectURI: isValidRedirectURI,
       save: save

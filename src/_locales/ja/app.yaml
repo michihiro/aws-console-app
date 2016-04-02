@@ -92,6 +92,7 @@ s3:
   changeVersioningMsg: 有効にしたバージョニングを無効にすることはできません。停止のみ可能です。
   changeBucketWebsite: バケットの静的WEBサイトホスティング
   websiteHosting: WEBサイトホスティング
+  websiteEndpoint: エンドポイント
   websiteDisabled: 無効
   websiteEnabled: 有効
   websiteRedirect: すべてをリダイレクト
