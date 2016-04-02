@@ -1,4 +1,4 @@
-(function(ng) {
+((ng) => {
   'use strict';
 
   var regions = [
@@ -71,7 +71,7 @@
     ];
 
     $urlRouterProvider.otherwise('/s3');
-    services.forEach(function(service) {
+    services.forEach((service) => {
       var serviceRegions;
       if(service !== 's3' && service !== 'r53') {
         serviceRegions = awsRegions[service];
@@ -133,9 +133,7 @@
     });
 
     credentialsService.load(true)
-      .catch(function() {
-        $rootScope.openDialog('com/credentialsDialog');
-      });
+      .catch(() => $rootScope.openDialog('com/credentialsDialog'));
 
     $rootScope.$on('$stateChangeSuccess',
       function(ev, state) {

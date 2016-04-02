@@ -1,13 +1,7 @@
-(function() {
+((ng) => {
   'use strict';
-  angular.element(document).on({
-    contextmenu: function(ev) {
-      ev.preventDefault();
-    },
-    click: function(ev) {
-      if (ev.ctrlKey) {
-        ev.preventDefault();
-      }
-    }
+  ng.element(document).on({
+    contextmenu: (ev) => ev.preventDefault(),
+    click: (ev) => ev.ctrlKey && ev.preventDefault()
   });
-})();
+})(angular);
