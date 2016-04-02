@@ -16,7 +16,7 @@
       s3ForcePathStyle: true,
       signatureVersion: 'v4',
       credentials: $rootScope.getCredentials(),
-      region: region,
+      region: region = region === 'EU' ? 'eu-west-1' : region
     });
   }
 
