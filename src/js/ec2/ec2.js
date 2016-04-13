@@ -7,8 +7,7 @@
   ng.module('aws-console')
     .factory('awsEC2', awsEC2Factory)
     .factory('ec2Info', ec2InfoFactory)
-    .factory('ec2Conf', ec2ConfFactory)
-    .factory('ec2Actions', ec2ActionsFactory);
+    .factory('ec2Conf', ec2ConfFactory);
 
   awsEC2Factory.$inject = ['$rootScope'];
 
@@ -17,70 +16,6 @@
       credentials: $rootScope.getCredentials(),
       region: region,
     });
-  }
-
-  ec2ActionsFactory.$inject = ['$rootScope', 'ec2Info'];
-
-  function ec2ActionsFactory($rootScope, ec2Info) {
-    var scope = $rootScope.$new();
-
-    ng.extend(scope, {
-      all: ['getWindowsPassword', '', 'startInstances', 'rebootInstances', 'stopInstances', 'terminateInstances', '', 'runInstances'],
-      onClick: onClick,
-      isDisabled: isDisabled,
-    });
-
-    return scope;
-
-    function onClick(ev, key) {
-      if (isDisabled(key)) {
-        ev.stopPropagation();
-        return;
-      }
-
-      if (key === 'getWindowsPassword') {
-        $rootScope.openDialog('ec2/getPasswordDialog', {}, {});
-      } else if (key === 'runInstances') {
-        $rootScope.openDialog('ec2/runInstancesDialog', {}, {
-          size: 'lg'
-        });
-      } else {
-        $rootScope.openDialog('ec2/changeInstanceStateDialog', {
-          mode: key
-        });
-      }
-    }
-
-    function isDisabled(key) {
-      if (!key || !key.length) {
-        return true;
-      }
-      if (key === 'runInstances') {
-        return false;
-      }
-      var enableStates = {
-        startInstances: ['stopped'],
-        rebootInstances: ['running'],
-        stopInstances: ['pending', 'running'],
-        terminateInstances: ['pending', 'running', 'stopping', 'stopped']
-      };
-      var isStartOrStop = (key === 'startInstances' || key === 'stopInstances');
-      var selected = ec2Info.getSelectedInstances();
-      var selected0 = selected[0] || {};
-      var enable = enableStates[key];
-      if (key === 'getWindowsPassword') {
-        return selected.length !== 1 || selected0.Platform !== 'windows' ||
-          selected0.State.Name === 'pending';
-      }
-      return !(selected || []).some((i) => {
-        if (isStartOrStop &&
-          (i.RootDeviceType !== 'ebs' || i.InstanceLifecycle === 'spot')) {
-          return false;
-        }
-        return enable.indexOf(i.State.Name) >= 0;
-      });
-    }
-
   }
 
   ec2InfoFactory.$inject = ['$rootScope', '$q', '$resource', 'awsRegions', 'awsEC2', 'ec2Conf'];
@@ -434,7 +369,7 @@
               all[v2.Key] = v2.Value;
               return all;
             }, {});
-            if (v.VpcId === undefined && v.State.Name !== 'terminated') {
+            if (v.VpcId === undefined && v.State.Name !== 'terminated' && v.State.Name !== 'shutting-down') {
               ec2Classic[region] = {
                 VpcId: 'EC2CLASSIC',
                 isClassic: true,

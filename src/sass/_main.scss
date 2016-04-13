@@ -102,14 +102,15 @@ a:focus {
     color: #f90;
   }
   .dropdown-menu {
-    padding: 0;
     margin-top: 4px;
     background: #222;
     > li > a {
       font-size: 1em;
-      padding: 8px 16px;
+      padding: 4px 16px;
       //background: #222;
       color: #eee;
+    }
+    > li:not(.dropdown-submenu) > a {
       cursor: pointer;
     }
     > li > a:hover,
@@ -225,6 +226,8 @@ a:focus {
   background: #222;
   > li > a {
     color: #eee;
+  }
+  > li:not(.dropdown-submenu) > a {
     cursor: pointer;
   }
   > li > a:hover,
@@ -277,7 +280,7 @@ a:focus {
   }
 
   &:hover>.dropdown-menu {
-    display: block;
+    display: table;
   }
 
   > a:after {

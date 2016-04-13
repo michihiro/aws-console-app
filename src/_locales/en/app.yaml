@@ -146,6 +146,7 @@ ec2:
   stop: Stop
   reboot: Reboot
   terminate: Terminate
+  instanceState: Instance State
   startInstances: Start Instance
   stopInstances: Stop Instance
   rebootInstances: Reboot Instance

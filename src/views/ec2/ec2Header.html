@@ -6,10 +6,22 @@
     </button>
     <ul uib-dropdown-menu>
       <li ng-repeat="m in ec2Actions.all track by $index"
-          ng-class="{divider:!m.length, disabled:ec2Actions.isDisabled(m)}">
-        <a ng-if="m.length" ng-click="ec2Actions.onClick($event, m);"
+          ng-class="{divider:!m.length, disabled:ec2Actions.isDisabled(m),'dropdown-submenu':(m|isArray)}">
+        <a ng-if="!(m|isArray) && m.length" ng-click="ec2Actions.onClick($event, m);"
            ng-bind="::'ec2.'+m|i18next">
         </a>
+        <a ng-if="m|isArray"
+           ng-bind="::'ec2.'+m[0]|i18next"
+           ng-click="$event.stopPropagation()"
+           ng-disabled="true">
+        </a>
+        <ul uib-dropdown-menu ng-if="m|isArray">
+          <li ng-repeat="m2 in m[1]"
+              ng-class="{disabled:ec2Actions.isDisabled(m2)}">
+            <a ng-click="ec2Actions.onClick($event, m2);"
+               ng-bind="::'ec2.'+m2|i18next"></a>
+          </li>
+        </ul>
       </li>
     </ul>
   </div>

@@ -1,4 +1,4 @@
-<div class="func-view">
+<div class="func-view" id="ec2-main-view">
   <uib-accordion close-others="false">
     <div class="no-instances"
          ng-if="ec2Info.getVpcs() && !ec2Info.getVpcs().length"
@@ -39,7 +39,8 @@
           <div ng-repeat="i in ec2Info.getInstances(v.region, v.VpcId, s.SubnetId) | orderBy:['tags.Name','InstanceId']">
             <div class="instance"
                  ng-class="{selected: ec2Info.isSelectedInstance(i)}"
-                 ng-click="ec2Info.selectInstances([i], s, v);">
+                 ng-click="ec2Info.selectInstances([i], s, v);"
+                 app-right-click="ec2Info.selectInstances([i], s, v);">
               <img src="images/Instance.svg" ng-class="'state-' + i.State.Name">
               <div class="instance-name">
                 <div ng-bind="i.tags.Name ? i.tags.Name : i.InstanceId"
@@ -59,14 +60,25 @@
   </uib-accordion>
 </div>
 
-<div uib-dropdown class="position-fixed" contextmenu-for=".panel-body">
+<div uib-dropdown class="position-fixed" contextmenu-for="#ec2-main-view">
   <ul uib-dropdown-menu>
     <li ng-repeat="m in ec2Actions.all track by $index"
-        ng-class="{divider:!m.length, disabled:ec2Actions.isDisabled(m)}">
-      <a ng-if="m.length" ng-class="{withoutripple:ec2Actions.isDisabled(m)}"
+        ng-class="{divider:!m.length, disabled:ec2Actions.isDisabled(m),'dropdown-submenu':(m|isArray)}">
+      <a ng-if="!(m|isArray) && m.length" ng-class="{withoutripple:ec2Actions.isDisabled(m)}"
          ng-click="ec2Actions.onClick($event, m);"
          ng-bind="::'ec2.'+m|i18next">
       </a>
+      <a uib-dropdown-toggle ng-if="m|isArray"
+         ng-bind="::'ec2.'+m[0]|i18next"
+         ng-disabled="true">
+      </a>
+      <ul uib-dropdown-menu ng-if="m|isArray">
+        <li ng-repeat="m2 in m[1]"
+            ng-class="{disabled:ec2Actions.isDisabled(m2)}">
+          <a ng-click="ec2Actions.onClick($event, m2);"
+             ng-bind="::'ec2.'+m2|i18next"></a>
+        </li>
+      </ul>
     </li>
   </ul>
 </div>

@@ -146,6 +146,7 @@ ec2:
   stop: 停止
   reboot: 再起動
   terminate: 削除
+  instanceState: インスタンスの状態
   startInstances: インスタンスの開始
   stopInstances: インスタンスの停止
   rebootInstances: インスタンスの再起動
