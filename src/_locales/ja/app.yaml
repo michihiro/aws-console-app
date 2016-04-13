@@ -151,6 +151,8 @@ ec2:
   stopInstances: インスタンスの停止
   rebootInstances: インスタンスの再起動
   terminateInstances: インスタンスの削除
+  instanceSettings: インスタンスの設定
+  changeInstanceType: インスタンスタイプの変更
   noInstances: インスタンスはありません。
   startInstancesMsg:
    - このインスタンスを開始してよろしいですか？

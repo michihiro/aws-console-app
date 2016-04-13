@@ -3,7 +3,8 @@
 
   ng.module('aws-console')
     .controller('ec2RunInstancesDialogCtrl', ec2RunInstancesDialogCtrl)
-    .controller('ec2ChangeInstanceStateDialogCtrl', ec2ChangeInstanceStateDialogCtrl);
+    .controller('ec2ChangeInstanceStateDialogCtrl', ec2ChangeInstanceStateDialogCtrl)
+    .controller('ec2ChangeInstanceTypeDialogCtrl', ec2ChangeInstanceTypeDialogCtrl);
 
   ec2RunInstancesDialogCtrl.$inject = ['$scope', '$q', '$filter', 'awsRegions', 'awsEC2', 'ec2Info'];
 
@@ -512,6 +513,54 @@
 
         if (mode === 'rebootInstances') {
           ec2Info.setRebooting(region, instanceIds);
+        }
+
+        ec2Info.listInstances(region).then(() => {
+          $scope.$close();
+        });
+      });
+    }
+  }
+
+  ec2ChangeInstanceTypeDialogCtrl.$inject = ['$scope', 'awsEC2', 'ec2Info'];
+
+  function ec2ChangeInstanceTypeDialogCtrl($scope, awsEC2, ec2Info) {
+    var instances = ec2Info.getSelectedInstances();
+    var instanceTypes = ec2Info.getInstanceTypes(instances[0].region);
+    var instanceType;
+
+    instanceTypes.some((typeGroup) =>
+      typeGroup.types.some((type) =>
+        type.type === instances[0].InstanceType && (instanceType = type)));
+
+    ng.extend($scope, {
+      instances: instances,
+      ec2Info: ec2Info,
+      instanceTypes: instanceTypes,
+      originalInstanceType: instanceType,
+      inputs: {
+        instanceType: instanceType,
+      },
+      update: update
+    });
+
+    function update() {
+      var params = ng.extend({
+        InstanceId: instances[0].InstanceId,
+        InstanceType: {
+          Value: $scope.inputs.instanceType.type
+        }
+      });
+
+      var region = instances[0].region;
+      $scope.processing = true;
+      awsEC2(region).modifyInstanceAttribute(params, (err) => {
+        if (err) {
+          $scope.$apply(() => {
+            $scope.error = err;
+            $scope.processing = false;
+          });
+          return;
         }
 
         ec2Info.listInstances(region).then(() => {

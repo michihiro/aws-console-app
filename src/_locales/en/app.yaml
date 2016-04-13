@@ -151,6 +151,8 @@ ec2:
   stopInstances: Stop Instance
   rebootInstances: Reboot Instance
   terminateInstances: Terminate Instance
+  instanceSettings: Instance Settings
+  changeInstanceType: Change Instance Type
   noInstances: No Insatances,
   startInstancesMsg:
    - Are you sure you want to start this instance?

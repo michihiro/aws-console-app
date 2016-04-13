@@ -16,6 +16,8 @@
     ng.extend(scope, {
       all: ['getWindowsPassword', '', [
         'instanceState', ['startInstances', 'rebootInstances', 'stopInstances', 'terminateInstances']
+      ], [
+        'instanceSettings', ['changeInstanceType']
       ], '', 'runInstances'],
       onClick: onClick,
       isDisabled: isDisabled,
@@ -35,6 +37,8 @@
         $rootScope.openDialog('ec2/runInstancesDialog', {}, {
           size: 'lg'
         });
+      } else if (key === 'changeInstanceType') {
+        $rootScope.openDialog('ec2/changeInstanceTypeDialog', {}, {});
       } else {
         $rootScope.openDialog('ec2/changeInstanceStateDialog', {
           mode: key
@@ -56,7 +60,8 @@
         startInstances: ['stopped'],
         rebootInstances: ['running'],
         stopInstances: ['pending', 'running'],
-        terminateInstances: ['pending', 'running', 'stopping', 'stopped']
+        terminateInstances: ['pending', 'running', 'stopping', 'stopped'],
+        changeInstanceType: ['stopped']
       };
       var isStartOrStop = (key === 'startInstances' || key === 'stopInstances');
       var selected = ec2Info.getSelectedInstances();

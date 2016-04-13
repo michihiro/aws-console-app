@@ -1,0 +1,60 @@
+<div class="modal-header">
+  <button class="close" ng-click="$dismiss()">&times;</button>
+  <h3 ng-bind="::'ec2.changeInstanceType'|i18next"></h3>
+</div>
+<div class="modal-body">
+  <form name="form" class="form-horizontal">
+    <div class="form-group">
+      <label class="col-xs-4 control-label"
+             ng-bind="::'ec2.instance'|i18next"></label>
+      <div class="col-xs-8 form-control-static">
+        <div ng-repeat="i in instances"
+             ng-bind="::i.tags.Name ? i.tags.Name+' ('+i.InstanceId+')' : i.InstanceId">
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-xs-4 control-label"
+             ng-bind="::'ec2.instanceType'|i18next"></label>
+      <div class="col-xs-8">
+        <input name="instanceType" type="hidden" ng-model="inputs.instanceType" required>
+        <div class="btn-group" uib-dropdown>
+          <button class="btn btn-raised" uib-dropdown-toggle
+                  ng-disabled="processing">
+            <span ng-if="inputs.instanceType"
+                  ng-bind="inputs.instanceType.type + ' (' + inputs.instanceType.vCpu + 'vCPU, ' + inputs.instanceType.memory + 'GB memory)'"></span>
+            <span class="caret"></span>
+          </button>
+          <ul uib-dropdown-menu>
+            <li class="dropdown-header"
+                ng-repeat-start="tg in instanceTypes"
+                ng-bind="::('ec2.instanceFamilyDescription.' + tg.familyDescription|i18next) + ' (' + tg.family + ')'"
+                ng-click="$event.stopPropagation()">
+            </li>
+            <li ng-repeat-end
+                ng-repeat="t in tg.types"
+                ng-class="{disabled: unavalableInstanceType(tg, t)}">
+              <a ng-click="unavalableInstanceType(tg, t) ? $event.stopPropagation() :  (inputs.instanceType=t)"
+                 ng-bind="::t.type + ' (' + t.vCpu + 'vCPU, ' + t.memory + 'GB memory)'"></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="cover" ng-if="processing"><div class="modal-loader"></div></div>
+</div>
+<div class="modal-footer">
+  <div class="alert alert-danger" ng-show="error" ng-bind="error|errorMsg:'ec2'"></div>
+  <button class="btn btn-raised"
+          ng-bind="::'com.cancel'|i18next"
+          ng-click="$dismiss()">
+  </button>
+  <button class="btn btn-success btn-raised"
+          ng-bind="::'com.update'|i18next"
+          ng-class="btnClass"
+          ng-click="update()"
+          ng-disabled="processing || inputs.instanceType == originalInstanceType || form.$invalid">
+  </button>
+  <div class="cover" ng-if="processing"></div>
+</div>
