@@ -101,13 +101,14 @@
     var unavailableInstanceFamilyResource = $resource('conf/unavailableInstanceFamily.json').get();
     var ruleTypeResource = $resource('conf/ruleType.json').get();
 
-    $rootScope.$watch('credentialsId', () => {
-      currentRegion = undefined;
+    $rootScope.$watch('credentialsId', (id) => {
       instances = {};
       vpcs = {};
       ec2Classic = {};
       selected = [];
-      setCurrentRegion(ec2Conf.currentRegion || 'all');
+      if(id) {
+        setCurrentRegion(currentRegion || ec2Conf.currentRegion || 'all');
+      }
     });
 
     return {
