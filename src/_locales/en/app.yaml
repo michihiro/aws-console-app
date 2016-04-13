@@ -194,6 +194,7 @@ ec2:
     gpuInstances: GPU Instances
     memoryOptimized: Memory optimized
     storageOptimized: Storage optimized
+  ebsOptimized: EBS Optimized
   storage: Storage
   deviceName: Device
   snapshot: Snapshot

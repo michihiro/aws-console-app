@@ -41,6 +41,17 @@
         </div>
       </div>
     </div>
+    <div class="form-group">
+      <div class="col-xs-8 col-xs-offset-4 checkbox">
+        <label>
+          <input type="checkbox" name="ebsOptimized"
+                 ng-model="inputs.ebsOptimized"
+                 ng-disabled="inputs.instanceType.ebsOptimized !== 0">
+          <span class="checkbox-material"><span class="check"></span></span>
+          <span ng-bind="::'ec2.ebsOptimized'|i18next"></span>
+        </label>
+      </div>
+    </div>
   </form>
   <div class="cover" ng-if="processing"><div class="modal-loader"></div></div>
 </div>
@@ -54,7 +65,7 @@
           ng-bind="::'com.update'|i18next"
           ng-class="btnClass"
           ng-click="update()"
-          ng-disabled="processing || inputs.instanceType == originalInstanceType || form.$invalid">
+          ng-disabled="processing || (inputs.instanceType == originalInstanceType && inputs.ebsOptimized == originalEbsOptimized) || form.$invalid">
   </button>
   <div class="cover" ng-if="processing"></div>
 </div>

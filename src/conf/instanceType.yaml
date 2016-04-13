@@ -33,18 +33,23 @@
   - type: m4.large
     vCpu: 2
     memory: 8
+    ebsOptimized: 1
   - type: m4.xlarge
     vCpu: 4
     memory: 16
+    ebsOptimized: 1
   - type: m4.2xlarge
     vCpu: 8
     memory: 32
+    ebsOptimized: 1
   - type: m4.4xlarge
     vCpu: 16
     memory: 64
+    ebsOptimized: 1
   - type: m4.10xlarge
     vCpu: 40
     memory: 169
+    ebsOptimized: 1
 - family: M3
   familyDescription: generalPurpose
   rootDeviceType:
@@ -69,11 +74,13 @@
     memory: 15
     instanceStoreNum: 2
     instanceStoreSize: 40
+    ebsOptimized: 0
   - type: m3.2xlarge
     vCpu: 8
     memory: 30
     instanceStoreNum: 2
     instanceStoreSize: 80
+    ebsOptimized: 0
 - family: C4
   familyDescription: computeOptimized
   rootDeviceType:
@@ -84,18 +91,23 @@
   - type: c4.large
     vCpu: 2
     memory: 3.75
+    ebsOptimized: 1
   - type: c4.xlarge
     vCpu: 4
     memory: 7.5
+    ebsOptimized: 1
   - type: c4.2xlarge
     vCpu: 8
     memory: 15
+    ebsOptimized: 1
   - type: c4.4xlarge
     vCpu: 16
     memory: 30
+    ebsOptimized: 1
   - type: c4.8xlarge
     vCpu: 36
     memory: 70
+    ebsOptimized: 1
 - family: C3
   familyDescription: computeOptimized
   rootDeviceType:
@@ -143,6 +155,7 @@
     memory: 15
     instanceStoreNum: 1
     instanceStoreSize: 60
+    ebsOptimized: 0
   - type: g2.8xlarge
     vCpu: 32
     memory: 60
@@ -166,16 +179,19 @@
     memory: 30.5
     instanceStoreNum: 1
     instanceStoreSize: 80
+    ebsOptimized: 0
   - type: r3.2xlarge
     vCpu: 8
     memory: 61
     instanceStoreNum: 1
     instanceStoreSize: 160
+    ebsOptimized: 0
   - type: r3.4xlarge
     vCpu: 16
     memory: 122
     instanceStoreNum: 1
     instanceStoreSize: 320
+    ebsOptimized: 0
   - type: r3.8xlarge
     vCpu: 32
     memory: 244
@@ -194,21 +210,25 @@
     memory: 30.5
     instanceStoreNum: 3
     instanceStoreSize: 2048
+    ebsOptimized: 1
   - type: d2.2xlarge
     vCpu: 8
     memory: 61
     instanceStoreNum: 6
     instanceStoreSize: 2048
+    ebsOptimized: 1
   - type: d2.4xlarge
     vCpu: 16
     memory: 122
     instanceStoreNum: 12
     instanceStoreSize: 2048
+    ebsOptimized: 1
   - type: d2.8xlarge
     vCpu: 36
     memory: 244
     instanceStoreNum: 24
     instanceStoreSize: 2048
+    ebsOptimized: 1
 - family: I2
   familyDescription: storageOptimized
   rootDeviceType:
@@ -222,16 +242,19 @@
     memory: 30.5
     instanceStoreNum: 1
     instanceStoreSize: 800
+    ebsOptimized: 0
   - type: i2.2xlarge
     vCpu: 8
     memory: 61
     instanceStoreNum: 2
     instanceStoreSize: 800
+    ebsOptimized: 0
   - type: i2.4xlarge
     vCpu: 16
     memory: 122
     instanceStoreNum: 4
     instanceStoreSize: 800
+    ebsOptimized: 0
   - type: i2.8xlarge
     vCpu: 32
     memory: 244

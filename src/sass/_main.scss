@@ -354,6 +354,11 @@ textarea.form-control {
   font-size: 14px;
   color: #333;
 }
+.checkbox label {
+  input[disabled] ~ span {
+    opacity: .5;
+  }
+}
 
 .password-score {
   font-size: .8em;

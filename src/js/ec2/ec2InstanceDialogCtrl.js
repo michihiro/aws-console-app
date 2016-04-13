@@ -523,11 +523,14 @@
     }
   }
 
-  ec2ChangeInstanceTypeDialogCtrl.$inject = ['$scope', 'awsEC2', 'ec2Info'];
+  ec2ChangeInstanceTypeDialogCtrl.$inject = ['$scope', '$q', 'awsEC2', 'ec2Info'];
 
-  function ec2ChangeInstanceTypeDialogCtrl($scope, awsEC2, ec2Info) {
+  function ec2ChangeInstanceTypeDialogCtrl($scope, $q, awsEC2, ec2Info) {
     var instances = ec2Info.getSelectedInstances();
-    var instanceTypes = ec2Info.getInstanceTypes(instances[0].region);
+    var region = instances[0].region;
+    var instanceTypes = ec2Info.getInstanceTypes(region);
+    var ebsOptimized = instances[0].EbsOptimized;
+    var inputsEbsOptimized = ebsOptimized;
     var instanceType;
 
     instanceTypes.some((typeGroup) =>
@@ -538,35 +541,71 @@
       instances: instances,
       instanceTypes: instanceTypes,
       originalInstanceType: instanceType,
+      originalEbsOptimized: ebsOptimized,
       inputs: {
         instanceType: instanceType,
       },
       update: update
     });
 
+    Object.defineProperty($scope.inputs, 'ebsOptimized', {
+      set: function(v) {
+        inputsEbsOptimized = v;
+      },
+      get: function() {
+        var ebsOptimized = $scope.inputs.instanceType.ebsOptimized;
+        return ebsOptimized === undefined ? false :
+          ebsOptimized === 1 ? true : inputsEbsOptimized;
+      },
+    });
+
     function update() {
-      var params = ng.extend({
-        InstanceId: instances[0].InstanceId,
-        InstanceType: {
-          Value: $scope.inputs.instanceType.type
-        }
-      });
 
-      var region = instances[0].region;
       $scope.processing = true;
-      awsEC2(region).modifyInstanceAttribute(params, (err) => {
-        if (err) {
-          $scope.$apply(() => {
-            $scope.error = err;
-            $scope.processing = false;
+      _updateInstanceType()
+        .then(_updateEbsOptimized)
+        .then(() => {
+          ec2Info.listInstances(region).then(() => {
+            $scope.$close();
           });
-          return;
-        }
-
-        ec2Info.listInstances(region).then(() => {
-          $scope.$close();
+        }, (err) => {
+          $scope.error = err;
+          $scope.processing = false;
         });
-      });
+
+      function _updateInstanceType() {
+        var defer = $q.defer();
+        var params = ng.extend({
+          InstanceId: instances[0].InstanceId,
+          InstanceType: {
+            Value: $scope.inputs.instanceType.type
+          }
+        });
+        awsEC2(region).modifyInstanceAttribute(params, (err, data) =>
+          err ? defer.reject(err) : defer.resolve(data));
+
+        return defer.promise;
+      }
+
+      function _updateEbsOptimized() {
+        /*
+        if ($scope.inputs.instanceType.ebsOptimized !== 0) {
+          return $q.when();
+        }
+        */
+
+        var defer = $q.defer();
+        var params = ng.extend({
+          InstanceId: instances[0].InstanceId,
+          EbsOptimized: {
+            Value: $scope.inputs.ebsOptimized
+          }
+        });
+        awsEC2(region).modifyInstanceAttribute(params, (err, data) =>
+          err ? defer.reject(err) : defer.resolve(data));
+
+        return defer.promise;
+      }
     }
   }
 
