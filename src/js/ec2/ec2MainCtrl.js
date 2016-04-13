@@ -15,10 +15,12 @@
 
     ng.extend(scope, {
       all: ['getWindowsPassword', '', [
-        'instanceState', ['startInstances', 'rebootInstances', 'stopInstances', 'terminateInstances']
-      ], [
-        'instanceSettings', ['changeInstanceType', 'getSystemLog']
-      ], '', 'runInstances'],
+          'instanceState', ['startInstances', 'rebootInstances', 'stopInstances', 'terminateInstances']
+        ],
+        [
+          'instanceSettings', ['changeInstanceType', 'getSystemLog']
+        ], '', 'runInstances'
+      ],
       onClick: onClick,
       isDisabled: isDisabled,
     });
@@ -34,7 +36,7 @@
       if (key === 'getWindowsPassword' ||
         key === 'changeInstanceType') {
         $rootScope.openDialog('ec2/' + key + 'Dialog', {}, {});
-      } else if (key === 'runInstances' || 
+      } else if (key === 'runInstances' ||
         key === 'getSystemLog') {
         $rootScope.openDialog('ec2/' + key + 'Dialog', {}, {
           size: 'lg'
@@ -62,7 +64,6 @@
         stopInstances: ['pending', 'running'],
         terminateInstances: ['pending', 'running', 'stopping', 'stopped'],
         changeInstanceType: ['stopped'],
-//!!
         getSystemLog: ['pending', 'running', 'stopping', 'stopped'],
       };
       var isStartOrStop = (key === 'startInstances' || key === 'stopInstances');
@@ -110,6 +111,5 @@
       $interval.cancel(refreshTimer);
     }
   }
-
 
 })(angular);

@@ -159,6 +159,7 @@
         v.volumeType === 'EBS' && attibuteTags.some((t) =>
           !v[t.col] && t.editable(v, idx)),
     }];
+    var inputsEbsOptimized;
 
     ng.extend($scope, {
       awsRegions: awsRegions,
@@ -178,6 +179,17 @@
       addVolume: addVolume,
       removeVolume: removeVolume,
       launch: launch,
+    });
+
+    Object.defineProperty($scope.inputs, 'ebsOptimized', {
+      set: function(v) {
+        inputsEbsOptimized = v;
+      },
+      get: function() {
+        var ebsOptimized = ($scope.inputs.instanceType || {}).ebsOptimized;
+        return ebsOptimized === undefined ? false :
+          ebsOptimized === 1 ? true : inputsEbsOptimized;
+      }
     });
 
     $scope.$watch('inputs.subnet', _onSubnetChanged);
@@ -422,6 +434,9 @@
           };
         }),
       };
+      if ($scope.inputs.instanceType.ebsOptimized === 0) {
+        params.EbsOptimized = $scope.inputs.ebsOptimized;
+      }
 
       $scope.processing = true;
       $scope.err = null;
@@ -556,7 +571,7 @@
         var ebsOptimized = $scope.inputs.instanceType.ebsOptimized;
         return ebsOptimized === undefined ? false :
           ebsOptimized === 1 ? true : inputsEbsOptimized;
-      },
+      }
     });
 
     function update() {
@@ -584,6 +599,7 @@
         awsEC2(region).modifyInstanceAttribute(params, (err, data) =>
           err ? defer.reject(err) : defer.resolve(data));
 
+
         return defer.promise;
       }
 
@@ -593,7 +609,6 @@
           return $q.when();
         }
         */
-
         var defer = $q.defer();
         var params = ng.extend({
           InstanceId: instances[0].InstanceId,
@@ -618,6 +633,7 @@
       instances: instances,
       getSysLog: getSysLog
     });
+
     getSysLog();
 
     function getSysLog() {
