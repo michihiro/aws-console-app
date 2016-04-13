@@ -4,7 +4,8 @@
   ng.module('aws-console')
     .controller('ec2RunInstancesDialogCtrl', ec2RunInstancesDialogCtrl)
     .controller('ec2ChangeInstanceStateDialogCtrl', ec2ChangeInstanceStateDialogCtrl)
-    .controller('ec2ChangeInstanceTypeDialogCtrl', ec2ChangeInstanceTypeDialogCtrl);
+    .controller('ec2ChangeInstanceTypeDialogCtrl', ec2ChangeInstanceTypeDialogCtrl)
+    .controller('ec2GetSystemLogDialogCtrl', ec2GetSystemLogDialogCtrl);
 
   ec2RunInstancesDialogCtrl.$inject = ['$scope', '$q', '$filter', 'awsRegions', 'awsEC2', 'ec2Info'];
 
@@ -535,7 +536,6 @@
 
     ng.extend($scope, {
       instances: instances,
-      ec2Info: ec2Info,
       instanceTypes: instanceTypes,
       originalInstanceType: instanceType,
       inputs: {
@@ -570,4 +570,36 @@
     }
   }
 
+  ec2GetSystemLogDialogCtrl.$inject = ['$scope', 'awsEC2', 'ec2Info'];
+
+  function ec2GetSystemLogDialogCtrl($scope, awsEC2, ec2Info) {
+    var instances = ec2Info.getSelectedInstances();
+
+    ng.extend($scope, {
+      instances: instances,
+      getSysLog: getSysLog
+    });
+    getSysLog();
+
+    function getSysLog() {
+      var params = {
+        InstanceId: instances[0].InstanceId,
+      };
+      var region = instances[0].region;
+      $scope.processing = true;
+      awsEC2(region).getConsoleOutput(params, (err, data) => {
+        if (err) {
+          $scope.$apply(() => {
+            $scope.error = err;
+            $scope.processing = false;
+          });
+          return;
+        }
+        $scope.$apply(() => {
+          $scope.syslog = data.Output ? AWS.util.base64.decode(data.Output).toString() : undefined;
+          $scope.processing = false;
+        });
+      });
+    }
+  }
 })(angular);

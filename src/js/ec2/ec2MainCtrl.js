@@ -17,7 +17,7 @@
       all: ['getWindowsPassword', '', [
         'instanceState', ['startInstances', 'rebootInstances', 'stopInstances', 'terminateInstances']
       ], [
-        'instanceSettings', ['changeInstanceType']
+        'instanceSettings', ['changeInstanceType', 'getSystemLog']
       ], '', 'runInstances'],
       onClick: onClick,
       isDisabled: isDisabled,
@@ -31,14 +31,14 @@
         return;
       }
 
-      if (key === 'getWindowsPassword') {
-        $rootScope.openDialog('ec2/getPasswordDialog', {}, {});
-      } else if (key === 'runInstances') {
-        $rootScope.openDialog('ec2/runInstancesDialog', {}, {
+      if (key === 'getWindowsPassword' ||
+        key === 'changeInstanceType') {
+        $rootScope.openDialog('ec2/' + key + 'Dialog', {}, {});
+      } else if (key === 'runInstances' || 
+        key === 'getSystemLog') {
+        $rootScope.openDialog('ec2/' + key + 'Dialog', {}, {
           size: 'lg'
         });
-      } else if (key === 'changeInstanceType') {
-        $rootScope.openDialog('ec2/changeInstanceTypeDialog', {}, {});
       } else {
         $rootScope.openDialog('ec2/changeInstanceStateDialog', {
           mode: key
@@ -61,7 +61,9 @@
         rebootInstances: ['running'],
         stopInstances: ['pending', 'running'],
         terminateInstances: ['pending', 'running', 'stopping', 'stopped'],
-        changeInstanceType: ['stopped']
+        changeInstanceType: ['stopped'],
+//!!
+        getSystemLog: ['pending', 'running', 'stopping', 'stopped'],
       };
       var isStartOrStop = (key === 'startInstances' || key === 'stopInstances');
       var selected = ec2Info.getSelectedInstances();

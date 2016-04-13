@@ -1,0 +1,33 @@
+<div class="modal-header">
+  <button class="close" ng-click="$dismiss()">&times;</button>
+  <h3 ng-bind="::'ec2.getSystemLog'|i18next"></h3>
+</div>
+<div class="modal-body">
+  <form name="form" class="form-horizontal">
+    <div class="form-group">
+      <label class="col-xs-4 control-label"
+             ng-bind="::'ec2.instance'|i18next"></label>
+      <div class="col-xs-7 form-control-static">
+        <div ng-repeat="i in instances"
+             ng-bind="::i.tags.Name ? i.tags.Name+' ('+i.InstanceId+')' : i.InstanceId">
+        </div>
+      </div>
+      <div class="col-xs-1">
+        <button class="btn pull-right" ng-click="getSysLog()">
+          <i class="fa fa-refresh"></i>
+        </button>
+      </div>
+    </div>
+    <div>
+      <textarea readonly ng-model="syslog"></textarea>
+    </div>
+  </form>
+  <div class="cover" ng-if="processing"><div class="modal-loader"></div></div>
+</div>
+<div class="modal-footer">
+  <div class="alert alert-danger" ng-show="error" ng-bind="error|errorMsg:'ec2'"></div>
+  <button class="btn btn-raised"
+          ng-bind="::'com.ok'|i18next"
+          ng-click="$dismiss()">
+  </button>
+</div>

@@ -153,6 +153,7 @@ ec2:
   terminateInstances: インスタンスの削除
   instanceSettings: インスタンスの設定
   changeInstanceType: インスタンスタイプの変更
+  getSystemLog: システムログの取得
   noInstances: インスタンスはありません。
   startInstancesMsg:
    - このインスタンスを開始してよろしいですか？

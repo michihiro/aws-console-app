@@ -298,3 +298,11 @@
   }
 }
 
+.ec2-get-system-log-dialog {
+  textarea {
+    width: 100%;
+    min-height: 400px;
+    background: #222;
+    color: lightgreen;
+  }
+}

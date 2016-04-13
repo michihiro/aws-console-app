@@ -153,6 +153,7 @@ ec2:
   terminateInstances: Terminate Instance
   instanceSettings: Instance Settings
   changeInstanceType: Change Instance Type
+  getSystemLog: Get System Log
   noInstances: No Insatances,
   startInstancesMsg:
    - Are you sure you want to start this instance?
