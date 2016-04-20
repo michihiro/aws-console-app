@@ -205,7 +205,10 @@ ec2:
     gp2: General Purpose SSD (GP2)
     io1: Provisioned IOPS SSD (IO1)
     standard: Magnetic
+    st1: Throughput Optimized HDD(ST1)
+    sc1: Cold HDD(SC1)
   iops: IOPS
+  throughput: Throughput
   notAvailable: N/A
   attributes: Attributes
   deleteOnTermination: Delete On Termination

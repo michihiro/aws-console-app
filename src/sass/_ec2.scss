@@ -176,7 +176,8 @@
     .attribute-group {
       display: inline-block;
       float: left;
-      width: calc(100% - 26px);
+      //width: calc(100% - 26px);
+      width: 100%;
       margin-left:4px;
     }
     .attribute {

@@ -205,7 +205,10 @@ ec2:
     gp2: 汎用 SSD (GP2)
     io1: プロビジョンド IOPS SSD (IO1)
     standard: マグネティック
+    st1: スループット最適化HDD(ST1)
+    sc1: Cold HDD(SC1)
   iops: IOPS
+  throughput: スループット
   notAvailable: 利用不可
   attributes: 属性
   deleteOnTermination: 合わせて削除

@@ -20,12 +20,23 @@
     var ebsVolumeTypes = [{
       value: 'gp2',
       name: i18next('ec2.ebsType.gp2'),
+      asRootVolume: true
     }, {
       value: 'io1',
       name: i18next('ec2.ebsType.io1'),
+      asRootVolume: true
     }, {
       value: 'standard',
       name: i18next('ec2.ebsType.standard'),
+      asRootVolume: true
+    }, {
+      value: 'st1',
+      name: i18next('ec2.ebsType.st1'),
+      asRootVolume: false
+    }, {
+      value: 'sc1',
+      name: i18next('ec2.ebsType.sc1'),
+      asRootVolume: false
     }];
 
     var attibuteTags = [{
@@ -81,7 +92,7 @@
           !blockDeviceMappings.some((b) => b.deviceName === d));
       }
     }, {
-      width: 90,
+      width: 80,
       col: 'size',
       name: 'ec2.sizeGiB',
       class: 'text-right',
@@ -99,16 +110,21 @@
         if (idx === 0 && v < $scope.inputs.ami.BlockDeviceMappings[0].Ebs.VolumeSize) {
           return false;
         }
-        if (item.ebsVolumeType === 'standard' && v > 1024) {
+        var ebsVolumeType = item.ebsVolumeType;
+        if (ebsVolumeType === 'standard' && v > 1024) {
           return false;
         }
-        if (item.ebsVolumeType === 'io1' && v < 4) {
+        if (ebsVolumeType === 'io1' && v < 4) {
+          return false;
+        }
+        if ((ebsVolumeType === 'st1' || ebsVolumeType === 'sc1') && v < 500) {
           return false;
         }
         return true;
-      }
+      },
+      validateWith: 'ebsVolumeType'
     }, {
-      width: 220,
+      width: 225,
       col: 'ebsVolumeType',
       name: 'ec2.ebsVolumeType',
       filterFn: (v, idx) => {
@@ -122,20 +138,22 @@
         return s !== key ? s : v.toUpperCase();
       },
       editable: (v) => v.volumeType === 'EBS',
-      dropdown: () => ebsVolumeTypes
+      dropdown: (idx) => ebsVolumeTypes.filter((v) => idx > 0 || v.asRootVolume)
     }, {
-      width: 75,
+      width: 80,
       col: 'ebsIops',
       name: 'ec2.iops',
       class: 'text-right',
       filterFn: (v, idx) => {
         var item = $scope.inputs.blockDeviceMappings[idx];
+        var val;
 
         if (item.volumeType !== 'EBS') {
           return i18next('ec2.notAvailable');
         }
         if (item.ebsVolumeType === 'gp2') {
-          return Math.min(+(item.size) * 3, 10000);
+          val = Math.min(+(item.size) * 3, 10000);
+          return val < 3000 ? val + '/3000' : val;
         }
         return i18next('ec2.notAvailable');
       },
@@ -152,7 +170,31 @@
         return true;
       }
     }, {
-      width: 250,
+      width: 80,
+      col: 'ebsThroughput',
+      name: 'ec2.throughput',
+      class: 'text-right',
+      filterFn: (v, idx) => {
+        var item = $scope.inputs.blockDeviceMappings[idx];
+        var ebsVolumeType = item.ebsVolumeType;
+        var size = +item.size;
+
+        if (item.volumeType !== 'EBS') {
+          return i18next('ec2.notAvailable');
+        }
+        if (ebsVolumeType === 'st1' && size) {
+          return Math.min(Math.ceil(size * 40 / 1024), 500) +
+            '/' + Math.min(Math.ceil(size * 250 / 1024), 500);
+        }
+        if (ebsVolumeType === 'sc1' && size) {
+          return Math.min(Math.ceil(size * 12 / 1024), 250) +
+            '/' + Math.min(Math.ceil(size * 80 / 1024), 250);
+        }
+        return i18next('ec2.notAvailable');
+      },
+      editable: () => false
+    }, {
+      width: 180,
       name: 'ec2.attributes',
       tags: attibuteTags,
       editable: (v, idx) =>
@@ -283,19 +325,22 @@
 
       (bdm || []).forEach((val, idx) => {
         var oldVal = (oldBdm || [])[idx] || {};
-        if (val.volumeType !== oldVal.volumeType) {
-          if (oldVal.volumeType && val.volumeType === 'EBS') {
+        var volumeType = val.volumeType;
+        var ebsVolumeType = val.ebsVolumeType;
+        if (volumeType !== oldVal.volumeType) {
+          if (oldVal.volumeType && volumeType === 'EBS') {
             val.ebsVolumeType = 'gp2';
             val.size = 8;
           }
         }
-        if (val.ebsVolumeType !== oldVal.ebsVolumeType) {
-          if (val.ebsVolumeType === 'io1') {
-            val.size = Math.max(val.size, 4);
+        if (ebsVolumeType !== oldVal.ebsVolumeType) {
+          if (ebsVolumeType === 'io1') {
+            val.size = Math.max(val.size, 4) || 4;
             val.ebsIops = Math.min(Math.min(+(val.size) * 3, 10000) * 10, 20000);
-          }
-          if (val.ebsVolumeType === 'standard') {
-            val.size = Math.min(val.size, 1024);
+          } else if (ebsVolumeType === 'standard') {
+            val.size = Math.max(val.size, 1024) || 1024;
+          } else if (ebsVolumeType === 'st1' || ebsVolumeType === 'sc1') {
+            val.size = Math.max(val.size, 500) || 500;
           }
         }
       });

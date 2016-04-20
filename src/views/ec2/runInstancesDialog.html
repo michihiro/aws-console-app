@@ -216,7 +216,8 @@
                              name="bdm_{{itemIdx}}_{{col.col}}"
                              ng-model="item[col.col]"
                              required
-                             ui-validate="'col.isValid($value, item, itemIdx)'">
+                             ui-validate="'col.isValid($value, item, itemIdx)'"
+                             ui-validate-watch="col.validateWith ? 'item.' + col.validateWith : null">
                     </div>
                   </div>
                   <div class="td-inner"
@@ -229,7 +230,7 @@
                       <span class="caret"></span>
                     </a>
                     <ul uib-dropdown-menu class="dropdown-menu-in-table">
-                      <li ng-repeat="item2 in col.dropdown()">
+                      <li ng-repeat="item2 in col.dropdown(itemIdx)">
                         <a ng-click="item[col.col]=item2.value||item2"
                            ng-bind="item2.name ? item2.name : item2"></a>
                       </li>
