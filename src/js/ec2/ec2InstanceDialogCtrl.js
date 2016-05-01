@@ -5,7 +5,8 @@
     .controller('ec2RunInstancesDialogCtrl', ec2RunInstancesDialogCtrl)
     .controller('ec2ChangeInstanceStateDialogCtrl', ec2ChangeInstanceStateDialogCtrl)
     .controller('ec2ChangeInstanceTypeDialogCtrl', ec2ChangeInstanceTypeDialogCtrl)
-    .controller('ec2GetSystemLogDialogCtrl', ec2GetSystemLogDialogCtrl);
+    .controller('ec2GetSystemLogDialogCtrl', ec2GetSystemLogDialogCtrl)
+    .controller('ec2ChangeInstanceSecurityGroupsDialogCtrl', ec2ChangeInstanceSecurityGroupsDialogCtrl);
 
   ec2RunInstancesDialogCtrl.$inject = ['$scope', '$q', '$filter', 'awsRegions', 'awsEC2', 'ec2Info'];
 
@@ -399,8 +400,8 @@
     function openManageSecurityGroupsDialog() {
       var dlg = $scope.openDialog('ec2/manageSecurityGroupsDialog', {
         vpc: $scope.inputs.vpc,
-        subnet: $scope.inputs.subnet,
-        ami: $scope.inputs.ami,
+        region: $scope.inputs.subnet.region,
+        platform: ($scope.inputs.ami || {}).Platform,
         securityGroup: $scope.inputs.securityGroups[0]
       }, {
         size: 'lg'
@@ -700,6 +701,110 @@
           $scope.processing = false;
         });
       });
+    }
+  }
+
+  ec2ChangeInstanceSecurityGroupsDialogCtrl.$inject = ['$scope', '$q', '$filter', 'awsRegions', 'awsEC2', 'ec2Info'];
+
+  function ec2ChangeInstanceSecurityGroupsDialogCtrl($scope, $q, $filter, awsRegions, awsEC2, ec2Info) {
+    var instances = ec2Info.getSelectedInstances();
+    var groups = ec2Info.getSecurityGroups(instances[0].region, instances[0].VpcId);
+    var region = instances[0].region;
+
+    ng.extend($scope, {
+      ec2Info: ec2Info,
+      instances: instances,
+      inputs: {
+        securityGroups: []
+      },
+      setSecurityGroup: setSecurityGroup,
+      openManageSecurityGroupsDialog: openManageSecurityGroupsDialog,
+      update: update,
+    });
+
+    var unwatch = $scope.$watch(function() {
+      return ec2Info.getSecurityGroups(instances[0].region, instances[0].VpcId);
+    }, function(g) {
+      groups = g || [];
+      $scope.inputs.securityGroups = [];
+      (instances[0].SecurityGroups || []).forEach(function(s) {
+        groups.some(function(g) {
+          if (g.GroupId === s.GroupId) {
+            $scope.inputs.securityGroups.push(g);
+          }
+        });
+      });
+      if (g && g.length) {
+        unwatch();
+      }
+    });
+
+    $scope.$watch('inputs.securityGroups', _onSecurityGroupsChanged, true);
+
+    function setSecurityGroup(group, idx) {
+      $scope.inputs.securityGroups[idx] = group;
+    }
+
+    function _onSecurityGroupsChanged() {
+      var groups = $scope.inputs.securityGroups;
+      var groupsLen = groups.length;
+      if (!groupsLen || groups[groupsLen - 1]) {
+        groups.push(undefined);
+      }
+    }
+
+    function openManageSecurityGroupsDialog() {
+      var instance0 = instances[0];
+      var vpc;
+      ec2Info.getVpcs(region).some((v) =>
+        v.VpcId === instance0.VpcId && (vpc = v));
+
+      var dlg = $scope.openDialog('ec2/manageSecurityGroupsDialog', {
+        vpc: vpc,
+        region: region,
+        platform: instance0.Platform,
+        securityGroup: $scope.inputs.securityGroups[0]
+      }, {
+        size: 'lg'
+      });
+      dlg.result.then((group) => {
+        var securityGroups = $scope.inputs.securityGroups || [];
+        var securityGroupsLen = securityGroups.length;
+        if (securityGroups.indexOf(group) < 0) {
+          if (securityGroupsLen && !securityGroups[securityGroupsLen - 1]) {
+            securityGroups[securityGroupsLen - 1] = group;
+          } else {
+            securityGroups.push(group);
+          }
+        }
+      });
+    }
+
+    function update() {
+      $scope.processing = true;
+      _updateGroups()
+        .then(() => {
+          ec2Info.listInstances(region).then(() => {
+            $scope.$close();
+          });
+        }, (err) => {
+          $scope.error = err;
+          $scope.processing = false;
+        });
+
+      function _updateGroups() {
+        var defer = $q.defer();
+        var groups = $scope.inputs.securityGroups.filter((v) => v)
+          .map((v) => v.GroupId);
+        var params = ng.extend({
+          InstanceId: instances[0].InstanceId,
+          Groups: groups
+        });
+        awsEC2(region).modifyInstanceAttribute(params, (err, data) =>
+          err ? defer.reject(err) : defer.resolve(data));
+
+        return defer.promise;
+      }
     }
   }
 })(angular);

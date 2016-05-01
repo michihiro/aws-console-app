@@ -154,6 +154,8 @@ ec2:
   instanceSettings: Instance Settings
   changeInstanceType: Change Instance Type
   getSystemLog: Get System Log
+  networking: Networking
+  changeInstanceSecurityGroups: Change Security Groups
   noInstances: No Insatances,
   startInstancesMsg:
    - Are you sure you want to start this instance?

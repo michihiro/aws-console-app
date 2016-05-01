@@ -325,7 +325,7 @@
     ng.extend($scope, {
       ec2Info: ec2Info,
       inputs: {
-        region: (dialogInputs.subnet || {}).region,
+        region: dialogInputs.region,
         vpc: dialogInputs.vpc,
         securityGroup: dialogInputs.securityGroup,
         rules: {
@@ -583,7 +583,7 @@
           return;
         }
         $timeout(() => {
-          var port = dialogInputs.ami.Platform === 'windows' ? 3389 : 22;
+          var port = dialogInputs.platform === 'windows' ? 3389 : 22;
           var type = _getRuleType({
             IpProtocol: 'TCP',
             FromPort: port,

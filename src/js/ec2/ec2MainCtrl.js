@@ -19,6 +19,9 @@
         ],
         [
           'instanceSettings', ['changeInstanceType', 'getSystemLog']
+        ],
+        [
+          'networking', ['changeInstanceSecurityGroups']
         ], '', 'runInstances'
       ],
       onClick: onClick,
@@ -37,7 +40,7 @@
         key === 'changeInstanceType') {
         $rootScope.openDialog('ec2/' + key + 'Dialog', {}, {});
       } else if (key === 'runInstances' ||
-        key === 'getSystemLog') {
+        key === 'getSystemLog' || key === 'changeInstanceSecurityGroups') {
         $rootScope.openDialog('ec2/' + key + 'Dialog', {}, {
           size: 'lg'
         });
@@ -63,8 +66,10 @@
         rebootInstances: ['running'],
         stopInstances: ['pending', 'running'],
         terminateInstances: ['pending', 'running', 'stopping', 'stopped'],
+        getWindowsPassword: ['pending'],
         changeInstanceType: ['stopped'],
         getSystemLog: ['pending', 'running', 'stopping', 'stopped'],
+        changeInstanceSecurityGroups: ['pending', 'running', 'stopping', 'stopped']
       };
       var isStartOrStop = (key === 'startInstances' || key === 'stopInstances');
       var selected = ec2Info.getSelectedInstances();
@@ -73,6 +78,13 @@
       if (key === 'getWindowsPassword') {
         return selected.length !== 1 || selected0.Platform !== 'windows' ||
           selected0.State.Name === 'pending';
+      }
+      if (key === 'changeInstanceType' || key === 'getSystemLog') {
+        return selected.length !== 1 || enable.indexOf(selected0.State.Name) < 0;
+      }
+      if (key === 'changeInstanceSecurityGroups') {
+        return selected.length !== 1 || !selected0.VpcId ||
+          enable.indexOf(selected0.State.Name) < 0;
       }
       return !(selected || []).some((i) => {
         if (isStartOrStop &&

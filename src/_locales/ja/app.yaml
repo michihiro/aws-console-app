@@ -154,6 +154,8 @@ ec2:
   instanceSettings: インスタンスの設定
   changeInstanceType: インスタンスタイプの変更
   getSystemLog: システムログの取得
+  networking: ネットワーキング
+  changeInstanceSecurityGroups: セキュリティグループの変更
   noInstances: インスタンスはありません。
   startInstancesMsg:
    - このインスタンスを開始してよろしいですか？
