@@ -42,12 +42,16 @@
                  ng-click="ec2Info.selectInstances([i], s, v);"
                  app-right-click="ec2Info.selectInstances([i], s, v);">
               <img src="images/Instance.svg" ng-class="'state-' + i.State.Name">
-              <div class="instance-name">
+              <div class="instance-name outline-text">
                 <div ng-bind="i.tags.Name ? i.tags.Name : i.InstanceId"
                      ng-attr-title="{{i.tags.Name ? i.tags.Name : '( ' + i.InstanceId + ' )'}}"></div>
                 <div ng-bind="i.tags.Name ? '( ' + i.InstanceId + ' )': ''"></div>
               </div>
-              <div class="instance-state"
+              <button class="btn btn-detail pull-right"
+                      ng-click="popupDetail($event)">
+                <i class="fa fa-list"></i>
+              </button>
+              <div class="instance-state outline-text"
                    ng-bind="i.InstanceType + ' - ' + i.State.Name">
               </div>
             </div>
@@ -58,6 +62,67 @@
 
     </uib-accordion-group>
   </uib-accordion>
+</div>
+
+<div ng-show="popupInstance"
+     class="func-view">
+  <div class="instance detail"
+       ng-style="popupStyle">
+    <img src="images/Instance.svg" ng-class="'state-' + popupInstance.State.Name">
+    <div class="instance-name outline-text">
+      <div ng-bind="popupInstance.tags.Name ? popupInstance.tags.Name : popupInstance.InstanceId"
+           ng-attr-title="{{popupInstance.tags.Name ? popupInstance.tags.Name : '( ' + popupInstance.InstanceId + ' )'}}"></div>
+      <div ng-bind="popupInstane.tags.Name ? '( ' + popupInstance.InstanceId + ' )': ''"></div>
+    </div>
+    <button class="btn btn-close pull-right"
+            ng-click="popupInstance=null;popupStyle=null;">&times;</button>
+    <div class="detail-field">
+      <div class="caption" ng-bind="'ec2.detail.baseInformation'|i18next"></div>
+      <table>
+        <tr>
+          <th><div ng-bind="::'ec2.detail.instanceId'|i18next"></div></th>
+          <td><div ng-bind="popupInstance.InstanceId"></div></td>
+          <th><div ng-bind="::'ec2.detail.instanceType'|i18next"></div></th>
+          <td><div ng-bind="popupInstance.InstanceType"></div></td>
+        </tr>
+        <tr>
+          <th><div ng-bind="::'ec2.detail.instanceState'|i18next"></div></th>
+          <td><div ng-bind="popupInstance.State.Name"></div></td>
+        </tr>
+      </table>
+      <div class="caption" ng-bind="'ec2.detail.network'|i18next"></div>
+      <table>
+        <tr>
+          <th><div ng-bind="::'ec2.detail.vpc'|i18next"></div></th>
+          <td><div ng-bind="popupInstance.VpcId"></div></td>
+          <th><div ng-bind="::'ec2.detail.subnet'|i18next"></div></th>
+          <td><div ng-bind="popupInstance.SubnetId"></div></td>
+        </tr>
+        <tr>
+          <th><div ng-bind="::'ec2.detail.securityGroups'|i18next"></div></th>
+          <td colspan="3"><div>
+            <span ng-repeat-start="g in popupInstance.SecurityGroups"
+                  ng-bind="g.GroupName + ' (' + g.GroupId + ') '"></span>
+            <span ng-repeat-end ng-if="!$last">,&nbsp;</span>
+          </div></td>
+        </tr>
+        <tr>
+          <th><div ng-bind="::'ec2.detail.publicDns'|i18next"></div></th>
+          <td colspan="3"><div>
+            <span ng-bind="popupInstance.PublicDnsName"></span>
+            (<span ng-bind="popupInstance.PublicIpAddress"></span>)
+          </div></td>
+        </tr>
+        <tr>
+          <th><div ng-bind="::'ec2.detail.privateDns'|i18next"></div></th>
+          <td colspan="3"><div>
+            <span ng-bind="popupInstance.PrivateDnsName"></span>
+            (<span ng-bind="popupInstance.PrivateIpAddress"></span>)
+          </div></td>
+        </tr>
+      </table>
+    </div>
+  </div>
 </div>
 
 <div uib-dropdown class="position-fixed" contextmenu-for="#ec2-main-view">

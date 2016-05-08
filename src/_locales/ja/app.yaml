@@ -323,6 +323,17 @@ ec2:
   passwordDecrypted: パスワードの復号に成功しました。
   passwordDecryptionError: パスワードの復号に失敗しました。プライベートキーを確認してください。
   password: パスワード
+  detail:
+   baseInformation: 基本情報
+   network: ネットワーク
+   instanceId: インスタンスID
+   instanceType: インスタンスタイプ
+   instanceState: インスタンスの状態
+   vpc: VPC
+   subnet: サブネット
+   securityGroups: セキュリティグループ
+   publicDns: パブリック DNS
+   privateDns: プライペート DNS
   error:
     VpcLimitExceeded: VPC の上限数を超えました。
 r53:

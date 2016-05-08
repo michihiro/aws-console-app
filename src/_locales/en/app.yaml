@@ -323,6 +323,17 @@ ec2:
   passwordDecrypted: The password successfully decrypted.
   passwordDecryptionError: Password Decryption failed. Please ensure your private key.
   password: Password
+  detail:
+   baseInformation: Base Information
+   network: Network
+   instanceId: Instance ID
+   instanceType: Instance Type 
+   instanceState: Instance State
+   vpc: VPC
+   subnet: Subnet
+   securityGroups: Security Groups
+   publicDns: Public DNS
+   privateDns: Private DNS
   error:
     VpcLimitExceeded: The maximum number of VPCs has been reached.
 r53:

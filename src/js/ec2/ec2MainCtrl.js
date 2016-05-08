@@ -107,12 +107,14 @@
     });
   }
 
-  ec2Ctrl.$inject = ['$scope', '$interval', 'awsRegions', 'ec2Info', 'ec2Actions'];
+  ec2Ctrl.$inject = ['$scope', '$interval', '$timeout', 'awsRegions', 'ec2Info', 'ec2Actions'];
 
-  function ec2Ctrl($scope, $interval, awsRegions, ec2Info, ec2Actions) {
+  function ec2Ctrl($scope, $interval, $timeout, awsRegions, ec2Info, ec2Actions) {
     ng.extend($scope, {
       ec2Info: ec2Info,
       ec2Actions: ec2Actions,
+      popupInstance: null,
+      popupDetail: popupDetail,
     });
 
     var refreshTimer = $interval(ec2Info.refresh.bind(null, null), REFRESH_INTERVAL);
@@ -121,6 +123,21 @@
 
     function onDestroy() {
       $interval.cancel(refreshTimer);
+    }
+
+    function popupDetail(ev) {
+      var target = $(ev.target).parents('.instance');
+      var off = target.position();
+      var targetScope = target.scope();
+
+      $scope.popupInstance = targetScope.i;
+      $scope.popupStyle = off;
+      $timeout(() => ng.extend(off, {
+        top: 8,
+        left: 8,
+        width: 'calc(100% - 16px)',
+        height: 'calc(100% - 16px)',
+      }));
     }
   }
 
