@@ -81,44 +81,75 @@
       <table>
         <tr>
           <th><div ng-bind="::'ec2.detail.instanceId'|i18next"></div></th>
-          <td><div ng-bind="popupInstance.InstanceId"></div></td>
+          <td><div ng-bind="popupInstance.InstanceId" app-selectable-text></div></td>
           <th><div ng-bind="::'ec2.detail.instanceType'|i18next"></div></th>
-          <td><div ng-bind="popupInstance.InstanceType"></div></td>
+          <td><div ng-bind="popupInstance.InstanceType" app-selectable-text></div></td>
         </tr>
         <tr>
-          <th><div ng-bind="::'ec2.detail.instanceState'|i18next"></div></th>
-          <td><div ng-bind="popupInstance.State.Name"></div></td>
+          <th><div ng-bind="::'ec2.detail.state'|i18next"></div></th>
+          <td><div ng-bind="popupInstance.State.Name" app-selectable-text></div></td>
+          <th><div ng-bind="::'ec2.detail.stateReason'|i18next"></div></th>
+          <td><div ng-bind="popupInstance.StateReason.Message" app-selectable-text></div></td>
+        </tr>
+        <tr>
+          <th><div ng-bind="::'ec2.detail.launchTime'|i18next"></div></th>
+          <td><div ng-bind="popupInstance.LaunchTime|momentFormat:'LLL'" app-selectable-text></div></td>
+          <th><div ng-bind="::'ec2.detail.ami'|i18next"></div></th>
+          <td><div ng-bind="popupInstance.ImageId" app-selectable-text></div></td>
         </tr>
       </table>
       <div class="caption" ng-bind="'ec2.detail.network'|i18next"></div>
       <table>
         <tr>
           <th><div ng-bind="::'ec2.detail.vpc'|i18next"></div></th>
-          <td><div ng-bind="popupInstance.VpcId"></div></td>
+          <td><div ng-bind="popupInstance.VpcId" app-selectable-text></div></td>
           <th><div ng-bind="::'ec2.detail.subnet'|i18next"></div></th>
-          <td><div ng-bind="popupInstance.SubnetId"></div></td>
+          <td><div ng-bind="popupInstance.SubnetId" app-selectable-text></div></td>
         </tr>
         <tr>
           <th><div ng-bind="::'ec2.detail.securityGroups'|i18next"></div></th>
           <td colspan="3"><div>
             <span ng-repeat-start="g in popupInstance.SecurityGroups"
-                  ng-bind="g.GroupName + ' (' + g.GroupId + ') '"></span>
+                  ng-bind="g.GroupName + ' (' + g.GroupId + ') '"
+                  app-selectable-text></span>
             <span ng-repeat-end ng-if="!$last">,&nbsp;</span>
           </div></td>
         </tr>
         <tr>
           <th><div ng-bind="::'ec2.detail.publicDns'|i18next"></div></th>
           <td colspan="3"><div>
-            <span ng-bind="popupInstance.PublicDnsName"></span>
-            (<span ng-bind="popupInstance.PublicIpAddress"></span>)
+            <span ng-bind="popupInstance.PublicDnsName" app-selectable-text></span>
+            (<span ng-bind="popupInstance.PublicIpAddress" app-selectable-text></span>)
           </div></td>
         </tr>
         <tr>
           <th><div ng-bind="::'ec2.detail.privateDns'|i18next"></div></th>
           <td colspan="3"><div>
-            <span ng-bind="popupInstance.PrivateDnsName"></span>
-            (<span ng-bind="popupInstance.PrivateIpAddress"></span>)
+            <span ng-bind="popupInstance.PrivateDnsName" app-selectable-text></span>
+            (<span ng-bind="popupInstance.PrivateIpAddress" app-selectable-text></span>)
           </div></td>
+        </tr>
+      </table>
+      <div class="caption" ng-bind="'ec2.detail.storage'|i18next"></div>
+      <table>
+        <tr>
+          <th><div ng-bind="::'ec2.detail.rootDeviceType'|i18next"></div></th>
+          <td><div ng-bind="popupInstance.RootDeviceType" app-selectable-text></div></td>
+          <th><div ng-bind="::'ec2.detail.ebsOptimized'|i18next"></div></th>
+          <td><div ng-bind="popupInstance.EbsOptimized" app-selectable-text></div></td>
+        </tr>
+        <tr ng-repeat-start="d in popupInstance.BlockDeviceMappings">
+          <td rowspan="3" class="device-name"><div ng-bind="d.DeviceName" app-selectable-text></div></td>
+          <th><div ng-bind="::'ec2.detail.ebsId'|i18next"></div></th>
+          <td colspan="2"><div ng-bind="d.Ebs.VolumeId" app-selectable-text></div></td>
+        </tr>
+        <tr>
+          <th><div ng-bind="::'ec2.detail.attachTime'|i18next"></div></th>
+          <td colspan="2"><div ng-bind="d.Ebs.AttachTime|momentFormat:'LLL'" app-selectable-text></div></td>
+        </tr>
+        <tr ng-repeat-end>
+          <th><div ng-bind="::'ec2.detail.deleteOnTermination'|i18next"></div></th>
+          <td colspan="2"><div ng-bind="d.Ebs.DeleteOnTermination" app-selectable-text></div></td>
         </tr>
       </table>
     </div>

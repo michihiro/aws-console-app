@@ -324,16 +324,25 @@ ec2:
   passwordDecryptionError: Password Decryption failed. Please ensure your private key.
   password: Password
   detail:
-   baseInformation: Base Information
-   network: Network
-   instanceId: Instance ID
-   instanceType: Instance Type 
-   instanceState: Instance State
-   vpc: VPC
-   subnet: Subnet
-   securityGroups: Security Groups
-   publicDns: Public DNS
-   privateDns: Private DNS
+    baseInformation: Base Information
+    network: Network
+    storage: Storage
+    instanceId: Instance ID
+    instanceType: Instance Type 
+    state: Instance State
+    stateReason: State Reason
+    launchTime: Launch Time
+    ami: AMI
+    vpc: VPC
+    subnet: Subnet
+    securityGroups: Security Groups
+    publicDns: Public DNS
+    privateDns: Private DNS
+    rootDeviceType: Root device type
+    ebsOptimized: EBS-optimized
+    ebsId: EBS ID
+    attachTime: Attachment time
+    DeleteOnTermination: Delete on termination
   error:
     VpcLimitExceeded: The maximum number of VPCs has been reached.
 r53:

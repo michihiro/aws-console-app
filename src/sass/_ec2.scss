@@ -169,15 +169,28 @@
         margin-bottom: 16px;
         display: inline-block;
         vertical-align: top;
+        font-size: 12px;
+        tr {
+          vertical-align: bottom;
+        }
         th, td {
           padding: 2px 8px;
-          min-width: 180px;
+          min-width: 160px;
           > div {
             border-bottom: 1px solid #ccc;
           }
         }
         th {
           text-align: right;
+        }
+        td.device-name {
+          vertical-align: middle;
+          text-align: center;
+          background: #f0f0f0;
+          border-top: 2px solid #fff;
+          > div {
+            border-bottom: none;
+          }
         }
       }
     }

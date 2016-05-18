@@ -324,16 +324,25 @@ ec2:
   passwordDecryptionError: パスワードの復号に失敗しました。プライベートキーを確認してください。
   password: パスワード
   detail:
-   baseInformation: 基本情報
-   network: ネットワーク
-   instanceId: インスタンスID
-   instanceType: インスタンスタイプ
-   instanceState: インスタンスの状態
-   vpc: VPC
-   subnet: サブネット
-   securityGroups: セキュリティグループ
-   publicDns: パブリック DNS
-   privateDns: プライペート DNS
+    baseInformation: 基本情報
+    network: ネットワーク
+    storage: ストレージ
+    instanceId: インスタンスID
+    instanceType: インスタンスタイプ
+    state: インスタンスの状態
+    stateReason: 状態遷移の理由
+    launchTime: 起動時刻
+    ami: AMI
+    vpc: VPC
+    subnet: サブネット
+    securityGroups: セキュリティグループ
+    publicDns: パブリック DNS
+    privateDns: プライペート DNS
+    rootDeviceType: ルートデバイスタイプ
+    ebsOptimized: EBS 最適化
+    ebsId: EBS ID
+    attachTime: アタッチ日時
+    deleteOnTermination: 合わせて削除
   error:
     VpcLimitExceeded: VPC の上限数を超えました。
 r53:
