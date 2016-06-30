@@ -11,6 +11,7 @@
     'ap-northeast-1',
     'ap-southeast-2',
     'ap-northeast-2',
+    'ap-south-1',
     'sa-east-1'
   ];
 
@@ -25,6 +26,7 @@
       'ap-northeast-1': 'Z2M4EHUR26P7ZW',
       'ap-southeast-2': 'Z1WCIGYICN2BYD',
       'ap-northeast-2': 'Z3W03O7B5YMIYP',
+      'ap-south-1': 'Z11RGJOFQNVJUP',
       'sa-east-1': 'Z7KQH4QJS55SO'
     },
     eb: {
@@ -37,6 +39,7 @@
       'ap-northeast-1': 'Z1R25G3KIG2GBW',
       'ap-southeast-2': 'Z2PCDNR3VC2G1N',
       'ap-northeast-2': 'Z3JE5OI70TWKCP',
+      'ap-south-1': 'Z18NTBI3Y7N9TZ',
       'sa-east-1': 'Z10X7K2B4QSOFV'
     },
     cf: 'Z2FDTNDATAQYW2'

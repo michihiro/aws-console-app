@@ -115,6 +115,7 @@ s3:
     ap-southeast-2: Asia Pacific (Sydney)
     ap-northeast-1: Asia Pacific (Tokyo)
     ap-northeast-2: Asia Pacific (Seoul)
+    ap-south-1: Asia Pacific (Mumbai)
     sa-east-1: South America (Sao Paulo)
   error:
     InvalidAccessKeyId: The AWS access key ID is invalid.
@@ -140,6 +141,7 @@ ec2:
     ap-southeast-2: Asia Pacific (Sydney)
     ap-northeast-1: Asia Pacific (Tokyo)
     ap-northeast-2: Asia Pacific (Seoul)
+    ap-south-1: Asia Pacific (Mumbai)
     sa-east-1: South America (Sao Paulo)
   instance: Instance
   start: Start

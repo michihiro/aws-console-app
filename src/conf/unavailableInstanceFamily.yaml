@@ -1,6 +1,14 @@
 ap-northeast-2:
   - M3
   - C3
+  - G2
+ap-south-1:
+  - C3
+  - M3 
+  - G2
 sa-east-1:
   - M4
   - C4
+  - G2
+  - D2
+  - I2
