@@ -1,6 +1,6 @@
 {
   "name": "aws-console-app",
-  "version": "0.4.10",
+  "version": "0.4.12",
   "repository": {
     "type": "git",
     "url": "https://github.com/michihiro/aws-console-app.git"
