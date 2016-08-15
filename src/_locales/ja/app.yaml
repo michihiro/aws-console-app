@@ -328,7 +328,7 @@ ec2:
   detail:
     baseInformation: 基本情報
     network: ネットワーク
-    storage: ストレージ
+    blockDevice: ブロックデバイス
     instanceId: インスタンスID
     instanceType: インスタンスタイプ
     state: インスタンスの状態

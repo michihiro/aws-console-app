@@ -328,7 +328,7 @@ ec2:
   detail:
     baseInformation: Base Information
     network: Network
-    storage: Storage
+    blockDevice: Block Device
     instanceId: Instance ID
     instanceType: Instance Type 
     state: Instance State

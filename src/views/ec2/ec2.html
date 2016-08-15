@@ -47,12 +47,10 @@
                      ng-attr-title="{{i.tags.Name ? i.tags.Name : '( ' + i.InstanceId + ' )'}}"></div>
                 <div ng-bind="i.tags.Name ? '( ' + i.InstanceId + ' )': ''"></div>
               </div>
-              <!--
               <button class="btn btn-detail pull-right"
                       ng-click="popupDetail($event)">
                 <i class="fa fa-list"></i>
               </button>
-              -->
               <div class="instance-state outline-text"
                    ng-bind="i.InstanceType + ' - ' + i.State.Name">
               </div>
@@ -132,7 +130,7 @@
           </div></td>
         </tr>
       </table>
-      <div class="caption" ng-bind="'ec2.detail.storage'|i18next"></div>
+      <div class="caption" ng-bind="'ec2.detail.blockDevice'|i18next"></div>
       <table>
         <tr>
           <th><div ng-bind="::'ec2.detail.rootDeviceType'|i18next"></div></th>
