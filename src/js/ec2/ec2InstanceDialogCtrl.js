@@ -153,7 +153,7 @@
           return i18next('ec2.notAvailable');
         }
         if (item.ebsVolumeType === 'gp2') {
-          val = Math.min(+(item.size) * 3, 10000);
+          val = Math.max(100, Math.min(+(item.size) * 3, 10000), 100);
           return val < 3000 ? val + '/3000' : val;
         }
         return i18next('ec2.notAvailable');
@@ -337,7 +337,7 @@
         if (ebsVolumeType !== oldVal.ebsVolumeType) {
           if (ebsVolumeType === 'io1') {
             val.size = Math.max(val.size, 4) || 4;
-            val.ebsIops = Math.min(Math.min(+(val.size) * 3, 10000) * 10, 20000);
+            val.ebsIops = Math.min(Math.min(+(val.size) * 5, 10000) * 10, 20000);
           } else if (ebsVolumeType === 'standard') {
             val.size = Math.max(val.size, 1024) || 1024;
           } else if (ebsVolumeType === 'st1' || ebsVolumeType === 'sc1') {
