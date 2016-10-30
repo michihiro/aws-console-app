@@ -107,6 +107,7 @@ s3:
   deleteMetadata: (delete)
   regionName:
     us-east-1: US East (Northern Virginia)
+    us-east-2: US East (Ohio)
     us-west-1: US West (Northern California)
     us-west-2: US West (Oregon)
     eu-west-1: EU (Ireland)
@@ -133,6 +134,7 @@ ec2:
   regionName:
     all: All Regions
     us-east-1: US East (Northern Virginia)
+    us-east-2: US East (Ohio)
     us-west-2: US West (Oregon)
     us-west-1: US West (Northern California)
     eu-west-1: EU (Ireland)

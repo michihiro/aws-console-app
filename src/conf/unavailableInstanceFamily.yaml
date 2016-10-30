@@ -1,3 +1,7 @@
+us-east-2:
+  - M3
+  - C3
+  - G2
 ap-northeast-2:
   - M3
   - C3

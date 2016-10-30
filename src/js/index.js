@@ -3,6 +3,7 @@
 
   var regions = [
     'us-east-1',
+    'us-east-2',
     'us-west-2',
     'us-west-1',
     'eu-west-1',
@@ -18,6 +19,7 @@
   var hostedZoneIds = {
     s3: {
       'us-east-1': 'Z3AQBSTGFYJSTF',
+      'us-east-2': 'Z2O1EMRO9K5GLX',
       'us-west-2': 'Z3BJ6K6RIION7M',
       'us-west-1': 'Z2F56UZL2M1ACD',
       'eu-west-1': 'Z1BKCTXD74EZPE',
@@ -31,6 +33,7 @@
     },
     eb: {
       'us-east-1': 'Z117KPS5GTRQ2G',
+      'us-east-2': 'Z14LCN19Q5QHIC',
       'us-west-2': 'Z38NKT9BP95V3O',
       'us-west-1': 'Z1LQECGX5PH1X',
       'eu-west-1': 'Z2NYPWQ7DFZAZH',

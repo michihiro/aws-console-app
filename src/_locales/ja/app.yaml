@@ -107,6 +107,7 @@ s3:
   deleteMetadata: (削除)
   regionName:
     us-east-1: US 東海岸（北バージニア）
+    us-east-2: US 東海岸 (オハイオ)
     us-west-1: US 西海岸（北カルフォルニア）
     us-west-2: US 西海岸（オレゴン）
     eu-west-1: EU （アイルランド）
@@ -133,6 +134,7 @@ ec2:
   regionName:
     all: 全てのリージョン
     us-east-1: US 東海岸（北バージニア）
+    us-east-2: US 東海岸 (オハイオ)
     us-west-2: US 西海岸（オレゴン）
     us-west-1: US 西海岸（北カルフォルニア）
     eu-west-1: EU （アイルランド）
